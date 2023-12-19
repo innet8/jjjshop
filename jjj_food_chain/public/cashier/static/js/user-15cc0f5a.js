@@ -1,0 +1,1 @@
+import{r as s}from"./request-0a0c61ce.js";let e={login:(e,r)=>s._post("/cashier/passport/login",e,r),editPassword:(e,r)=>s._post("/cashier/admin.user/renew",e,r),loginOut:(e,r)=>s._post("/cashier/passport/logout",e,r),getVersion:(e,r)=>s._post("/cashier/index/index",e,r),getMenber:(e,r)=>s._post("/cashier/user.User/index",e,r)};export{e as U};
