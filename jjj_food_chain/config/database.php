@@ -20,23 +20,23 @@ return [
     'connections' => [
         'mysql' => [
             // 数据库类型
-            'type' => Env::get('database.type', 'mysql'),
+            'type' => Env::get('DATABASE_TYPE', 'mysql'),
             // 服务器地址
-            'hostname' => Env::get('database.hostname', '127.0.0.1'),
+            'hostname' => Env::get('DB_HOST', 'db'),
             // 数据库名
-            'database' => Env::get('database.database', ''),
+            'database' => Env::get('DB_DATABASE', 'jjj'),
             // 用户名
-            'username' => Env::get('database.username', 'root'),
+            'username' => Env::get('DB_USER', 'jjj'),
             // 密码
-            'password' => Env::get('database.password', ''),
+            'password' => Env::get('DB_PASSWORD', '123456'),
             // 端口
-            'hostport' => Env::get('database.hostport', '3306'),
+            'hostport' => Env::get('DB_PORT', '3306'),
             // 数据库连接参数
             'params' => [],
             // 数据库编码默认采用utf8
-            'charset' => Env::get('database.charset', 'utf8'),
+            'charset' => Env::get('DB_CHARSET', 'utf8'),
             // 数据库表前缀
-            'prefix' => Env::get('database.prefix', ''),
+            'prefix' => Env::get('DB_PREFIX', 'jjjfood_'),
 
             // 数据库部署方式:0 集中式(单一服务器),1 分布式(主从服务器)
             'deploy' => 0,

@@ -1,0 +1,36 @@
+version: '3'
+services:
+  app:
+    container_name: "jjj-app-1"
+    image: richarvey/nginx-php-fpm
+    volumes:
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+      - ./docker/nginx/sites-available/:/etc/nginx/sites-available
+      - ./docker/nginx/sites-enabled:/etc/nginx/sites-enabled
+      - ./:/var/www/html
+    ports:
+      - "${APP_PORT}:80"
+    restart: always
+    depends_on:
+      - db
+  db:
+    container_name: "jjj-db-1"
+    image: "mariadb"
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+      - ./init.sql:/home/init.sql
+      - ./docker/mysql/conf.d:/etc/mysql/conf.d
+    ports:
+      - 33111:3306
+    environment:
+      TZ: "Asia/Shanghai"
+      MARIADB_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+      MARIADB_DATABASE: "${DB_DATABASE}"
+      MARIADB_USER: "${DB_USERNAME}"
+      MARIADB_PASSWORD: "${DB_PASSWORD}"
+    restart: always
+  redis:
+    container_name: "jjj-redis-1"
+    image: redis:6
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    restart: always

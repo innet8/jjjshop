@@ -1,0 +1,6 @@
+.env
+.DS_Store
+/runtime/*
+/docker/mysql/*
+/public/uploads/*
+/public/temp/*

@@ -1,0 +1,74 @@
+#!/bin/bash
+
+#fonts color
+Green="\033[32m"
+Red="\033[31m"
+GreenBG="\033[42;37m"
+RedBG="\033[41;37m"
+Font="\033[0m"
+
+#notification information
+OK="${Green}[OK]${Font}"
+Error="${Red}[错误]${Font}"
+
+cur_path="$(pwd)"
+
+docker_name() {
+    echo `docker-compose ps | awk '{print $1}' | grep "\-$1\-"`
+}
+
+env_get() {
+    local key=$1
+    local value=`cat ${cur_path}/.env | grep "^$key=" | awk -F '=' '{print $2}'`
+    echo "$value"
+}
+
+run_exec() {
+    local container=$1
+    local cmd=$2
+    local name=`docker_name $container`
+    echo $name
+    if [ -z "$name" ]; then
+        echo -e "${Error} ${RedBG} 没有找到 $container 容器! ${Font}"
+        exit 1
+    fi
+    if [ "$container" = "mariadb" ] || [ "$container" = "nginx" ] || [ "$container" = "redis" ]; then
+        docker exec -it "$name" /bin/sh -c "$cmd"
+    else
+        docker exec -it "$name" /bin/bash -c "$cmd"
+    fi
+}
+
+if [ $# -gt 0 ]; then
+    database=$(env_get DB_DATABASE)
+    password=$(env_get DB_ROOT_PASSWORD)
+    if [[ "$1" == "init" ]] || [[ "$1" == "install" ]]; then
+        shift 1
+        docker-compose up -d
+        run_exec app "composer install"
+        echo -e "${OK} ${GreenBG} 初始化数据库 ${Font}"
+        run_exec db "mysql -uroot -p$password $database < /home/init.sql"
+        echo -e "${OK} ${GreenBG} 安装完成 ${Font}"
+        #echo -e "地址: http://${GreenBG}127.0.0.1:$(env_get APP_PORT)${Font}"
+    elif [[ "$1" == "uninstall" ]]; then
+        shift 1
+        #read -rp "确定要卸载（含：删除容器、数据库、日志）吗？(y/n): " uninstall
+        #[[ -z ${uninstall} ]] && uninstall="N"
+        #case $uninstall in
+        #[yY][eE][sS] | [yY])
+        #    echo -e "${RedBG} 开始卸载... ${Font}"
+        #    ;;
+        #*)
+        #    echo -e "${GreenBG} 终止卸载。 ${Font}"
+        #    exit 2
+        #    ;;
+        #esac
+        docker-compose down
+        #rm -rf "./docker/mysql/data"
+        echo -e "${OK} ${GreenBG} 卸载完成 ${Font}"
+    else
+        docker-compose "$@"
+    fi
+else
+    docker-compose ps
+fi
