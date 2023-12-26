@@ -1,5 +1,9 @@
 .env
 .DS_Store
+.idea
+.vscode
+/vendor
+/node_modules
 /runtime/*
 /docker/mysql/*
 /public/uploads/*
