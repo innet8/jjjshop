@@ -40,14 +40,16 @@ run_exec() {
 }
 
 if [ $# -gt 0 ]; then
-    database=$(env_get DB_DATABASE)
     password=$(env_get DB_ROOT_PASSWORD)
+    database=$(env_get DB_DATABASE)
     if [[ "$1" == "init" ]] || [[ "$1" == "install" ]]; then
         shift 1
         docker-compose up -d
+        run_exec app "/usr/local/bin/docker-php-ext-configure bcmath && /usr/local/bin/docker-php-ext-install bcmath"
         run_exec app "composer install"
+        run_exec app "supervisorctl restart php-fpm"
         echo -e "${OK} ${GreenBG} 初始化数据库 ${Font}"
-        run_exec db "mysql -uroot -p$password $database < /home/init.sql"
+        run_exec db "mariadb -uroot -p$password $database < /home/init.sql"
         echo -e "${OK} ${GreenBG} 安装完成 ${Font}"
         #echo -e "地址: http://${GreenBG}127.0.0.1:$(env_get APP_PORT)${Font}"
     elif [[ "$1" == "uninstall" ]]; then

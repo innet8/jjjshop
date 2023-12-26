@@ -19,7 +19,7 @@ class ProductRankingService
     {
         $model = new ProductModel();
         if ($shop_supplier_id > 0) {
-            $model = $model->where('order.shop_supplier_id', '=', $shop_supplier_id);
+            $model = $model->where('p.shop_supplier_id', '=', $shop_supplier_id);
         }
         $OrderProduct = new OrderProductModel();
         $totalSaleSql = $OrderProduct->alias('op')

@@ -15,7 +15,7 @@ services:
       - db
   db:
     container_name: "jjj-db-1"
-    image: "mariadb"
+    image: "mariadb:latest"
     volumes:
       - ./docker/mysql:/var/lib/mysql
       - ./init.sql:/home/init.sql
