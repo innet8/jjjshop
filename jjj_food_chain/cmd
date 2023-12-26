@@ -45,7 +45,9 @@ if [ $# -gt 0 ]; then
     if [[ "$1" == "init" ]] || [[ "$1" == "install" ]]; then
         shift 1
         docker-compose up -d
-        run_exec app "/usr/local/bin/docker-php-ext-configure bcmath && /usr/local/bin/docker-php-ext-install bcmath"
+        DOCKER_PHP_EXT="/usr/local/bin/docker-php-ext-"
+        run_exec app "${DOCKER_PHP_EXT}configure bcmath && ${DOCKER_PHP_EXT}install bcmath"
+        run_exec app "${DOCKER_PHP_EXT}configure pcntl && ${DOCKER_PHP_EXT}install pcntl"
         run_exec app "composer install"
         run_exec app "supervisorctl restart php-fpm"
         echo -e "${OK} ${GreenBG} 初始化数据库 ${Font}"
