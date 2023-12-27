@@ -14,6 +14,9 @@
       <el-select v-model="form.model.category_id">
          <template v-for="cat in form.category" :key="cat.category_id">
           <el-option :value="cat.category_id" :label="cat.name"></el-option>
+           <template v-for="cat_c in cat.child" :key="cat_c.category_id">
+             <el-option :value="cat_c.category_id" :label="cat_c.name">|—{{cat_c.name}}</el-option>
+           </template>
         </template>
       </el-select>
     </el-form-item>

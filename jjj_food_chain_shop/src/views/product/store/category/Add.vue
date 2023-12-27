@@ -9,7 +9,7 @@
     <el-form size="small" :model="form" :rules="formRules" ref="form">
       <el-form-item label="父级分类" :label-width="formLabelWidth">
         <el-select v-model="form.parent_id" label="无">
-          <el-option value="0" label="无"></el-option>
+          <el-option :value="0" label="无"></el-option>
           <template v-for="cat in category" :key="cat.category_id">
             <el-option :value="cat.category_id" :label="cat.name"></el-option>
           </template>
@@ -54,8 +54,8 @@
       return {
         category: [],
         form: {
-          parent_id: '0',
-          category_id: null,
+          parent_id: 0,
+          category_id: 0,
           name: '',
           sort: 100,
           image_id: ''
@@ -95,7 +95,7 @@
       this.getParentCategory();
     },
     methods: {
-      /*获取基础数据*/
+      /*获取父级分类*/
       getParentCategory: function() {
         let self = this;
         PorductApi.storeCatParentList({}, true)

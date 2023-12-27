@@ -23,6 +23,11 @@ class Category extends BaseModel
         return $this->hasOne('app\\common\\model\\file\\UploadFile', 'file_id', 'image_id');
     }
 
+    public function child()
+    {
+        return $this->hasMany('app\\common\\model\\product\\Category', 'parent_id', 'category_id');
+    }
+
     /**
      * 充值套餐详情
      */
@@ -52,7 +57,47 @@ class Category extends BaseModel
         }
         $model = new static;
         if (!Cache::get('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special)) {
+            $data = $model->with(['images', 'child.images'])
+                ->where('parent_id', '=', 0)
+                ->where('type', '=', $type)
+                ->where('is_special', '=', $is_special)
+                ->order(['sort' => 'asc', 'create_time' => 'asc'])
+                ->where('shop_supplier_id', '=', $shop_supplier_id)
+                ->select();
+            $all = !empty($data) ? $data->toArray() : [];
+            if ($is_special == 1 && empty($all)) {
+                (new static)->addSpecial($model::$app_id, $shop_supplier_id);
+                $data = $model->with(['images'])
+                    ->where('type', '=', $type)
+                    ->where('is_special', '=', $is_special)
+                    ->order(['sort' => 'asc', 'create_time' => 'asc'])
+                    ->where('shop_supplier_id', '=', $shop_supplier_id)
+                    ->select();
+                $all = !empty($data) ? $data->toArray() : [];
+            }
+            Cache::tag('cache')->set('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special, $all);
+        }
+        return Cache::get('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special);
+    }
+
+    /**
+     * 所有父级分类
+     */
+    public static function getALLParent($type, $is_special, $store = '')
+    {
+        $user = $store['user'];
+        $supplier = $store['supplier'];
+        if ($supplier['is_main'] == 1 || $supplier['category_set'] == 20) {
+            $shop_supplier_id = $user['shop_supplier_id'];
+        } else {
+            $detail = SupplierModel::where('is_main', '=', 1)->find();
+            $shop_supplier_id = $detail['shop_supplier_id'];
+        }
+        $model = new static;
+        if (!Cache::get('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special)) {
             $data = $model->with(['images'])
+                ->where('parent_id', '=', 0)
+                ->where('parent_id', '=', 0)
                 ->where('type', '=', $type)
                 ->where('is_special', '=', $is_special)
                 ->order(['sort' => 'asc', 'create_time' => 'asc'])
