@@ -6,6 +6,9 @@ let ProductApi = {
     storeCatList(data, errorback) {
         return request._post('/shop/product.store.category/index', data, errorback);
     },
+    storeCatParentList(data, errorback) {
+        return request._post('/shop/product.store.category/parent', data, errorback);
+    },
     /* 外卖分类管理*/
     takeCatList(data, errorback) {
         return request._post('/shop/product.takeaway.category/index', data, errorback);
