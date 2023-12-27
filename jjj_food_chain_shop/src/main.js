@@ -4,6 +4,7 @@ import {
 import router from "./router";
 import "../static/css/app.css";
 import "../static/css/common.css";
+import I18n from "./lang/index";
 import {
 	createPinia
 } from 'pinia'
@@ -25,6 +26,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 	app.component(key, component)
 }
 app.use(VueUeditorWrap)
+app.use(I18n)
 app.use(pinia)
 app.use(router)
 app.mount('#app')
