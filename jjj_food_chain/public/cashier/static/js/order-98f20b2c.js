@@ -1,1 +1,0 @@
-import{r}from"./request-0a0c61ce.js";let e={getList:(e,o)=>r._post("/cashier/order.order/index",e,o),settle:(e,o)=>r._post("/cashier/order.order/settle",e,o),refund:(e,o)=>r._post("/cashier/order.order/refund",e,o),print:(e,o)=>r._post("/cashier/order.order/print",e,o),moveProduct:(e,o)=>r._post("/cashier/order.order/moveProduct",e,o)};export{e as o};
