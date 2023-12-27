@@ -20,7 +20,7 @@
 								@click="choseMenu(2,item, index)" v-if="item.is_menu==1">
 								<div class="item-box">
 									<span :class="'icon iconfont menu-item-icon ' + item.icon"></span>
-									<span>{{ item.name }}</span>
+									<span>{{ $t(item.name) }}</span>
 								</div>
 							</li>
 						</template>

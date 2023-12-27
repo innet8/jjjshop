@@ -7,7 +7,7 @@
   <div class="common-header">
     <div class="breadcrumb">
       <div class="baseInfo-left-base">
-        <span class="name">店铺名称：{{ shop_name }}</span>
+        <span class="name">{{ $t('店铺名称：')}}{{ shop_name }}</span>
         <span class="timer">{{nowDate}}</span>
       </div>
       <div class="header-navbar">
