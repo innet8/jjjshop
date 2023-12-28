@@ -12,22 +12,35 @@ use app\common\library\language\engine\YouDao;
 class Language
 {
     // 当前文件语言集
-    private $targetFiles = ['zh', 'zhtw', 'en', 'tr'];
+    // zh: 中文 | zhtw: 繁体中文 | en: 英文 | th: 泰文 | ja: 日文 | tr: 土耳其文
+    private $targetFiles = ['zh', 'zhtw', 'en', 'th', 'ja','tr'];
 
     // 谷歌语言集
-    private $googleTargetFiles = ['zh', 'zh-TW', 'en', 'tr'];
+    private $googleTargetFiles = ['zh', 'zh-TW', 'en', 'th', 'ja', 'tr'];
 
     // 有道语言集
-    private $youdaoTargetFiles = ['zh-CHS', 'zh-CHT', 'en', 'tr'];
+    private $youdaoTargetFiles = ['zh-CHS', 'zh-CHT', 'en', 'th', 'ja', 'tr'];
 
     // 当前语言文件路径
     private $langFilePath = 'lang/';
 
     // 有道翻译参数
-    const YOUDAO_APP_KEY = "41dfa0e454e1efa1";
-    const YOUDAO_SEC_KEY = "oGOP7927lLseJpRQtaF6lChs2vw7wz2R";
+    private $youdaoAppKey;
+    private $youdaoSecKey;
 
-    // extractTexts 语言提取
+
+    public function __construct()
+    {
+        $this->youdaoAppKey = env('YOUDAO_APP_KEY') ?? '';
+        $this->youdaoSecKey = env('YOUDAO_SEC_KEY') ?? '';
+    }
+
+    /**
+     * 语言提取
+     *
+     * @param array $texts
+     * @return array
+     */
     public function extractTexts($texts = [])
     {
         if (!empty($texts)) {
@@ -45,14 +58,24 @@ class Language
         return $texts;
     }
 
-    // getTranslatedTexts 获取已翻译中文
+    /**
+     * 获取已翻译中文
+     *
+     * @return array
+     */
     public function getTranslatedTexts()
     {
         $translated = !is_file('lang/zh/auto.php') ? [] : include('lang/zh/auto.php');
         return $translated;
     }
 
-    // filterTexts 过滤已翻译中文
+    /**
+     * 过滤已翻译中文
+     *
+     * @param array $texts
+     * @param array $translated
+     * @return array
+     */
     public function filterTexts($texts, $translated)
     {
         $texts = array_filter($texts, function ($text) use ($translated) {
@@ -61,7 +84,12 @@ class Language
         return $texts;
     }
 
-    // getTargets 获取目标语言
+    /**
+     * 获取目标语言
+     *
+     * @param string $channel
+     * @return array
+     */
     public function getTargets($channel)
     {
         $targets = [];
@@ -73,26 +101,41 @@ class Language
         return $targets;
     }
 
-    // getTranslator 获取翻译引擎
+    /**
+     * 获取翻译引擎
+     *
+     * @param string $channel
+     * @return Google|YouDao|null
+     */
     public function getTranslator($channel)
     {
         if ($channel == 'google') {
             $tr = new Google(); // Translates to 'en' from auto-detected language by default
         } else if ($channel == 'youdao') {
-            $tr = new YouDao(self::YOUDAO_APP_KEY, self::YOUDAO_SEC_KEY);
+            $tr = new YouDao($this->youdaoAppKey, $this->youdaoSecKey);
         } else {
             return;
         }
         return $tr;
     }
 
-    // getSavePath 获取保存路径
+    /**
+     * 获取保存路径
+     *
+     * @param string $file
+     * @return string
+     */
     public function getSavePath($file)
     {
         return $this->langFilePath . $file . '/auto.php';
     }
 
-    // initSavePath 初始化保存路径
+    /**
+     * 初始化保存路径
+     *
+     * @param string $file
+     * @return string
+     */
     public function initSavePath($file)
     {
         $savePath = $this->getSavePath($file);
@@ -107,7 +150,14 @@ class Language
         return $savePath;
     }
 
-    // 执行翻译
+    /**
+     * 执行翻译
+     *
+     * @param array $targets
+     * @param array $texts
+     * @param [type] $tr
+     * @return void
+     */
     public function commandExecute($targets = [], $texts = [], $tr = null)
     {
         if (empty($targets) || empty($texts) || empty($tr)) {

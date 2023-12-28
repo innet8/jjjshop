@@ -70,6 +70,9 @@ if [ $# -gt 0 ]; then
         docker-compose down
         #rm -rf "./docker/mysql/data"
         echo -e "${OK} ${GreenBG} 卸载完成 ${Font}"
+    elif [[ "$1" == "think" ]]; then
+        shift 1
+        e="php think $@" && run_exec app "$e"
     else
         docker-compose "$@"
     fi

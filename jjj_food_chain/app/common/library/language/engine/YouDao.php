@@ -131,7 +131,8 @@ class YouDao
     {
         $microTime = microtime();
         list($a_dec, $a_sec) = explode(" ", $microTime);
-        $dec_hex = dechex($a_dec * 1000000);
+        // $dec_hex = dechex($a_dec * 1000000);
+        $dec_hex = dechex(min(intval($a_dec * 1000000), PHP_INT_MAX));
         $sec_hex = dechex($a_sec);
         $this->ensure_length($dec_hex, 5);
         $this->ensure_length($sec_hex, 6);
