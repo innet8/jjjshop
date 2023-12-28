@@ -403,3 +403,102 @@ function checkToken($token, $type)
         return $status;
     }
 }
+
+/**
+ * 判断字符串存在(包含)
+ * @param string $string
+ * @param string $find
+ * @return bool
+ */
+function strExists($string, $find)
+{
+    if (!is_string($string) || !is_string($find)) {
+        return false;
+    }
+    return str_contains($string, $find);
+}
+
+/**
+ * 自动侦测设置获取语言选择
+ * @return string
+ */
+function checkDetect(): string
+{
+    if ($langSet = Request::get("language")) {
+        // url中设置了语言变量
+        return $langSet;
+    }
+
+    if ($langSet = Request::header("language")) {
+        // Header中设置了语言变量
+        return $langSet;
+    }
+
+    if ($langSet = Request::cookie("language")) {
+        // Cookie中设置了语言变量
+        return $langSet;
+    }
+
+    if ($langSet = Request::server('HTTP_ACCEPT_LANGUAGE')) {
+        // 自动侦测浏览器语言
+        return parse_accept_language($langSet);
+    }
+
+    return '';
+}
+
+/**
+ * 解析语言参数
+ *
+ * @param string $header
+ * @return string
+ */
+function parse_accept_language(string $header): string {
+    $langMap = [
+        'zh-tw' => 'zhtw',
+        'zh-cn' => 'zh',
+        'en-us' => 'en',
+    ];
+
+    if (preg_match('/^([a-z\d\-]+)/i', $header, $matches)) {
+        $langSet = strtolower($matches[1]);
+        return $langMap[$langSet] ?? $langSet;
+    }
+
+    return '';
+}
+
+/**
+ * 国际化（替换国际语言）
+ * @param $val
+ * @param string $language
+ * @return mixed
+ */
+function langTrans(string $val, string $language = 'zh'): string
+{
+    $language = checkDetect() ?: $language;
+    $data = langData($language);
+
+    if (array_key_exists($val, $data)) {
+        return $data[$val];
+    }
+
+    return $val;
+}
+
+/**
+ * 加载语言数据
+ * @param string language 语言
+ * @return array
+ */
+function langData($language = 'zh')
+{
+    $langpath = app()->getRootPath().'lang/' . strtolower($language). '/auto.php';
+    if (file_exists($langpath)) {
+        $data = include $langpath;
+        if (is_array($data)) {
+            return $data;
+        }
+    }
+    return [];
+}

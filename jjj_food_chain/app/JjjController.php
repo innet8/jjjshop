@@ -26,7 +26,7 @@ abstract class JjjController extends BaseController
      */
     protected function renderSuccess($msg = 'success', $data = [])
     {
-        return json($this->renderJson(1, $msg, $data));
+        return json($this->renderJson(1, langTrans($msg), $data));
     }
 
     /**
@@ -34,7 +34,7 @@ abstract class JjjController extends BaseController
      */
     protected function renderError($msg = 'error', $data = [], $code = 0)
     {
-        return json($this->renderJson($code, $msg, $data));
+        return json($this->renderJson($code, langTrans($msg), $data));
     }
 
     /**
