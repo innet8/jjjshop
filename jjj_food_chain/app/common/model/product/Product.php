@@ -5,6 +5,7 @@ namespace app\common\model\product;
 use app\common\library\helper;
 use app\common\model\BaseModel;
 use app\common\model\order\OrderProduct;
+use app\shop\model\product\Category as CategoryModel;
 
 /**
  * 商品模型
@@ -143,7 +144,12 @@ class Product extends BaseModel
             $model = $model->where('product.product_type', '=', $params['product_type']);
         }
         if ($params['category_id'] > 0) {
-            $model = $model->where('product.category_id', '=', $params['category_id']);
+            $categoryIds =(new CategoryModel)
+                ->where('category_id', $params['category_id'])
+                ->whereOr('parent_id', $params['category_id'])
+                ->column('category_id');
+            trace($categoryIds);
+            $model = $model->whereIn('category_id', $categoryIds);
         }
         if ($params['special_id'] > 0) {
             $model = $model->where('product.special_id', '=', $params['special_id']);

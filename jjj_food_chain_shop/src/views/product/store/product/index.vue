@@ -19,7 +19,12 @@
         <el-form-item label="商品分类">
           <el-select size="small" v-model="searchForm.category_id" placeholder="所有分类">
             <el-option label="全部" value="0"></el-option>
-            <el-option v-for="(item, index) in categoryList" :key="index" :label="item.name" :value="item.category_id"></el-option>
+            <template v-for="cat in categoryList" :key="cat.category_id">
+              <el-option :value="cat.category_id" :label="cat.name"></el-option>
+              <template v-for="cat_c in cat.child" :key="cat_c.category_id">
+                <el-option :value="cat_c.category_id" :label="cat_c.name">|—{{cat_c.name}}</el-option>
+              </template>
+            </template>
           </el-select>
         </el-form-item>
         <el-form-item label="商品名称"><el-input size="small" v-model="searchForm.product_name" placeholder="请输入商品名称"></el-input></el-form-item>
