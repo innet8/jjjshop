@@ -41,7 +41,6 @@ class Lang extends Command
         // 获取已翻译中文
         $translated = $lang->getTranslatedTexts();
         $texts = $lang->filterTexts($texts, $translated);
-        $textChunks = array_chunk(array_values($texts), 200);
 
         $targets = $lang->getTargets($channel);
         $tr = $lang->getTranslator($channel);
@@ -49,7 +48,7 @@ class Lang extends Command
         // 执行待翻译中文
         $output->writeln('#####开始翻译#####');
 
-        $lang->execute($targets, $textChunks, $tr, $channel);
+        $lang->commandExecute($targets, $texts, $tr);
         $output->writeln('#####翻译完成#####');
     }
 }

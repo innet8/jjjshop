@@ -26,9 +26,11 @@ class YouDao
      * @param $q
      * @param $from
      * @param $to
+     * @param $successSleep
      * @return mixed|null
+     * @throws \Exception
      */
-    public function translate($q, $from = null, $to = null)
+    public function translate($q, $from = null, $to = null, $successSleep = 1)
     {
         if ($from === null) {
             $from = 'auto';
@@ -50,12 +52,15 @@ class YouDao
         $args['curtime'] = $curtime;
         $signStr = $this->APP_KEY . $this->truncate($q) . $salt . $curtime . $this->SEC_KEY;
         $args['sign'] = hash("sha256", $signStr);
-        // $args['vocabId'] = ''; // 您的用户词表ID
-        $res = json_decode($this->call(self::URL, $args), true);
+        // $args['vocabId'] = '您的用户词表ID';
+        $data = $this->call(self::URL, $args);
+        $res = json_decode($data, true);
         if ($res['errorCode'] == 0 && $res['translation']) {
+            sleep($successSleep);
             return is_array($res['translation']) ? $res['translation'][0] : $res['translation'];
         }
-        return null;
+        file_put_contents('error.log', $data . "\n", FILE_APPEND);
+        throw new \Exception("翻译失败，详细查看：error.log\n\n");
     }
 
     private function call($url, $args = null, $method = "post", $testflag = 0, $timeout = self::CURL_TIMEOUT, $headers = array())
@@ -77,12 +82,11 @@ class YouDao
     private function callOnce($url, $args = null, $method = "post", $withCookie = false, $timeout = self::CURL_TIMEOUT, $headers = array())
     {
         $ch = curl_init();
+        $data = $this->convert($args);
         if ($method == "post") {
-            $data = $this->convert($args);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
             curl_setopt($ch, CURLOPT_POST, 1);
         } else {
-            $data = $this->convert($args);
             if ($data) {
                 if (stripos($url, "?") > 0) {
                     $url .= "&$data";
@@ -105,7 +109,7 @@ class YouDao
         return $r;
     }
 
-    private function convert(&$args)
+    private function convert($args)
     {
         $data = '';
         if (is_array($args)) {
@@ -131,8 +135,7 @@ class YouDao
         $sec_hex = dechex($a_sec);
         $this->ensure_length($dec_hex, 5);
         $this->ensure_length($sec_hex, 6);
-        $guid = "";
-        $guid .= $dec_hex;
+        $guid = $dec_hex;
         $guid .= $this->create_guid_section(3);
         $guid .= '-';
         $guid .= $this->create_guid_section(4);

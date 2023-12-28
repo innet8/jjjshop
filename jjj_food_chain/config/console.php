@@ -7,5 +7,7 @@ return [
     'commands' => [
         // 定时任务
         'job' => \app\job\command\Job::class,
+        // 多语言
+        'lang' => app\job\command\Lang::class,
     ],
 ];

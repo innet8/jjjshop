@@ -108,33 +108,28 @@ class Language
     }
 
     // 执行翻译
-    public function execute($targets = [], $textChunks = [], $tr = null)
+    public function commandExecute($targets = [], $texts = [], $tr = null)
     {
-        if (empty($targets) || empty($textChunks) || empty($tr)) {
+        if (empty($targets) || empty($texts) || empty($tr)) {
             return;
         }
-
+        //
+        $textChunks = array_chunk(array_values($texts), 200);
         foreach ($targets as $file => $target) {
             $savePath = $this->initSavePath($file);
             $translation = include($savePath);
 
             foreach ($textChunks as $chunk) {
                 if ($file == 'zh') {
-                foreach ($chunk as $item) {
-                    $translation[$item] = $item;
-                }
+                    foreach ($chunk as $item) {
+                        $translation[$item] = $item;
+                    }
                 } else {
                     $q = implode("\n", $chunk);
                     $trans = $tr->translate($q, $targets['zh'], $target);
                     //
                     $trans = is_string($trans) ? $trans : '';
-                    $transArray = explode("\n", $trans);
-                    // 确保 $chunk 和 $transArray 的元素数量相同
-                    $count = min(count($chunk), count($transArray));
-                    $count = intval($count); // 显式地将 $count 转换为整数
-                    $chunk = array_slice($chunk, 0, (int)$count);
-                    $transArray = array_slice($transArray, 0, (int)$count);
-                    $translation = array_merge($translation, array_combine($chunk, $transArray));
+                    $translation = array_merge($translation, array_combine($chunk, explode("\n", $trans)));
                 }
             }
 
@@ -168,13 +163,12 @@ class Language
         }
     }
 
-
     /**
      * 新建目录
      * @param $path
      * @return mixed
      */
-    private function makeDir($path)
+    public function makeDir($path)
     {
         try {
             Filesystem::createDirectory($path);
@@ -194,7 +188,7 @@ class Language
      * @param array $arr
      * @return array
      */
-    private function getDirAllFile($path, $arr = [])
+    public function getDirAllFile($path, $arr = [])
     {
         $arr = array();
         if (is_file($path)) {
