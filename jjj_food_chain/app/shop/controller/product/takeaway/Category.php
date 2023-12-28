@@ -86,5 +86,13 @@ class Category extends Controller
         return $this->renderError($model->getError() ?: '设置失败');
     }
 
-
+    /**
+     * 外卖普通商品顶级分类列表
+     */
+    public function parent()
+    {
+        $model = new CategoryModel;
+        $list = $model->getALLParent(0, 0, $this->store);
+        return $this->renderSuccess('', compact('list'));
+    }
 }

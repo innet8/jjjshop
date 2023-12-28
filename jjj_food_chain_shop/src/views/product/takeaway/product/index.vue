@@ -1,9 +1,4 @@
 <template>
-  <!--
-      作者：luoyiming
-      时间：2019-10-24
-      描述：商品管理
-  -->
   <div class="product-list">
     <!--搜索表单-->
     <div class="common-seach-wrap">

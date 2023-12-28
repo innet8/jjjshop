@@ -13,6 +13,9 @@ let ProductApi = {
     takeCatList(data, errorback) {
         return request._post('/shop/product.takeaway.category/index', data, errorback);
     },
+    takeCatParentList(data, errorback) {
+        return request._post('/shop/product.takeaway.category/parent', data, errorback);
+    },
 
     /*店内特殊分类管理*/
     storeCatSP(data, errorback) {

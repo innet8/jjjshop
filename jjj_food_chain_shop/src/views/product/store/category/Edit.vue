@@ -1,9 +1,4 @@
 <template>
-  <!--
-    	作者：wangxw
-    	时间：2019-10-26
-    	描述：产品分类-修改
-    -->
   <el-dialog title="修改分类" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
     :close-on-press-escape="false">
     <el-form size="small" :model="form" :rules="formRules" ref="form">

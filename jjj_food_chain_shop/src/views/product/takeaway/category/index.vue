@@ -1,9 +1,4 @@
 <template>
-  <!--
-    	作者：wangxw
-    	时间：2019-10-26
-    	描述：产品分类管理
-    -->
   <div class="product">
     <el-tabs v-model="activeName" @tab-change="handleClick">
       <el-tab-pane label="普通分类" name="first">

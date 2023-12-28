@@ -1,16 +1,18 @@
 <template>
-  <!--
-    	作者：wangxw
-    	时间：2019-10-26
-    	描述：产品分类-添加
-    -->
   <el-dialog title="添加分类" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
     :close-on-press-escape="false">
     <el-form size="small" :model="form" :rules="formRules" ref="form">
+      <el-form-item label="父级分类" :label-width="formLabelWidth">
+        <el-select v-model="form.parent_id" label="无">
+          <el-option :value="0" label="无"></el-option>
+          <template v-for="cat in category" :key="cat.category_id">
+            <el-option :value="cat.category_id" :label="cat.name"></el-option>
+          </template>
+        </el-select>
+      </el-form-item>
       <el-form-item label="分类名称" prop="name" :label-width="formLabelWidth">
         <el-input v-model="form.name" autocomplete="off"></el-input>
       </el-form-item>
-
       <el-form-item label="分类图片" prop="image_id" :label-width="formLabelWidth">
         <el-row>
           <el-button type="primary" @click="openUpload">选择图片</el-button>
@@ -45,8 +47,10 @@
     },
     data() {
       return {
+        category: [],
         form: {
-          parent_id: '0',
+          parent_id: 0,
+          category_id: 0,
           name: '',
           sort: 100,
           image_id: ''
@@ -82,8 +86,25 @@
     props: ['open_add', 'addform'],
     created() {
       this.dialogVisible = this.open_add;
+      /*获取父级分类*/
+      this.getParentCategory();
     },
     methods: {
+      /*获取父级分类*/
+      getParentCategory: function() {
+        let self = this;
+        PorductApi.takeCatParentList({}, true)
+            .then(res => {
+              self.loading = false;
+              // console.log(res.data);
+              // Object.assign(self.category, res.data.list);
+              // console.log(self.category)
+              this.category = res.data.list;
+            })
+            .catch(error => {
+              self.loading = false;
+            });
+      },
       /*添加用户*/
       addUser() {
         let self = this;
