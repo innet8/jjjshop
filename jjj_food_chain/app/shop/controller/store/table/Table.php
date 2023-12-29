@@ -40,7 +40,7 @@ class Table extends Controller
         $data['shop_supplier_id'] = $this->store['user']['shop_supplier_id'];
         // 新增记录
         if ($model->add($data)) {
-            return $this->renderSuccess('', '添加成功');
+            return $this->renderSuccess('添加成功');
         }
         return $this->renderError($model->getError() ?: '添加失败');
     }
@@ -53,7 +53,7 @@ class Table extends Controller
         $model = TableModel::detail($table_id);
         //编辑店员的数据
         if ($model->edit($this->postData())) {
-            return $this->renderSuccess('', '更新成功');
+            return $this->renderSuccess('更新成功');
         }
         return $this->renderError($model->getError() ?: '更新失败');
 

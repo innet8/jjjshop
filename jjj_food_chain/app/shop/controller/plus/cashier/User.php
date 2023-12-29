@@ -30,7 +30,7 @@ class User extends Controller
         $model = new UserModel;
         // 新增记录
         if ($model->add($this->postData(), $this->store['user']['shop_supplier_id'])) {
-            return $this->renderSuccess('', '添加成功');
+            return $this->renderSuccess('添加成功');
         }
         return $this->renderError($model->getError() ?: '添加失败');
     }
@@ -45,7 +45,7 @@ class User extends Controller
             return $this->renderSuccess('', compact('model'));
         }
         if ($model->edit($this->postData())) {
-            return $this->renderSuccess('', '更新成功');
+            return $this->renderSuccess('更新成功');
         }
         return $this->renderError($model->getError() ?: '更新失败');
     }

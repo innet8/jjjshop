@@ -46,7 +46,7 @@ class Printing extends Controller
         }
         // 新增记录
         if ($model->add($this->postData(), $this->store['user'])) {
-            return $this->renderSuccess('', '添加成功');
+            return $this->renderSuccess('添加成功');
         }
         return $this->renderError($model->getError() ?: '添加失败');
     }
@@ -71,7 +71,7 @@ class Printing extends Controller
             return $this->renderSuccess('', compact('model', 'printerList', 'printerTagList', 'storeList', 'takeList', 'labelList'));
         }
         if ($model->edit($this->postData())) {
-            return $this->renderSuccess('', '更新成功');
+            return $this->renderSuccess('更新成功');
         }
         return $this->renderError($model->getError() ?: '更新失败');
     }

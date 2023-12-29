@@ -28,7 +28,7 @@ class Record extends Controller
         $model = QueueRecordModel::detail($record_id);
         //编辑店员的数据
         if ($model->edit($this->postData())) {
-            return $this->renderSuccess('', '更新成功');
+            return $this->renderSuccess('更新成功');
         }
         return $this->renderError($model->getError() ?: '更新失败');
     }

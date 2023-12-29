@@ -32,7 +32,7 @@ class Type extends Controller
         $data['shop_supplier_id'] = $this->store['user']['shop_supplier_id'];
         // 新增记录
         if ($model->add($data)) {
-            return $this->renderSuccess('', '添加成功');
+            return $this->renderSuccess('添加成功');
         }
         return $this->renderError($model->getError() ?: '添加失败');
     }
@@ -45,7 +45,7 @@ class Type extends Controller
         $model = TableTypeModel::detail($type_id);
         //编辑
         if ($model->edit($this->postData())) {
-            return $this->renderSuccess('', '更新成功');
+            return $this->renderSuccess('更新成功');
         }
         return $this->renderError($model->getError() ?: '更新失败');
 
