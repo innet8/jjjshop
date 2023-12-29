@@ -5,10 +5,12 @@ import router from "./router";
 import "../static/css/app.css";
 import "../static/css/common.css";
 import I18n from "./lang/index";
+import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import {
 	createPinia
 } from 'pinia'
 const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate)
 import {
 	setupRouter
 } from "@/router";

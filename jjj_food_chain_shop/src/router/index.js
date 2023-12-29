@@ -17,6 +17,14 @@ export const constantRoutes = [{
 			title: '登录'
 		},
 	},
+    {
+		path: '/lockscreen',
+		name: 'lockscreen',
+		meta: {
+			title: '锁屏'
+		},
+		component: () => import('@/views/lockscreen/index.vue'),
+	},
 	{
 		path: '/home',
 		name: 'Home',

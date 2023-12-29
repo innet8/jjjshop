@@ -3,12 +3,12 @@
  * @returns
  */
 export function getStorage(name) {
-  // let data = sessionStorage.getItem(name);
-  // if (data) {
-  //   data = JSON.parse(sessionStorage.getItem(data))
-  //   return data
-  // }
-  return JSON.parse(sessionStorage.getItem(name));
+    // let data = sessionStorage.getItem(name);
+    // if (data) {
+    //   data = JSON.parse(sessionStorage.getItem(data))
+    //   return data
+    // }
+    return JSON.parse(sessionStorage.getItem(name));
 }
 
 /**
@@ -17,12 +17,12 @@ export function getStorage(name) {
  * @returns 
  */
 export function setStorage(data, name) {
-  return sessionStorage.setItem(name, data);
+    return sessionStorage.setItem(name, data);
 }
 /**
  * @description 移除
  * @returns
  */
 export function removeStorage(name) {
-  return sessionStorage.removeItem(name);
+    return sessionStorage.removeItem(name);
 }

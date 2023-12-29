@@ -57,6 +57,8 @@
   import logimg from '@/assets/img/login_logo.png';
   import UserApi from '@/api/user.js';
   import { useUserStore } from '@/store';
+  import { useLockscreenStore } from "@/store/model/lockscreen.js"
+  const useLockscreen = useLockscreenStore();
    const { afterLogin } = useUserStore();
   export default {
 
@@ -194,6 +196,7 @@
               _this.$router.push({
                 path: '/home'
               })
+              useLockscreen.setLock(false);
             })
               .catch(error => {
                 console.log("error",error)
