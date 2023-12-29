@@ -493,7 +493,7 @@ function langTrans(string $val, string $language = 'zh'): string
  */
 function langData($language = 'zh')
 {
-    $langpath = app()->getRootPath().'lang/' . strtolower($language). '/auto.php';
+    $langpath = root_path().'lang/' . strtolower($language). '/auto.php';
     if (file_exists($langpath)) {
         $data = include $langpath;
         if (is_array($data)) {
