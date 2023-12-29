@@ -1,7 +1,7 @@
 <?php
 declare (strict_types = 1);
 
-namespace app\job\command;
+namespace app\common\command;
 
 use think\console\Command;
 use think\console\Input;

@@ -60,7 +60,7 @@ class YouDao
             return is_array($res['translation']) ? $res['translation'][0] : $res['translation'];
         }
         file_put_contents('error.log', $data . "\n", FILE_APPEND);
-        throw new \Exception("翻译失败，详细查看：error.log\n\n");
+        throw new \Exception("Translation failed, see in detail:error.log");
     }
 
     private function call($url, $args = null, $method = "post", $testflag = 0, $timeout = self::CURL_TIMEOUT, $headers = array())
