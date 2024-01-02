@@ -191,7 +191,15 @@ html,body{ height: 100%;}
 .common-header .header-navbar .header-navbar-icon { margin-right: 16px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 12px;}
 .common-header .header-navbar-icon .svg-icon{ width: 20px; height: 20px; color: rgba(153, 162, 186, 1);}
 .common-header .header-navbar-icon .text{color: rgba(153, 162, 186, 1);}
-
+.common-header .header-navbar .header-lang{
+    margin-right: 16px;
+    cursor: pointer;
+}
+.common-header .header-navbar .header-lang,.common-header .header-navbar .header-lang .el-dropdown-link{
+    display: flex;
+    align-items: center;
+    color: rgba(153, 162, 186, 1);
+}
 .right-content-box {
     max-height: calc(100vh - 48px);
     min-height: calc(100vh - 80px);
