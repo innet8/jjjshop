@@ -21,9 +21,9 @@
           <el-table-column prop="label_name" label="标签名称" width="400px"></el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template #default="scope">
-              <el-button @click="editClick(scope.row)" type="text" size="small" v-auth="'/product/expand/label/edit'">编辑
+              <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/product/expand/label/edit'">编辑
               </el-button>
-              <el-button @click="deleteClick(scope.row.label_id)" type="text" size="small"
+              <el-button @click="deleteClick(scope.row.label_id)" type="primary" link size="small"
                 v-auth="'/product/expand/label/delete'">删除</el-button>
             </template>
           </el-table-column>

@@ -61,10 +61,10 @@
           <el-table-column fixed="right" label="操作" width="120">
             <template #default="scope">
               <template v-if="scope.row.apply_status.value == 10">
-                <el-button @click="submitClick(scope.row)" type="text" size="small">审核</el-button>
+                <el-button @click="submitClick(scope.row)" type="primary" link size="small">审核</el-button>
               </template>
               <template v-if="scope.row.apply_status.value == 20">
-                <el-button @click="makeMoney(scope.row)" type="text" size="small">确认打款</el-button>
+                <el-button @click="makeMoney(scope.row)" type="primary" link size="small">确认打款</el-button>
               </template>
             </template>
           </el-table-column>

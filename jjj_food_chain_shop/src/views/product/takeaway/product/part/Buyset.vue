@@ -63,7 +63,7 @@
 
     <el-form-item label="" v-if="form.model.is_alone_grade==1&&form.model.is_enable_grade==1">
       <div class="max-w460">
-        <el-table :data="form.gradeList" border size="mini" style="width: 100%">
+        <el-table :data="form.gradeList" border size="" style="width: 100%">
           <el-table-column prop="name" label="会员等级">
           </el-table-column>
           <el-table-column prop="name" label="折扣">

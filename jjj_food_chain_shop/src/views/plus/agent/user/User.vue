@@ -56,11 +56,11 @@
           <el-table-column fixed="right" label="操作" width="210">
             <template #default="scope">
               <div>
-                <el-button @click="saleClick(scope.row)" type="text" size="small" v-auth="'/plus/agent/order/index'">订单</el-button>
-                <el-button @click="detailedClick(scope.row)" type="text" size="small" v-auth="'/plus/agent/cash/index'">提现</el-button>
-                <el-button @click="openSubUser(scope.row)" type="text" size="small" v-auth="'/plus/agent/user/fans'">下级</el-button>
-                <el-button @click="EditClick(scope.row)" type="text" size="small" v-auth="'/plus/agent/user/edit'">修改</el-button>
-                <el-button @click="delClick(scope.row)" type="text" size="small" v-auth="'/plus/agent/user/delete'">删除</el-button>
+                <el-button @click="saleClick(scope.row)" type="primary" link size="small" v-auth="'/plus/agent/order/index'">订单</el-button>
+                <el-button @click="detailedClick(scope.row)" type="primary" link size="small" v-auth="'/plus/agent/cash/index'">提现</el-button>
+                <el-button @click="openSubUser(scope.row)" type="primary" link size="small" v-auth="'/plus/agent/user/fans'">下级</el-button>
+                <el-button @click="EditClick(scope.row)" type="primary" link size="small" v-auth="'/plus/agent/user/edit'">修改</el-button>
+                <el-button @click="delClick(scope.row)" type="primary" link size="small" v-auth="'/plus/agent/user/delete'">删除</el-button>
               </div>
             </template>
           </el-table-column>

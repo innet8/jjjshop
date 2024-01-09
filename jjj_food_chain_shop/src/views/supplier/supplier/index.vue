@@ -43,17 +43,17 @@
           <el-table-column prop="create_time" label="添加时间" width="150"></el-table-column>
           <el-table-column fixed="right" label="操作" width="150">
             <template #default="scope">
-              <el-button @click="recycle(scope.row,0)" type="text" size="small" v-auth="'/supplier/supplier/recycle'"
+              <el-button @click="recycle(scope.row,0)" type="primary" link size="small" v-auth="'/supplier/supplier/recycle'"
                 v-if="scope.row.is_recycle==1">开启</el-button>
-              <el-button @click="recycle(scope.row,1)" type="text" size="small" v-auth="'/supplier/supplier/recycle'"
+              <el-button @click="recycle(scope.row,1)" type="primary" link size="small" v-auth="'/supplier/supplier/recycle'"
                 v-else>禁止</el-button>
-              <el-button @click="editClick(scope.row)" type="text" size="small"
+              <el-button @click="editClick(scope.row)" type="primary" link size="small"
                 v-auth="'/supplier/supplier/edit'">编辑</el-button>
-              <el-button @click="qrcode(scope.row)" type="text" size="small"
+              <el-button @click="qrcode(scope.row)" type="primary" link size="small"
                 v-auth="'/supplier/supplier/qrcode'">二维码</el-button>
-              <el-button @click="settingClick(scope.row)" type="text" size="small"
+              <el-button @click="settingClick(scope.row)" type="primary" link size="small"
                 v-auth="'/supplier/supplier/setting'">设置</el-button>
-              <el-button v-if="scope.row.is_main==0" @click="deleteClick(scope.row.shop_supplier_id)" type="text"
+              <el-button v-if="scope.row.is_main==0" @click="deleteClick(scope.row.shop_supplier_id)" type="primary" link
                 size="small" v-auth="'/supplier/supplier/delete'">删除</el-button>
             </template>
           </el-table-column>

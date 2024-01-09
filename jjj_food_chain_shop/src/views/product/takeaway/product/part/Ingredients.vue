@@ -49,7 +49,7 @@
               </div>
             </div>
           </div>
-           <el-button size="mini" icon="Delete" circle @click="deleteIngredients(index)"></el-button>
+           <el-button size="" icon="Delete" circle @click="deleteIngredients(index)"></el-button>
         </div>
         <!-- </el-form-item> -->
       </div>

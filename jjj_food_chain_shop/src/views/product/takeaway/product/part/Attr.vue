@@ -23,7 +23,7 @@
           </div>
           <div class="d-c-s">
             <div class="d-c-c">
-              <el-button class='mr16 mb20' size="mini" icon="Delete" circle
+              <el-button class='mr16 mb20' size="" icon="Delete" circle
                 @click="delIndex(index)"></el-button>
               <div style="width: 100px;">
                 <el-form-item label-width="0" :rules="[{ required: true, message: ' ' }]"
@@ -40,9 +40,9 @@
                   <el-autocomplete style="width: 100px;" size="medium" v-model="item.attribute_value[aindex]"
                     :fetch-suggestions="(queryString,cb)=>querySearch2(queryString,cb,index)" placeholder="请选择">
                   </el-autocomplete>
-                  <el-button v-if="aindex == item.attribute_value.length - 1" class="ml10" size="mini"
+                  <el-button v-if="aindex == item.attribute_value.length - 1" class="ml10" size=""
                     icon="Plus" circle @click="addAttIndex(index)"></el-button>
-                  <el-button class='ml10' size="mini" icon="Delete" v-if="aindex>1" circle
+                  <el-button class='ml10' size="" icon="Delete" v-if="aindex>1" circle
                     @click="delAttIndex(index,aindex)"></el-button>
                 </el-form-item>
               </div>

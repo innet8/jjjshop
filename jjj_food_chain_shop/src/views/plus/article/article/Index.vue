@@ -35,8 +35,8 @@
         <el-table-column prop="update_time" label="更新时间" width="140"></el-table-column>
         <el-table-column prop="name" label="操作" width="120">
           <template #default="scope">
-            <el-button @click="editArticle(scope.row)" type="text" size="small">编辑</el-button>
-            <el-button @click="deleteArticle(scope.row)" type="text" size="small">删除</el-button>
+            <el-button @click="editArticle(scope.row)" type="primary" link size="small">编辑</el-button>
+            <el-button @click="deleteArticle(scope.row)" type="primary" link size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -55,10 +55,10 @@
           <el-table-column prop="create_time" label="注册时间" width="140"></el-table-column>
           <el-table-column fixed="right" label="操作" width="160">
             <template #default="scope">
-			  <el-button @click="editClick(scope.row)" type="text" size="small" v-auth="'/user/user/edit'">编辑</el-button>
-              <el-button @click="addClick(scope.row)" type="text" size="small" v-auth="'/user/user/recharge'">充值</el-button>
-              <el-button @click="gradeClick(scope.row)" type="text" size="small" v-auth="'/user/user/grade'">会员等级</el-button>
-              <el-button @click="deleteClick(scope.row)" type="text" size="small" v-auth="'/user/user/delete'">删除</el-button>
+			  <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/user/user/edit'">编辑</el-button>
+              <el-button @click="addClick(scope.row)" type="primary" link size="small" v-auth="'/user/user/recharge'">充值</el-button>
+              <el-button @click="gradeClick(scope.row)" type="primary" link size="small" v-auth="'/user/user/grade'">会员等级</el-button>
+              <el-button @click="deleteClick(scope.row)" type="primary" link size="small" v-auth="'/user/user/delete'">删除</el-button>
             </template>
           </el-table-column>
         </el-table>

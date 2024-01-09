@@ -44,7 +44,7 @@
           <el-table-column fixed="right" label="操作" width="160">
             <template #default="scope" >
               <div v-if="!scope.row.is_top_row">
-              <el-button v-if="scope.row.status==10" @click="editClick(scope.row)" type="text" size="small" v-auth="'/store/order/detail'">编辑
+              <el-button v-if="scope.row.status==10" @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/store/order/detail'">编辑
               </el-button>
               </div>
             </template>

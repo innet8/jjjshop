@@ -48,14 +48,14 @@
           <el-table-column prop="create_time" label="操作时间" width="140"></el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template #default="scope">
-              <el-button @click="detailClick(scope.row)" type="text" size="small" v-auth="'/takeout/deliver/detail'">详情
+              <el-button @click="detailClick(scope.row)" type="primary" link size="small" v-auth="'/takeout/deliver/detail'">详情
               </el-button>
               <el-button @click="cancelClick(scope.row)"
                 v-if="scope.row.deliver_source==20||scope.row.deliver_source==40||scope.row.deliver_source==50&&scope.row.status==10"
-                type="text" size="small" v-auth="'/takeout/deliver/cancel'">取消配送
+                type="primary" link size="small" v-auth="'/takeout/deliver/cancel'">取消配送
               </el-button>
               <el-button @click="verifyClick(scope.row)" v-if="scope.row.deliver_source==10&&scope.row.status==10"
-                type="text" size="small" v-auth="'/takeout/deliver/verify'">确认送达
+                type="primary" link size="small" v-auth="'/takeout/deliver/verify'">确认送达
               </el-button>
             </template>
           </el-table-column>

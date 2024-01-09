@@ -30,8 +30,8 @@
           <el-table-column prop="create_time" label="添加时间"></el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template #default="scope">
-              <el-button @click="editClick(scope.row)" type="text" size="small" v-auth="'/supplier/printing/edit'">编辑</el-button>
-              <el-button @click="deleteClick(scope.row)" type="text" size="small" v-auth="'/supplier/printing/delete'">删除</el-button>
+              <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/supplier/printing/edit'">编辑</el-button>
+              <el-button @click="deleteClick(scope.row)" type="primary" link size="small" v-auth="'/supplier/printing/delete'">删除</el-button>
             </template>
           </el-table-column>
         </el-table>

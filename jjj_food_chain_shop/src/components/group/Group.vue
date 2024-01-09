@@ -38,7 +38,7 @@
 						v-if="islist"></el-table-column>
 					<el-table-column width="80" label="单选" v-if="!islist">
 						<template #default="scope">
-							<el-button size="mini" @click="SingleFunc(scope.row)">选择</el-button>
+							<el-button size="" @click="SingleFunc(scope.row)">选择</el-button>
 						</template>
 					</el-table-column>
 				</el-table>

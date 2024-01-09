@@ -46,8 +46,8 @@
           <el-table-column prop="pay_time_text" label="领取时间"></el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template #default="scope">
-              <el-button @click="putClick(scope.row)" type="text" size="small" v-auth="'/card/card/delay'" v-if="scope.row.expire_time>0">延期</el-button>
-              <el-button @click="cancel(scope.row)" type="text" size="small" v-auth="'/card/card/cancel'" v-if="scope.row.pay_type==30">撤销</el-button>
+              <el-button @click="putClick(scope.row)" type="primary" link size="small" v-auth="'/card/card/delay'" v-if="scope.row.expire_time>0">延期</el-button>
+              <el-button @click="cancel(scope.row)" type="primary" link size="small" v-auth="'/card/card/cancel'" v-if="scope.row.pay_type==30">撤销</el-button>
             </template>
           </el-table-column>
         </el-table>

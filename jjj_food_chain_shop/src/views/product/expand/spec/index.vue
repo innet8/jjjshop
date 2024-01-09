@@ -21,9 +21,9 @@
           <el-table-column prop="spec_name" label="规格名" width="400px"></el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template  #default="scope">
-              <el-button @click="editClick(scope.row)" type="text" size="small" v-auth="'/product/expand/spec/edit'">编辑
+              <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/product/expand/spec/edit'">编辑
               </el-button>
-              <el-button @click="deleteClick(scope.row.spec_id)" type="text" size="small"
+              <el-button @click="deleteClick(scope.row.spec_id)" type="primary" link size="small"
                 v-auth="'/product/expand/spec/delete'">删除</el-button>
             </template>
           </el-table-column>

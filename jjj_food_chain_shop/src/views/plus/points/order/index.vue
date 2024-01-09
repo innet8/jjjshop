@@ -83,15 +83,15 @@
           <el-table-column prop="create_time" label="兑换时间"></el-table-column>
           <el-table-column fixed="right" label="操作" width="150">
             <template #default="scope">
-              <el-button @click="toDetail(scope.row)" type="text" size="small" v-auth="'/plus/points/order/detail'">订单详情
+              <el-button @click="toDetail(scope.row)" type="primary" link size="small" v-auth="'/plus/points/order/detail'">订单详情
               </el-button>
               <el-button
                 v-if="scope.row.delivery_status.value==10&&scope.row.pay_status.value==20&&scope.row.delivery_type.value==10"
-                @click="toDetail(scope.row)" type="text" size="small" v-auth="'/plus/points/order/delivery'">发货
+                @click="toDetail(scope.row)" type="primary" link size="small" v-auth="'/plus/points/order/delivery'">发货
               </el-button>
               <el-button
                 v-if="scope.row.order_status.value==10&&scope.row.pay_status.value==20&&scope.row.delivery_type.value==20"
-                @click="verifyClick(scope.row)" type="text" size="small" v-auth="'/plus/points/order/extract'">核销
+                @click="verifyClick(scope.row)" type="primary" link size="small" v-auth="'/plus/points/order/extract'">核销
               </el-button>
             </template>
           </el-table-column>

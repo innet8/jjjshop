@@ -16,7 +16,7 @@
           <el-input  v-model="form.attribute_value[index]" autocomplete="off"></el-input>
           <el-button type="danger" size="small" @click="deleteattr(index)">删除</el-button>
         </div>
-        <el-button type="text" @click="addvalue">+添加属性名</el-button>
+        <el-button type="primary" link @click="addvalue">+添加属性名</el-button>
       </el-form-item>
     </el-form>
     <template #footer>

@@ -42,10 +42,10 @@
 					<el-table-column fixed="right" label="操作" width="200">
 						<template #default="scope">
 							<div class="table-buttons">
-								<el-button @click="openClick(scope.row)" type="text" size="small">商品</el-button>
-								<el-button @click="delClick(scope.row)" type="text" size="small">删除</el-button>
-								<el-button @click="editClick(scope.row)" type="text" size="small">编辑</el-button>
-								<el-button @click="setTop(scope.row)" type="text"
+								<el-button @click="openClick(scope.row)" type="primary" link size="small">商品</el-button>
+								<el-button @click="delClick(scope.row)" type="primary" link size="small">删除</el-button>
+								<el-button @click="editClick(scope.row)" type="primary" link size="small">编辑</el-button>
+								<el-button @click="setTop(scope.row)" type="primary" link
 									size="small">{{ scope.row.is_top == 0 ? '设为置顶' : '取消置顶' }}</el-button>
 							</div>
 						</template>

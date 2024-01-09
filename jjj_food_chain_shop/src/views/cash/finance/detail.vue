@@ -88,7 +88,7 @@
             <el-table-column prop="state_text" label="订单状态"></el-table-column>
             <el-table-column prop='order_id' fixed="right" label="操作" width="120" >
               <template #default="scope">
-                  <el-button  @click="addClick(scope.row)" type="text" size="small">详情</el-button>
+                  <el-button  @click="addClick(scope.row)" type="primary" link size="small">详情</el-button>
               </template>
             </el-table-column>
           </el-table>

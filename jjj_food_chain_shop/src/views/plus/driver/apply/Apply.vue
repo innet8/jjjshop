@@ -61,12 +61,12 @@
 							<div>
 								<el-button
 									v-if="scope.row.apply_status.value == 10&&((scope.row.cash_open==1&&scope.row.deposit_money>0&&scope.row.is_pay==20)||scope.row.cash_open==0)"
-									@click="editClick(scope.row)" type="text" size="small"
+									@click="editClick(scope.row)" type="primary" link size="small"
 									v-auth="'/plus/driver/apply/edit'">
 									审核
 								</el-button>
 								<el-button v-if="scope.row.apply_status.value == 30" @click="editClick(scope.row)"
-									type="text" size="small">查看</el-button>
+									type="primary" link size="small">查看</el-button>
 							</div>
 						</template>
 					</el-table-column>

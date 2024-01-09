@@ -71,8 +71,8 @@
             <el-table-column fixed="right" label="操作" width="120">
               <template #default="scope">
 
-                <el-button @click="editClick(scope.row)" type="text" size="small">编辑</el-button>
-                <el-button @click="deleteClick(scope.row)" type="text" size="small">删除</el-button>
+                <el-button @click="editClick(scope.row)" type="primary" link size="small">编辑</el-button>
+                <el-button @click="deleteClick(scope.row)" type="primary" link size="small">删除</el-button>
 
 
               </template>

@@ -7,7 +7,7 @@
   <div class="pie-container d-b-s d-c">
     <div class="ww100 d-b-c lh30">
       <span class="f16">成交会员占比</span>
-      <el-select size="mini" v-model="selectDay" @change="changeFunc" placeholder="请选择">
+      <el-select size="" v-model="selectDay" @change="changeFunc" placeholder="请选择">
         <el-option v-for="item in days" :key="item.value" :label="item.label" :value="item.value"></el-option>
       </el-select>
     </div>

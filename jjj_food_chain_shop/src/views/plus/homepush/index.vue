@@ -65,7 +65,7 @@
               </el-table-column>
               <el-table-column label="操作" width="90">
                 <template #default="scope">
-                     <el-button @click="deleteCouponClick(scope.row.$index)" type="text" size="small">删除</el-button>
+                     <el-button @click="deleteCouponClick(scope.row.$index)" type="primary" link size="small">删除</el-button>
                   </template>
               </el-table-column>
             </el-table>

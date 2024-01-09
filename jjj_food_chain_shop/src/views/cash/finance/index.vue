@@ -55,7 +55,7 @@
           <el-table-column prop="create_time" label="添加时间"></el-table-column>
           <el-table-column prop='settled_id' fixed="right" label="操作" width="120" >
             <template #default="scope">
-                <el-button  @click="addClick(scope.row)" type="text" size="small" v-auth="'/cash/finance/detail'">详情</el-button>
+                <el-button  @click="addClick(scope.row)" type="primary" link size="small" v-auth="'/cash/finance/detail'">详情</el-button>
             </template>
           </el-table-column>
         </el-table>

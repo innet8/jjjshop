@@ -39,7 +39,7 @@
       <!--内容-->
       <div class="product-content">
         <div class="table-wrap setlink-product-table">
-          <el-table size="mini" :data="tableData" border style="width: 100%">
+          <el-table size="" :data="tableData" border style="width: 100%">
             <el-table-column prop="product_name" label="产品">
               <template #default="scope">
                 <div class="product-info">
@@ -57,7 +57,7 @@
             </el-table-column>
             <el-table-column label="操作" width="80">
               <template #default="scope">
-                <el-button size="mini" @click="changeFunc(scope.row)">选择</el-button>
+                <el-button size="" @click="changeFunc(scope.row)">选择</el-button>
               </template>
             </el-table-column>
           </el-table>

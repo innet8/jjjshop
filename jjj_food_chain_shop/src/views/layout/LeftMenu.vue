@@ -33,7 +33,7 @@
 			<div class="child-menu right-animation">
 				<ul v-if="active_menu != null">
 					<template v-for="(item, index) in menuList[active_menu]['children']" :key="index">
-						<li :class="active_child == index ? 'routre-link router-link-active' : 'router-link'" @click="choseMenu(3,item, index)" v-if="item.is_menu==1">
+						<li :class="active_child == index ? 'routre-link router-link-active' : 'router-link'" @click="choseMenu(3,item, index)" v-if="item.is_menu==1 && item.path !='/product/takeaway/index'">
 							<span class="name">{{ item.name }}</span>
 						</li>
 					</template>
@@ -137,14 +137,18 @@ export default defineComponent({
         		// this.bus_emit('MenuName', '首页');
 			}else if(type == 2){
 				this.active_menu = index;
-				this.active_child = 0;
+                if(item.path=='/product'){
+                    this.active_child = 1;
+                }else{
+                    this.active_child = 0;
+                }
+		
 				this.$router.push(item.redirect_name);
         		// this.bus_emit('MenuName', item.name);
 				if(item.children){
 					this.$emit('selectMenu', false);
 				}
 			}else if(type == 3){
-				console.log("item",item)
 				let path = item.path;
 				if(item.redirect_name){
 					path = item.redirect_name;

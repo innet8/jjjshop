@@ -58,8 +58,8 @@
           <el-table-column type="selection" :selectable="selectableFunc" width="44" v-if="islist"></el-table-column>
           <el-table-column width="80" label="单选" v-if="!islist">
             <template #default="scope">
-              <el-button size="mini" v-if="scope.row.noChoose" @click="SingleFunc(scope.row)">选择</el-button>
-              <el-button size="mini" v-else disabled>已选</el-button>
+              <el-button size="" v-if="scope.row.noChoose" @click="SingleFunc(scope.row)">选择</el-button>
+              <el-button size="" v-else disabled>已选</el-button>
             </template>
           </el-table-column>
         </el-table>

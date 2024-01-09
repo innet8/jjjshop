@@ -22,9 +22,9 @@
           <el-table-column prop="price" label="价格" width="400px"></el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template #default="scope">
-              <el-button @click="editClick(scope.row)" type="text" size="small" v-auth="'/product/expand/feed/edit'">编辑
+              <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/product/expand/feed/edit'">编辑
               </el-button>
-              <el-button @click="deleteClick(scope.row.feed_id)" type="text" size="small"
+              <el-button @click="deleteClick(scope.row.feed_id)" type="primary" link size="small"
                 v-auth="'/product/expand/feed/delete'">删除</el-button>
             </template>
           </el-table-column>

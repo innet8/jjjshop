@@ -56,14 +56,14 @@
           <el-table-column fixed="right" label="操作" width="160">
             <template #default="scope">
               <div>
-                <el-button @click="saleClick(scope.row)" type="text" size="small" v-auth="'/plus/driver/order/index'">订单
+                <el-button @click="saleClick(scope.row)" type="primary" link size="small" v-auth="'/plus/driver/order/index'">订单
                 </el-button>
-                <el-button @click="detailedClick(scope.row)" type="text" size="small"
+                <el-button @click="detailedClick(scope.row)" type="primary" link size="small"
                   v-auth="'/plus/driver/cash/index'">
                   提现明细</el-button>
-                <el-button @click="EditClick(scope.row)" type="text" size="small" v-auth="'/plus/driver/user/edit'">修改
+                <el-button @click="EditClick(scope.row)" type="primary" link size="small" v-auth="'/plus/driver/user/edit'">修改
                 </el-button>
-                <el-button @click="delClick(scope.row)" type="text" size="small" v-auth="'/plus/driver/user/delete'">删除
+                <el-button @click="delClick(scope.row)" type="primary" link size="small" v-auth="'/plus/driver/user/delete'">删除
                 </el-button>
               </div>
             </template>

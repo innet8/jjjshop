@@ -11,7 +11,7 @@
         <el-tab-pane label="上架中" name="sell"></el-tab-pane>
         <el-tab-pane label="下架中" name="lower">
           <template #label>
-            <span>下架中 <el-tag size="mini">{{product_count.lower}}</el-tag></span>
+            <span>下架中 <el-tag size="">{{product_count.lower}}</el-tag></span>
           </template>
         </el-tab-pane>
       </el-tabs>
@@ -62,10 +62,10 @@
           <el-table-column prop="product_sort" label="排序"></el-table-column>
           <el-table-column fixed="right" label="操作" width="160">
             <template #default="scope">
-              <el-button @click="editClick(scope.row)" type="text" size="small" v-auth="'/product/store/product/edit'">编辑</el-button>
-              <el-button @click="undercarriage(scope.row,20)" type="text" size="small" v-auth="'/product/store/product/state'" v-if="scope.row.product_status.value!=20">下架</el-button>
-              <el-button @click="undercarriage(scope.row,10)" type="text" size="small" v-auth="'/product/store/product/state'" v-else>上架</el-button>
-              <el-button @click="deleteClick(scope.row)" type="text" size="small" v-auth="'/product/store/product/delete'">删除</el-button>
+              <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/product/store/product/edit'">编辑</el-button>
+              <el-button @click="undercarriage(scope.row,20)" type="primary" link size="small" v-auth="'/product/store/product/state'" v-if="scope.row.product_status.value!=20">下架</el-button>
+              <el-button @click="undercarriage(scope.row,10)" type="primary" link size="small" v-auth="'/product/store/product/state'" v-else>上架</el-button>
+              <el-button @click="deleteClick(scope.row)" type="primary" link size="small" v-auth="'/product/store/product/delete'">删除</el-button>
             </template>
           </el-table-column>
         </el-table>

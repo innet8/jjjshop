@@ -18,6 +18,7 @@
     components: {
       categoryindex,
       productindex,
+      
     },
     setup() {
 

@@ -18,12 +18,12 @@
     <!--内容-->
     <div class="article-content">
       <div class="table-wrap">
-        <el-table size="mini" :data="tableData" border style="width: 100%">
+        <el-table size="" :data="tableData" border style="width: 100%">
           <el-table-column prop="article_title" label="文章标题"></el-table-column>
           <el-table-column prop="category.name" label="文章分类" width="80"></el-table-column>
           <el-table-column label="操作" width="80">
             <template #default="scope">
-              <el-button size="mini" @click="changeFunc(scope.row)">选择</el-button>
+              <el-button size="" @click="changeFunc(scope.row)">选择</el-button>
             </template>
           </el-table-column>
         </el-table>

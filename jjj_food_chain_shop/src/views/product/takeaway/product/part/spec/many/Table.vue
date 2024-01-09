@@ -8,7 +8,7 @@
     <el-form-item label="规格明细：" v-if="form.model.sku.length > 0">
       <!--多规格表格-->
       
-        <el-table size="mini" :data="form.model.sku" border style="width: 100%; margin-top: 20px">
+        <el-table size="" :data="form.model.sku" border style="width: 100%; margin-top: 20px">
           <el-table-column label="规格名称">
             <template  #default="scope">
               <el-form-item label="" style="margin-bottom: 0;">

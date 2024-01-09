@@ -50,7 +50,7 @@
           <el-table-column fixed="right" label="操作" width="50">
             <template #default="scope">
               <div>
-                <el-button v-if="scope.row.apply_status.value == 10" @click="editClick(scope.row)" type="text"
+                <el-button v-if="scope.row.apply_status.value == 10" @click="editClick(scope.row)" type="primary" link
                   size="small" v-auth="'/plus/driver/apply/refundStatus'">
                   审核
                 </el-button>

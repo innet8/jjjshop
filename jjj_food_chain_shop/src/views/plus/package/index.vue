@@ -27,20 +27,20 @@
             <el-table-column prop="status.text" label="状态"></el-table-column>
             <el-table-column fixed="right" width="210" label="操作">
               <template #default="scope">
-                <el-button v-auth="'/plus/package/edit'" @click="editClick(scope.row.package_id)" type="text"
+                <el-button v-auth="'/plus/package/edit'" @click="editClick(scope.row.package_id)" type="primary" link
                   size="small">
                   编辑
                 </el-button>
                 <el-button v-if="scope.row.status.value==1" v-auth="'/plus/package/send'"
-                  @click="sendClick(scope.row.package_id)" type="text" size="small"> 发布
+                  @click="sendClick(scope.row.package_id)" type="primary" link size="small"> 发布
                 </el-button>
                 <el-button v-else="" v-auth="'/plus/package/send'" @click="endClick(scope.row.package_id)"
-                  type="text" size="small"> 终止
+                  type="primary" link size="small"> 终止
                 </el-button>
-                <el-button v-auth="'/plus/package/orderlist'" @click="orderClick(scope.row.package_id)" type="text"
+                <el-button v-auth="'/plus/package/orderlist'" @click="orderClick(scope.row.package_id)" type="primary" link
                   size="small"> 购买记录
                 </el-button>
-                <el-button v-auth="'/plus/package/delete'" @click="deleteClick(scope.row.package_id)" type="text"
+                <el-button v-auth="'/plus/package/delete'" @click="deleteClick(scope.row.package_id)" type="primary" link
                   size="small"> 删除
                 </el-button>
               </template>

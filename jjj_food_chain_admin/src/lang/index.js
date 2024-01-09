@@ -2,7 +2,11 @@ import { createI18n } from "vue-i18n"
 import auto_zh from "./auto/zh.json"
 import auto_en from "./auto/en.json"
 import auto_tc from "./auto/tc.json"
-const lang = JSON.parse(localStorage.getItem("Language")).language
+let lang = 'zh'
+if(JSON.parse(localStorage.getItem("Language"))){
+    lang = JSON.parse(localStorage.getItem("Language")).language 
+}
+
 const i18n = createI18n({
     legacy: false,
     locale: lang || "zh",

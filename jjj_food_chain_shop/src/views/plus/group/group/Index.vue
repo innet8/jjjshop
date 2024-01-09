@@ -38,9 +38,9 @@
         <el-table-column prop="update_time" label="更新时间" width="140"></el-table-column>
         <el-table-column prop="name" label="操作" width="120">
           <template #default="scope">
-            <el-button @click="editGroup(scope.row)" v-auth="'/plus/group/group/edit'" type="text"
+            <el-button @click="editGroup(scope.row)" v-auth="'/plus/group/group/edit'" type="primary" link
               size="small">编辑</el-button>
-            <el-button @click="deleteGroup(scope.row)" v-auth="'/plus/group/group/delete'" type="text"
+            <el-button @click="deleteGroup(scope.row)" v-auth="'/plus/group/group/delete'" type="primary" link
               size="small">删除</el-button>
           </template>
         </el-table-column>

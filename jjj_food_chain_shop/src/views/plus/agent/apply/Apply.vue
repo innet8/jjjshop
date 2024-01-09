@@ -45,10 +45,10 @@
           <el-table-column fixed="right" label="操作" width="50">
             <template #default="scope">
               <div>
-                <el-button v-if="scope.row.apply_status.value == 10" @click="editClick(scope.row)" type="text" size="small" v-auth="'/plus/agent/apply/editApplyStatus'">
+                <el-button v-if="scope.row.apply_status.value == 10" @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/plus/agent/apply/editApplyStatus'">
                   审核
                 </el-button>
-                <el-button v-if="scope.row.apply_status.value == 30" @click="editClick(scope.row)" type="text" size="small">查看</el-button>
+                <el-button v-if="scope.row.apply_status.value == 30" @click="editClick(scope.row)" type="primary" link size="small">查看</el-button>
               </div>
             </template>
           </el-table-column>

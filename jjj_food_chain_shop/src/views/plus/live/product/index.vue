@@ -51,9 +51,9 @@
 					<el-table-column prop="create_time" label="创建时间"></el-table-column>
 					<el-table-column fixed="right" label="操作">
 						<template #default="scope">
-							<el-button v-if="scope.row.audit_status!=3" type="text" size="small"
+							<el-button v-if="scope.row.audit_status!=3" type="primary" link size="small"
 								@click="openEdit(scope.row)">编辑</el-button>
-							<el-button type="text" size="small" @click="delClick(scope.row)">删除</el-button>
+							<el-button type="primary" link size="small" @click="delClick(scope.row)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>

@@ -49,11 +49,11 @@
           <el-table-column prop="create_time" label="添加时间"></el-table-column>
           <el-table-column fixed="right" label="操作" width="190">
             <template #default="scope">
-              <el-button @click="qrcode(scope.row)" type="text" size="small" v-auth="'/store/table/table/edit'">
+              <el-button @click="qrcode(scope.row)" type="primary" link size="small" v-auth="'/store/table/table/edit'">
                 二维码</el-button>
-              <el-button @click="editClick(scope.row)" type="text" size="small" v-auth="'/store/table/table/edit'">编辑
+              <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/store/table/table/edit'">编辑
               </el-button>
-              <el-button @click="deleteClick(scope.row)" type="text" size="small" v-auth="'/store/table/table/delete'">
+              <el-button @click="deleteClick(scope.row)" type="primary" link size="small" v-auth="'/store/table/table/delete'">
                 删除</el-button>
             </template>
           </el-table-column>

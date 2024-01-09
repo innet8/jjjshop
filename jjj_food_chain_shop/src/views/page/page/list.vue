@@ -36,9 +36,9 @@
             <el-table-column prop="update_time" label="更新时间"></el-table-column>
             <el-table-column fixed="right" label="操作" width="110">
               <template #default="scope">
-                <el-button v-if="scope.row.is_default==0" @click="setHomeClick(scope.row.page_id)" type="text" size="small" v-auth="'/page/page/setPage'">设为默认</el-button>
-                <el-button @click="editClick(scope.row.page_id)" type="text" size="small" v-auth="'/page/page/editPage'">编辑</el-button>
-                <el-button @click="deleteClick(scope.row.page_id)" type="text" size="small" v-auth="'/page/page/deletePage'">删除
+                <el-button v-if="scope.row.is_default==0" @click="setHomeClick(scope.row.page_id)" type="primary" link size="small" v-auth="'/page/page/setPage'">设为默认</el-button>
+                <el-button @click="editClick(scope.row.page_id)" type="primary" link size="small" v-auth="'/page/page/editPage'">编辑</el-button>
+                <el-button @click="deleteClick(scope.row.page_id)" type="primary" link size="small" v-auth="'/page/page/deletePage'">删除
                 </el-button>
               </template>
             </el-table-column>

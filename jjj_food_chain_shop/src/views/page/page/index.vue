@@ -31,8 +31,8 @@
           <el-table-column prop="update_time" label="更新时间"></el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template #default="scope">
-              <el-button @click="editClick(scope.row.page_id)" type="text" size="small" v-auth="'/page/page/edit'">编辑</el-button>
-              <el-button v-if="scope.row.page_type==20" @click="deleteClick(scope.row.page_id)" type="text" size="small" v-auth="'/page/page/delete'">删除
+              <el-button @click="editClick(scope.row.page_id)" type="primary" link size="small" v-auth="'/page/page/edit'">编辑</el-button>
+              <el-button v-if="scope.row.page_type==20" @click="deleteClick(scope.row.page_id)" type="primary" link size="small" v-auth="'/page/page/delete'">删除
               </el-button>
             </template>
           </el-table-column>

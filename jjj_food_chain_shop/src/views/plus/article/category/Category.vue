@@ -16,8 +16,8 @@
                 <el-table-column prop="create_time" label="添加时间" width="180"></el-table-column>
                 <el-table-column prop="name" label="操作" width="150">
                     <template #default="scope">
-                        <el-button @click="editCategory(scope.row)" type="text" size="small">编辑</el-button>
-                        <el-button @click="deleteCategory(scope.row)" type="text" size="small">删除</el-button>
+                        <el-button @click="editCategory(scope.row)" type="primary" link size="small">编辑</el-button>
+                        <el-button @click="deleteCategory(scope.row)" type="primary" link size="small">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>

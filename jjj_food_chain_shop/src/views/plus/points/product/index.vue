@@ -43,8 +43,8 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template #default="scope">
-              <el-button v-auth="'/plus/points/product/edit'" @click="editClick(scope.row.product_id)" type="text" size="small">编辑</el-button>
-              <el-button v-auth="'/plus/points/product/delete'" @click="deleteClick(scope.row.product_id)" type="text" size="small">删除</el-button>
+              <el-button v-auth="'/plus/points/product/edit'" @click="editClick(scope.row.product_id)" type="primary" link size="small">编辑</el-button>
+              <el-button v-auth="'/plus/points/product/delete'" @click="deleteClick(scope.row.product_id)" type="primary" link size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>

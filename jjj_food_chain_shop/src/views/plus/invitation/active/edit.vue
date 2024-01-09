@@ -52,13 +52,13 @@
           <div>
             <span style="font-weight: 900;">奖项{{reward_index+1}}:</span>
             <span>每邀请</span>
-            <el-input type="number" v-model="item.invitation_num" size="mini" style="width: 100px;"></el-input>
+            <el-input type="number" v-model="item.invitation_num" size="" style="width: 100px;"></el-input>
             <span>人获得礼品</span>
             <el-checkbox v-model="item.is_point" class="pl16">积分</el-checkbox>
-            <el-input type="number" v-model="item.point" size="mini" style="width: 100px;"></el-input>
+            <el-input type="number" v-model="item.point" size="" style="width: 100px;"></el-input>
             <el-checkbox v-model="item.is_coupon" class="pl16">优惠券</el-checkbox>
-            <el-input type="text" v-model="item.coupon_name" size="mini" disabled="true" style="width: 200px;"></el-input>
-            <el-button type="primary" size="mini" @click="addCoupon(reward_index)">选择优惠券</el-button>
+            <el-input type="text" v-model="item.coupon_name" size="" disabled="true" style="width: 200px;"></el-input>
+            <el-button type="primary" size="" @click="addCoupon(reward_index)">选择优惠券</el-button>
             <el-link type="primary" @click="delReward(reward_index)" style="float:right;">删除</el-link>
           </div>
         </div>

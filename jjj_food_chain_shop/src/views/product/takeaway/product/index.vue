@@ -8,7 +8,7 @@
           <template #label>
             <span>
               下架
-              <el-tag size="mini">{{product_count.lower}}</el-tag>
+              <el-tag size="">{{product_count.lower}}</el-tag>
             </span>
           </template>
         </el-tab-pane>

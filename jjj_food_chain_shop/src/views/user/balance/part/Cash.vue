@@ -89,16 +89,16 @@
           <el-table-column fixed="right" label="操作" width="180">
             <template #default="scope">
               <div v-if="scope.row.apply_status.value == 10 || scope.row.apply_status.value == 20">
-                <el-button @click="editClick(scope.row)" type="text" size="small" v-auth="'/user/cash/audit'">审核</el-button>
+                <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/user/cash/audit'">审核</el-button>
                 <template v-if="scope.row.apply_status.value == 20&& scope.row.pay_type.value != 10">
-                  <el-button @click="makeMoney(scope.row)" type="text" size="small" v-auth="'/user/cash/money'">确认打款</el-button>
+                  <el-button @click="makeMoney(scope.row)" type="primary" link size="small" v-auth="'/user/cash/money'">确认打款</el-button>
                 </template>
                 <template v-if="scope.row.apply_status.value == 20 && scope.row.pay_type.value == 10">
-                  <el-button @click="WxPay(scope.row.id)" type="text" size="small" v-auth="'/user/cash/wxpay'">微信付款</el-button>
+                  <el-button @click="WxPay(scope.row.id)" type="primary" link size="small" v-auth="'/user/cash/wxpay'">微信付款</el-button>
                 </template>
               </div>
               <div v-if="scope.row.apply_status.value == 30">
-                <el-button @click="editClick(scope.row)" type="text" size="small">详情</el-button>
+                <el-button @click="editClick(scope.row)" type="primary" link size="small">详情</el-button>
                </div>
             </template>
           </el-table-column>

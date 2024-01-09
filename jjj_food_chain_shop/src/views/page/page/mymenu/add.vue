@@ -32,7 +32,7 @@
       <el-form-item label="链接" prop="link_url">
         <el-row>
           <div class="url-box flex-1">
-            <el-input v-model="form.link_url" type="text" class="max-w460" style="width: 380px;"></el-input>
+            <el-input v-model="form.link_url" type="primary" link class="max-w460" style="width: 380px;"></el-input>
               <span></span>
             <el-button type="primary" @click="changeLink()">选择链接
             </el-button>

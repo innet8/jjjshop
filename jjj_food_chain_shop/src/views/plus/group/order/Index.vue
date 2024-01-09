@@ -41,7 +41,7 @@
             <template #label>
               <span>
                 全部订单
-                <el-tag size="mini">{{order_count.all}}</el-tag>
+                <el-tag size="">{{order_count.all}}</el-tag>
               </span>
             </template>
           </el-tab-pane>
@@ -49,28 +49,28 @@
             <template #label>
               <span>
                 待付款 
-                <el-tag size="mini">{{order_count.payment}}</el-tag>
+                <el-tag size="">{{order_count.payment}}</el-tag>
               </span>
             </template>
           </el-tab-pane>
           <el-tab-pane :label="'待使用'" name="process">
             <template #label>
-              <span>待使用 <el-tag size="mini">{{order_count.process}}</el-tag></span>
+              <span>待使用 <el-tag size="">{{order_count.process}}</el-tag></span>
             </template>
           </el-tab-pane>
           <el-tab-pane :label="'已取消'" name="cancel">
             <template #label>
-              <span>已取消 <el-tag size="mini">{{order_count.cancel}}</el-tag></span>
+              <span>已取消 <el-tag size="">{{order_count.cancel}}</el-tag></span>
             </template>
           </el-tab-pane>
           <el-tab-pane :label="'已退款'" name="refund">
             <template #label>
-              <span>已退款 <el-tag size="mini">{{order_count.refund}}</el-tag></span>
+              <span>已退款 <el-tag size="">{{order_count.refund}}</el-tag></span>
             </template>
           </el-tab-pane>
           <el-tab-pane :label="'已完成'" name="complete">
             <template #label>
-              <span>已完成 <el-tag size="mini">{{order_count.complete}}</el-tag></span>
+              <span>已完成 <el-tag size="">{{order_count.complete}}</el-tag></span>
             </template>
           </el-tab-pane>
         </el-tabs>
@@ -131,7 +131,7 @@
           <el-table-column fixed="right" label="操作" width="160">
             <template #default="scope" >
               <div v-if="!scope.row.is_top_row">
-              <el-button @click="addClick(scope.row)" type="text" size="small" v-auth="'/store/order/detail'">订单详情
+              <el-button @click="addClick(scope.row)" type="primary" link size="small" v-auth="'/store/order/detail'">订单详情
               </el-button>
               </div>
             </template>

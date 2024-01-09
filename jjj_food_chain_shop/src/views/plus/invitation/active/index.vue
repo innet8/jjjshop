@@ -31,18 +31,18 @@
             <el-table-column fixed="right" label="操作" width="200">
               <template #default="scope">
                 <el-button v-auth="'/plus/invitation/active/edit'" @click="editClick(scope.row.invitation_gift_id)"
-                  type="text" size="small">编辑</el-button>
+                  type="primary" link size="small">编辑</el-button>
                 <el-button v-if="scope.row.status.value==1" v-auth="'/plus/invitation/active/send'" @click="sendClick(scope.row.invitation_gift_id)"
-                  type="text" size="small">发布</el-button>
+                  type="primary" link size="small">发布</el-button>
                 <el-button v-else v-auth="'/plus/invitation/active/end'" @click="endClick(scope.row.invitation_gift_id)"
-                  type="text" size="small">终止</el-button>
+                  type="primary" link size="small">终止</el-button>
                 <el-button v-auth="'/plus/invitation/active/partake'" @click="partakeClick(scope.row.invitation_gift_id)"
-                  type="text" size="small">参与记录</el-button>
+                  type="primary" link size="small">参与记录</el-button>
                 <el-button v-auth="'/plus/invitation/active/receive'" @click="receiveClick(scope.row.invitation_gift_id)"
-                  type="text" size="small">礼品记录</el-button>
-                <el-button v-auth="'/plus/invitation/active/qrcode'" @click="qrcodeClick(scope.row)" type="text" size="small">推广二维码</el-button>
+                  type="primary" link size="small">礼品记录</el-button>
+                <el-button v-auth="'/plus/invitation/active/qrcode'" @click="qrcodeClick(scope.row)" type="primary" link size="small">推广二维码</el-button>
                 <el-button v-auth="'/plus/invitation/active/delete'" @click="deleteClick(scope.row.invitation_gift_id)"
-                  type="text" size="small">删除</el-button>
+                  type="primary" link size="small">删除</el-button>
               </template>
             </el-table-column>
           </el-table>

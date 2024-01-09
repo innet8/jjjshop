@@ -81,7 +81,7 @@
         </el-table-column>
         <el-table-column label="操作" prop="address">
           <template #default="scope">
-            <el-button type="text" size="small" @click='delcoupon(scope.row)'> 删除 </el-button>
+            <el-button type="primary" link size="small" @click='delcoupon(scope.row)'> 删除 </el-button>
           </template>
         </el-table-column>
       </el-table>

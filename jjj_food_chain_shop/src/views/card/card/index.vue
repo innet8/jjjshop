@@ -62,11 +62,11 @@
           <el-table-column prop="create_time" label="创建时间"></el-table-column>
           <el-table-column fixed="right" label="操作">
             <template #default="scope">
-              <el-button @click="putClick(scope.row)" type="text" size="small" v-auth="'/card/card/put'"
+              <el-button @click="putClick(scope.row)" type="primary" link size="small" v-auth="'/card/card/put'"
                 v-if="scope.row.type_id!=3">发卡</el-button>
-              <el-button @click="editClick(scope.row)" type="text" size="small" v-auth="'/card/card/edit'">编辑
+              <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/card/card/edit'">编辑
               </el-button>
-              <el-button @click="deleteClick(scope.row)" type="text" size="small" v-auth="'/card/card/delete'">删除
+              <el-button @click="deleteClick(scope.row)" type="primary" link size="small" v-auth="'/card/card/delete'">删除
               </el-button>
             </template>
           </el-table-column>

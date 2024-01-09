@@ -55,7 +55,7 @@ body,
 /*left*/
 .left-menu-wrapper {
   position: fixed;
-  top: 0;
+  top: 64px;
   left: 0;
   bottom: 0;
   width: 100px;
@@ -157,7 +157,7 @@ body,
 
 .child-menu-wrapper {
   position: fixed;
-  top: 0;
+  top: 64px;
   bottom: 0;
   left: 100px;
   width: 100px;
@@ -228,10 +228,10 @@ body,
 }
 
 .common-header {
-  height: 48px;
+  height: 64px;
   border-bottom: 1px solid #eee;
   background: #fff;
-  line-height: 48px;
+  line-height: 64px;
 }
 
 .common-header,
@@ -272,7 +272,15 @@ body,
   cursor: pointer;
   font-size: 12px;
 }
-
+.header-lang{
+    margin-right: 16px;
+    cursor: pointer;
+}
+.header-lang,.header-lang .el-dropdown-link{
+    display: flex;
+    align-items: center;
+    color: rgba(70, 79, 101);
+}
 .header-navbar-icon .svg-icon {
   width: 20px;
   height: 20px;
@@ -308,13 +316,20 @@ body,
 .subject-wrap {
   min-height: calc(100vh - 90px);
   overflow-x: auto;
+  position: relative;
   /* padding: 16px; */
   /* background: #FFFFFF; */
 }
-.subject-wrap>div{
+.subject-wrap>.main-div{
 	padding: 16px;
 	margin: 20px 16px;
 	background-color: #fff;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
 }
 .common-level-rail {
   margin-bottom: 18px;

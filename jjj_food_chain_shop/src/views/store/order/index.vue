@@ -38,27 +38,27 @@
         <el-tabs v-model="activeName" @tab-change="handleClick">
           <el-tab-pane label="全部订单" name="all">
             <template #label>
-              <span>全部订单 <el-tag size="mini">{{order_count.all}}</el-tag></span>
+              <span>全部订单 <el-tag size="">{{order_count.all}}</el-tag></span>
             </template>
           </el-tab-pane>
           <el-tab-pane :label="'未付款'" name="payment">
             <template #label>
-              <span>未付款 <el-tag size="mini">{{order_count.payment}}</el-tag></span>
+              <span>未付款 <el-tag size="">{{order_count.payment}}</el-tag></span>
             </template>
           </el-tab-pane>
           <el-tab-pane :label="'进行中'" name="process">
             <template #label>
-              <span>进行中 <el-tag size="mini">{{order_count.process}}</el-tag></span>
+              <span>进行中 <el-tag size="">{{order_count.process}}</el-tag></span>
             </template>
           </el-tab-pane>
           <el-tab-pane :label="'已取消'" name="cancel">
             <template #label>
-              <span>已取消 <el-tag size="mini">{{order_count.cancel}}</el-tag></span>
+              <span>已取消 <el-tag size="">{{order_count.cancel}}</el-tag></span>
             </template>
           </el-tab-pane>
           <el-tab-pane :label="'已完成'" name="complete">
             <template #label>
-              <span>已完成 <el-tag size="mini">{{order_count.complete}}</el-tag></span>
+              <span>已完成 <el-tag size="">{{order_count.complete}}</el-tag></span>
             </template>
           </el-tab-pane>
         </el-tabs>
@@ -73,7 +73,7 @@
                 <span class="pl16">下单时间：{{ scope.row.create_time }}</span>
                 <!--是否取消申请中-->
                 <span class="pl16" v-if="scope.row.order_status == 21">
-                  <el-tag effect="dark" size="mini">取消申请中</el-tag>
+                  <el-tag effect="dark" size="">取消申请中</el-tag>
                 </span>
               </div>
               <template v-else>
@@ -137,16 +137,16 @@
           <el-table-column fixed="right" label="操作" width="160">
             <template  #default="scope" >
               <div v-if="!scope.row.is_top_row">
-              <el-button @click="addClick(scope.row)" type="text" size="small" v-auth="'/store/order/detail'">订单详情
+              <el-button @click="addClick(scope.row)" type="primary" link size="small" v-auth="'/store/order/detail'">订单详情
               </el-button>
               <el-button
                 v-if="scope.row.order_status.value==10&&scope.row.pay_status.value==20&&scope.row.refund_money==0"
-                @click="refundClick(scope.row)" type="text" size="small" v-auth="'/store/operate/refund'">退款</el-button>
+                @click="refundClick(scope.row)" type="primary" link size="small" v-auth="'/store/operate/refund'">退款</el-button>
               <el-button v-if="scope.row.order_status.value==10&&scope.row.pay_status.value==20"
-                @click="cancelClick(scope.row)" type="text" size="small" v-auth="'/store/operate/orderCancel'">取消
+                @click="cancelClick(scope.row)" type="primary" link size="small" v-auth="'/store/operate/orderCancel'">取消
               </el-button>
               <el-button v-if="scope.row.order_status.value==10&&scope.row.pay_status.value==20"
-                @click="verifyClick(scope.row)" type="text" size="small" v-auth="'/store/operate/extract'">核销
+                @click="verifyClick(scope.row)" type="primary" link size="small" v-auth="'/store/operate/extract'">核销
               </el-button>
               </div>
             </template>

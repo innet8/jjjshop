@@ -53,7 +53,7 @@
           <el-table-column prop="create_time" label="注册时间" width="140"></el-table-column>
           <!-- <el-table-column label="操作" width="80">
             <template #default="scope">
-              <el-button type="primary" size="mini" @click="selectUser(scope.row)">选择</el-button>
+              <el-button type="primary" size="" @click="selectUser(scope.row)">选择</el-button>
             </template>
           </el-table-column> -->
           <el-table-column type="selection" width="45"></el-table-column>

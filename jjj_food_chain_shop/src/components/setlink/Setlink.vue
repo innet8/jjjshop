@@ -82,7 +82,7 @@ export default {
 
 <style>
 .marketing-box .el-tabs__item {
-  font-size: 12px;
+  font-size: 14px;
 }
 .setlink-footer-btn{ width: 160px;}
 .setlink-set-link{ width: 500px;}

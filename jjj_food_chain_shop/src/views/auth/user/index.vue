@@ -54,10 +54,10 @@
           <el-table-column prop="create_time" label="添加时间"></el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template #default="scope">
-              <el-button v-if="scope.row.is_super < 1" @click="editClick(scope.row)" type="text" size="small"
+              <el-button v-if="scope.row.is_super < 1" @click="editClick(scope.row)" type="primary" link size="small"
                 v-auth="'/auth/user/edit'">编辑</el-button>
               <el-button v-if="scope.row.is_super < 1||(scope.row.is_super ==1 && scope.row.user_type ==1)"
-                @click="deleteClick(scope.row)" type="text" size="small" v-auth="'/auth/user/delete'">删除</el-button>
+                @click="deleteClick(scope.row)" type="primary" link size="small" v-auth="'/auth/user/delete'">删除</el-button>
             </template>
           </el-table-column>
         </el-table>

@@ -12,7 +12,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="外卖商品">
-        <el-button type="text" @click="addTakeout">添加外卖商品</el-button>
+        <el-button type="primary" link @click="addTakeout">添加外卖商品</el-button>
         <el-table :data="takeoutData" highlight-current-row ref="singleTable">
           <el-table-column prop="lottery_id" label="序号" type="index">
           </el-table-column>
@@ -42,13 +42,13 @@
           </el-table-column>
           <el-table-column prop="address" label="操作">
             <template #default="scope">
-              <el-button type="text" size="small" @click="delcoupon('takeoutData',scope.$index)"> 删除 </el-button>
+              <el-button type="primary" link size="small" @click="delcoupon('takeoutData',scope.$index)"> 删除 </el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-form-item>
       <el-form-item label="店内商品">
-        <el-button type="text" @click="addStore">添加店内商品</el-button>
+        <el-button type="primary" link @click="addStore">添加店内商品</el-button>
         <el-table :data="storeData" highlight-current-row ref="singleTable">
           <el-table-column prop="lottery_id" label="序号" type="index">
           </el-table-column>
@@ -81,7 +81,7 @@
           </el-table-column>
           <el-table-column prop="address" label="操作">
             <template #default="scope">
-              <el-button type="text" size="small" @click="delcoupon('storeData',scope.$index)"> 删除 </el-button>
+              <el-button type="primary" link size="small" @click="delcoupon('storeData',scope.$index)"> 删除 </el-button>
             </template>
           </el-table-column>
         </el-table>

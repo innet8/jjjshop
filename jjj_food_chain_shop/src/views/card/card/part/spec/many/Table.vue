@@ -16,7 +16,7 @@
         </div>
         <!--多规格表格-->
         <div >
-          <el-table size="mini" :data="form.model.spec_many.spec_list" :span-method="objectSpanMethod" border style="width: 100%; margin-top: 20px">
+          <el-table size="" :data="form.model.spec_many.spec_list" :span-method="objectSpanMethod" border style="width: 100%; margin-top: 20px">
             <el-table-column :label="item.group_name" :key="item.group_name" v-for="(item, index) in form.model.spec_many.spec_attr">
               <template #default="scope">
                 {{ scope.row.rows[index].spec_value }}
