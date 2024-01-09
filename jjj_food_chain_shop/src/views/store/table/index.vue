@@ -52,7 +52,6 @@
            value: '桌位类型',
            path: '/store/table/type/index'
           },
-
         ],
         /*权限筛选后的数据*/
         tabList: [],

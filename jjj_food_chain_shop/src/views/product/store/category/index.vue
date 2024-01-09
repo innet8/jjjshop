@@ -1,7 +1,6 @@
 <template>
   <div class="product">
-    <el-tabs v-model="activeName" @tab-change="handleClick">
-      <el-tab-pane label="普通分类" name="first">
+
         <div class="common-level-rail">
           <el-button size="small" type="primary" @click="addClick" icon="Plus"
             v-auth="'/product/store/category/Add'">添加分类</el-button>
@@ -37,39 +36,7 @@
             </el-table>
           </div>
         </div>
-      </el-tab-pane>
-      <el-tab-pane label="特色分类" name="second">
-        <!--内容-->
-        <div class="product-content">
-          <div class="table-wrap">
-            <el-table size="small" :data="tableData" row-key="category_id" default-expand-all
-              :tree-props="{children: 'child'}" style="width: 100%" v-loading="loading">
-              <el-table-column prop="name" label="分类名称" width="180"></el-table-column>
-              <el-table-column prop="" label="图片" width="180">
-                <template #default="scope">
-                  <img v-if="scope.row.images" v-img-url="scope.row.images.file_path" alt="" width="50" />
-                </template>
-              </el-table-column>
-              <el-table-column prop="sort" label="分类排序"></el-table-column>
-              <el-table-column prop="sort" label="状态">
-                <template #default="scope">
-                  <el-switch v-model="scope.row.status" :active-value="1" :inactive-value="0"
-                    @change="statusSet($event,scope.row.category_id)">
-                  </el-switch>
-                </template>
-              </el-table-column>
-              <el-table-column prop="create_time" label="添加时间"></el-table-column>
-              <el-table-column fixed="right" label="操作" width="100">
-                <template #default="scope">
-                  <el-button @click="editClick(scope.row)" type="primary" link size="small"
-                    v-auth="'/product/store/category/Edit'">编辑</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
-        </div>
-      </el-tab-pane>
-    </el-tabs>
+
     <!--添加产品分类-->
 
 
@@ -131,7 +98,6 @@
       getData() {
         let self = this;
         self.loading = true;
-        if (self.activeName == 'first') {
           PorductApi.storeCatList({}, true)
             .then(data => {
               self.loading = false;
@@ -141,17 +107,7 @@
             .catch(error => {
               self.loading = false;
             });
-        } else {
-          PorductApi.storeCatSP({}, true)
-            .then(data => {
-              self.loading = false;
-              self.tableData = data.data.list;
-              self.categoryModel.catList = self.tableData;
-            })
-            .catch(error => {
-              self.loading = false;
-            });
-        }
+      
 
       },
       /*打开添加*/

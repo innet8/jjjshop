@@ -7,6 +7,8 @@
     <productindex v-if="activeName=='productindex'"></productindex>
     <!--分类管理-->
     <categoryindex v-if="activeName=='categoryindex'" ></categoryindex>
+    <!-- 特色管理 -->
+    <featureindex  v-if="activeName=='featureindex'" ></featureindex>
   </div>
 </template>
 <script>
@@ -14,11 +16,12 @@
   import { useUserStore } from "@/store";
   import categoryindex from './category/index.vue';
   import productindex from './product/index.vue';
+  import featureindex from './feature/index.vue'
   export default defineComponent({
     components: {
       categoryindex,
       productindex,
-      
+      featureindex,
     },
     setup() {
 
@@ -45,7 +48,11 @@
             value: '分类管理',
             path: '/product/store/category/index'
           },
-
+          {
+            key: 'featureindex',
+            value: '特色管理',
+            path: '/product/store/feature/index'
+          },
         ],
         /*权限筛选后的数据*/
         tabList: [],

@@ -8,7 +8,7 @@ const dealWithRoute = async (data, parent = 'Home') => {
 	for (let item of data) {
 		count = count + 1;
 		item.component = modules[`../views${item.path}.vue`];
-		router.addRoute(parent, item)
+        router.addRoute(parent, item)
 		if (item.children && item.children.length > 0) {
 			dealWithRoute(item.children)
 		}

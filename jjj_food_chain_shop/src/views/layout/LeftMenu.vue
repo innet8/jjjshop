@@ -10,7 +10,7 @@
 				</div>
 			</div>
 			<div class="d-c-c">
-				<span class="p-10-0 blue fb tc">{{ userInfo.shopName || '点餐系统连锁总店'}}</span>
+				<span class="fb tc home-title">{{ userInfo.shopName || '点餐系统连锁总店'}}</span>
 			</div>
 			<div class="nav-wrapper mt10">
 				<div class="first-menu-content">
@@ -33,7 +33,7 @@
 			<div class="child-menu right-animation">
 				<ul v-if="active_menu != null">
 					<template v-for="(item, index) in menuList[active_menu]['children']" :key="index">
-						<li :class="active_child == index ? 'routre-link router-link-active' : 'router-link'" @click="choseMenu(3,item, index)" v-if="item.is_menu==1 && item.path !='/product/takeaway/index'">
+						<li :class="active_child == index ? 'routre-link router-link-active' : 'router-link'" @click="choseMenu(3,item, index)" v-if="item.is_menu==1">
 							<span class="name">{{ item.name }}</span>
 						</li>
 					</template>
@@ -137,13 +137,8 @@ export default defineComponent({
         		// this.bus_emit('MenuName', '首页');
 			}else if(type == 2){
 				this.active_menu = index;
-                if(item.path=='/product'){
-                    this.active_child = 1;
-                }else{
-                    this.active_child = 0;
-                }
-		
-				this.$router.push(item.redirect_name);
+                this.active_child = 0;
+                    this.$router.push(item.redirect_name);
         		// this.bus_emit('MenuName', item.name);
 				if(item.children){
 					this.$emit('selectMenu', false);
@@ -172,10 +167,11 @@ export default defineComponent({
 	}
 
 	.menu-item-icon.icon.iconfont {
-		font-size: 20px;
+		font-size: 18px;
 	}
 
 	.menu-item .item-box {
 		display: flex;
+        align-items: center;
 	}
 </style>

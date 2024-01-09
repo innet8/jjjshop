@@ -25,7 +25,7 @@
             </div>
             <!-- <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off" placeholder="密码"></el-input> -->
           </el-form-item>
-          <el-form-item prop="verifycode" style="line-height:0px;">
+          <!-- <el-form-item prop="verifycode" style="line-height:0px;">
             <div class="d-b-c">
               <div class="left-img-input" style="width: auto;">
                 <el-input v-model="ruleForm.verifycode" ref="verifycode" placeholder="验证码" class="l-input"
@@ -35,7 +35,7 @@
                 <sidentify :identifyCode="identifyCode"></sidentify>
               </div>
             </div>
-          </el-form-item>
+          </el-form-item> -->
           <!--登录-->
           <el-form-item>
             <el-button type="primary" style="width:100%;height: 51px;font-size: 18px;"

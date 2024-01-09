@@ -7,14 +7,14 @@
   <div class="product-list">
     <!--搜索表单-->
     <div class="common-seach-wrap">
-      <el-tabs v-model="activeName" @tab-change="handleClick">
+      <!-- <el-tabs v-model="activeName" @tab-change="handleClick">
         <el-tab-pane label="上架中" name="sell"></el-tab-pane>
         <el-tab-pane label="下架中" name="lower">
           <template #label>
             <span>下架中 <el-tag size="">{{product_count.lower}}</el-tag></span>
           </template>
         </el-tab-pane>
-      </el-tabs>
+      </el-tabs> -->
       <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
         <el-form-item label="商品分类">
           <el-select size="small" v-model="searchForm.category_id" placeholder="所有分类">
@@ -27,14 +27,24 @@
             </template>
           </el-select>
         </el-form-item>
+        <el-form-item label="商品状态">
+          <el-select size="small" v-model="activeName" placeholder="商品状态">
+            <el-option label="全部" value="all"></el-option>
+            <el-option label="上架中" value="sell"></el-option>
+            <el-option label="下架中" value="lower"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="商品名称"><el-input size="small" v-model="searchForm.product_name" placeholder="请输入商品名称"></el-input></el-form-item>
         <el-form-item>
           <el-button size="small" type="primary" icon="Search" @click="onSubmit">查询</el-button>
         </el-form-item>
+        <el-form-item >
+            <el-button size="small" type="primary" icon="Plus" v-auth="'/product/store/product/add'" @click="addClick">添加产品</el-button>
+        </el-form-item>
+
       </el-form>
     </div>
     <!--添加产品-->
-    <div class="common-level-rail"><el-button size="small" type="primary" icon="Plus" v-auth="'/product/store/product/add'" @click="addClick">添加产品</el-button></div>
     <!--内容-->
     <div class="product-content">
       <div class="table-wrap">
@@ -93,7 +103,7 @@ export default {
   data() {
     return {
       /*切换菜单*/
-      activeName: 'sell',
+      activeName: '',
       /*切换选中值*/
       activeIndex: '0',
       /*是否正在加载*/

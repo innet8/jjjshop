@@ -5,7 +5,7 @@
         <div class="right-content-box">
             <div class="subject-wrap">
                 <div class="main-div">
-                    <childTabs></childTabs>
+                    <ChildTabs></ChildTabs>
                     <router-view />
                 </div>
             </div>
@@ -14,10 +14,10 @@
 </template>
 
 <script>
-import childTabs from './childTabs.vue';
+import ChildTabs from '@/views/layout/ChildTabs.vue';
 export default {
     components: {
-        childTabs
+        ChildTabs
     },
     data() {
         return {};
