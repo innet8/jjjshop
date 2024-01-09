@@ -2,7 +2,7 @@
 
 namespace app\cashier\model\cashier;
 
-use app\common\model\plus\cashier\User as UserModel;
+use app\common\model\shop\User as UserModel;
 use think\facade\Env;
 
 /**
@@ -15,7 +15,7 @@ class User extends UserModel
      */
     public function checkLogin($user)
     {
-        $where['account'] = $user['user_name'];
+        $where['user_name'] = $user['user_name'];
         $where['password'] = $user['password'];
         $where['is_delete'] = 0;
 
@@ -31,12 +31,12 @@ class User extends UserModel
             $this->error = '登录失败, 当前应用已删除';
             return false;
         }
-        if ($user['status'] == 0) {
+        if ($user['is_status'] == 1) {
             $this->error = '账号被禁用，请联系管理员';
             return false;
         }
         // 保存登录状态
-        $user['token'] = signToken($user['cashier_id'], 'cashier');
+        $user['token'] = signToken($user['shop_user_id'], 'cashier');
         return $user;
     }
 
@@ -76,7 +76,7 @@ class User extends UserModel
      */
     public static function getUser($data)
     {
-        return (new static())->where(['cashier_id' => $data['uid']])->find();
+        return (new static())->where(['shop_user_id' => $data['uid']])->find();
     }
 
 }

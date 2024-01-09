@@ -19,9 +19,9 @@ class Passport extends Controller
         $model = new User();
         if ($userInfo = $model->checkLogin($user)) {
             return $this->renderSuccess('登录成功', [
-                'cashier_id' => $userInfo['cashier_id'],
+                'cashier_id' => $userInfo['shop_user_id'],
                 'user_name' => $userInfo['user_name'],
-                'account' => $userInfo['account'],
+                'account' => $userInfo['user_name'],
                 'mobile' => $userInfo['mobile'],
                 'shop_supplier_id' => $userInfo['shop_supplier_id'],
                 'name' => $userInfo['supplier']['name'],

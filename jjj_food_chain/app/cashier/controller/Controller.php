@@ -81,9 +81,9 @@ class Controller extends JjjController
         }
         $this->cashier = [
             'user' => [
-                'cashier_id' => $user['cashier_id'],
+                'cashier_id' => $user['shop_user_id'],
                 'user_name' => $user['user_name'],
-                'account' => $user['account'],
+                'account' => $user['user_name'],
                 'mobile' => $user['mobile'],
                 'shop_supplier_id' => $user['shop_supplier_id'],
                 'name' => $user['supplier']['name'],
