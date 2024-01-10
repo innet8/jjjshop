@@ -115,6 +115,34 @@ class Order extends OrderModel
             ->where('order_status', '=', 10)
             ->where('eat_type', '=', 10)
             ->find();
+
+        if (!$detail) {
+            $this->error = "订单不存在";
+            return false;
+        }
+
+        if ($detail['pay_status']['value'] == 20) {
+            $this->error = "订单已付款，不允许取消";
+            return false;
+        }
+        if ($detail['order_status']['value'] != 10) {
+            $this->error = "订单状态错误，不允许取消";
+            return false;
+        }
+        return $detail->save(['order_status' => 20]);
+    }
+
+
+    /**
+     * 取消订单
+     */
+    public function cancels()
+    {
+        $detail = $this->find();
+        if (!$detail) {
+            $this->error = "订单不存在";
+            return false;
+        }
         if ($detail['pay_status']['value'] == 20) {
             $this->error = "订单已付款，不允许取消";
             return false;

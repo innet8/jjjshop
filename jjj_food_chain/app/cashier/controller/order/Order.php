@@ -228,12 +228,11 @@ class Order extends Controller
      */
     public function cancel($order_id)
     {
-        $order = OrderModel::detail($order_id);
-        // 打印机设置
-        $printerConfig = SettingModel::getSupplierItem('printer', $order['shop_supplier_id'], $order['app_id']);
-        //发送打印
-        (new OrderPrinterService)->sellerPrint($printerConfig, $order);
-        return $this->renderSuccess('打印成功');
+        $detail = OrderModel::detail($order_id);
+        if ($detail?->cancels()) {
+            return $this->renderSuccess('操作成功');
+        }
+        return $this->renderError($detail?->getError() ?: '操作失败');
     }
     
 }
