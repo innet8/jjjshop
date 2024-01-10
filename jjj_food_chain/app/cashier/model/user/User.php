@@ -22,7 +22,8 @@ class User extends UserModel
             return [];
         }
         // 获取用户列表
-        return $model->where('is_delete', '=', '0')
+        return $model->with(['address', 'addressDefault', 'grade'])
+            ->where('is_delete', '=', '0')
             ->order(['create_time' => 'desc'])
             ->hidden(['open_id', 'union_id'])
             ->select();
