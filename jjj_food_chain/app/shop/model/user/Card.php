@@ -62,67 +62,75 @@ class Card extends CardModel
      */
     public function put($data)
     {
-        $userId = $data['user_ids'];
-        if (empty($userId)) {
+        $userIds = $data['user_ids'];
+        if (empty($userIds)) {
             $this->error = "请选择会员";
             return false;
         }
-        //是否存在会员卡
-        $isExist = (new CardRecord())->checkExistByUserId($userId);
-        if ($isExist) {
-            $this->error = "该会员已存在会员卡，勿重复发放";
-            return false;
+        $userIdsArr = array_unique(explode(',', $userIds));
+        foreach ($userIdsArr as $userId) {
+            //是否存在会员卡
+            $isExist = (new CardRecord())->checkExistByUserId($userId);
+            if ($isExist) {
+                $this->error = "该会员已存在会员卡，勿重复发放";
+                return false;
+            }
+
+            $detail = self::detail($data['card_id']);
+            $this->startTrans();
+            try {
+                //添加会员卡
+                $record = [
+                    'user_id' => $userId,
+                    'card_id' => $data['card_id'],
+                    'expire_time' => $detail['expire'] ? (time() + $detail['expire'] * 86400 * 30) : 0,
+                    'money' => $detail['money'],
+                    'discount' => $detail['is_discount'] ? $detail['discount'] : 0,
+                    'open_points' => $detail['open_points'],
+                    'open_points_num' => $detail['open_points_num'],
+                    'open_coupon' => $detail['open_coupon'],
+                    'open_coupons' => $detail['open_coupons'],
+                    'open_money' => $detail['open_money'],
+                    'open_money_num' => $detail['open_money_num'],
+                    'pay_status' => 20,
+                    'pay_type' => 30,
+                    'pay_time' => time(),
+                    'app_id' => self::$app_id,
+                ];
+                $CardRecordModel = new CardRecordModel;
+                $CardRecordModel->save($record);
+                $user = (new User)::detail($userId);
+                // 会员卡id
+                if ($data['card_id']) {
+                    $user->setCardId($data['card_id']);
+                }
+                //赠送积分
+                if ($detail['open_points'] && $detail['open_points_num']) {
+                    $user->setIncPoints($detail['open_points_num'], '发会员卡获取积分');
+                }
+                //赠送优惠券
+                if ($detail['open_coupon'] && $detail['open_coupons']) {
+                    (new UserCouponModel)->addUserCardCoupon($detail['open_coupons'], $user, $CardRecordModel['order_id']);
+                }
+                //赠送余额
+                if ($detail['open_money'] && $detail['open_money_num']) {
+                    (new User())->where('user_id', '=', $user['user_id'])
+                        ->inc('balance', $detail['open_money_num'])
+                        ->update();
+                    BalanceLogModel::add(BalanceLogSceneEnum::RECHARGE, [
+                        'user_id' => $user['user_id'],
+                        'money' => $detail['open_money_num'],
+                    ], ['order_no' => '后台发放会员卡赠送']);
+                }
+                $detail->save(['receive_num' => $detail['receive_num'] + 1]);
+                $this->commit();
+            } catch (\Exception $e) {
+                $this->error = $e->getMessage();
+                $this->rollback();
+                return false;
+            }
         }
-        $detail = self::detail($data['card_id']);
-        $this->startTrans();
-        try {
-            //添加会员卡
-            $record = [
-                'user_id' => $userId,
-                'card_id' => $data['card_id'],
-                'expire_time' => $detail['expire'] ? (time() + $detail['expire'] * 86400 * 30) : 0,
-                'money' => $detail['money'],
-                'discount' => $detail['is_discount'] ? $detail['discount'] : 0,
-                'open_points' => $detail['open_points'],
-                'open_points_num' => $detail['open_points_num'],
-                'open_coupon' => $detail['open_coupon'],
-                'open_coupons' => $detail['open_coupons'],
-                'open_money' => $detail['open_money'],
-                'open_money_num' => $detail['open_money_num'],
-                'pay_status' => 20,
-                'pay_type' => 30,
-                'pay_time' => time(),
-                'app_id' => self::$app_id,
-            ];
-            $CardRecordModel = new CardRecordModel;
-            $CardRecordModel->save($record);
-            $user = (new User)::detail($userId);
-            //赠送积分
-            if ($detail['open_points'] && $detail['open_points_num']) {
-                $user->setIncPoints($detail['open_points_num'], '发会员卡获取积分');
-            }
-            //赠送优惠券
-            if ($detail['open_coupon'] && $detail['open_coupons']) {
-                (new UserCouponModel)->addUserCardCoupon($detail['open_coupons'], $user, $CardRecordModel['order_id']);
-            }
-            //赠送余额
-            if ($detail['open_money'] && $detail['open_money_num']) {
-                (new User())->where('user_id', '=', $user['user_id'])
-                    ->inc('balance', $detail['open_money_num'])
-                    ->update();
-                BalanceLogModel::add(BalanceLogSceneEnum::RECHARGE, [
-                    'user_id' => $user['user_id'],
-                    'money' => $detail['open_money_num'],
-                ], ['order_no' => '后台发放会员卡赠送']);
-            }
-            $detail->save(['receive_num' => $detail['receive_num'] + 1]);
-            $this->commit();
-            return true;
-        } catch (\Exception $e) {
-            $this->error = $e->getMessage();
-            $this->rollback();
-            return false;
-        }
+        return true;
     }
 
     /**

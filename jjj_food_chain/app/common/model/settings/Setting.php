@@ -2,12 +2,9 @@
 
 namespace app\common\model\settings;
 
-use app\common\enum\order\OrderPayTypeEnum;
 use app\common\enum\settings\SettingEnum;
 use think\facade\Cache;
-use app\common\enum\settings\DeliveryTypeEnum;
 use app\common\model\BaseModel;
-use app\common\enum\settings\OperateTypeEnum;
 
 /**
  * 系统设置模型
