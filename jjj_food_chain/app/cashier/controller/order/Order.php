@@ -23,7 +23,7 @@ class Order extends Controller
      * @Apidoc\Param("eat_type", type="int",require=true, default="10", desc="订单类型 0-全部,10-收银订单，20-桌台订单")
      * @Apidoc\Param("time_type", type="int",require=true, default="1", desc="时间类型 0-全都,1-今天,2-昨天,3-周")
      * @Apidoc\Param("time", type="string",require=true, default="", desc="时间范围 [2024-01-01, 2024-01-11]")
-     * @Apidoc\Param("dataType", type="int",require=true, default="1", desc="订单状态 0-全都,1-进行中,2-已完成,3-已取消")
+     * @Apidoc\Param("dataType", type="int",require=true, default="0", desc="订单状态 0-全都,1-进行中,2-已完成,3-已取消")
      * @Apidoc\Param("search", type="string",require=true, default="", desc="订单号")
      * @Apidoc\Param("order_type", type="string",require=true, default="", desc="用餐方式 0-外卖,1-店内")
      * @Apidoc\Param(ref="pageParam")
@@ -224,7 +224,7 @@ class Order extends Controller
      * @Apidoc\Tag("取消订单")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/cashier/order.order/cancel")
-     * @Apidoc\Param("order_id", type="int",require=true, default="", desc="订单id")
+     * @Apidoc\Param("order_id", type="int",require=true, default=0, desc="订单id")
      */
     public function cancel($order_id)
     {
