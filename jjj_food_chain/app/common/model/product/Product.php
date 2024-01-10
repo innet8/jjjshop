@@ -148,7 +148,6 @@ class Product extends BaseModel
                 ->where('category_id', $params['category_id'])
                 ->whereOr('parent_id', $params['category_id'])
                 ->column('category_id');
-            trace($categoryIds);
             $model = $model->whereIn('category_id', $categoryIds);
         }
         if ($params['special_id'] > 0) {
