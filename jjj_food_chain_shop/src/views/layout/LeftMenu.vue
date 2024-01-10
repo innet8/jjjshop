@@ -138,11 +138,13 @@ export default defineComponent({
 			}else if(type == 2){
 				this.active_menu = index;
                 this.active_child = 0;
-                    this.$router.push(item.redirect_name);
+                this.$router.push(item.redirect_name);
         		// this.bus_emit('MenuName', item.name);
 				if(item.children){
 					this.$emit('selectMenu', false);
-				}
+				}else{
+                    this.$emit('selectMenu', null);
+                }
 			}else if(type == 3){
 				let path = item.path;
 				if(item.redirect_name){
