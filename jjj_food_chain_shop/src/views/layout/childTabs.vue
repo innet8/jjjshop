@@ -16,6 +16,7 @@ const tab_type = ref('')
 const router = useRouter()
 const tabList = ref([])
 
+console.log("ZHUCE");
 bus_on("tabData", (res) => {
     tabList.value = res.list;
     activeValue.value = res.active;

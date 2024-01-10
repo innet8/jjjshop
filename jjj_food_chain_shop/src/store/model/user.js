@@ -26,7 +26,7 @@ export const useUserStore = defineStore('main', {
 			let self = this;
 			if (self.list[name]) {
 				self.list[name].forEach((fn) => {
-					fn(data);
+                    fn(data);
 				});
 			}
 		},

@@ -39,6 +39,7 @@ export function loadDirectives(app) {
 				auth = getStorage(menu);
 				createdAuth(auth, authlist);
 				setSessionStorage('authlist', authlist);
+				console.log("authlistauthlistauthlist")
 				console.log(authlist)
 				auth = authlist;
 			}

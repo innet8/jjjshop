@@ -81,7 +81,7 @@
 
      
     },
-    created() {
+    mounted() {
       this.tabList = this.authFilter();
       if(this.tabList.length>0){
         this.activeName=this.tabList[0].key;
