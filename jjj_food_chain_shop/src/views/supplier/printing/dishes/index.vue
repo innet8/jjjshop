@@ -5,7 +5,7 @@
       描述：设置-打印机管理
   -->
   <div class="user">
-    <div class="common-form">菜品打印列表</div>
+
     <!--添加等级-->
     <div class="common-level-rail"><el-button size="small" type="primary" @click="addClick" v-auth="'/supplier/printing/add'">添加</el-button></div>
 

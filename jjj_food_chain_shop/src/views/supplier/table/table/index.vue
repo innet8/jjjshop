@@ -29,7 +29,7 @@
     </div>
     <!--添加产品分类-->
     <div class="common-level-rail">
-      <el-button size="small" type="primary" @click="addClick" icon="Plus" v-auth="'/store/table/table/add'">
+      <el-button size="small" type="primary" @click="addClick" icon="Plus" v-auth="'/supplier/table/table/add'">
         添加桌位</el-button>
     </div>
     <!--内容-->
@@ -49,11 +49,11 @@
           <el-table-column prop="create_time" label="添加时间"></el-table-column>
           <el-table-column fixed="right" label="操作" width="190">
             <template #default="scope">
-              <el-button @click="qrcode(scope.row)" type="primary" link size="small" v-auth="'/store/table/table/edit'">
+              <el-button @click="qrcode(scope.row)" type="primary" link size="small" v-auth="'/supplier/table/table/edit'">
                 二维码</el-button>
-              <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/store/table/table/edit'">编辑
+              <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/supplier/table/table/edit'">编辑
               </el-button>
-              <el-button @click="deleteClick(scope.row)" type="primary" link size="small" v-auth="'/store/table/table/delete'">
+              <el-button @click="deleteClick(scope.row)" type="primary" link size="small" v-auth="'/supplier/table/table/delete'">
                 删除</el-button>
             </template>
           </el-table-column>

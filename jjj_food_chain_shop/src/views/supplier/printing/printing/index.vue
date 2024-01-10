@@ -8,7 +8,6 @@
     <!--form表单-->
     <el-form size="small" ref="form" :model="form" label-width="200px">
       <!--小票打印设置-->
-      <div class="common-form">小票打印设置</div>
 
       <el-form-item label="是否开启商户小票打印">
         <div>

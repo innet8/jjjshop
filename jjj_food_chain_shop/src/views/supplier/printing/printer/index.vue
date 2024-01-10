@@ -5,7 +5,6 @@
       描述：设置-打印机管理
   -->
   <div class="user">
-    <div class="common-form">小票打印机列表</div>
     <!--添加等级-->
     <div class="common-level-rail">
       <el-button size="small" type="primary" @click="addClick" v-auth="'/setting/printer/add'">添加</el-button>
@@ -111,14 +110,14 @@
       },
       /*打开添加*/
       addClick() {
-        this.$router.push('/setting/printer/add');
+        this.$router.push('/supplier/printing/add');
       },
 
       /*打开编辑*/
       editClick(item) {
         let self = this;
         this.$router.push({
-          path: '/setting/printer/edit',
+          path: '/supplier/printing/edit',
           query: {
             printer_id: item.printer_id
           }
