@@ -1,7 +1,7 @@
 <?php
 return [
     // （选配）文档标题，显示在左上角与首页
-    'title'              => 'Apidoc',
+    'title'              => '点餐系统接口文档',
     // （选配）文档描述，显示在首页
     'desc'               => '手册：https://docs.apidoc.icu/use/#%E4%B9%A6%E5%86%99%E8%A7%84%E8%8C%83',
     // （必须）设置文档的应用/版本
@@ -72,7 +72,7 @@ return [
         // （选配）全局的请求Header
         'header'=>[
             // name=字段名，type=字段类型，require=是否必须，default=默认值，desc=字段描述
-            ['name'=>'Authorization','type'=>'string','require'=>true,'desc'=>'身份令牌Token'],
+            ['name'=>'Token','type'=>'string','require'=>true,'desc'=>'身份令牌Token'],
         ],
         // （选配）全局的请求Query
         'query'=>[
