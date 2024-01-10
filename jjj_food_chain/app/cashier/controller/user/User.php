@@ -11,12 +11,12 @@ use app\cashier\model\user\User as UserModel;
 class User extends Controller
 {
     /**
-     * 会员列表
+     * 会员信息 by mobile
      */
     public function index($mobile)
     {
-        $list = UserModel::getUserList($mobile);
-        return $this->renderSuccess('', compact('list'));
+        $detail = UserModel::detail(['mobile' => $mobile]);
+        return $this->renderSuccess('', $detail);
     }
 
     /**
