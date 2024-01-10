@@ -14,6 +14,7 @@ use app\common\library\helper;
  */
 class Cart extends CartModel
 {
+    protected $table = 'jjjfood_cashier_cart';
     /**
      * 隐藏字段
      * @var array
