@@ -1,6 +1,6 @@
 <?php
 
-namespace app\store\model;
+namespace app\shop\controller\setting;
 
 use think\Cache;
 use app\common\model\settings\Setting as SettingModel;
