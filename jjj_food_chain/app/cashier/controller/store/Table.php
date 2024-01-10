@@ -8,7 +8,7 @@ use app\cashier\model\store\Table as TableModel;
 use app\common\model\supplier\Supplier as SupplierModel;
 
 /**
- * 桌位控制器
+ * 桌台
  */
 class Table extends Controller
 {
@@ -27,11 +27,11 @@ class Table extends Controller
     /**
      * 桌位列表
      */
-    public function table($area_id, $type_id)
+    public function table($area_id = '', $type_id = '')
     {
         // 桌位列表
         $model = new TableModel;
-        $list = $model->getList($area_id, $type_id,$this->cashier['user']);
+        $list = $model->getList($area_id, $type_id, $this->cashier['user']);
         $basic = SupplierModel::detail($this->cashier['user']['shop_supplier_id']);
         return $this->renderSuccess('', compact('list', 'basic'));
     }

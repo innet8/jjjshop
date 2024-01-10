@@ -154,8 +154,9 @@ class Order extends Controller
     }
 
     /**
-     * @Apidoc\Title("桌台订单-退菜")
+     * @Apidoc\Title("桌台订单退菜")
      * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.order/moveProduct")
      * @Apidoc\Param("order_id", type="int", require=true, desc="订单ID")
      * @Apidoc\Param("order_product_id", type="int", require=true, desc="订单产品表ID")
      * @Apidoc\Param("num", type="int", require=true, desc="产品数量")

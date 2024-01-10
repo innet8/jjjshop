@@ -8,7 +8,7 @@ use app\cashier\model\order\Order as OrderModel;
 use hg\apidoc\annotation as Apidoc;
 
 /**
- * 堂食购物车控制器
+ * 桌台点单
  */
 class HallCart extends Controller
 {
@@ -51,6 +51,7 @@ class HallCart extends Controller
     /**
      * @Apidoc\Title("添加商品到收银购物车")
      * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.cart/add")
      * @Apidoc\Param("product_id", type="int", require=true, desc="商品ID")
      * @Apidoc\Param("product_num", type="int", require=true, desc="商品数量")
      * @Apidoc\Param("product_sku_id", type="int", require=true, desc="商品SKU ID")
@@ -79,6 +80,7 @@ class HallCart extends Controller
     /**
      * @Apidoc\Title("修改购物车商品数量")
      * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.cart/sub")
      * @Apidoc\Param("product_num", type="int", require=true, desc="商品数量")
      * @Apidoc\Param("cart_id", type="int", require=true, desc="桌台购物车ID")
      * @Apidoc\Returned("code", type="int", desc="操作代码")
@@ -95,8 +97,9 @@ class HallCart extends Controller
     }
 
     /**
-     * @Apidoc\Title("清台(把桌台变为未开台状态并取消订单)")
+     * @Apidoc\Title("桌台清台")
      * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/cancel")
      * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
      * @Apidoc\Returned("code", type="int", desc="操作代码")
      * @Apidoc\Returned("msg", type="string", desc="操作消息")
