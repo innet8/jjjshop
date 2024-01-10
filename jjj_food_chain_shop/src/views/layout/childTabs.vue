@@ -16,7 +16,6 @@ const tab_type = ref('')
 const router = useRouter()
 const tabList = ref([])
 
-console.log("ZHUCE");
 bus_on("tabData", (res) => {
     tabList.value = res.list;
     activeValue.value = res.active;
@@ -43,15 +42,7 @@ const tabClick = (event) => {
             },
         });
     }
-    /*桌位管理*/
-    if (tab_type.value == "tablemanage") {
-        router.push({
-            path: "/store/table/index",
-            query: {
-                type: e.name,
-            },
-        });
-    }
+
     /*外卖商品*/
     if (tab_type.value == "takeaway") {
         router.push({
@@ -98,6 +89,25 @@ const tabClick = (event) => {
             }
         });
     }
+    /*商品扩展*/
+    if (tab_type.value == "printing") {
+        router.push({
+            path: "/supplier/printing/index",
+            query: {
+                type: e.name
+            }
+        });
+    }
+    /*桌位管理*/
+    if (tab_type.value == "tablemanage") {
+        router.push({
+            path: "/supplier/table/index",
+            query: {
+                type: e.name,
+            },
+        });
+    }
+
     /*分销*/
     if (tab_type.value == "agent") {
         router.push({

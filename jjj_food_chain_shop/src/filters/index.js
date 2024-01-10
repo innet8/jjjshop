@@ -17,9 +17,6 @@ const filters = {
     /*判断有没有权限*/
     isAuth: function (val) {
         let auth = getSessionStorage('authlist');
-        console.log("valvalvalvalvalvalvalvalval");
-        console.log(val);
-        console.log(auth);
         if (!auth) {
             let authlist = {}
             createdAuth(auth, authlist);

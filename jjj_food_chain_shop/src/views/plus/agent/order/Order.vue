@@ -243,7 +243,6 @@
               list.push(item);
             }
             self.tableData = list;
-            console.log(list)
             self.totalDataNumber = data.data.list.total;
           })
           .catch(error => {

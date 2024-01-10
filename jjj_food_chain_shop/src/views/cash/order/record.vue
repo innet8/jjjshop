@@ -198,7 +198,6 @@
 			},
 			getIssettled(val) {
 				this.formInline.is_settled = val;
-				console.log(this.formInline.is_settled)
 			},
 			/*搜索查询*/
 			onSubmit() {

@@ -51,7 +51,6 @@
     watch:{
       'detail':function(n,o){
         if(n!=o){
-          console.log(n)
           this.form = n;
         }
       }

@@ -46,7 +46,6 @@ export default {
   inject: ['dataRank'],
   created() {
  this.listData = this.dataRank.salesMoneyRank;
- console.log(this.listData);
   },
   mounted() {
    

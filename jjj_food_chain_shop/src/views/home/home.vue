@@ -238,7 +238,6 @@
       }
     },
     mounted() {
-      console.log(this.product_data);
       /*获取数据*/
       this.getData();
       this.getBaseInof();
@@ -248,7 +247,6 @@
         /* let res = await store.dispatch('common/getBaseInfo');
         this.user_type = res.user.user_type; */
         this.user_type = userInfo.user_type;
-        console.log(this.user_type)
       },
       /*获取数据*/
       getData() {

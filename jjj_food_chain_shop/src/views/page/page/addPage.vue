@@ -66,10 +66,8 @@ export default {
 		/*获取列表*/
 		getData() {
 			let self = this;
-			console.log(1);
 			PageApi.getHome({}, true)
 				.then(res => {
-					console.log(res);
 					self.defaultData = res.data.defaultData;
 					self.diyData = res.data.jsonData;
 					self.form.curItem = self.diyData.page;

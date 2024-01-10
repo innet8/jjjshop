@@ -73,7 +73,6 @@
           this.refreshCode();
           callback(new Error('请输入验证码'))
         } else if (value !== this.identifyCode) {
-          console.log('验证码:', value);
           this.refreshCode();
           callback(new Error('验证码不正确!'))
         } else {
@@ -199,7 +198,6 @@
               useLockscreen.setLock(false);
             })
               .catch(error => {
-                console.log("error",error)
                 //接口调用方法统一处理
                 _this.logining = false;
               });

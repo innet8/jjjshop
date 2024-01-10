@@ -9,7 +9,6 @@ import { useLockscreenStore } from "@/store/model/lockscreen.js"
 import { useRouter } from "vue-router";
 const useLockscreen = useLockscreenStore();
 const router = useRouter();
-console.log(router);
 const Unlock = ()=>{
     useLockscreen.setLock(false);
     router.push('/home')

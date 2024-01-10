@@ -67,7 +67,6 @@ export default {
 	},
 	props: ['curItem', 'selectedIndex'],
 	created() {
-		console.log(this.curItem);
 	},
 	methods: {}
 };

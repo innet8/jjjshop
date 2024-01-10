@@ -64,7 +64,6 @@
     inject: ['form'],
     methods: {
       changeSpec(e) {
-        console.log(e)
         if (e == 10) {
           this.form.sku = {
             product_price: '',

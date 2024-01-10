@@ -89,7 +89,6 @@ export function handRouterTable(menus) {
 			list = [];
 		})
 	}
-	console.log('menus-----------',menuList)
 	return menuList;
 }
 /**

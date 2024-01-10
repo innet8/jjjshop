@@ -224,8 +224,6 @@ export default {
 		onEditorAddData: function() {
 			let self = this;
 			// 新增data数据
-			console.log(self.defaultData);
-			console.log(self.form.curItem.type);
 			var newDataItem = deepClone(self.defaultData[self.form.curItem.type].data[0]);
 			self.form.curItem.data.push(newDataItem);
 		},

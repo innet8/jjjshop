@@ -115,7 +115,6 @@
 
       /*获取链接并关闭弹窗*/
       closeLinkset(e) {
-        //console.log(e);
         this.is_linkset = false;
         if (e != null) {
           this.form.link_url = e.url;

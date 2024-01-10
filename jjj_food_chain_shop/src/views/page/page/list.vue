@@ -128,7 +128,6 @@
           self.loading = false;
           self.tableData = data.data.list.data;
           self.diyData = data.data.default.page_data;
-          console.log( self.diyData)
           self.totalDataNumber = data.data.list.total;
         }).catch(error => {
 

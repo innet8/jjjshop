@@ -98,7 +98,6 @@ export default {
   watch:{
     'shop_supplier_id':function(n,o){
       if(n!=o){
-        console.log(n)
       }
     }
   },

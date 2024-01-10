@@ -57,7 +57,6 @@ export default {
   inject: ['form'],
   created() {
     this.formData = this.form;
-    console.log(this.formData.model.category)
   },
   methods: {
 

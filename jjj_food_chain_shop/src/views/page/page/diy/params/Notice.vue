@@ -50,7 +50,6 @@
     props: ['curItem', 'selectedIndex', 'opts'],
     created() {
       this.curItem.style.paddingTop = parseInt(this.curItem.style.paddingTop);
-      console.log(this.$props.curItem.params)
     },
     methods: {
 

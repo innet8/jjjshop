@@ -39,18 +39,18 @@
         /*切换数组原始数据*/
         sourceList: [{
             key: 'tables',
-            value: '桌位管理',
-            path: '/store/table/table/index'
+            value: $t('桌位管理'),
+            path: '/supplier/table/table/index'
           },
           {
            key: 'tablearea',
-           value: '区域管理',
-           path: '/store/table/area/index'
+           value: $t('区域管理'),
+           path: '/supplier/table/area/index'
           },
           {
            key: 'tabletype',
-           value: '桌位类型',
-           path: '/store/table/type/index'
+           value: $t('桌位类型'),
+           path: '/supplier/table/type/index'
           },
         ],
         /*权限筛选后的数据*/

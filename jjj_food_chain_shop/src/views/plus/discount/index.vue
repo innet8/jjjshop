@@ -135,7 +135,6 @@
 
             if (data.data.detail) {
               self.storeData = data.data.detail.store_product;
-              console.log(self.storeData)
               self.takeoutData = data.data.detail.takeout_product;
               self.exclude_ids = data.data.productIds;
               if (data.data.detail.time) {

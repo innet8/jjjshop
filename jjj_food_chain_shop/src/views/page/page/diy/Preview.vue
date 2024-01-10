@@ -209,7 +209,6 @@ export default {
 		diyType:String
 	},
 	created() {
-		console.log(this.diyData);
 	},
 	methods: {
 		/*删除diy元素*/

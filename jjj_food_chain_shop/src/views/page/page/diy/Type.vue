@@ -53,7 +53,6 @@ export default {
         tempList[item.group].children.push(item);
       }
       this.typeList=tempList;
-      console.log('type',this.typeList);
     }
   }
 };

@@ -52,7 +52,6 @@
     inject: ['form'],
     methods: {
       addAttr() {
-        console.log(this.form.model.product_attr)
         this.form.model.product_attr.push({
           attribute_name: '',
           attribute_value: []

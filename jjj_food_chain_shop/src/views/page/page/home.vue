@@ -72,7 +72,6 @@ export default {
           self.diyData = res.data.jsonData;
           self.form.curItem=self.diyData.page;
           self.opts = res.data.opts;
-          console.log('product',self.diyData.items.map(item=>item.type));
           self.loading = false;
         })
         .catch(error => {
