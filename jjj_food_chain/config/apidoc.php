@@ -8,14 +8,6 @@ return [
     'apps'           => [
         [
             // （必须）标题
-            'title'=>'Api接口',
-            // （必须）控制器目录地址
-            'path'=>'app\api\controller',
-            // （必须）唯一的key
-            'key'=>'api',
-        ],
-        [
-            // （必须）标题
             'title'=>'Admin接口',
             // （必须）控制器目录地址
             'path'=>'app\admin\controller',
@@ -41,16 +33,16 @@ return [
     ],
 
     // （必须）指定通用注释定义的文件地址
-    'definitions'        => "app\common\controller\Definitions",
+    'definitions'        => "app\Definitions",
     // （必须）自动生成url规则，当接口不添加@Apidoc\Url ("xxx")注解时，使用以下规则自动生成
     'auto_url' => [
         // 字母规则，lcfirst=首字母小写；ucfirst=首字母大写；
         'letter_rule' => "lcfirst",
         // url前缀
-        'prefix'=>"",
+        'prefix'=>"/index.php",
     ],
     // 是否自动注册路由
-    'auto_register_routes'=>false,
+    'auto_register_routes' => false,
     // （必须）缓存配置
     'cache'              => [
         // 是否开启缓存
@@ -116,7 +108,11 @@ return [
     // （选配）数据库配置
     'database'=>[],
     // （选配）Markdown文档
-    'docs'              => [],
+    'docs' => [
+        ['title' => 'HTTP响应编码', 'path' => 'extend/apidocs/HttpStatus'],
+        ['title' => 'ApiDoc配置说明', 'path' => 'extend/apidocs/Config'],
+        ['title' => 'ApiDoc使用说明', 'path' => 'extend/apidocs/Use'],
+    ],
     // （选配）代码生成器配置 注意：是一个二维数组
     'generator' =>[],
     // （选配）代码模板

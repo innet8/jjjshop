@@ -9,21 +9,31 @@ use app\cashier\controller\Controller;
 use app\common\service\order\OrderPrinterService;
 use app\common\model\settings\Setting as SettingModel;
 use hg\apidoc\annotation as Apidoc;
-
 /**
  * 订单
  */
 class Order extends Controller
 {
+    
     /**
-     * 订单列表
+     * @Apidoc\Title("订单列表")
+     * @Apidoc\Tag("订单列表")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.order/index")
+     * @Apidoc\Param("eat_type", type="int",require=true, default="10", desc="订单类型 0-全部,10-收银订单，20-桌台订单")
+     * @Apidoc\Param("time_type", type="int",require=true, default="1", desc="时间类型 0-全都,1-今天,2-昨天,3-周")
+     * @Apidoc\Param("time", type="string",require=true, default="", desc="时间范围 [2024-01-01, 2024-01-11]")
+     * @Apidoc\Param("dataType", type="int",require=true, default="1", desc="订单状态 0-全都,1-进行中,2-已完成,3-已取消")
+     * @Apidoc\Param("search", type="string",require=true, default="", desc="订单号")
+     * @Apidoc\Param("order_type", type="string",require=true, default="", desc="用餐方式 0-外卖,1-店内")
+     * @Apidoc\Param(ref="pageParam")
+     * @Apidoc\Returned("list",type="array",ref="app\cashier\model\order\Order\getList")
      */
     public function index()
     {
-        $model = new OrderModel();
         $data = $this->postData();
         $data['shop_supplier_id'] = $this->cashier['user']['shop_supplier_id'];
-        $list = $model->getList($data);
+        $list = (new OrderModel)->getList($data);
         return $this->renderSuccess('', compact('list'));
     }
 
@@ -208,4 +218,22 @@ class Order extends Controller
         return $this->renderSuccess('打印成功');
 
     }
+
+    /**
+     * @Apidoc\Title("取消订单")
+     * @Apidoc\Tag("取消订单")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.order/cancel")
+     * @Apidoc\Param("order_id", type="int",require=true, default="", desc="订单id")
+     */
+    public function cancel($order_id)
+    {
+        $order = OrderModel::detail($order_id);
+        // 打印机设置
+        $printerConfig = SettingModel::getSupplierItem('printer', $order['shop_supplier_id'], $order['app_id']);
+        //发送打印
+        (new OrderPrinterService)->sellerPrint($printerConfig, $order);
+        return $this->renderSuccess('打印成功');
+    }
+    
 }
