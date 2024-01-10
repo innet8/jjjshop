@@ -69,6 +69,25 @@ const tabClick = (event) => {
             }
         });
     }
+
+    /*会员管理*/
+    if (tab_type.value == "uesrmanage") {
+        router.push({
+            path: "/card/user/index",
+            query: {
+                type: e.name
+            }
+        });
+    }
+    /*会员卡管理*/
+    if (tab_type.value == "cardmanage") {
+        router.push({
+            path: "/card/card/index",
+            query: {
+                type: e.name
+            }
+        });
+    }
     /*商品扩展*/
     if (tab_type.value == "expand") {
         router.push({
@@ -174,7 +193,7 @@ const tabClick = (event) => {
 
 </script>
 <style lang="scss" scoped>
-    .el-tabs__header {
+.el-tabs__header {
     margin-bottom: 16px;
 }
 </style>

@@ -67,7 +67,7 @@
 
 <script>
   import CardApi from '@/api/card.js';
-  import expire from './dialog/expire.vue';
+  import expire from '../dialog/expire.vue';
   import {
     deepClone
   } from '@/utils/base.js';

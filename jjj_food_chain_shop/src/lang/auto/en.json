@@ -1,4 +1,12 @@
 {
-    "店铺名称：": "Store Name:",
-    "商品": "commodity"
+    "商品": "commodity",
+    "会员卡管理": "Membership card management",
+    "领取记录": "Get records",
+    "删除记录": "Delete Record",
+    "退出": "quit",
+    "会员管理": "Member management",
+    "等级管理": "hierarchical management",
+    "积分设置": "Points settings",
+    "积分明细": "Points details",
+    "余额明细": "Balance details"
 }

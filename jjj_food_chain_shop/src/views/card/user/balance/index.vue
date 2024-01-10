@@ -5,14 +5,14 @@
       描述：会员-积分管理
   -->
   <div class="common-seach-wrap">
-    <el-tabs v-model="activeName">
+    <!-- <el-tabs v-model="activeName">
       <el-tab-pane label="余额明细" name="log"></el-tab-pane>
       <el-tab-pane label="充值设置" name="settings"></el-tab-pane>
       <el-tab-pane label="充值套餐" name="plan"></el-tab-pane>
       <el-tab-pane label="充值记录" name="record"></el-tab-pane>
       <el-tab-pane label="提现设置" name="cashsetting"></el-tab-pane>
       <el-tab-pane label="提现记录" name="cash"></el-tab-pane>
-    </el-tabs>
+    </el-tabs> -->
 
     <!--余额明细-->
     <Log v-if="activeName == 'log'"></Log>

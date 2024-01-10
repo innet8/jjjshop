@@ -4,7 +4,7 @@ import {
 import router from "./router";
 import "../static/css/app.css";
 import "../static/css/common.css";
-import I18n from "./lang/index";
+
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import {
 	createPinia
@@ -21,12 +21,14 @@ import {
 } from "@/directive"
 import VueUeditorWrap from 'vue-ueditor-wrap'
 import filters from '@/filters/index.js' 
+import I18n from "./lang/index";
 const app = createApp(App);
 /** 加载自定义指令 */
 loadDirectives(app)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 	app.component(key, component)
 }
+window.$t = I18n.global.t
 app.use(VueUeditorWrap)
 app.use(I18n)
 app.use(pinia)
