@@ -40,6 +40,14 @@ class User extends BaseModel
     }
 
     /**
+     * 关联会员卡表
+     */
+    public function card()
+    {
+        return $this->hasOne('app\\common\\model\\user\\Card', 'card_id', 'card_id');
+    }
+
+    /**
      * 关联收货地址表
      */
     public function address()
@@ -67,7 +75,7 @@ class User extends BaseModel
         } else {
             $filter['user_id'] = (int)$where;
         }
-        return $model->where($filter)->with(['address', 'addressDefault', 'grade'])->find();
+        return $model->where($filter)->with(['address', 'addressDefault', 'grade', 'card'])->find();
     }
 
     /**
@@ -78,7 +86,7 @@ class User extends BaseModel
         $model = new static;
         $filter = ['is_delete' => 0];
         $filter = array_merge($filter, ['union_id' => $unionid]);
-        return $model->where($filter)->with(['address', 'addressDefault', 'grade'])->find();
+        return $model->where($filter)->with(['address', 'addressDefault', 'grade', 'card'])->find();
     }
 
     /**
@@ -164,5 +172,13 @@ class User extends BaseModel
     {
         $this->where('user_id', '=', $user_id)->inc('total_invite')->update();
         event('UserGrade', $user_id);
+    }
+
+    /**
+     * 更新会员卡id
+     */
+    public function setCardId($cardId)
+    {
+        return $this->save(['card_id' => $cardId]);
     }
 }
