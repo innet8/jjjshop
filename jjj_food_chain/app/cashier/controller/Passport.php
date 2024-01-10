@@ -3,14 +3,19 @@
 namespace app\cashier\controller;
 
 use app\cashier\model\cashier\User;
-
+use hg\apidoc\annotation as Apidoc;
 /**
- * 商户认证
+ * 收银机-收银员相关
  */
 class Passport extends Controller
 {
     /**
-     * 商户后台登录
+     * @Apidoc\Title("登录")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/passport/login")
+     * @Apidoc\Param("user_name", type="string", require=true, default="001", desc="用户名")
+     * @Apidoc\Param("password", type="string", require=true, default="123456", desc="密码")
+     * @Apidoc\Returned()
      */
     public function login()
     {
@@ -33,16 +38,23 @@ class Passport extends Controller
     }
 
     /**
-     * 退出登录
+     * @Apidoc\Title("退出登录")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/passport/logout")
+     * @Apidoc\Returned()
      */
     public function logout()
     {
         return $this->renderSuccess('退出成功');
     }
 
-    /*
-   * 修改密码
-   */
+    /**
+     * @Apidoc\Title("修改密码")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/passport/editPass")
+     * @Apidoc\Param("password", type="string", require=true, default="123456", desc="密码")
+     * @Apidoc\Returned()
+     */
     public function editPass()
     {
         $model = new User();

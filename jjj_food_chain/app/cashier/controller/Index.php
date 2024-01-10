@@ -3,14 +3,18 @@
 namespace app\cashier\controller;
 
 use app\common\model\settings\Setting as SettingModel;
+use hg\apidoc\annotation as Apidoc;
 
 /**
- * 后台首页控制器
+ * 收银机-首页
  */
 class Index extends Controller
 {
     /**
-     * 后台首页
+     * @Apidoc\Title("首页")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/index/index")
+     * @Apidoc\Returned()
      */
     public function index()
     {
@@ -19,7 +23,10 @@ class Index extends Controller
     }
 
     /**
-     * 登录数据
+     * @Apidoc\Title("登录数据")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/index/base")
+     * @Apidoc\Returned()
      */
     public function base()
     {
