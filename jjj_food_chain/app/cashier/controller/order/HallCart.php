@@ -5,9 +5,10 @@ namespace app\cashier\controller\order;
 use app\cashier\controller\Controller;
 use app\cashier\model\order\Cart as CartModel;
 use app\cashier\model\order\Order as OrderModel;
+use hg\apidoc\annotation as Apidoc;
 
 /**
- * 堂食购物车控制器
+ * 桌台点单
  */
 class HallCart extends Controller
 {
@@ -48,7 +49,22 @@ class HallCart extends Controller
     }
 
     /**
-     * 加入购物车
+     * @Apidoc\Title("添加商品到收银购物车")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.cart/add")
+     * @Apidoc\Param("product_id", type="int", require=true, desc="商品ID")
+     * @Apidoc\Param("product_num", type="int", require=true, desc="商品数量")
+     * @Apidoc\Param("product_sku_id", type="int", require=true, desc="商品SKU ID")
+     * @Apidoc\Param("attr", type="int", require=false, desc="商品属性，如果有必填")
+     * @Apidoc\Param("feed", type="string", require=false, desc="加料")
+     * @Apidoc\Param("describe", type="string", require=false, desc="描述，拼接商品的规格，属性加料。如：小份;蒜蓉;番茄,茄子;")
+     * @Apidoc\Param("price", type="float", require=true, desc="实收商品价格")
+     * @Apidoc\Param("product_price", type="float", require=true, desc="商品价格")
+     * @Apidoc\Param("bag_price", type="float", require=true, desc="打包费")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+     * @Apidoc\Returned("code", type="int", desc="返回代码")
+     * @Apidoc\Returned("msg", type="string", desc="返回消息")
+     * @Apidoc\Returned("data", type="array", desc="返回数据")
      */
     public function add()
     {
@@ -62,8 +78,14 @@ class HallCart extends Controller
     }
 
     /**
-     * 加减购物商品数量
-     * @param $cart_id
+     * @Apidoc\Title("修改购物车商品数量")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.cart/sub")
+     * @Apidoc\Param("product_num", type="int", require=true, desc="商品数量")
+     * @Apidoc\Param("cart_id", type="int", require=true, desc="桌台购物车ID")
+     * @Apidoc\Returned("code", type="int", desc="操作代码")
+     * @Apidoc\Returned("msg", type="string", desc="操作消息")
+     * @Apidoc\Returned("data", type="array", desc="返回数据")
      */
     public function sub($cart_id)
     {
@@ -72,11 +94,16 @@ class HallCart extends Controller
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model ? $model->getError() : '操作失败');
-
     }
 
     /**
-     * 取消订单
+     * @Apidoc\Title("桌台清台")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/cancel")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+     * @Apidoc\Returned("code", type="int", desc="操作代码")
+     * @Apidoc\Returned("msg", type="string", desc="操作消息")
+     * @Apidoc\Returned("data", type="array", desc="返回数据")
      */
     public function cancel($table_id)
     {

@@ -20,8 +20,12 @@ class Table extends TableModel
         $model = $this;
         // 查询列表数据
         $list = $model->with(['supplier'])
-            ->where('area_id', '=', $area_id)
-            ->where('type_id', '=', $type_id)
+            ->when($area_id, function ($query) use ($area_id) {
+                return $query->where('area_id', '=', $area_id);
+            })
+            ->when($type_id, function ($query) use ($type_id) {
+                return $query->where('type_id', '=', $type_id);
+            })
             ->order(['sort' => 'asc', 'create_time' => 'desc'])
             ->select();
         foreach ($list as &$item) {

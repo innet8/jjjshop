@@ -11,7 +11,6 @@ use app\common\service\product\factory\ProductFactory;
 use app\common\model\settings\Setting as SettingModel;
 use app\common\service\order\OrderCompleteService;
 use app\common\library\helper;
-use app\common\model\order\OrderProduct as OrderProductModel;
 use app\common\service\order\OrderRefundService;
 
 /**
@@ -42,10 +41,15 @@ class Order extends OrderModel
         if (isset($params['search']) && $params['search']) {
             $model = $model->where('order_no', 'like', '%' . $params['search'] . '%');
         }
+        if (isset($params['order_type']) && $params['order_type']) {
+            $model = $model->where('order_type', '=', $params['eat_type']);
+        }
+        
+
         $startTime = 0;
         $endTime = 0;
         //查询时间
-        switch ($params['time_type']) {
+        switch ($params['time_type'] ?? 1) {
             case '1'://今天
                 $startTime = strtotime(date('Y-m-d'));
                 $endTime = $startTime + 86399;
@@ -67,7 +71,7 @@ class Order extends OrderModel
             $model = $model->where('create_time', 'between', [$startTime, $endTime]);
         }
 
-        switch ($params['dataType']) {
+        switch ($params['dataType'] ?? 1) {
             case '1'://进行中
                 $model = $model->where('order_status', '=', 10);
                 break;
@@ -326,7 +330,7 @@ class Order extends OrderModel
                 'total_price' => $this['total_price'] - $total_pay_price
             ]);
             $isPay = $this['pay_status']['value'] == 20 ? 1 : 0;
-            $orderProduct['total_num'] = $num;
+//            $orderProduct['total_num'] = $num;
             // 退回商品库存
             ProductFactory::getFactory($this['order_source'])->backProductStock([$orderProduct], $isPay);
             if ($orderProduct['total_num'] == $num) {

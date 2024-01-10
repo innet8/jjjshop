@@ -1,19 +1,11 @@
 <?php
 return [
     // （选配）文档标题，显示在左上角与首页
-    'title'              => 'Apidoc',
+    'title'              => '点餐系统接口文档',
     // （选配）文档描述，显示在首页
     'desc'               => '手册：https://docs.apidoc.icu/use/#%E4%B9%A6%E5%86%99%E8%A7%84%E8%8C%83',
     // （必须）设置文档的应用/版本
     'apps'           => [
-        [
-            // （必须）标题
-            'title'=>'Api接口',
-            // （必须）控制器目录地址
-            'path'=>'app\api\controller',
-            // （必须）唯一的key
-            'key'=>'api',
-        ],
         [
             // （必须）标题
             'title'=>'Admin接口',
@@ -41,16 +33,16 @@ return [
     ],
 
     // （必须）指定通用注释定义的文件地址
-    'definitions'        => "app\common\controller\Definitions",
+    'definitions'        => "app\Definitions",
     // （必须）自动生成url规则，当接口不添加@Apidoc\Url ("xxx")注解时，使用以下规则自动生成
     'auto_url' => [
         // 字母规则，lcfirst=首字母小写；ucfirst=首字母大写；
         'letter_rule' => "lcfirst",
         // url前缀
-        'prefix'=>"",
+        'prefix'=>"/index.php",
     ],
     // 是否自动注册路由
-    'auto_register_routes'=>false,
+    'auto_register_routes' => false,
     // （必须）缓存配置
     'cache'              => [
         // 是否开启缓存
@@ -72,7 +64,8 @@ return [
         // （选配）全局的请求Header
         'header'=>[
             // name=字段名，type=字段类型，require=是否必须，default=默认值，desc=字段描述
-            ['name'=>'Authorization','type'=>'string','require'=>true,'desc'=>'身份令牌Token'],
+            ['name'=>'Token','type'=>'string','require'=>true,'desc'=>'身份令牌Token'],
+            ['name'=>'Appid','type'=>'string','require'=>true,'default'=>'10001','desc'=>'应用Appid'],
         ],
         // （选配）全局的请求Query
         'query'=>[
@@ -115,7 +108,11 @@ return [
     // （选配）数据库配置
     'database'=>[],
     // （选配）Markdown文档
-    'docs'              => [],
+    'docs' => [
+        ['title' => 'HTTP响应编码', 'path' => 'extend/apidocs/HttpStatus'],
+        ['title' => 'ApiDoc配置说明', 'path' => 'extend/apidocs/Config'],
+        ['title' => 'ApiDoc使用说明', 'path' => 'extend/apidocs/Use'],
+    ],
     // （选配）代码生成器配置 注意：是一个二维数组
     'generator' =>[],
     // （选配）代码模板

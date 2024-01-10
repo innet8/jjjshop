@@ -61,8 +61,8 @@ class Cart extends CartModel
             ->where('shop_supplier_id', '=', $user['shop_supplier_id'])
             ->where('cashier_id', '=', $user['cashier_id'])
             ->update(['discount_money' => 0]);
-        $this->where('cart_id', '=', $cart_id)->update(['price' => $price]);
-        return true;
+//        $this->where('cart_id', '=', $cart_id)->update(['price' => $price]);
+        return $this->where('cart_id', '=', $cart_id)->update(['price' => $price]);;
     }
 
     /**
@@ -344,26 +344,36 @@ class Cart extends CartModel
             $this->error = '商品已下架';
             return false;
         }
-        if ($param['type'] == 'down') {
-            if ($this['product_num'] <= 1) {
-                return $this->delete();
-            }
-            return $this->where('cart_id', '=', $this['cart_id'])->dec('product_num', 1)->update();
-        } elseif ($param['type'] == 'up') {
-            $stockStatus = $this->productStockState($this['product_id'], $this['product_sku_id']);
-            if (!$stockStatus) {
-                $this->error = '商品库存不足';
-                return false;
-            }
-            return $this->where('cart_id', '=', $this['cart_id'])->inc('product_num', 1)->update();
-        } elseif ($param['type'] == 'mid') {
-            $stockStatus = $this->getStockState($this['product_id'], $this['product_sku_id'], $param['product_num']);
-            if (!$stockStatus) {
-                $this->error = '商品库存不足';
-                return false;
-            }
-            return $this->save(['product_num' => $param['product_num']]);
+//        if ($param['type'] == 'down') {
+//            if ($this['product_num'] <= 1) {
+//                return $this->delete();
+//            }
+//            return $this->where('cart_id', '=', $this['cart_id'])->dec('product_num', 1)->update();
+//        } elseif ($param['type'] == 'up') {
+//            $stockStatus = $this->productStockState($this['product_id'], $this['product_sku_id']);
+//            if (!$stockStatus) {
+//                $this->error = '商品库存不足';
+//                return false;
+//            }
+//            return $this->where('cart_id', '=', $this['cart_id'])->inc('product_num', 1)->update();
+//        } elseif ($param['type'] == 'mid') {
+//            $stockStatus = $this->getStockState($this['product_id'], $this['product_sku_id'], $param['product_num']);
+//            if (!$stockStatus) {
+//                $this->error = '商品库存不足';
+//                return false;
+//            }
+//            return $this->save(['product_num' => $param['product_num']]);
+//        }
+
+        $stockStatus = $this->getStockState($this['product_id'], $this['product_sku_id'], $param['product_num']);
+        if (!$stockStatus) {
+            $this->error = '商品库存不足';
+            return false;
         }
+        if ($param['product_num'] <= 0) {
+            return $this->delete();
+        }
+        return $this->save(['product_num' => $param['product_num']]);
     }
 
     /**
@@ -457,7 +467,7 @@ class Cart extends CartModel
             ->count();
     }
 
-    //判断商品是否下架
+    //判断商品库存
     public function getStockState($product_id, $product_sku_id, $product_num)
     {
         return (new ProductSkuModel)->where('product_id', '=', $product_id)

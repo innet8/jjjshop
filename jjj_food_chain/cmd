@@ -73,6 +73,9 @@ if [ $# -gt 0 ]; then
     elif [[ "$1" == "think" ]]; then
         shift 1
         e="php think $@" && run_exec app "$e"
+    elif [[ "$1" == "composer" ]]; then
+        shift 1
+        e="composer $@" && run_exec app "$e"
     else
         docker-compose "$@"
     fi

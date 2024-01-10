@@ -819,4 +819,35 @@ class Order extends BaseModel
             return false;
         }
     }
+
+    /**
+     * 取消订单
+     * @param $extractClerkId
+     * @return bool|mixed
+     */
+    public function cancelOrder()
+    {
+        if ($this['pay_status']['value'] != 20 || in_array($this['order_status']['value'], [20, 30])) {
+            $this->error = '该订单不满足核销条件';
+            return false;
+        }
+        return $this->transaction(function () {
+            $deliver = (new OrderDeliver())::detail(['order_id' => $this['order_id'], 'status' => 10]);
+            if ($deliver) {
+                $deliver->updateDeliver();
+            }
+            // 更新订单状态：已发货、已收货
+            $status = $this->save([
+                'delivery_status' => 20,
+                'delivery_time' => time(),
+                'receipt_status' => 20,
+                'receipt_time' => time(),
+                'order_status' => 30
+            ]);
+            // 执行订单完成后的操作
+            $OrderCompleteService = new OrderCompleteService(OrderTypeEnum::MASTER);
+            $OrderCompleteService->complete([$this], static::$app_id);
+            return $status;
+        });
+    }
 }
