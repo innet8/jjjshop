@@ -337,6 +337,16 @@ body,
     bottom: 0;
     overflow-y: auto;
 }
+.subject-wrap>.home-div{
+	padding: 16px;
+	margin: 20px 16px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+}
 .common-level-rail {
   margin-bottom: 18px;
 }

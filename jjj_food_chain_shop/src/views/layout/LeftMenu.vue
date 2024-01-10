@@ -125,7 +125,11 @@ export default defineComponent({
 			bus_emit
 		};
 	},
-	mounted(){},
+	mounted(){
+        if(this.route.path == '/home'){
+            this.$emit('selectMenu', null);
+        }
+    },
 	methods: {
 		/*点击菜单跳转*/
 		choseMenu(type,item,index) {

@@ -6,6 +6,7 @@ import "../static/css/app.css";
 import "../static/css/common.css";
 
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
+import 'virtual:svg-icons-register'
 import {
 	createPinia
 } from 'pinia'

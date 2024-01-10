@@ -1,350 +1,346 @@
 <template>
-  <div class="home" v-loading="loading">
-    <div class="operation-wrap" style="background-color: #FFFFFF;" v-if="user_type==0">
-      <el-row>
-        <el-col :span="6" class="d-c-c">
-          <div class="grid-content blue">
-            <div class="info">
-              <h3>{{top_data.supplier_total}}</h3>
-              <p>门店总量</p>
-            </div>
-          </div>
-        </el-col>
-        <el-col :span="6" class="d-c-c">
-          <div class="grid-content yellow">
-            <div class="info">
-              <h3>{{top_data.user_total}}</h3>
-              <p>用户总量</p>
-            </div>
-          </div>
-        </el-col>
-        <el-col :span="6" class="d-c-c">
-          <div class="grid-content  purple">
-            <div class="info">
-              <h3>{{top_data.total_money}}</h3>
-              <p>营业总量</p>
-            </div>
-          </div>
-        </el-col>
-        <el-col :span="6" class="d-c-c">
-          <div class="grid-content orderred">
-            <div class="info ">
-              <h3>{{top_data.order_total}}</h3>
-              <p>订单总量</p>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-    </div>
-    <div class="operation-wrap" style="background-color: #FFFFFF;" v-if="user_type==1">
-      <el-row>
-        <el-col :span="6" class="d-c-c">
-          <div class="grid-content blue">
-            <div class="info">
-              <h3>{{top_data.order_total}}</h3>
-              <p>订单总量</p>
-            </div>
-          </div>
-        </el-col>
-        <el-col :span="6" class="d-c-c">
-          <div class="grid-content purple">
-            <div class="info">
-              <h3>{{top_data.product_total}}</h3>
-              <p>商品总量</p>
-            </div>
-          </div>
-        </el-col>
-        <el-col :span="6" class="d-c-c">
-          <div class="grid-content yellow ">
-            <div class="info">
-              <h3 style="font-size: 32px;">{{Math.floor(top_data.total_money)}}</h3>
-              <p>销售总额(元)</p>
-            </div>
-          </div>
-        </el-col>
-        <el-col :span="6" class="d-c-c">
-          <div class="grid-content orderred">
-            <div class="info">
-              <h3>{{top_data.income_money}}</h3>
-              <p>预计收入</p>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-    </div>
-    <div class="home-index">
-      <!--main-index-->
-      <div class="flex-1">
-        <div class="main-index">
-          <div class="common-form mt16" style="font-size: 18px;">
-            今日概况
-          </div>
-          <el-row class="border-b-l" v-if="user_type==0">
-            <el-col :span="6">
-              <div class="grid-content">
-                <div class="info t-c">
-                  <p class="des">销售额(元)</p>
-                  <h3>{{today_data.order_total_price.tday}}</h3>
-                  <p class="yesterday">昨日：{{today_data.order_total_price.ytd}}</p>
+    <div class="home" v-loading="loading">
+        <div class="operation-wrap" style="background-color: #FFFFFF;">
+            <h3 class="operation-title mb16">{{ $t('数据总览') }}</h3>
+            <div class="operation-data">
+                <div class="data-box">
+                    <div class="data-box-title">
+                        <h3>{{ $t('营业总额（元）') }}</h3>
+                        <SvgIcon class="data-box-icon" name="icon1"></SvgIcon>
+                    </div>
+                    <h4>12,584.00</h4>
                 </div>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content">
-                <div class="info">
-                  <p class="des">支付订单数</p>
-                  <h3>{{today_data.order_total.tday}}</h3>
-                  <p class="yesterday">昨日：{{today_data.order_total.ytd}}</p>
+                <div class="data-box">
+                    <div class="data-box-title">
+                        <h3>{{ $t('折扣总额（元）') }}</h3>
+                        <SvgIcon class="data-box-icon" name="icon2"></SvgIcon>
+                    </div>
+                    <h4>12,584.00</h4>
                 </div>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content">
-                <div class="info">
-                  <p class="des">新增用户数</p>
-                  <h3>{{today_data.new_user_total.tday}}</h3>
-                  <p class="yesterday">昨日：{{today_data.new_user_total.ytd}}</p>
+                <div class="data-box">
+                    <div class="data-box-title">
+                        <h3>{{ $t('会员数（元）') }}</h3>
+                        <SvgIcon class="data-box-icon" name="icon3"></SvgIcon>
+                    </div>
+                    <h4>12,584.00</h4>
                 </div>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content">
-                <div class="info">
-                  <p class="des">新增商户</p>
-                  <h3>{{today_data.new_supplier_total.tday}}</h3>
-                  <p class="yesterday">昨日：{{today_data.new_supplier_total.ytd}}</p>
+                <div class="data-box">
+                    <div class="data-box-title">
+                        <h3>{{ $t('订单数') }}</h3>
+                        <SvgIcon class="data-box-icon" name="icon4"></SvgIcon>
+                    </div>
+                    <h4>12,584.00</h4>
                 </div>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row class="border-b-l" v-if="user_type==1">
-            <el-col :span="6">
-              <div class="grid-content">
-                <div class="info">
-                  <p class="des">销售额(元)</p>
-                  <h3>{{today_data.order_total_price.tday}}</h3>
-                  <p class="yesterday">昨日：{{today_data.order_total_price.ytd}}</p>
+                <div class="data-box">
+                    <div class="data-box-title">
+                        <h3>{{ $t('退款金额（元）') }}</h3>
+                        <SvgIcon class="data-box-icon" name="icon5"></SvgIcon>
+                    </div>
+                    <h4>12,584.00</h4>
                 </div>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content">
-                <div class="info">
-                  <p class="des">支付订单数</p>
-                  <h3>{{today_data.order_total.tday}}</h3>
-                  <p class="yesterday">昨日：{{today_data.order_total.ytd}}</p>
-                </div>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content">
-                <div class="info">
-                  <p class="des">下单用户数</p>
-                  <h3>{{today_data.order_user_total.tday}}</h3>
-                  <p class="yesterday">昨日：{{today_data.order_user_total.ytd}}</p>
-                </div>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content">
-                <div class="info">
-                  <p class="des">预计收入</p>
-                  <h3>{{today_data.income_money.tday}}</h3>
-                  <p class="yesterday">昨日：{{today_data.income_money.ytd}}</p>
-                </div>
-              </div>
-            </el-col>
-          </el-row>
-          <div>
-            <!--待办事项-->
-            <div class="matters-wrap" style="width: 100%;">
-              <Transaction></Transaction>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="matters-wrap">
-        <div class="common-form mt16" style="font-size: 18px;">
-          待办事项<span class="ml10 f14 gray" style="font-weight: normal;">请尽快处理，以免影响营业</span>
-        </div>
-        <el-row class="matters_box">
-          <el-col :span="24">
-            <div class="matters">
-              <div class="box ">
-                <ul class="matters_item">
-                  <li><span class="fb">{{wait_data.order.disposal}}</span>待处理订单</li>
-                  <li><span class="fb">{{wait_data.stock.product}}</span>库存告急</li>
-                  <li  v-if="user_type==0"><span class="fb">{{wait_data.supplier.cash_apply}}</span>提现打款</li>
-                  <li  v-if="user_type==0"><span class="fb">{{wait_data.supplier.cash_money}}</span>提现审核</li>
-                </ul>
-              </div>
-            </div>
-          </el-col>
-        </el-row>
-        <Ranking v-if="!loading"></Ranking>
-      </div>
 
-    </div>
+            </div>
+        </div>
+        <div class="operation-center mt12">
+            <div class="operation-center-l">
+                <h3 class="operation-title mb16">{{ $t('今日概况') }}</h3>
+                <div class="operation-today">
+                    <div class="grid-content">
+                        <p class="des">{{ $t('营业总额（元）') }}</p>
+                        <h3>{{ today_data.order_total_price.tday }}</h3>
+                        <p class="yesterday">{{ $t('昨日：') }}{{ today_data.order_total_price.ytd }}</p>
+                    </div>
+                    <div class="grid-content">
+                        <p class="des">{{ $t('折扣总额（元）') }}</p>
+                        <h3>11</h3>
+                        <p class="yesterday">{{ $t('昨日：') }}11</p>
+                    </div>
+                    <div class="grid-content">
+                        <p class="des">{{ $t('会员数（人）') }}</p>
+                        <h3>{{ today_data.new_user_total.tday }}</h3>
+                        <p class="yesterday">{{ $t('昨日：') }}{{ today_data.new_user_total.ytd }}</p>
+                    </div>
+                    <div class="grid-content">
+                        <p class="des">{{ $t('订单数') }}</p>
+                        <h3>{{ today_data.order_total.tday }}</h3>
+                        <p class="yesterday">{{ $t('昨日：') }}{{ today_data.order_total.ytd }}</p>
+                    </div>
+                    <div class="grid-content">
+                        <p class="des">{{ $t('退款金额（元）') }}</p>
+                        <h3>11</h3>
+                        <p class="yesterday">{{ $t('昨日：') }}11</p>
+                    </div>
 
-  </div>
+                </div>
+            </div>
+            <div class="operation-center-r">
+                <h3 class="operation-title mb16">{{ $t('待办事项') }}</h3>
+                <div class="center-r-box">
+                    <div class="center-r-box-t">
+                        <h4>{{ $t('库存告急') }}</h4>
+                        <p>{{ $t('查看') }}</p>
+                    </div>
+                    <p class="fb">{{ wait_data.stock.product }}</p>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="home-index mt12">
+            <!--main-index-->
+            <div class="flex-1">
+                    <!--待办事项-->
+                    <div class="matters-wrap" style="width: 100%;">
+                        <Transaction></Transaction>
+                    </div>
+         
+            </div>
+            <div class="matters-wrap flex-1">
+                <Ranking v-if="!loading"></Ranking>
+            </div>
+
+        </div>
+    </div>
 </template>
 
 <script>
-  import IndexApi from '@/api/index.js';
-  import Ranking from '@/views/home/part/product/Ranking.vue';
-  import Transaction from '@/views/home/part/Transaction.vue';
-  import { useUserStore } from '@/store';
-  const { userInfo } = useUserStore();
-  export default {
+import IndexApi from '@/api/index.js';
+import Ranking from '@/views/home/part/product/Ranking.vue';
+import Transaction from '@/views/home/part/Transaction.vue';
+import SvgIcon from "@/components/svg-icon/SvgIcon.vue";
+import { useUserStore } from '@/store';
+const { userInfo } = useUserStore();
+export default {
     components: {
-      Ranking,
-      Transaction
+        Ranking,
+        Transaction,
+        SvgIcon,
     },
     data() {
-      return {
-        /*是否加载完成*/
-        loading: true,
-        /*统计信息*/
-        top_data: [],
-        /*待办事项*/
-        wait_data: {
-          order: {},
-          agent: {},
-          supplier: {},
-          activity: {},
-          audit: {},
-          stock:{}
-        },
-        /*今日数据*/
-        today_data: {
-          order_total_price: {},
-          order_total: {},
-          new_user_total: {},
-          new_supplier_total: {},
-          apply_supplier_total: {},
-          order_user_total:{},
-          income_money:{}
-        },
-        product_data: {
-          salesMoneyRank: [],
-          salesNumRank: []
-        },
-        user_type: ''
-      };
+        return {
+            /*是否加载完成*/
+            loading: true,
+            /*统计信息*/
+            top_data: [],
+            /*待办事项*/
+            wait_data: {
+                order: {},
+                agent: {},
+                supplier: {},
+                activity: {},
+                audit: {},
+                stock: {}
+            },
+            /*今日数据*/
+            today_data: {
+                order_total_price: {},
+                order_total: {},
+                new_user_total: {},
+                new_supplier_total: {},
+                apply_supplier_total: {},
+                order_user_total: {},
+                income_money: {}
+            },
+            product_data: {
+                salesMoneyRank: [],
+                salesNumRank: []
+            },
+            user_type: ''
+        };
     },
-    provide: function() {
-      return {
-        dataRank: this.product_data
-      }
+    provide: function () {
+        return {
+            dataRank: this.product_data
+        }
     },
     mounted() {
-      /*获取数据*/
-      this.getData();
-      this.getBaseInof();
+        /*获取数据*/
+        this.getData();
+        this.getBaseInof();
     },
     methods: {
-      async getBaseInof() {
-        /* let res = await store.dispatch('common/getBaseInfo');
-        this.user_type = res.user.user_type; */
-        this.user_type = userInfo.user_type;
-      },
-      /*获取数据*/
-      getData() {
-        let self = this;
-        self.loading = true;
-        IndexApi.getCount(true).then(data => {
-          self.loading = false;
-          Object.assign(self.product_data, data.data.data.product_data);
-          self.top_data = data.data.data.top_data;
-          self.wait_data = data.data.data.wait_data;
-          self.today_data = data.data.data.today_data;
-        }).catch(error => {
+        async getBaseInof() {
+            /* let res = await store.dispatch('common/getBaseInfo');
+            this.user_type = res.user.user_type; */
+            this.user_type = userInfo.user_type;
+        },
+        /*获取数据*/
+        getData() {
+            let self = this;
+            self.loading = true;
+            IndexApi.getCount(true).then(data => {
+                self.loading = false;
+                Object.assign(self.product_data, data.data.data.product_data);
+                self.top_data = data.data.data.top_data;
+                self.wait_data = data.data.data.wait_data;
+                self.today_data = data.data.data.today_data;
+            }).catch(error => {
 
-        });
-      },
+            });
+        },
     }
-  };
+};
 </script>
 
 <style lang="scss" scoped>
-  .operation-wrap {
+.operation-wrap {
+    height: auto;
     width: 100%;
-    height: 164px;
+    padding: 16px;
     border-radius: 8px;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    padding: 0 20px;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    overflow: hidden;
     background-size: 100% 100%;
     color: #ffffff;
-  }
+}
 
-  .operation-wrap .grid-content h3 {
-    font-size: 36px;
-    line-height: 40px;
-  }
+.operation-center {
+    width: 100%;
+    display: flex;
+    gap: 12px;
+}
 
-  .operation-wrap .grid-content .info {
-    text-align: center;
-    margin-left: 10px;
-  }
+.operation-center-l {
+    flex: 7;
+    border-radius: 4px;
+    padding: 16px;
+    background: #fff;
+}
 
-  .home .operation-wrap .grid-content {
-    width: 90%;
-    height: 150px;
-    justify-content: flex-start;
+.operation-today {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.grid-content {
+    border-radius: 4px;
+    padding: 16px;
+    background: #F7F9FB;
+    flex: 1;
+    min-width: calc(33.3% - 8px);
+    max-width: 30%;
+}
+
+.grid-content .des {
+    color: var(--el-color-black);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    margin-bottom: 16px;
+}
+
+.grid-content h3 {
+    color: var(--el-color-black);
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.grid-content .yesterday {
+    color: var(--el-color-tips);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+}
+
+.operation-center-r {
+    flex: 3;
+    border-radius: 4px;
+    padding: 16px;
+    background: #fff;
+}
+
+.center-r-box {
+    padding: 16px;
+    border-radius: 4px;
+    background: #FFF1EE;
+}
+
+.center-r-box-t {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    padding-left: 23px;
-  }
+    width: 100%;
+    margin-bottom: 16px;
+}
 
-  .operation-wrap .grid-content.blue {
-    background: url(../../../static/imgs/total_shop.png) no-repeat;
-    background-size: 100% 100%;
-  }
+.center-r-box-t h4 {
+    color: var(--el-color-black);
+    font-size: 16px;
+    font-weight: 400;
+}
 
-  .operation-wrap .grid-content.yellow {
-    background: url(../../../static/imgs/total_user.png) no-repeat;
-    background-size: 100% 100%;
-  }
-
-  .operation-wrap .grid-content.purple {
-    background: url(../../../static/imgs/total_volume.png) no-repeat;
-    background-size: 100% 100%;
-  }
-
-  .operation-wrap .grid-content.orderred {
-    background: url(../../../static/imgs/total_order.png) no-repeat;
-    background-size: 100% 100%;
-  }
-
-  .operation-wrap .grid-content .info h3 {
-    font-size: 40px;
-    line-height: 40px;
-    color: #FFFFFF;
-    text-align: left;
-    margin-bottom: 20px;
-  }
-
-  .operation-wrap .grid-content .info {
-    margin-left: 10px;
-    text-align: center;
+.center-r-box-t p {
+    color: var(--el-color-primary);
     font-size: 14px;
-    color: #FFFFFF;
-  }
+    font-weight: 400;
+    cursor: pointer;
+}
 
-  .operation-wrap .grid-content .svg-icon {
-    color: rgba(255, 255, 255, .3);
-    font-size: 300%;
-  }
+.operation-title {
+    color: var(--el-color-black);
+    font-size: 20px;
+    font-weight: 500;
+}
 
-  .home-index {
+.fb {
+    color: #FF6241;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.operation-data {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.data-box {
+    flex: 1;
+    padding: 16px;
+    background: #FFF6DE;
+    border-radius: 4px;
+
+}
+
+.data-box-title {
+    display: flex;
+    justify-content: space-between;
+}
+
+.data-box-title h3 {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--el-color-black);
+}
+
+.data-box h4 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-top: 20px;
+    color: var(--el-color-black);
+}
+
+.data-box:hover {
+    background: #FFBE00;
+}
+
+.data-box:hover .data-box-icon {
+    color: #fff;
+}
+
+.data-box-icon {
+    width: 24px;
+    height: 24px;
+    color: #FFBE00;
+}
+
+.home-index {
     display: -ms-flexbox;
     display: flex;
+    gap: 12px;
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
     -ms-flex-direction: row;
@@ -354,56 +350,25 @@
     justify-content: space-between;
     min-width: 1000px;
     overflow-x: auto;
-  }
+}
 
-  .main-index {
+.main-index {
     flex: 1;
     margin: 20px;
-  }
+}
 
-  .main-index .grid-content,
-  .operation-wrap .grid-content {
-
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-direction: row;
-    -ms-flex-direction: row;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .main-index .grid-content {
-    height: 120px;
-  }
-
-  .main-index .grid-content .pic {
-    margin-right: 10px;
-  }
-
-  .main-index .grid-content h3 {
-    font-size: 20px;
-    font-weight: normal;
-  }
-
-  .main-index .grid-content .yesterday {
-    color: #ccc;
-  }
-
-  .main-index .grid-content .svg-icon {
-    color: #3a8ee6;
-  }
-
-  .matters-wrap {
+.matters-wrap {
     padding-bottom: 15px;
-    width: 40%;
-  }
+    padding: 16px;
+    border-radius: 4px;
+    background: #fff;
+}
 
-  .matters .box {
+.matters .box {
     width: 100%;
-  }
+}
 
-  .matters-wrap .matters {
+.matters-wrap .matters {
     display: -ms-flexbox;
     display: flex;
     -webkit-box-direction: column;
@@ -413,9 +378,9 @@
     align-items: flex-start;
     // height: 120px;
     margin-bottom: 30px;
-  }
+}
 
-  .matters-wrap .matters .title {
+.matters-wrap .matters .title {
     font-size: 16px;
     color: #333333;
     display: inline-block;
@@ -424,65 +389,48 @@
     padding: 11px;
     text-align: center;
     margin-bottom: 20px;
-  }
+}
 
-  .matters-wrap .matters ul {
+.matters-wrap .matters ul {
     color: #999999;
-  }
+}
 
-  .matters-wrap .matters ul span {
+.matters-wrap .matters ul span {
     padding-right: 6px;
     color: #3a8ee6;
-  }
+}
 
-  .border-b {
+.border-b {
     display: flex;
     flex-direction: column;
-  }
+}
 
-  .border-b-l {
+.border-b-l {
     flex-direction: initial;
-  }
+}
 
-  .matters_item {
+.matters_item {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-  }
+}
 
-  .matters_item li {
+.matters_item li {
     width: 72px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin-right: 16px;
-  }
+}
 
-  .grid-content .info h3 {
-    font-weight: bold;
-    color: #5d75e3;
-    text-align: center;
-  }
-
-  .grid-content .info .des {
-    font-size: 16px;
-    margin-bottom: 6px;
-  }
-
-  .grid-content .info .yesterday {
-    font-size: 13px;
-    text-align: center;
-  }
-
-  .matters_box {
+.matters_box {
     width: 90%;
     border-top: 1px solid #d9d9d9;
     padding-top: 20px;
-  }
+}
 
-  .matters-wrap .matters_item li .fb {
+.matters-wrap .matters_item li .fb {
     font-size: 16px;
     color: #5d75e3;
-  }
-</style>
+}</style>

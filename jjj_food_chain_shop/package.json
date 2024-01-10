@@ -37,6 +37,7 @@
         "unplugin-vue-components": "^0.24.1",
         "vite": "^4.2.0",
         "vite-plugin-compression": "^0.5.1",
-        "vite-plugin-eslint": "^1.8.1"
+        "vite-plugin-eslint": "^1.8.1",
+        "vite-plugin-svg-icons": "^2.0.1"
     }
 }
