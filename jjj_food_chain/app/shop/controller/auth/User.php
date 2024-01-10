@@ -8,6 +8,7 @@ use app\shop\controller\Controller;
 use app\shop\model\auth\User as UserModel;
 use app\shop\model\auth\Role;
 use app\shop\model\auth\User as AuthUserModel;
+use hg\apidoc\annotation as Apidoc;
 
 /**
  * 管理员
@@ -41,8 +42,16 @@ class User extends Controller
     }
 
     /**
-     * 新增
-     * @return \think\response\Json
+     * @Apidoc\Title("新增")
+     * @Apidoc\Tag("新增")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/auth.user/add")
+     * @Apidoc\Param("user_name", type="string", require=true, default="001", desc="用户名")
+     * @Apidoc\Param("role_id", type="array", require=true, desc="角色ids")
+     * @Apidoc\Param("password", type="string", require=true, default="123456", desc="密码")
+     * @Apidoc\Param("confirm_password", type="string", require=true, default="123456", desc="确认密码")
+     * @Apidoc\Param("real_name", type="string", require=true, desc="真实姓名")
+     * @Apidoc\Returned()
      */
     public function add()
     {
@@ -52,7 +61,7 @@ class User extends Controller
         if ($num > 0) {
             return $this->renderError('用户名已存在');
         }
-        if (!isset($data['role_id'])) {
+        if (!isset($data['role_id']) || empty($data['role_id'])) {
             return $this->renderError('请选择所属角色');
         }
         if ($data['confirm_password'] != $data['password']) {

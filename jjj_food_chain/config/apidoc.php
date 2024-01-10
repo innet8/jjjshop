@@ -73,6 +73,7 @@ return [
         'header'=>[
             // name=字段名，type=字段类型，require=是否必须，default=默认值，desc=字段描述
             ['name'=>'Token','type'=>'string','require'=>true,'desc'=>'身份令牌Token'],
+            ['name'=>'Appid','type'=>'string','require'=>true,'default'=>'10001','desc'=>'应用Appid'],
         ],
         // （选配）全局的请求Query
         'query'=>[
