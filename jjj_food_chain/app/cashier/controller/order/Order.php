@@ -8,6 +8,7 @@ use app\cashier\service\order\settled\CashierOrderSettledService;
 use app\cashier\controller\Controller;
 use app\common\service\order\OrderPrinterService;
 use app\common\model\settings\Setting as SettingModel;
+use hg\apidoc\annotation as Apidoc;
 
 /**
  * 订单

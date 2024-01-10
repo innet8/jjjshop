@@ -5,6 +5,7 @@ namespace app\cashier\controller\order;
 use app\cashier\controller\Controller;
 use app\cashier\model\order\Cart as CartModel;
 use app\cashier\model\order\Order as OrderModel;
+use hg\apidoc\annotation as Apidoc;
 
 /**
  * 堂食购物车控制器
