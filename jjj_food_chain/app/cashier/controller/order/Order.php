@@ -122,7 +122,7 @@ class Order extends Controller
     }
 
     /**
-     * @Apidoc\Title("桌台协助点餐、加餐")
+     * @Apidoc\Title("桌台协助点餐、加餐(送厨)")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.Order/addMeal")
      * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
@@ -194,13 +194,13 @@ class Order extends Controller
     }
    
     /**
-     * @Apidoc\Title("桌台付款")
-     * @Apidoc\Tag("桌台付款")
+     * @Apidoc\Title("桌台结账")
+     * @Apidoc\Tag("桌台结账")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url("/index.php/cashier/order.order/pay")
      * @Apidoc\Param("order_id", type="int",require=true, default=0, desc="订单id")
-     * @Apidoc\Param("pay_type", type="int",require=true, default=0, desc="付款类型")
-     * @Apidoc\Param("user_id", type="int",require=false, default=0, desc="用户id")
+     * @Apidoc\Param("pay_type", type="int",require=true, default=0, desc="付款类型  10-余额收款 40-现金收款 50-微信收款 60-支付宝收款 70-POS机收款")
+     * @Apidoc\Param("user_id", type="int",require=false, default=0, desc="用户id （pay_type为余额收款必填）")
      */
     public function pay($order_id)
     {
