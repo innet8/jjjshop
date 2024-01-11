@@ -686,7 +686,7 @@ class Order extends BaseModel
                 $this->error = '订单已支付，不允许加菜';
                 return false;
             }
-            if ($order['order_status'] != 10) {
+            if ($order['order_status'][ 'value'] != 10) {
                 $this->error = '订单已结束';
                 return false;
             }

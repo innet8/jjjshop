@@ -51,6 +51,15 @@ class Cart extends CartModel
         return $list;
     }
 
+    //查询桌号订单信息
+    public static function getTableCartInfo($user, $table_id)
+    {
+        return (new static())->with('product')
+            ->where('cashier_id', '=', $user['cashier_id'])
+            ->where('table_id', '=', $table_id)
+            ->find();
+    }
+
     /**
      * 改价
      */

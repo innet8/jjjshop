@@ -81,7 +81,7 @@ class Order extends Controller
     }
 
     /**
-     * @Apidoc\Title("开台")
+     * @Apidoc\Title("桌台开台")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.Order/tableBuy")
      * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
@@ -122,7 +122,7 @@ class Order extends Controller
     }
 
     /**
-     * @Apidoc\Title("协助点餐、加餐")
+     * @Apidoc\Title("桌台协助点餐、加餐")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.Order/addMeal")
      * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
@@ -152,7 +152,7 @@ class Order extends Controller
     }
 
     /**
-     * @Apidoc\Title("修改就餐人数")
+     * @Apidoc\Title("桌台修改就餐人数")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.Order/updateMealNum")
      * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")

@@ -47,6 +47,20 @@ class HallCart extends Controller
     }
 
     /**
+     * @Apidoc\Title("当前桌台菜品列表（订单+购物车）")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/tableProductList")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+     * @Apidoc\Returned("list",type="array",ref="app\cashier\model\order\Order\getOrderInfo")
+     */
+    public function tableProductList($table_id)
+    {
+        $orderProductList = (new OrderModel())->getOrderInfo($table_id)['product'] ?? [];
+        $cartProductList = (new CartModel())->getTableCartInfo($this->cashier['user'], $table_id)['product'] ?? [];
+        return $this->renderSuccess('', compact('orderProductList', 'cartProductList'));
+    }
+
+    /**
      * @Apidoc\Title("折扣抹零")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.HallCart/changeMoney")
