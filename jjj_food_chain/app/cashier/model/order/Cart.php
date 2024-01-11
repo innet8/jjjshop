@@ -7,6 +7,7 @@ use app\common\model\plus\discount\DiscountProduct;
 use app\common\model\supplier\Supplier as SupplierModel;
 use app\cashier\model\product\Product as ProductModel;
 use app\cashier\model\product\ProductSku as ProductSkuModel;
+use app\cashier\service\order\settled\CashierOrderSettledService;
 use app\common\library\helper;
 
 /**
@@ -506,4 +507,49 @@ class Cart extends CartModel
         return $cartInfo;
     }
 
+    /**
+     * 修改商品备注
+     *
+     * @param int $cart_id
+     * @param string $remark
+     * @return void
+     */
+    public function updateRemark($cart_id, $remark)
+    {
+        return $this->where('cart_id', '=', $cart_id)->update(['remark' => $remark]);
+    }
+
+    /**
+     * 送厨
+     *
+     * @param [type] $params
+     * @param [type] $user
+     * @return int
+     */
+    public function sendKitchen($params, $user)
+    {
+        $CartModel = new static();
+        // 购物车商品列表
+        $productList = $CartModel->getCartList($user);
+        if (count($productList) <= 0) {
+            return $this->renderError('购物车商品不能为空');
+        }
+        $params['eat_type'] = 20;
+        // 实例化订单service
+        $orderService = new CashierOrderSettledService($user, $productList, $params);
+        // 获取订单信息
+        $orderInfo = $orderService->settlement();
+        // 订单结算提交
+        if ($orderService->hasError()) {
+            return $this->renderError($orderService->getError());
+        }
+        // 创建订单
+        $order_id = $orderService->createOrder($orderInfo);
+        if (!$order_id) {
+            return $this->renderError($orderService->getError() ?: '订单创建失败');
+        }
+        // 移出购物车中已下单的商品
+        $CartModel->deleteAll($this->cashier['user']);
+        return $order_id;
+    }
 }

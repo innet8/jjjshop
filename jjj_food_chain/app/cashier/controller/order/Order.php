@@ -17,7 +17,7 @@ use hg\apidoc\annotation as Apidoc;
  */
 class Order extends Controller
 {
-    
+
     /**
      * @Apidoc\Title("订单列表")
      * @Apidoc\Tag("订单列表")
@@ -192,7 +192,7 @@ class Order extends Controller
         }
         return $this->renderError($detail->getError() ?: '转台失败');
     }
-   
+
     /**
      * @Apidoc\Title("桌台付款")
      * @Apidoc\Tag("桌台付款")
@@ -307,7 +307,7 @@ class Order extends Controller
         }
         return $this->renderError($detail?->getError() ?: '操作失败');
     }
-    
+
     /**
      * @Apidoc\Title("删除订单")
      * @Apidoc\Tag("删除订单")

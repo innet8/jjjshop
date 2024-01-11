@@ -4,6 +4,7 @@ namespace app\cashier\controller\order;
 
 use app\cashier\controller\Controller;
 use app\cashier\model\order\Cart as CartModel;
+use app\cashier\model\order\Order as OrderModel;
 use hg\apidoc\annotation as Apidoc;
 
 /**
@@ -24,9 +25,9 @@ class Cart extends Controller
      * @Apidoc\Param("product_price", type="float", require=true, desc="商品单价")
      * @Apidoc\Param("bag_price", type="float", require=true, desc="包装费")
      * @Apidoc\Param("delivery", type="int", require=true, desc="消费方式：10-外卖配送 20-上门取 30-打包带走 40-店内就餐")
-     * @Apidoc\Param("attr", type="string", require=false, desc="商品属性")
-     * @Apidoc\Param("feed", type="string", require=false, desc="商品加料")
-     * @Apidoc\Param("describe", type="string", require=false, desc="商品描述")
+     * @Apidoc\Param("attr", type="string", require=false, desc="商品属性，如：1,1")
+     * @Apidoc\Param("feed", type="string", require=false, desc="商品加料，如：0,1")
+     * @Apidoc\Param("describe", type="string", require=false, desc="商品描述，如：规格1;属性1;属性2;加料1,加料2")
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned()
      */
@@ -155,7 +156,7 @@ class Cart extends Controller
         if ($model->pickCart($cart_no, $this->cashier['user'])) {
             return $this->renderSuccess('取单成功');
         };
-        return $this->renderError($model->getError() ?: '取单失败');
+        return $this->renderError($model->getError() ?: '请先将购物车内的商品挂单或结账后再取单');
     }
 
     /**
@@ -222,5 +223,43 @@ class Cart extends Controller
     {
         (new CartModel)->deleteAll($this->cashier['user']);
         return $this->renderSuccess('删除成功');
+    }
+
+    /**
+     * @Apidoc\Title("备注")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.cart/remark")
+     * @Apidoc\Param("cart_id", type="int", require=true, desc="购物车商品ID")
+     * @Apidoc\Param("remark", type="string", require=true, desc="备注")
+     * @Apidoc\Returned()
+     */
+    public function remark($cart_id, $remark)
+    {
+        $model = new CartModel();
+        if ($model->updateRemark($cart_id, $remark)) {
+            return $this->renderSuccess('备注成功');
+        }
+        return $this->renderError($model->getError() ?: '备注失败');
+    }
+
+    /**
+     * @Apidoc\Title("送厨")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.cart/sendKitchen")
+     * @Apidoc\Param("delivery", type="int", require=true, desc="消费方式：10-外卖配送 20-上门取 30-打包带走 40-店内就餐")
+     * @Apidoc\Param("user_id", type="int", require=false, default="0", desc="用户id")
+     * @Apidoc\Returned()
+     */
+    public function sendKitchen()
+    {
+        $params = $this->postData();
+        $user = $this->cashier['user'];
+        $model = new CartModel();
+        if ($order_id = $model->sendKitchen($params, $user)) {
+            // 返回订单商品记录
+            $orderProductList = OrderModel::detail($order_id)['product'];
+            return $this->renderSuccess('送厨成功', compact('orderProductList'));
+        }
+        return $this->renderError($model->getError() ?: '送厨失败');
     }
 }
