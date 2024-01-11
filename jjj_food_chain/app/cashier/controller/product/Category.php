@@ -4,7 +4,7 @@ namespace app\cashier\controller\product;
 
 use app\cashier\controller\Controller;
 use app\cashier\model\product\Category as CategoryModel;
-
+use hg\apidoc\annotation as Apidoc;
 /**
  * 商品
  */

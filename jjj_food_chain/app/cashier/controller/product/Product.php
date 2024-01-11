@@ -4,6 +4,7 @@ namespace app\cashier\controller\product;
 
 use app\cashier\model\product\Product as ProductModel;
 use app\cashier\controller\Controller;
+use hg\apidoc\annotation as Apidoc;
 
 /**
  * 商品管理控制器
