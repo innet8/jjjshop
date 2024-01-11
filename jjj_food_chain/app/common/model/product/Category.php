@@ -97,7 +97,6 @@ class Category extends BaseModel
         if (!Cache::get('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special)) {
             $data = $model->with(['images'])
                 ->where('parent_id', '=', 0)
-                ->where('parent_id', '=', 0)
                 ->where('type', '=', $type)
                 ->where('is_special', '=', $is_special)
                 ->order(['sort' => 'asc', 'create_time' => 'asc'])
