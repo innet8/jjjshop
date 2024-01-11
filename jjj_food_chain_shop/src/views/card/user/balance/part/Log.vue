@@ -35,18 +35,21 @@
       <div class="table-wrap">
         <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
           <el-table-column prop="user_id" label="ID" width="80"></el-table-column>
-          <el-table-column prop="user.nickName" label="微信头像" width="70">
-            <template #default="scope">
-              <img :src="scope.row.user.avatarUrl" width="30" height="30" />
-            </template>
-          </el-table-column>
+
           <el-table-column prop="user.nickName" label="昵称">
             <template #default="scope">
               <span>{{scope.row.user.nickName}}</span>
               <span class="gray9">(用户ID：{{scope.row.user.user_id}})</span>
             </template>
           </el-table-column>
-          <el-table-column prop="scene.text" label="余额变动场景">
+          <el-table-column prop="user_id" :label="$t('用户ID')" width="80"></el-table-column>
+          <el-table-column prop="money" :label="$t('变动数量')">
+            <template #default="scope">
+              <p v-if="scope.row.money >0">+{{scope.row.money}}</p>
+              <p v-else>{{scope.row.money}}</p>
+            </template>
+          </el-table-column>
+          <el-table-column prop="scene.text" label="变动场景">
             <template #default="scope">
               <span v-if="scope.row.scene.value==10" style="color: #409EFF">{{scope.row.scene.text}}</span>
               <span v-if="scope.row.scene.value==20" style="color: #67C23A">{{scope.row.scene.text}}</span>
@@ -55,13 +58,7 @@
               <span v-if="scope.row.scene.value==50" style="color: #E63C81">{{scope.row.scene.text}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="money" label="变动金额	">
-            <template #default="scope">
-              <p v-if="scope.row.money >0">+{{scope.row.money}}</p>
-              <p v-else>{{scope.row.money}}</p>
-            </template>
-          </el-table-column>
-          <el-table-column prop="describe" label="描述/说明" width="200"></el-table-column>
+
           <el-table-column prop="remark" label="管理员备注">
             <template #default="scope">
               <p v-if="scope.row.remark ==''">--</p>

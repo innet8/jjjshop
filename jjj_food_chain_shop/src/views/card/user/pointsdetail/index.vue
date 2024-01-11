@@ -8,7 +8,7 @@
     <!--搜索表单-->
     <div class="common-seach-wrap">
       <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="昵称">
+        <el-form-item :label="$t('昵称')">
           <el-input v-model="formInline.search" placeholder="请输入昵称"></el-input>
         </el-form-item>
         <el-form-item label="注册时间">
@@ -29,25 +29,20 @@
       <div class="table-wrap">
         <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
           <el-table-column prop="log_id" label="ID" width="60"></el-table-column>
-          <el-table-column prop="nickName" label="微信头像" width="70">
-            <template #default="scope">
-              <img :src="scope.row.user.avatarUrl" width="30" height="30" />
-            </template>
-          </el-table-column>
           <el-table-column prop="" label="昵称">
             <template #default="scope">
               <span>{{scope.row.user.nickName}}</span>
               <span class="gray9">(用户ID：{{scope.row.user.user_id}})</span>
             </template>
           </el-table-column>
-          <el-table-column prop="value" label="变动数量"></el-table-column>
-          <el-table-column prop="describe" label="描述/说明"></el-table-column>
-          <el-table-column prop="remark" label="管理员备注">
-            <template #default="scope">
-              <span v-if="scope.row.remark==''">--</span>
-            </template>
+          <el-table-column prop="tel" label="手机号" width="160">
           </el-table-column>
-          <el-table-column prop="create_time" label="创建时间"></el-table-column>
+          <el-table-column prop="id" :label="$t('用户ID')" width="80">
+          </el-table-column>
+          <el-table-column prop="value" label="变动数量"></el-table-column>
+          <el-table-column prop="describe" :label="$t('变动场景')"></el-table-column>
+
+          <el-table-column prop="create_time" :label="$t('变动时间')"></el-table-column>
         </el-table>
       </div>
 

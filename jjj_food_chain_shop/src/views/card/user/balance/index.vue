@@ -17,15 +17,15 @@
     <!--余额明细-->
     <Log v-if="activeName == 'log'"></Log>
     <!--余额设置-->
-    <Setting v-if="activeName == 'settings'"></Setting>
+    <!-- <Setting v-if="activeName == 'settings'"></Setting> -->
     <!--充值套餐-->
-    <Plan v-if="activeName == 'plan'"></Plan>
+    <!-- <Plan v-if="activeName == 'plan'"></Plan> -->
     <!--充值记录-->
-    <Record v-if="activeName == 'record'"></Record>
+    <!-- <Record v-if="activeName == 'record'"></Record> -->
     <!--提现设置-->
-    <CashSetting v-if="activeName == 'cashsetting'"></CashSetting>
+    <!-- <CashSetting v-if="activeName == 'cashsetting'"></CashSetting> -->
     <!--提现记录-->
-    <Cash v-if="activeName == 'cash'"></Cash>
+    <!-- <Cash v-if="activeName == 'cash'"></Cash> -->
 
   </div>
 </template>
