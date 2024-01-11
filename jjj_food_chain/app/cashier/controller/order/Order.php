@@ -41,7 +41,13 @@ class Order extends Controller
     }
 
     /**
-     * 收银购物车-立即购买
+     * @Apidoc\Title("收银收款")
+     * @Apidoc\Tag("收银收款")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/index.php/cashier/order.order/index")
+     * @Apidoc\Param("delivery", type="int",require=true, default=0, desc="配送方式(10外卖配送 20上门取 30打包带走 40店内就餐)")
+     * @Apidoc\Param("pay_type", type="int",require=true, default=0, desc="支付方式(10余额支付 20微信支付 40现金支付)")
+     * @Apidoc\Param("user_id", type="int",require=false, default=0, desc="用户id")
      */
     public function buy()
     {
@@ -75,7 +81,13 @@ class Order extends Controller
     }
 
     /**
-     * 桌台订单-生成订单
+     * @Apidoc\Title("桌台下单")
+     * @Apidoc\Tag("桌台下单")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/index.php/cashier/order.order/index")
+     * @Apidoc\Param("table_id", type="int",require=true, default="0", desc="桌台id")
+     * @Apidoc\Param("meal_num", type="int",require=true, default="0", desc="就餐人数")
+     * @Apidoc\Param("user_id", type="int",require=false, default="0", desc="用户id")
      */
     public function tableBuy()
     {
@@ -110,7 +122,14 @@ class Order extends Controller
     }
 
     /**
-     * 堂食协助点餐
+     * @Apidoc\Title("桌台协助下单")
+     * @Apidoc\Tag("桌台协助下单")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/cashier/order.order/addMeal")
+     * @Apidoc\Param("order_id", type="int", require=true, default="0", desc="订单id")
+     * @Apidoc\Param("table_id", type="int", require=true, default="0", desc="桌台id")
+     * @Apidoc\Param("meal_num", type="int", require=true, default="0", desc="就餐人数")
+     * @Apidoc\Param("user_id", type="int", require=false, default="0", desc="用户id")
      */
     public function addMeal()
     {
@@ -133,11 +152,13 @@ class Order extends Controller
     }
 
     /**
-     * @Apidoc\Title("订单转台")
+     * @Apidoc\Title("桌台转台")
      * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/cashier/order.order/changeTable")
+     * @Apidoc\Param("order_id", type="int", require=false, desc="订单id")
+     * @Apidoc\Param("table_id", type="int", require=false, desc="桌台ID")
      * @Apidoc\Param("area_id", type="int", require=false, desc="区域ID")
      * @Apidoc\Param("type_id", type="int", require=false, desc="桌台类型ID")
-     * @Apidoc\Url ("/index.php/cashier/store.table/table")
      * @Apidoc\Returned("list",type="array",ref="app\cashier\model\store\Table\getList")
      */
     public function changeTable($order_id, $table_id)
@@ -148,9 +169,15 @@ class Order extends Controller
         }
         return $this->renderError($detail->getError() ?: '转台失败');
     }
-
+   
     /**
-     * 桌台订单-付款
+     * @Apidoc\Title("桌台付款")
+     * @Apidoc\Tag("桌台付款")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/cashier/order.order/pay")
+     * @Apidoc\Param("order_id", type="int",require=true, default=0, desc="订单id")
+     * @Apidoc\Param("pay_type", type="int",require=true, default=0, desc="付款类型")
+     * @Apidoc\Param("user_id", type="int",require=false, default=0, desc="用户id")
      */
     public function pay($order_id)
     {
@@ -168,7 +195,6 @@ class Order extends Controller
      * @Apidoc\Param("order_id", type="int", require=true, desc="订单ID")
      * @Apidoc\Param("order_product_id", type="int", require=true, desc="订单产品表ID")
      * @Apidoc\Param("num", type="int", require=true, desc="商品数量")
-     * @Apidoc\Returned()
      */
     public function moveProduct($order_id, $order_product_id, $num)
     {
@@ -180,7 +206,11 @@ class Order extends Controller
     }
 
     /**
-     * 桌台订单-详情
+     * @Apidoc\Title("订单详情")
+     * @Apidoc\Tag("详情")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/cashier/order.order/detail")
+     * @Apidoc\Param("order_id", type="int",require=true, default=0, desc="订单id")
      */
     public function detail($order_id)
     {
@@ -189,7 +219,11 @@ class Order extends Controller
     }
 
     /**
-     * 订单-结算完成
+     * @Apidoc\Title("结算完成")
+     * @Apidoc\Tag("结算完成")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/cashier/order.order/settle")
+     * @Apidoc\Param("order_id", type="int",require=true, default=0, desc="订单id")
      */
     public function settle($order_id)
     {

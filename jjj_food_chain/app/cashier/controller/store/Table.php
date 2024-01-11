@@ -17,7 +17,7 @@ class Table extends Controller
     /**
      * @Apidoc\Title("桌位区域列表")
      * @Apidoc\Method ("POST")
-     * @Apidoc\Url ("/index.php/cashier/store.table/area")
+     * @Apidoc\Url("/index.php/cashier/store.table/area")
      * @Apidoc\Returned("list",type="array",ref="app\cashier\model\store\TableArea\getList")
      */
     public function area()
@@ -31,9 +31,9 @@ class Table extends Controller
     /**
      * @Apidoc\Title("桌位列表")
      * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/cashier/store.table/table")
      * @Apidoc\Param("area_id", type="int", require=false, desc="区域ID")
      * @Apidoc\Param("type_id", type="int", require=false, desc="桌台类型ID")
-     * @Apidoc\Url ("/index.php/cashier/store.table/table")
      * @Apidoc\Returned("list",type="array",ref="app\cashier\model\store\Table\getList")
      */
     public function table($area_id = '', $type_id = '')

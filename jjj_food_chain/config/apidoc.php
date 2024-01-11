@@ -94,15 +94,15 @@ return [
     'responses'=>[
         // 成功响应体
         'success'=>[
-            ['name'=>'code','desc'=>'业务代码','type'=>'int','require'=>1],
-            ['name'=>'message','desc'=>'业务信息','type'=>'string','require'=>1],
+            ['name'=>'code','desc'=>'状态码','type'=>'int','require'=>1,'md'=>'/extend/apidocs/HttpStatus.md'],
+            ['name'=>'msg','desc'=>'成功信息','type'=>'string','require'=>1],
             //参数同上 headers；main=true来指定接口Returned参数挂载节点
-            ['name'=>'data','desc'=>'业务数据','main'=>true,'type'=>'object','require'=>1],
+            ['name'=>'data','desc'=>'数据','main'=>true,'type'=>'object','require'=>1],
         ],
         // 异常响应体
         'error'=>[
-            ['name'=>'code','desc'=>'业务代码','type'=>'int','require'=>1,'md'=>'/docs/HttpError.md'],
-            ['name'=>'message','desc'=>'业务信息','type'=>'string','require'=>1],
+            ['name'=>'code','desc'=>'状态码','type'=>'int','require'=>1,'md'=>'/extend/apidocs/HttpStatus.md'],
+            ['name'=>'msg','desc'=>'错误信息','type'=>'string','require'=>1],
         ]
     ],
     // （选配）apidoc路由前缀,默认apidoc
