@@ -7,13 +7,9 @@ use app\cashier\model\order\Cart as CartModel;
 use hg\apidoc\annotation as Apidoc;
 
 /**
-<<<<<<< Updated upstream
- * 公共模块-购物车
-=======
  * 购物车
  * @Apidoc\Group("order")
  * @Apidoc\Sort(2)
->>>>>>> Stashed changes
  */
 class Cart extends Controller
 {
