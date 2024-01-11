@@ -6,7 +6,7 @@ use app\common\model\settings\Setting as SettingModel;
 use hg\apidoc\annotation as Apidoc;
 
 /**
- * 收银机-首页
+ * 首页
  */
 class Index extends Controller
 {

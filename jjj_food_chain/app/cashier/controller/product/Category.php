@@ -15,7 +15,6 @@ class Category extends Controller
      * @Apidoc\Title("商品分类列表")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/cashier/product.category/index")
-     * @Apidoc\Returned()
      * @Apidoc\Returned("list",type="array",ref="app\cashier\model\product\Category\getCashierALL")
      */
     public function index()

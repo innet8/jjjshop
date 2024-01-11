@@ -5,7 +5,7 @@ namespace app\cashier\controller;
 use app\cashier\model\cashier\User;
 use hg\apidoc\annotation as Apidoc;
 /**
- * 收银机-收银员相关
+ * 用户
  */
 class Passport extends Controller
 {
