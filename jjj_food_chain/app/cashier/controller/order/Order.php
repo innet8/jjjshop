@@ -81,13 +81,13 @@ class Order extends Controller
     }
 
     /**
-     * @Apidoc\Title("桌台下单")
-     * @Apidoc\Tag("桌台下单")
+     * @Apidoc\Title("开台")
      * @Apidoc\Method("POST")
-     * @Apidoc\Url("/index.php/cashier/order.order/index")
-     * @Apidoc\Param("table_id", type="int",require=true, default="0", desc="桌台id")
-     * @Apidoc\Param("meal_num", type="int",require=true, default="0", desc="就餐人数")
-     * @Apidoc\Param("user_id", type="int",require=false, default="0", desc="用户id")
+     * @Apidoc\Url ("/index.php/cashier/order.Order/tableBuy")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+     * @Apidoc\Param("meal_num", type="int", require=true, desc="就餐人数")
+     * @Apidoc\Param("user_id", type="int", require=false, desc="会员ID（会员自己开台必填）")
+     * @Apidoc\Returned()
      */
     public function tableBuy()
     {
@@ -99,9 +99,9 @@ class Order extends Controller
         $CartModel = new CartModel();
         // 购物车商品列表
         $productList = $CartModel->getCartList($user, $params['table_id'], 10);
-        if (empty($productList)) {
-            return $this->renderError('购物车商品不能为空');
-        }
+//        if (empty($productList) || count($productList) == 0) {
+//            return $this->renderError('购物车商品不能为空');
+//        }
         // 实例化订单service
         $orderService = new CashierOrderSettledService($user, $productList, $params);
         // 获取订单信息
@@ -122,14 +122,14 @@ class Order extends Controller
     }
 
     /**
-     * @Apidoc\Title("桌台协助下单")
-     * @Apidoc\Tag("桌台协助下单")
-     * @Apidoc\Method ("POST")
-     * @Apidoc\Url("/index.php/cashier/order.order/addMeal")
-     * @Apidoc\Param("order_id", type="int", require=true, default="0", desc="订单id")
-     * @Apidoc\Param("table_id", type="int", require=true, default="0", desc="桌台id")
-     * @Apidoc\Param("meal_num", type="int", require=true, default="0", desc="就餐人数")
-     * @Apidoc\Param("user_id", type="int", require=false, default="0", desc="用户id")
+     * @Apidoc\Title("协助点餐、加餐")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.Order/addMeal")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+     * @Apidoc\Param("order_id", type="int", require=true, desc="订单ID")
+     * @Apidoc\Param("meal_num", type="int", require=true, desc="就餐人数")
+     * @Apidoc\Param("user_id", type="int", require=false, desc="会员ID（会员自己开台必填）")
+     * @Apidoc\Returned()
      */
     public function addMeal()
     {

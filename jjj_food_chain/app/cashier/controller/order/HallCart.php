@@ -32,7 +32,11 @@ class HallCart extends Controller
     }
 
     /**
-     * 当前桌号订单
+     * @Apidoc\Title("当前桌台订单")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/detail")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+     * @Apidoc\Returned("list",type="array",ref="app\cashier\model\order\Order\getOrderInfo")
      */
     public function detail($table_id)
     {
