@@ -56,7 +56,7 @@ class HallCart extends Controller
     public function tableProductList($table_id)
     {
         $orderProductList = (new OrderModel())->getOrderInfo($table_id)['product'] ?? [];
-        $cartProductList = (new CartModel())->getTableCartInfo($this->cashier['user'], $table_id)['product'] ?? [];
+        $cartProductList = (new CartModel())->getTableCartInfo($this->cashier['user'], $table_id) ?? [];
         return $this->renderSuccess('', compact('orderProductList', 'cartProductList'));
     }
 

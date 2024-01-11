@@ -57,7 +57,7 @@ class Cart extends CartModel
         return (new static())->with('product')
             ->where('cashier_id', '=', $user['cashier_id'])
             ->where('table_id', '=', $table_id)
-            ->find();
+            ->select();
     }
 
     /**
