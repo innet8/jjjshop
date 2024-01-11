@@ -7,12 +7,20 @@ use app\cashier\model\order\Cart as CartModel;
 use hg\apidoc\annotation as Apidoc;
 
 /**
- * 桌台模块-购物车
+ * 公共模块-购物车
  */
 class Cart extends Controller
 {
     /**
-     * 当前购物车列表
+     * @Apidoc\Title("购物车列表")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.cart/list")
+     * @Apidoc\Param("delivery", type="int", require=true, default="0", desc="消费方式：10-外卖配送 20-上门取 30-打包带走 40-店内就餐")
+     * @Apidoc\Param(ref="pageParam")
+     * @Apidoc\Returned("productList",type="array",ref="app\cashier\model\order\Cart\getList")
+     * @Apidoc\Returned("cartInfo",type="array",ref="app\cashier\model\order\Cart\getCartPrice")
+     * @Apidoc\Returned("delivery",type="string", desc="消费方式：10-外卖配送 20-上门取 30-打包带走 40-店内就餐")
+     * @Apidoc\Returned("stayNum",type="int", desc="挂单数量")
      */
     public function list($delivery = 40)
     {
@@ -60,7 +68,10 @@ class Cart extends Controller
     }
 
     /**
-     * 整单取消
+     * @Apidoc\Title("整单取消")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.cart/delStay")
+     * @Apidoc\Returned()
      */
     public function delStay()
     {
@@ -72,7 +83,11 @@ class Cart extends Controller
     }
 
     /**
-     * 挂单列表
+     * @Apidoc\Title("挂单列表")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.cart/stayList")
+     * @Apidoc\Param(ref="pageParam")
+     * @Apidoc\Returned("productList",type="array",ref="app\cashier\model\order\Cart\getStayList")
      */
     public function stayList()
     {
@@ -83,7 +98,10 @@ class Cart extends Controller
     }
 
     /**
-     * 挂单
+     * @Apidoc\Title("挂单")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.cart/stay")
+     * @Apidoc\Returned()
      */
     public function stay()
     {
@@ -95,7 +113,10 @@ class Cart extends Controller
     }
 
     /**
-     * 取单
+     * @Apidoc\Title("取单")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.cart/pick")
+     * @Apidoc\Returned()
      */
     public function pick($cart_no)
     {
@@ -107,7 +128,10 @@ class Cart extends Controller
     }
 
     /**
-     * 删掉挂单
+     * @Apidoc\Title("删掉挂单")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.cart/delCart")
+     * @Apidoc\Returned()
      */
     public function delCart($cart_no)
     {
@@ -119,7 +143,10 @@ class Cart extends Controller
     }
 
     /**
-     * 折扣抹零
+     * @Apidoc\Title("折扣抹零")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.cart/changeMoney")
+     * @Apidoc\Returned()
      */
     public function changeMoney()
     {
@@ -146,10 +173,11 @@ class Cart extends Controller
         return $this->renderSuccess('加入购物车成功');
     }
 
-
     /**
-     * 加减购物商品数量
-     * @param $cart_id
+     * @Apidoc\Title("加减购物商品数量")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.cart/sub")
+     * @Apidoc\Returned()
      */
     public function sub($cart_id)
     {
@@ -162,7 +190,10 @@ class Cart extends Controller
     }
 
     /**
-     * 清空购物车
+     * @Apidoc\Title("清空购物车")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.cart/delete")
+     * @Apidoc\Returned()
      */
     public function delete()
     {
