@@ -32,9 +32,7 @@ class Cart extends Controller
      * @Apidoc\Url ("/index.php/cashier/order.cart/changePrice")
      * @Apidoc\Param("cart_id", type="int", require=true, desc="购物车ID")
      * @Apidoc\Param("price", type="float", require=true, desc="价格")
-     * @Apidoc\Returned("code", type="int", desc="返回代码")
-     * @Apidoc\Returned("msg", type="string", desc="返回消息")
-     * @Apidoc\Returned("data", type="array", desc="返回数据")
+     * @Apidoc\Returned()
      */
     public function changePrice($cart_id, $price)
     {
@@ -50,9 +48,7 @@ class Cart extends Controller
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/delProduct")
      * @Apidoc\Param("cart_id", type="int", require=true, desc="购物车商品ID")
-     * @Apidoc\Returned("code", type="int", desc="返回代码")
-     * @Apidoc\Returned("msg", type="string", desc="返回消息")
-     * @Apidoc\Returned("data", type="array", desc="返回数据")
+     * @Apidoc\Returned()
      */
     public function delProduct($cart_id)
     {

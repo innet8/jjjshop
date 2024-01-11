@@ -164,10 +164,8 @@ class Order extends Controller
      * @Apidoc\Url ("/index.php/cashier/order.order/moveProduct")
      * @Apidoc\Param("order_id", type="int", require=true, desc="订单ID")
      * @Apidoc\Param("order_product_id", type="int", require=true, desc="订单产品表ID")
-     * @Apidoc\Param("num", type="int", require=true, desc="产品数量")
-     * @Apidoc\Returned("code", type="int", desc="返回代码")
-     * @Apidoc\Returned("msg", type="string", desc="返回消息")
-     * @Apidoc\Returned("data", type="array", desc="返回数据")
+     * @Apidoc\Param("num", type="int", require=true, desc="商品数量")
+     * @Apidoc\Returned()
      */
     public function moveProduct($order_id, $order_product_id, $num)
     {

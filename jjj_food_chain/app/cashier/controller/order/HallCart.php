@@ -41,7 +41,15 @@ class HallCart extends Controller
     }
 
     /**
-     * 折扣抹零
+     * @Apidoc\Title("折扣抹零")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/changeMoney")
+     * @Apidoc\Param("order_id", type="int", require=true, desc="订单ID")
+     * @Apidoc\Param("type", type="int", require=true, desc="折扣方式 1-订单改价 2-折扣 3-抹零")
+     * @Apidoc\Param("money", type="float", require=false, desc="改价价格 （type-1 必填）")
+     * @Apidoc\Param("rate", type="float", require=false, desc="折扣 （type-2 必填）")
+     * @Apidoc\Param("discountType", type="int", require=false, desc="抹零类型 1-抹分 2-抹角 3-四舍五入到角 4-四舍五入到元 （type-3 必填）")
+     * @Apidoc\Returned()
      */
     public function changeMoney()
     {
@@ -66,9 +74,7 @@ class HallCart extends Controller
      * @Apidoc\Param("product_price", type="float", require=true, desc="商品价格")
      * @Apidoc\Param("bag_price", type="float", require=true, desc="打包费")
      * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
-     * @Apidoc\Returned("code", type="int", desc="返回代码")
-     * @Apidoc\Returned("msg", type="string", desc="返回消息")
-     * @Apidoc\Returned("data", type="array", desc="返回数据")
+     * @Apidoc\Returned()
      */
     public function add()
     {
@@ -87,9 +93,7 @@ class HallCart extends Controller
      * @Apidoc\Url ("/index.php/cashier/order.cart/sub")
      * @Apidoc\Param("product_num", type="int", require=true, desc="商品数量")
      * @Apidoc\Param("cart_id", type="int", require=true, desc="桌台购物车ID")
-     * @Apidoc\Returned("code", type="int", desc="操作代码")
-     * @Apidoc\Returned("msg", type="string", desc="操作消息")
-     * @Apidoc\Returned("data", type="array", desc="返回数据")
+     * @Apidoc\Returned()
      */
     public function sub($cart_id)
     {
@@ -105,9 +109,7 @@ class HallCart extends Controller
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.HallCart/cancel")
      * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
-     * @Apidoc\Returned("code", type="int", desc="操作代码")
-     * @Apidoc\Returned("msg", type="string", desc="操作消息")
-     * @Apidoc\Returned("data", type="array", desc="返回数据")
+     * @Apidoc\Returned()
      */
     public function cancel($table_id)
     {
