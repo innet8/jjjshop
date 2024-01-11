@@ -9,7 +9,7 @@ use app\cashier\controller\Controller;
 /**
  * 呼叫相关
  * @Apidoc\Group("base")
- * @Apidoc\Sort(2)
+ * @Apidoc\Sort(4)
  */
 class Call extends Controller
 {
@@ -30,7 +30,7 @@ class Call extends Controller
 
     /**
      * @Apidoc\Title("已处理")
-     * @Apidoc\Tag("已处理")
+     * @Apidoc\Desc("已处理")
      * @Apidoc\Method("POST")
      * @Apidoc\Url("/index.php/cashier/call.call/processed")
      * @Apidoc\Param("call_id", type="int", require=false, default="0", desc="呼叫id")

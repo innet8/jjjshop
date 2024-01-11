@@ -7,7 +7,7 @@ use hg\apidoc\annotation as Apidoc;
 
 /**
  * 基础信息
- * @Apidoc\Sort(1)
+ * @Apidoc\Sort(2)
  * @Apidoc\Group("base")
  */
 class Index extends Controller

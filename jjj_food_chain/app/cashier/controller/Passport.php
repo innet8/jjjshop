@@ -7,7 +7,7 @@ use hg\apidoc\annotation as Apidoc;
 /**
  * 用户
  * @Apidoc\Group("base")
- * @Apidoc\Sort(2)
+ * @Apidoc\Sort(1)
  */
 class Passport extends Controller
 {

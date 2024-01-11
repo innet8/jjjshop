@@ -14,7 +14,7 @@ class Call extends Controller
 {
     /**
      * @Apidoc\Title("呼叫")
-     * @Apidoc\Tag("呼叫")
+     * @Apidoc\Desc("呼叫")
      * @Apidoc\Method("POST")
      * @Apidoc\Url("/index.php/tablet/call.call/call")
      * @Apidoc\Param("table_id", type="int", require=true, default="0", desc="卓位id")

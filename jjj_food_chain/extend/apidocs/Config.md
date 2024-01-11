@@ -1,7 +1,7 @@
 <br>
 <br>
 
-**[官方文档](https://hgthecode.github.io/thinkphp-apidoc/use/notes/controller)**
+**[官方文档](https://docs.apidoc.icu/config/)**
 <br>
 <br>
 

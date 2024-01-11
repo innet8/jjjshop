@@ -53,7 +53,13 @@ class Order extends BaseModel
         return $this->hasMany('app\\common\\model\\order\\OrderProduct', 'order_id', 'order_id')->hidden(['content']);
     }
 
-
+     /**
+     * 订单商品列表
+     */
+    public function aaaaa()
+    {
+        return $this->hasMany('app\\common\\model\\order\\OrderProduct', 'order_id', 'order_id')->hidden(['content']);
+    }
     /**
      * 关联订单收货地址表
      */
@@ -876,6 +882,8 @@ class Order extends BaseModel
             $this->error = "订单状态错误，不允许取消";
             return false;
         }
+        $this->is_delete = 1;
+        $this->save();
         return $this->delete($this->order_id);
     }
 

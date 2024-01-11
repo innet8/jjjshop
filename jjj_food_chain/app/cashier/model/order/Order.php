@@ -353,7 +353,7 @@ class Order extends OrderModel
                 'total_price' => $this['total_price'] - $total_pay_price
             ]);
             $isPay = $this['pay_status']['value'] == 20 ? 1 : 0;
-//            $orderProduct['total_num'] = $num;
+//          $orderProduct['total_num'] = $num;
             // 退回商品库存
             ProductFactory::getFactory($this['order_source'])->backProductStock([$orderProduct], $isPay);
             if ($orderProduct['total_num'] == $num) {
@@ -434,5 +434,67 @@ class Order extends OrderModel
             return $this->save($update);
         });
         return $status;
+    }
+
+    /**
+     * 营业数据
+     */
+    public function businessData($params)
+    {
+        $model = $this;
+        if (isset($params['shop_supplier_id']) && $params['shop_supplier_id']) {
+            $model = $model->where('a.shop_supplier_id', '=', $params['shop_supplier_id']);
+        }
+        if (isset($params['category_type']) && $params['category_type']) {
+            $model = $model->where('c.parent_id', $params['category_type'] == 1 ? '=' : '>', 0);
+        }
+
+        $startTime = 0;
+        $endTime = 0;
+        //查询时间
+        switch ($params['time_type'] ?? 1) {
+            case '1'://今天
+                $startTime = strtotime(date('Y-m-d'));
+                $endTime = $startTime + 86399;
+                break;
+            case '2'://昨天
+                $startTime = strtotime("-1 days", strtotime(date('Y-m-d')));
+                $endTime = $startTime + 86399;
+                break;
+            case '3'://一周
+                $startTime = strtotime("-7 days", strtotime(date('Y-m-d')));
+                $endTime = time();
+                break;
+        }
+        if (isset($params['time']) && $params['time']) {
+            $startTime = strtotime($params['time'][0]);
+            $endTime = strtotime($params['time'][0]) + 86399;
+        }
+        if ($startTime && $endTime) {
+            $model = $model->where('a.create_time', 'between', [$startTime, $endTime]);
+        }
+
+        $model = $model->alias('a')
+            ->leftJoin('order_product rp','a.order_id = rp.order_id')
+            ->leftJoin('product p','p.product_id = rp.product_id')
+            ->leftJoin('category c','c.category_id = p.category_id')
+            ->where('a.pay_status', '=', 20)
+            ->where('a.order_status', '=', 30)
+            ->where('a.eat_type', '<>', 0);
+
+        return [
+            'categorys' => (clone $model)->group("c.category_id")
+                ->field("c.name, count(a.order_id) as sales, sum(a.pay_price - a.refund_money) as prices")
+                ->select()
+                ->append([]),
+            'sales_num' => (clone $model)->count(),
+            'balance_pay' => (clone $model)->where('pay_type', 10)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0,
+            'cash_pay' => (clone $model)->where('pay_type', 40)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0,
+            'wx_pay' => (clone $model)->where('pay_type', 50)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0,
+            'zfb_pay' => (clone $model)->where('pay_type', 60)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0,
+            'refund_amount' => (clone $model)->sum("refund_money"), 
+            'total_amount' => (clone $model)->sum("pay_price"), 
+
+        ];
     }
 }
