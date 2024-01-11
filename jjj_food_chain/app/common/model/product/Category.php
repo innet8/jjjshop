@@ -25,7 +25,7 @@ class Category extends BaseModel
 
     public function child()
     {
-        return $this->hasMany('app\\common\\model\\product\\Category', 'parent_id', 'category_id');
+        return $this->hasMany('app\\common\\model\\product\\Category', 'parent_id', 'category_id')->with(['images', 'child']);
     }
 
     /**
@@ -57,7 +57,7 @@ class Category extends BaseModel
         }
         $model = new static;
         if (!Cache::get('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special)) {
-            $data = $model->with(['images', 'child.images'])
+            $data = $model->with(['images', 'child'])
                 ->where('parent_id', '=', 0)
                 ->where('type', '=', $type)
                 ->where('is_special', '=', $is_special)
@@ -156,7 +156,7 @@ class Category extends BaseModel
             $shop_supplier_id = $detail['shop_supplier_id'];
         }
         if (!Cache::get('category_cashier_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special)) {
-            $data = $model->with(['images', 'child.images'])
+            $data = $model->with(['images', 'child'])
                 ->where('parent_id', '=', 0)
                 ->where('type', '=', $type)
                 ->where('status', '=', 1)

@@ -6,12 +6,17 @@ use app\cashier\controller\Controller;
 use app\cashier\model\product\Category as CategoryModel;
 
 /**
- * 商品分类
+ * 商品
  */
 class Category extends Controller
 {
     /**
      * 普通商品分类列表
+     */
+    /**
+     * @Apidoc\Title("商品分类")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Returned("list",type="array",ref="app\cashier\model\product\Category\getCashierALL")
      */
     public function index()
     {
