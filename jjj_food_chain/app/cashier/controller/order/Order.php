@@ -130,7 +130,12 @@ class Order extends Controller
     }
 
     /**
-     * 转台
+     * @Apidoc\Title("转台")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Param("area_id", type="int", require=false, desc="区域ID")
+     * @Apidoc\Param("type_id", type="int", require=false, desc="桌台类型ID")
+     * @Apidoc\Url ("/index.php/cashier/store.table/table")
+     * @Apidoc\Returned("list",type="array",ref="app\cashier\model\store\Table\getList")
      */
     public function changeTable($order_id, $table_id)
     {

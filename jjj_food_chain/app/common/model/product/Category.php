@@ -156,7 +156,8 @@ class Category extends BaseModel
             $shop_supplier_id = $detail['shop_supplier_id'];
         }
         if (!Cache::get('category_cashier_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special)) {
-            $data = $model->with(['images'])
+            $data = $model->with(['images', 'child.images'])
+                ->where('parent_id', '=', 0)
                 ->where('type', '=', $type)
                 ->where('status', '=', 1)
                 ->where('is_special', '=', $is_special)
