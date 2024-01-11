@@ -13,14 +13,13 @@
       <div class="table-wrap">
         <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="45"></el-table-column>
-          <el-table-column prop="sort" label="排序"></el-table-column>
-          <el-table-column prop="attribute_id" label="ID"></el-table-column>
           <el-table-column prop="attribute_name" label="属性名" width="400px"></el-table-column>
           <el-table-column prop="attribute_value" label="属性值">
             <template  #default="scope">
              {{attrjoin(scope.row.attribute_value)}}
             </template>
           </el-table-column>
+          <el-table-column prop="sort" label="排序"></el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template  #default="scope">
               <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/product/expand/attr/edit'" >编辑</el-button>

@@ -36,10 +36,10 @@
                                 </el-input>
                             </template>
                             <el-icon class="add-button" @click="handleAdd(index)">
-                                <Plus />
+                                <CirclePlusFilled />
                             </el-icon>
                             <el-icon class="add-button" @click="handleDecrease(index)">
-                                <Minus />
+                                <RemoveFilled />
                             </el-icon>
                         </el-form-item>
                     </el-form>

@@ -16,9 +16,8 @@
         <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading"
           @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="45"></el-table-column>
-          <el-table-column prop="sort" label="排序"></el-table-column>
-          <el-table-column prop="unit_id" label="ID"></el-table-column>
           <el-table-column prop="unit_name" label="单位名称" width="400px"></el-table-column>
+          <el-table-column prop="sort" label="排序"></el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template #default="scope">
               <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/product/expand/unit/edit'">编辑

@@ -5,12 +5,22 @@
   <el-dialog title="添加单位" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
     :close-on-press-escape="false">
     <el-form size="small" :model="form" :rules="formRules" ref="form">
-      <el-form-item label="排序" prop="sort" :label-width="formLabelWidth">
+      <el-form-item label="排序" prop="sort" >
         <el-input v-model.number="form.sort" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="单位名称" prop="unit_name" :label-width="formLabelWidth">
+      <el-form-item :label="$t('单位名称')+'(ภาษาไทย)'" prop="unit_name" >
         <el-input v-model="form.unit_name" autocomplete="off"></el-input>
       </el-form-item>
+      <el-form-item :label="$t('单位名称')+'(简体中文)'" prop="unit_name" >
+        <el-input v-model="form.unit_name" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item :label="$t('单位名称')+'(繁體中文)'" prop="unit_name" >
+        <el-input v-model="form.unit_name" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item :label="$t('单位名称')+'(English)'" prop="unit_name" >
+        <el-input v-model="form.unit_name" autocomplete="off"></el-input>
+      </el-form-item>
+
     </el-form>
     <template #footer>
     <div class="dialog-footer">

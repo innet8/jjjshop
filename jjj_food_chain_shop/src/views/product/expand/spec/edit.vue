@@ -5,10 +5,19 @@
   <el-dialog title="编辑规格" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
     :close-on-press-escape="false">
     <el-form size="small" :model="form" :rules="formRules" ref="form">
-      <el-form-item label="排序" prop="sort" :label-width="formLabelWidth">
+      <el-form-item label="排序" prop="sort" >
         <el-input v-model.number="form.sort" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="规格名称" prop="spec_name" :label-width="formLabelWidth">
+      <el-form-item :label="$t('规格名称')+ '(ภาษาไทย)'" prop="spec_name" >
+        <el-input v-model="form.spec_name" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item :label="$t('规格名称')+ '(简体中文)'" prop="spec_name" >
+        <el-input v-model="form.spec_name" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item :label="$t('规格名称')+ '(繁體中文)'" prop="spec_name" >
+        <el-input v-model="form.spec_name" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item :label="$t('规格名称')+ '(English)'" prop="spec_name" >
         <el-input v-model="form.spec_name" autocomplete="off"></el-input>
       </el-form-item>
     </el-form>
