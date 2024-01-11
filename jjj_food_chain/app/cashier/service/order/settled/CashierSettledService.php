@@ -68,19 +68,14 @@ abstract class CashierSettledService extends BaseService
     {
         // 整理订单数据
         $this->orderData = $this->getOrderData();
-        trace('aaaa');
         // 验证商品状态, 是否允许购买
         $this->validateProductList();
-        trace('bbbbb');
         // 订单商品总数量
         $orderTotalNum = helper::getArrayColumnSum($this->productList, 'product_num');
-        trace('ccccc');
         // 设置订单商品总金额(不含优惠折扣)
         $this->setOrderTotalPrice();
-        trace('ddddd');
         // 计算订单商品的实际付款金额
         $this->setOrderProductPayPrice();
-        trace('eeeee');
         // 计算订单最终金额
         $this->setOrderPayPrice();
         // 计算订单积分赠送数量

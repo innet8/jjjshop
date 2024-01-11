@@ -686,6 +686,10 @@ class Order extends BaseModel
                 $this->error = '订单已支付，不允许加菜';
                 return false;
             }
+            if ($order['order_status'] != 10) {
+                $this->error = '订单已结束';
+                return false;
+            }
             $setting = SettingModel::getItem('points');
             // 条件：后台开启开启购物送积分
             $points_bonus = 0;
@@ -821,6 +825,22 @@ class Order extends BaseModel
             $this->rollback();
             return false;
         }
+    }
+
+    /**
+     * 修改桌台就餐人数
+     */
+    public function updateMealNum($data)
+    {
+        // 检查桌台状态
+        $tableOrder = self::where('order_id', '=', $data['order_id'])
+            ->where('table_id', '=', $data['table_id'])
+            ->where('order_status', '=', 10)->find();
+        if ($tableOrder) {
+            $tableOrder->meal_num = $data['meal_num'];
+            return $tableOrder->save();
+        }
+        return false;
     }
 
     /**
