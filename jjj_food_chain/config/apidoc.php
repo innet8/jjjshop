@@ -16,7 +16,7 @@ return [
         ],
         [
             // （必须）标题
-            'title'=>'Cashier接口',
+            'title'=>'收银端接口',
             // （必须）控制器目录地址
             'path'=>'app\cashier\controller',
             // （必须）唯一的key
@@ -30,7 +30,7 @@ return [
         ],
         [
             // （必须）标题
-            'title'=>'Shop接口',
+            'title'=>'店铺端接口',
             // （必须）控制器目录地址
             'path'=>'app\shop\controller',
             // （必须）唯一的key
@@ -43,6 +43,14 @@ return [
             'path'=>'app\api\controller',
             // （必须）唯一的key
             'key'=>'api',
+        ],
+        [
+            // （必须）标题
+            'title'=> '平板端接口',
+            // （必须）控制器目录地址
+            'path'=>'app\tablet\controller',
+            // （必须）唯一的key
+            'key'=>'tablet',
         ]
     ],
 

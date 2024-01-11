@@ -64,6 +64,13 @@ class BaseModel extends Model
         self::$app_id = request()->param('app_id');
     }
 
+    /**
+     * 设置app_id (平板模块)
+     */
+    protected static function setTabletAppId()
+    {
+        self::$app_id = request()->param('app_id') ?: 0;
+    }
 
     /**
      * 设置app_id (cashier模块)
