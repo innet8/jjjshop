@@ -4,7 +4,7 @@
         <!--内容区域-->
         <div class="right-content-box">
             <div class="subject-wrap">
-                <div class="main-div">
+                <div :class=" route.path=='/home' ? 'home-div' :'main-div'">
                     <ChildTabs></ChildTabs>
                     <router-view />
                 </div>
@@ -13,18 +13,9 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import ChildTabs from '@/views/layout/ChildTabs.vue';
-export default {
-    components: {
-        ChildTabs
-    },
-    data() {
-        return {};
-    },
-    created() { },
-    methods: {}
-};
+import { useRoute } from 'vue-router';
+const route = useRoute()
 </script>
-
 <style></style>

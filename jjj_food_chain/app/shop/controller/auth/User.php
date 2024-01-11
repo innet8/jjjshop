@@ -11,7 +11,7 @@ use app\shop\model\auth\User as AuthUserModel;
 use hg\apidoc\annotation as Apidoc;
 
 /**
- * 管理员
+ * 用户管理
  */
 class User extends Controller
 {
@@ -43,7 +43,6 @@ class User extends Controller
 
     /**
      * @Apidoc\Title("新增")
-     * @Apidoc\Tag("新增")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/shop/auth.user/add")
      * @Apidoc\Param("user_name", type="string", require=true, default="001", desc="用户名")

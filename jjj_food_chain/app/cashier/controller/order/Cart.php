@@ -7,7 +7,7 @@ use app\cashier\model\order\Cart as CartModel;
 use hg\apidoc\annotation as Apidoc;
 
 /**
- * 快餐购物车控制器
+ * 桌台点单
  */
 class Cart extends Controller
 {
@@ -29,6 +29,7 @@ class Cart extends Controller
     /**
      * @Apidoc\Title("对购物车商品改价")
      * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.cart/changePrice")
      * @Apidoc\Param("cart_id", type="int", require=true, desc="购物车ID")
      * @Apidoc\Param("price", type="float", require=true, desc="价格")
      * @Apidoc\Returned("code", type="int", desc="返回代码")
@@ -47,6 +48,7 @@ class Cart extends Controller
     /**
      * @Apidoc\Title("删除购物车商品")
      * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.cart/delProduct")
      * @Apidoc\Param("cart_id", type="int", require=true, desc="购物车商品ID")
      * @Apidoc\Returned("code", type="int", desc="返回代码")
      * @Apidoc\Returned("msg", type="string", desc="返回消息")
