@@ -8,12 +8,16 @@ use app\cashier\model\order\Order as OrderModel;
 use hg\apidoc\annotation as Apidoc;
 
 /**
- * 桌台点单
+ * 桌台模块-购物车
  */
 class HallCart extends Controller
 {
     /**
-     * 当前购物车列表
+     * @Apidoc\Title("当前商品列表")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/list")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+     * @Apidoc\Returned("list",type="array",ref="app\cashier\model\order\Cart\getList")
      */
     public function list($table_id)
     {
@@ -49,7 +53,7 @@ class HallCart extends Controller
     }
 
     /**
-     * @Apidoc\Title("添加商品到收银购物车")
+     * @Apidoc\Title("添加商品")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/add")
      * @Apidoc\Param("product_id", type="int", require=true, desc="商品ID")
@@ -78,7 +82,7 @@ class HallCart extends Controller
     }
 
     /**
-     * @Apidoc\Title("修改购物车商品数量")
+     * @Apidoc\Title("修改商品数量")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/sub")
      * @Apidoc\Param("product_num", type="int", require=true, desc="商品数量")
