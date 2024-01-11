@@ -6,6 +6,7 @@ use app\cashier\controller\Controller;
 use app\cashier\model\store\TableArea as TableAreaModel;
 use app\cashier\model\store\Table as TableModel;
 use app\common\model\supplier\Supplier as SupplierModel;
+use app\shop\model\store\TableType as TableTypeModel;
 use hg\apidoc\annotation as Apidoc;
 
 /**
@@ -15,7 +16,7 @@ use hg\apidoc\annotation as Apidoc;
 class Table extends Controller
 {
     /**
-     * @Apidoc\Title("桌位区域列表")
+     * @Apidoc\Title("桌台区域分类")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url("/index.php/cashier/store.table/area")
      * @Apidoc\Returned("list",type="array",ref="app\cashier\model\store\TableArea\getList")
@@ -25,6 +26,19 @@ class Table extends Controller
         // 桌位列表
         $model = new TableAreaModel;
         $list = $model->getList($this->cashier['user']['shop_supplier_id']);
+        return $this->renderSuccess('', compact('list'));
+    }
+
+    /**
+     * @Apidoc\Title("桌台类型分类")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/cashier/store.table/tableType")
+     * @Apidoc\Returned("list",type="array",ref="app\cashier\model\store\TableType\getList")
+     */
+    public function tableType()
+    {
+        $model = new TableTypeModel;
+        $list = $model->getList($this->postData(), $this->cashier['user']['shop_supplier_id']);
         return $this->renderSuccess('', compact('list'));
     }
 

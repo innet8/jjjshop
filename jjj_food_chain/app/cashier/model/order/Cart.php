@@ -70,8 +70,7 @@ class Cart extends CartModel
             ->where('shop_supplier_id', '=', $user['shop_supplier_id'])
             ->where('cashier_id', '=', $user['cashier_id'])
             ->update(['discount_money' => 0]);
-//        $this->where('cart_id', '=', $cart_id)->update(['price' => $price]);
-        return $this->where('cart_id', '=', $cart_id)->update(['price' => $price]);;
+        return $this->where('cart_id', '=', $cart_id)->update(['price' => $price]);
     }
 
     /**
