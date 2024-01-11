@@ -2,14 +2,7 @@
     <el-dialog title="添加分类" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
         :close-on-press-escape="false">
         <el-form size="small" :model="form" :rules="formRules" ref="form">
-            <el-form-item label="父级分类">
-                <el-select v-model="form.parent_id" label="无">
-                    <el-option :value="0" label="无"></el-option>
-                    <template v-for="cat in category" :key="cat.category_id">
-                        <el-option :value="cat.category_id" :label="cat.name"></el-option>
-                    </template>
-                </el-select>
-            </el-form-item>
+
             <el-form-item :label="$t('分类名称') + '(ภาษาไทย)'" prop="name">
                 <el-input v-model="form.name" autocomplete="off"></el-input>
             </el-form-item>
@@ -83,6 +76,7 @@ export default {
                 }]
             },
             /*左边长度*/
+            formLabelWidth: '120px',
             /*是否显示*/
             dialogVisible: false,
             loading: false,

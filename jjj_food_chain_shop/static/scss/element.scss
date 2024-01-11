@@ -4,6 +4,8 @@
     --el-component-size-small: 32px !important;
     --el-color-black:#100A05 !important;
     --el-color-tips:#909399 !important;
+    --el-color-primary-dark-2: #FFBE00;
+    --el-color-primary-light-5: #FFBE00;
     --el-color-primary-light-8: #FFBE00;
     --el-color-primary-light-9: #FFFAEB;
 }
@@ -74,9 +76,15 @@
 /* 表格 */
 .el-table .cell{
     line-height: 32px !important;
-    font-size: 12px !important;
+    font-size: 14px !important;
 }
-
+.el-table thead{
+    color: var(--el-color-tips) !important;
+}
+.el-table td.el-table__cell{
+    color: var(--el-color-black);
+    font-weight: 400;
+}
 /* 按钮 */
 .el-button.el-button--small.el-button--text{
     padding-left: 0;
@@ -129,6 +137,7 @@
 .el-form{
     --el-text-color-regular:#333;
     --el-font-size-base: 12px !important;
+    position: relative;
 }
 .el-form-item{
     --font-size: 14px !important;

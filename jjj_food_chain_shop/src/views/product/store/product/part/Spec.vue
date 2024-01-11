@@ -22,13 +22,25 @@
       </el-radio-group>
     </el-form-item>
     <el-form-item label="商品单位：" :rules="[{ required: true, message: '请填写商品单位' }]" prop="model.product_unit">
-      <el-autocomplete class="inline-input" v-model="form.model.product_unit" placeholder="如:大份"
-        :fetch-suggestions="querySearch"></el-autocomplete>
+      <el-input class="inline-input" v-model="form.model.product_unit" :placeholder="$t('请输入')+'(ภาษาไทย)'"
+        ></el-input>
+    </el-form-item>
+    <el-form-item label="" :rules="[{ required: true, message: '请填写商品单位' }]" prop="model.product_unit">
+      <el-input class="inline-input" v-model="form.model.product_unit" :placeholder="$t('请输入')+'(简体中文)'"
+        ></el-input>
+    </el-form-item>
+    <el-form-item label="" :rules="[{ required: true, message: '请填写商品单位' }]" prop="model.product_unit">
+      <el-input class="inline-input" v-model="form.model.product_unit" :placeholder="$t('请输入')+'(繁體中文)'"
+        ></el-input>
+    </el-form-item>
+    <el-form-item label="" :rules="[{ required: true, message: '请填写商品单位' }]" prop="model.product_unit">
+      <el-input class="inline-input" v-model="form.model.product_unit" :placeholder="$t('请输入')+'(English)'"
+        ></el-input>
     </el-form-item>
     <el-form-item label="产品规格：">
       <el-radio-group v-model="form.model.spec_type" @change="changeSpec">
-        <el-radio :label="10" v-if="!form.isSpecLocked||(form.isSpecLocked&&form.model.spec_type==10)">单规格</el-radio>
-        <el-radio :label="20" v-if="!form.isSpecLocked||(form.isSpecLocked&&form.model.spec_type==20)">多规格</el-radio>
+        <el-radio :label="10" v-if="!form.isSpecLocked||(form.isSpecLocked&&form.model.spec_type==10)">{{$t('单规格')}}</el-radio>
+        <el-radio :label="20" v-if="!form.isSpecLocked||(form.isSpecLocked&&form.model.spec_type==20)">{{$t('多规格')}}</el-radio>
       </el-radio-group>
       <div v-if="form.isSpecLocked" class="red">此商品正在参加活动，不能修改规格</div>
     </el-form-item>
@@ -100,6 +112,8 @@
   };
 </script>
 
-<style>
-
+<style scoped>
+.inline-input{
+    max-width: 460px;
+}
 </style>

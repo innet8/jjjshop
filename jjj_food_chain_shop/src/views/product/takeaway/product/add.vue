@@ -219,6 +219,6 @@
   .basic-setting-content {}
 
   .product-add {
-    padding-bottom: 100px;
+    
   }
 </style>

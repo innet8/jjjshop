@@ -4,14 +4,14 @@
     	时间：2019-10-26
     	描述：商品管理-商品编辑-高级设置
     -->
-  <div class="buy-set-content pl16 pr16">
-    <div class="common-form">积分设置</div>
+  <div class="buy-set-content">
+    <!-- <div class="common-form">积分设置</div>
     <el-form-item label="是否开启积分赠送：">
       <el-radio-group v-model="form.model.is_points_gift">
         <el-radio :label="1">开启</el-radio>
         <el-radio :label="0">关闭</el-radio>
       </el-radio-group>
-    </el-form-item>
+    </el-form-item> -->
     <!--其他设置-->
     <div class="common-form mt50">其他设置</div>
     <el-form-item v-if="form.model.product_status!=40" label="商品状态：" :rules="[{ required: true, message: '选择商品状态' }]" prop="model.product_status">

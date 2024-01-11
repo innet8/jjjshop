@@ -266,7 +266,7 @@
   .basic-setting-content {}
 
   .product-add {
-    padding-bottom: 50px;
+    
   }
 
   .mb50 {

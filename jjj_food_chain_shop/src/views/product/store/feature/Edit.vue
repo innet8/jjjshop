@@ -1,15 +1,7 @@
 <template>
-    <el-dialog title="添加分类" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
+    <el-dialog title="修改分类" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
         :close-on-press-escape="false">
         <el-form size="small" :model="form" :rules="formRules" ref="form">
-            <el-form-item label="父级分类">
-                <el-select v-model="form.parent_id" label="无">
-                    <el-option :value="0" label="无"></el-option>
-                    <template v-for="cat in category" :key="cat.category_id">
-                        <el-option :value="cat.category_id" :label="cat.name"></el-option>
-                    </template>
-                </el-select>
-            </el-form-item>
             <el-form-item :label="$t('分类名称') + '(ภาษาไทย)'" prop="name">
                 <el-input v-model="form.name" autocomplete="off"></el-input>
             </el-form-item>
@@ -30,7 +22,6 @@
                     </div>
                 </el-row>
             </el-form-item>
-
             <el-form-item label="分类排序" prop="sort">
                 <el-input v-model.number="form.sort" autocomplete="off"></el-input>
             </el-form-item>
@@ -60,9 +51,10 @@ export default {
                 parent_id: 0,
                 category_id: 0,
                 name: '',
-                sort: 100,
-                image_id: ''
+                image_id: '',
+                sort: ''
             },
+            file_path: '',
             formRules: {
                 name: [{
                     required: true,
@@ -83,6 +75,7 @@ export default {
                 }]
             },
             /*左边长度*/
+            formLabelWidth: '120px',
             /*是否显示*/
             dialogVisible: false,
             loading: false,
@@ -90,11 +83,17 @@ export default {
             isupload: false,
         };
     },
-    props: ['open_add', 'addform'],
+    props: ['open_edit', 'editform'],
     created() {
-        this.dialogVisible = this.open_add;
         /*获取父级分类*/
         this.getParentCategory();
+        this.dialogVisible = this.open_edit;
+        this.form.category_id = this.editform.model.category_id;
+        this.form.parent_id = this.editform.model.parent_id;
+        this.form.name = this.editform.model.name;
+        this.form.sort = this.editform.model.sort;
+        this.form.image_id = this.editform.model.image_id;
+        this.file_path = this.editform.model.images?.file_path;
     },
     methods: {
         /*获取父级分类*/
@@ -112,17 +111,17 @@ export default {
                     self.loading = false;
                 });
         },
-        /*添加用户*/
+        /*修改用户*/
         addUser() {
             let self = this;
             let params = self.form;
             self.$refs.form.validate((valid) => {
                 if (valid) {
                     self.loading = true;
-                    PorductApi.storeCatAdd(params).then(data => {
+                    PorductApi.storeCatEdit(params, true).then(data => {
                         self.loading = false;
                         ElMessage({
-                            message: '添加成功',
+                            message: '修改成功',
                             type: 'success'
                         });
                         self.dialogFormVisible(true);
@@ -132,7 +131,6 @@ export default {
                 }
             });
         },
-
         /*关闭弹窗*/
         dialogFormVisible(e) {
             if (e) {

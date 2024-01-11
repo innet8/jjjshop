@@ -15,7 +15,7 @@
       <Ingredients></Ingredients>
 
       <!--商品详情-->
-      <Content></Content>
+      <!-- <Content></Content> -->
 
       <!--高级设置-->
       <Buyset></Buyset>
@@ -31,12 +31,12 @@
 
 <script>
   import PorductApi from '@/api/product.js';
-  import Basic from '../../takeaway/product/part/Basic.vue';
-  import Attr from '../../takeaway/product/part/Attr.vue';
-  import Ingredients from '../../takeaway/product/part/Ingredients.vue';
-  import Spec from '../../takeaway/product/part/Spec.vue';
-  import Content from '../../takeaway/product/part/Content.vue';
-  import Buyset from '../../takeaway/product/part/Buyset.vue';
+  import Basic from './part/Basic.vue';
+  import Attr from './part/Attr.vue';
+  import Ingredients from './part/Ingredients.vue';
+  import Spec from './part/Spec.vue';
+  import Content from './part/Content.vue';
+  import Buyset from './part/Buyset.vue';
   export default {
     components: {
       /*基础信息*/
@@ -219,6 +219,6 @@
   .basic-setting-content {}
 
   .product-add {
-    padding-bottom: 100px;
+    
   }
 </style>

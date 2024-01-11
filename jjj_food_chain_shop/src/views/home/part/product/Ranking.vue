@@ -10,28 +10,19 @@
             <div :class="activeName == 'view' ? 'active' : ''" @click="handleClick('view')">{{ $t('销售额TOP10') }}</div>
         </div>
         <div class="list ww100">
-            <ul v-if="listData.length > 0">
-                <li v-for="(item, index) in listData" :key="index" class="d-s-c p-6-0 border-b-d">
-                    <span class="key-box">{{ index + 1 }}</span>
-                    <span class="text-ellipsis-2 flex-1 ml10">{{ item.product_name }}</span>
-                    <span class="gray9 tr" style="width: 200px;">
-                        <template v-if="activeName == 'sale'">
-                            {{ $t('销量：') }}{{ item.total_num }}
-                            {{ $t('销售额：') }}{{ item.total_price }}
-                        </template>
-                        <template v-if="activeName == 'view'">
-                            {{ $t('销量：') }}{{ item.total_num }}
-                            {{ $t('销量：') }}{{ item.total_price }}
-                        </template>
-                    </span>
-                </li>
-            </ul>
-            <el-table v-if="listData.length > 0" :data="listData" style="width: 100%" size="small"> 
-                <el-table-column prop="product_name" :label="$t('商品名称')" >
+
+            <el-table v-if="listData.length > 0" :data="listData" style="width: 100%" size="small">
+                <el-table-column prop="product_name" :label="$t('商品名称')">
+                    <template #default="scope">
+                        <div class="product-name">
+                            <span :class="scope.$index <=3 ? 'key-box':'key-box2'">{{ scope.$index }}</span>
+                            <span class="">{{ scope.row.product_name }}</span>
+                        </div>
+                    </template>
                 </el-table-column>
-                <el-table-column prop="total_num" :label="$t('销量')" >
+                <el-table-column prop="total_num" :label="$t('销量')">
                 </el-table-column>
-                <el-table-column prop="total_price" :label="$t('销售额')" >
+                <el-table-column prop="total_price" :label="$t('销售额')">
                 </el-table-column>
             </el-table>
             <div v-else class="tc pt30">暂无上榜记录</div>
@@ -78,18 +69,37 @@ export default {
 .Echarts>div {
     height: 400px;
 }
-
-.right-box .list .key-box {
+.product-name{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.key-box {
+    display: block;
     width: 20px;
     height: 20px;
+    font-size: 12px;
     line-height: 20px;
     border-radius: 50%;
     font-weight: bold;
     text-align: center;
-    color: #ffffff;
-    background: red;
+    color: var(--el-color-black);
+    background: var(--el-color-primary);
+    font-weight: 700;
 }
-
+.key-box2 {
+    display: block;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    line-height: 20px;
+    border-radius: 50%;
+    font-weight: bold;
+    text-align: center;
+    color: var(--el-color-primary);
+    background: #FFF6DE;
+    font-weight: 700;
+}
 .right-box .list img {
     width: 30px;
     height: 30px;

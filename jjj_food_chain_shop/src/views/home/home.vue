@@ -338,6 +338,7 @@ export default {
 }
 
 .home-index {
+    width: 100%;
     display: -ms-flexbox;
     display: flex;
     gap: 12px;

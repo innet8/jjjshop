@@ -80,7 +80,9 @@ let myChart = null;
           tooltip: {
             trigger: 'axis'
           },
-          yAxis: {}
+          yAxis: {
+            type: 'value'
+          }
         }
       };
     },
@@ -133,7 +135,7 @@ let myChart = null;
             boundaryGap: false,
             data: xAxis
           };
-          this.option.color = ["#5E73E3", "#31C0D0"];
+          this.option.color = ["#FFBE00", "#FE852E"];
 
           this.option.legend = {
             data: [{
@@ -141,14 +143,15 @@ let myChart = null;
               color: '#ccc'
             }, {
               name: names[1]
-            }]
+            }],
+            right: 20
           };
           this.option.series = [{
               name: names[0],
               type: 'line',
               data: series1,
               lineStyle: {
-                color: '#5E73E3'
+                color: '#FFBE00'
               }
             },
             {
@@ -156,7 +159,7 @@ let myChart = null;
               type: 'line',
               data: series2,
               lineStyle: {
-                color: '#31C0D0'
+                color: '#FE852E'
               }
             }
           ];
