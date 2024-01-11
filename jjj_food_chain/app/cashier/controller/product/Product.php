@@ -7,12 +7,13 @@ use app\cashier\controller\Controller;
 use hg\apidoc\annotation as Apidoc;
 
 /**
- * 收银模块-商品管理
+ * 商品
+ * @Apidoc\Group("product")
  */
 class Product extends Controller
 {
     /**
-     * @Apidoc\Title("商品列表")
+     * @Apidoc\Title("列表")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/cashier/product.product/index")
      * @Apidoc\Param("category_id", type="int", require=false, default="0", desc="分类id")
@@ -29,7 +30,7 @@ class Product extends Controller
     }
 
     /**
-     * @Apidoc\Title("商品详情")
+     * @Apidoc\Title("详情")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/cashier/product.product/detail")
      * @Apidoc\Param("product_id", type="int", require=false, default="0", desc="商品id")

@@ -20,7 +20,7 @@ return [
     'connections' => [
         'mysql' => [
             // 数据库类型
-            'type' => Env::get('DATABASE_TYPE', 'mysql'),
+            'type' => Env::get('DB_TYPE', 'mysql'),
             // 服务器地址
             'hostname' => Env::get('DB_HOST', 'db'),
             // 数据库名

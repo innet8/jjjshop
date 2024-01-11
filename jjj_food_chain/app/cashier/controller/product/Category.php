@@ -7,12 +7,13 @@ use app\cashier\model\product\Category as CategoryModel;
 use hg\apidoc\annotation as Apidoc;
 
 /**
- * 收银模块-商品分类
+ * 商品分类
+ * @Apidoc\Group("product")
  */
 class Category extends Controller
 {
     /**
-     * @Apidoc\Title("商品分类列表")
+     * @Apidoc\Title("列表")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/cashier/product.category/index")
      * @Apidoc\Returned("list",type="array",ref="app\cashier\model\product\Category\getCashierALL")

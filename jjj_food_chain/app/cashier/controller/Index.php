@@ -6,12 +6,14 @@ use app\common\model\settings\Setting as SettingModel;
 use hg\apidoc\annotation as Apidoc;
 
 /**
- * 首页
+ * 基础信息
+ * @Apidoc\Sort(1)
+ * @Apidoc\Group("base")
  */
 class Index extends Controller
 {
     /**
-     * @Apidoc\Title("首页")
+     * @Apidoc\Title("基础信息")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/cashier/index/index")
      * @Apidoc\Returned()

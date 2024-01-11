@@ -9,7 +9,8 @@ use app\common\model\supplier\Supplier as SupplierModel;
 use hg\apidoc\annotation as Apidoc;
 
 /**
- * 桌台模块-桌台相关
+ * 桌台相关
+ * @Apidoc\Group("table")
  */
 class Table extends Controller
 {

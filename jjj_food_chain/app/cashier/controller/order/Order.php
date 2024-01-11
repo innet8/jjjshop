@@ -4,6 +4,7 @@ namespace app\cashier\controller\order;
 
 use app\cashier\model\order\Cart as CartModel;
 use app\cashier\model\order\Order as OrderModel;
+use app\common\model\order\Order as CommonOrderModel;
 use app\cashier\service\order\settled\CashierOrderSettledService;
 use app\cashier\controller\Controller;
 use app\common\service\order\OrderPrinterService;
@@ -11,6 +12,8 @@ use app\common\model\settings\Setting as SettingModel;
 use hg\apidoc\annotation as Apidoc;
 /**
  * 订单
+ * @Apidoc\Group("order")
+ * @Apidoc\Sort(1)
  */
 class Order extends Controller
 {
@@ -18,8 +21,8 @@ class Order extends Controller
     /**
      * @Apidoc\Title("订单列表")
      * @Apidoc\Tag("订单列表")
-     * @Apidoc\Method ("POST")
-     * @Apidoc\Url ("/index.php/cashier/order.order/index")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/index.php/cashier/order.order/index")
      * @Apidoc\Param("eat_type", type="int",require=true, default="10", desc="订单类型 0-全部,10-收银订单，20-桌台订单")
      * @Apidoc\Param("time_type", type="int",require=true, default="1", desc="时间类型 0-全都,1-今天,2-昨天,3-周")
      * @Apidoc\Param("time", type="string",require=true, default="", desc="时间范围 [2024-01-01, 2024-01-11]")
@@ -130,7 +133,7 @@ class Order extends Controller
     }
 
     /**
-     * @Apidoc\Title("转台")
+     * @Apidoc\Title("订单转台")
      * @Apidoc\Method ("POST")
      * @Apidoc\Param("area_id", type="int", require=false, desc="区域ID")
      * @Apidoc\Param("type_id", type="int", require=false, desc="桌台类型ID")
@@ -159,7 +162,7 @@ class Order extends Controller
     }
 
     /**
-     * @Apidoc\Title("桌台订单退菜")
+     * @Apidoc\Title("订单退菜")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.order/moveProduct")
      * @Apidoc\Param("order_id", type="int", require=true, desc="订单ID")
@@ -198,19 +201,28 @@ class Order extends Controller
     }
 
     /**
-     * 退款
+     * @Apidoc\Title("订单退款")
+     * @Apidoc\Tag("订单退款")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/cashier/order.order/refund")
+     * @Apidoc\Param("refund_money", type="int",require=true, default=0, desc="退款金额")
+     * @Apidoc\Param("order_id", type="int",require=true, default=0, desc="订单id")
      */
     public function refund($order_id)
     {
         $model = OrderModel::detail($order_id);
-        if ($model->refund($this->postData())) {
+        if ($model?->refund($this->postData())) {
             return $this->renderSuccess('操作成功');
         }
-        return $this->renderError($model->getError() ?: '操作失败');
+        return $this->renderError($model?->getError() ?: '操作失败');
     }
 
     /**
-     * 打印小票
+     * @Apidoc\Title("打印小票")
+     * @Apidoc\Tag("打印小票")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/cashier/order.order/print")
+     * @Apidoc\Param("order_id", type="int",require=true, default=0, desc="订单id")
      */
     public function print($order_id)
     {
@@ -226,17 +238,34 @@ class Order extends Controller
     /**
      * @Apidoc\Title("取消订单")
      * @Apidoc\Tag("取消订单")
-     * @Apidoc\Method ("POST")
-     * @Apidoc\Url ("/index.php/cashier/order.order/cancel")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/index.php/cashier/order.order/cancel")
      * @Apidoc\Param("order_id", type="int",require=true, default=0, desc="订单id")
      */
     public function cancel($order_id)
     {
-        $detail = OrderModel::detail($order_id);
+        $detail = CommonOrderModel::detail($order_id);
         if ($detail?->cancels()) {
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($detail?->getError() ?: '操作失败');
     }
     
+    /**
+     * @Apidoc\Title("删除订单")
+     * @Apidoc\Tag("删除订单")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/cashier/order.order/remove")
+     * @Apidoc\Param("order_id", type="int",require=true, default=0, desc="订单id")
+     */
+    public function remove($order_id)
+    {
+        $detail = CommonOrderModel::detail($order_id);
+        if ($detail?->remove()) {
+            return $this->renderSuccess('操作成功');
+        }
+        return $this->renderError($detail?->getError() ?: '操作失败');
+    }
+
+
 }

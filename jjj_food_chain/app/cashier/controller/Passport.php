@@ -6,6 +6,8 @@ use app\cashier\model\cashier\User;
 use hg\apidoc\annotation as Apidoc;
 /**
  * 用户
+ * @Apidoc\Group("base")
+ * @Apidoc\Sort(2)
  */
 class Passport extends Controller
 {

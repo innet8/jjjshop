@@ -138,20 +138,15 @@ class Order extends OrderModel
      */
     public function cancels()
     {
-        $detail = $this->find();
-        if (!$detail) {
-            $this->error = "订单不存在";
-            return false;
-        }
-        if ($detail['pay_status']['value'] == 20) {
+        if ($this->pay_status['value'] == 20) {
             $this->error = "订单已付款，不允许取消";
             return false;
         }
-        if ($detail['order_status']['value'] != 10) {
+        if ($this->order_status['value'] != 10) {
             $this->error = "订单状态错误，不允许取消";
             return false;
         }
-        return $detail->save(['order_status' => 20]);
+        return $this->save(['order_status' => 20]);
     }
 
     /**

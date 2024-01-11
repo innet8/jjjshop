@@ -7,7 +7,9 @@ use app\cashier\model\user\User as UserModel;
 use hg\apidoc\annotation as Apidoc;
 
 /**
- * 收银模块-会员相关
+ * 会员相关
+ * @Apidoc\Group("base")
+ * @Apidoc\Sort(3)
  */
 class User extends Controller
 {

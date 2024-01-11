@@ -2,7 +2,6 @@
 
 namespace app\common\model\order;
 
-use app\api\model\order\Order as OrderModel;
 use app\api\model\user\CardRecord as CardRecordModel;
 use app\common\enum\order\OrderSourceEnum;
 use app\common\model\BaseModel;
@@ -22,15 +21,19 @@ use app\common\exception\BaseException;
 use app\common\service\deliveryapi\MeTuanApi;
 use app\common\service\deliveryapi\UuApi;
 use app\common\service\product\factory\ProductFactory;
+use think\model\concern\SoftDelete;
 
 /**
  * 订单模型模型
  */
 class Order extends BaseModel
 {
+    use SoftDelete;
     protected $pk = 'order_id';
     protected $name = 'order';
-
+    protected $deleteTime = 'delete_time';
+    protected $defaultSoftDelete = 0;
+    
     /**
      * 追加字段
      * @var string[]
@@ -825,29 +828,36 @@ class Order extends BaseModel
      * @param $extractClerkId
      * @return bool|mixed
      */
-    public function cancelOrder()
+    public function cancels()
     {
-        if ($this['pay_status']['value'] != 20 || in_array($this['order_status']['value'], [20, 30])) {
-            $this->error = '该订单不满足核销条件';
+        if ($this->pay_status['value'] == 20) {
+            $this->error = "订单已付款，不允许取消";
             return false;
         }
-        return $this->transaction(function () {
-            $deliver = (new OrderDeliver())::detail(['order_id' => $this['order_id'], 'status' => 10]);
-            if ($deliver) {
-                $deliver->updateDeliver();
-            }
-            // 更新订单状态：已发货、已收货
-            $status = $this->save([
-                'delivery_status' => 20,
-                'delivery_time' => time(),
-                'receipt_status' => 20,
-                'receipt_time' => time(),
-                'order_status' => 30
-            ]);
-            // 执行订单完成后的操作
-            $OrderCompleteService = new OrderCompleteService(OrderTypeEnum::MASTER);
-            $OrderCompleteService->complete([$this], static::$app_id);
-            return $status;
-        });
+        if ($this->order_status['value'] != 10) {
+            $this->error = "订单状态错误，不允许取消";
+            return false;
+        }
+        return $this->save(['order_status' => 20]);
     }
+
+    /**
+     * 删除订单
+     * @param $extractClerkId
+     * @return bool|mixed
+     */
+    public function remove()
+    {
+        if ($this->pay_status['value'] == 20) {
+            $this->error = "订单已付款，不允许删除";
+            return false;
+        }
+        if ($this->order_status['value'] != 20) {
+            $this->error = "订单状态错误，不允许取消";
+            return false;
+        }
+        return $this->delete($this->order_id);
+    }
+
+
 }

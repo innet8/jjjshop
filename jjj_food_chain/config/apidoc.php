@@ -21,6 +21,12 @@ return [
             'path'=>'app\cashier\controller',
             // （必须）唯一的key
             'key'=>'cashier',
+            'groups'  => [
+                ['title'=>'基础','name'=>'base'],
+                ['title'=>'商品相关','name'=>'product'],
+                ['title'=>'桌台模块','name'=>'table'],
+                ['title'=>'订单相关','name'=>'order'],
+            ],
         ],
         [
             // （必须）标题
@@ -29,6 +35,14 @@ return [
             'path'=>'app\shop\controller',
             // （必须）唯一的key
             'key'=>'shop',
+        ],
+        [
+            // （必须）标题
+            'title'=> 'Api接口',
+            // （必须）控制器目录地址
+            'path'=>'app\api\controller',
+            // （必须）唯一的key
+            'key'=>'api',
         ]
     ],
 

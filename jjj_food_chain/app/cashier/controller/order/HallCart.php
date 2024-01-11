@@ -8,7 +8,9 @@ use app\cashier\model\order\Order as OrderModel;
 use hg\apidoc\annotation as Apidoc;
 
 /**
- * 桌台模块-购物车
+ * 桌台购物车
+ * @Apidoc\Group("order")
+ * @Apidoc\Sort(3)
  */
 class HallCart extends Controller
 {
