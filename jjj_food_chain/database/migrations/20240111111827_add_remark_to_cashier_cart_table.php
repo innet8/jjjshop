@@ -3,7 +3,7 @@
 use think\migration\Migrator;
 use think\migration\db\Column;
 
-class AddCardIdToUserTable extends Migrator
+class AddRemarkToCashierCartTable extends Migrator
 {
     /**
      * Change Method.
@@ -28,8 +28,15 @@ class AddCardIdToUserTable extends Migrator
      */
     public function change()
     {
-        $table = $this->table('user');
-        $table->addColumn(Column::unsignedInteger('card_id')->setNull(false)->setDefault(0)->setComment('会员卡id')->setAfter('grade_id'));
+        // 收银机购物车表
+        $table = $this->table('cashier_cart');
+        $table->addColumn(Column::string('remark')->setNull(false)->setDefault("")->setComment('自定义商品备注')->setAfter('table_id'));
+        $table->addColumn(Column::unsignedInteger('order_id')->setNull(false)->setDefault(0)->setComment('订单id')->setAfter('table_id'));
+        $table->update();
+
+        // 订单商品记录表
+        $table = $this->table('order_product');
+        $table->addColumn(Column::string('remark')->setNull(false)->setDefault("")->setComment('自定义商品备注')->setAfter('order_id'));
         $table->update();
     }
 }
