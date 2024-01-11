@@ -5,17 +5,17 @@ namespace app\cashier\controller\product;
 use app\cashier\controller\Controller;
 use app\cashier\model\product\Category as CategoryModel;
 use hg\apidoc\annotation as Apidoc;
+
 /**
- * 商品
+ * 收银模块-商品分类
  */
 class Category extends Controller
 {
     /**
-     * 普通商品分类列表
-     */
-    /**
-     * @Apidoc\Title("商品分类")
-     * @Apidoc\Method("POST")
+     * @Apidoc\Title("商品分类列表")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/product.category/index")
+     * @Apidoc\Returned()
      * @Apidoc\Returned("list",type="array",ref="app\cashier\model\product\Category\getCashierALL")
      */
     public function index()
