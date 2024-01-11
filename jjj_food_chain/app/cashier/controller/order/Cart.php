@@ -14,10 +14,38 @@ use hg\apidoc\annotation as Apidoc;
 class Cart extends Controller
 {
     /**
+     * @Apidoc\Title("加入购物车")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.cart/add")
+     * @Apidoc\Param("product_id", type="int", require=true, desc="商品id")
+     * @Apidoc\Param("product_num", type="int", require=true, desc="商品数量")
+     * @Apidoc\Param("product_sku_id", type="int", require=true, desc="商品规格id")
+     * @Apidoc\Param("price", type="float", require=true, desc="总价")
+     * @Apidoc\Param("product_price", type="float", require=true, desc="商品单价")
+     * @Apidoc\Param("bag_price", type="float", require=true, desc="包装费")
+     * @Apidoc\Param("delivery", type="int", require=true, desc="消费方式：10-外卖配送 20-上门取 30-打包带走 40-店内就餐")
+     * @Apidoc\Param("attr", type="string", require=false, desc="商品属性")
+     * @Apidoc\Param("feed", type="string", require=false, desc="商品加料")
+     * @Apidoc\Param("describe", type="string", require=false, desc="商品描述")
+     * @Apidoc\Param(ref="pageParam")
+     * @Apidoc\Returned()
+     */
+    public function add()
+    {
+        $data = $this->postData();
+        $data['eat_type'] = 20;
+        $model = new CartModel();
+        if (!$model->add($data, $this->cashier['user'])) {
+            return $this->renderError($model->getError() ?: '加入购物车失败');
+        }
+        return $this->renderSuccess('加入购物车成功');
+    }
+
+    /**
      * @Apidoc\Title("购物车列表")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/list")
-     * @Apidoc\Param("delivery", type="int", require=true, default="0", desc="消费方式：10-外卖配送 20-上门取 30-打包带走 40-店内就餐")
+     * @Apidoc\Param("delivery", type="int", require=true, default="40", desc="消费方式：10-外卖配送 20-上门取 30-打包带走 40-店内就餐")
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("productList",type="array",ref="app\cashier\model\order\Cart\getList")
      * @Apidoc\Returned("cartInfo",type="array",ref="app\cashier\model\order\Cart\getCartPrice")
@@ -118,6 +146,7 @@ class Cart extends Controller
      * @Apidoc\Title("取单")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/pick")
+     * @Apidoc\Param("cart_no", type="string", require=true, desc="挂起单号")
      * @Apidoc\Returned()
      */
     public function pick($cart_no)
@@ -133,6 +162,7 @@ class Cart extends Controller
      * @Apidoc\Title("删掉挂单")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/delCart")
+     * @Apidoc\Param("cart_no", type="string", require=true, desc="挂起单号")
      * @Apidoc\Returned()
      */
     public function delCart($cart_no)
@@ -148,6 +178,10 @@ class Cart extends Controller
      * @Apidoc\Title("折扣抹零")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/changeMoney")
+     * @Apidoc\Param("type", type="int", require=true, default="1", desc="折扣方式：1-改价 2-折扣 3-抹零")
+     * @Apidoc\Param("money", type="float", require=false, desc="改价价格 （type-1 必填）")
+     * @Apidoc\Param("rate", type="float", require=false, desc="折扣 （type-2 必填）")
+     * @Apidoc\Param("discountType", type="int", require=false, desc="抹零类型 1-抹分 2-抹角 3-四舍五入到角 4-四舍五入到元 （type-3 必填）")
      * @Apidoc\Returned()
      */
     public function changeMoney()
@@ -160,25 +194,12 @@ class Cart extends Controller
     }
 
     /**
-     * 加入购物车
-     * @param int $product_id 商品id
-     * @param int $product_num 商品数量
-     */
-    public function add()
-    {
-        $data = $this->postData();
-        $data['eat_type'] = 20;
-        $model = new CartModel();
-        if (!$model->add($data, $this->cashier['user'])) {
-            return $this->renderError($model->getError() ?: '加入购物车失败');
-        }
-        return $this->renderSuccess('加入购物车成功');
-    }
-
-    /**
      * @Apidoc\Title("加减购物商品数量")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/sub")
+     * @Apidoc\Param("cart_id", type="int", require=true, desc="购物车商品ID")
+     * @Apidoc\Param("product_num", type="int", require=true, desc="商品数量")
+     * @Apidoc\Param("type", type="string", require=true, default="mid", desc="操作类型：mid-中间件操作，up-加，down-减")
      * @Apidoc\Returned()
      */
     public function sub($cart_id)
