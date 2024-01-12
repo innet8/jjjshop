@@ -160,7 +160,6 @@ export default {
 }
 
 .product-add {
-  padding-bottom: 50px;
 }
 
 .img {

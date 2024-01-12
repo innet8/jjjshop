@@ -1,15 +1,12 @@
 <template>
   <div class="product-add" v-loading="loading">
-    <el-tabs v-model="activeName" type="card">
-      <el-tab-pane label="基本信息" name="basic"></el-tab-pane>
-      <el-tab-pane label="领取设置" name="set"></el-tab-pane>
-    </el-tabs>
+
     <!--form表单-->
     <el-form size="small" ref="form" :model="form" label-width="180px" v-if="!loading">
       <!--基础信息-->
-      <Basic v-show="activeName == 'basic'"></Basic>
+      <Basic ></Basic>
       <!--高级设置-->
-      <Set v-show="activeName == 'set'"></Set>
+      <Set ></Set>
       <!--提交-->
       <div class="common-button-wrapper">
         <el-button size="small" type="info" @click="cancelFunc">取消</el-button>
@@ -157,6 +154,5 @@
   .basic-setting-content {}
 
   .product-add {
-    padding-bottom: 50px;
   }
 </style>

@@ -199,7 +199,7 @@
 
 <style lang="scss" scoped>
 	.product-add {
-		padding-bottom: 50px;
+
 	}
 
 	.tips {

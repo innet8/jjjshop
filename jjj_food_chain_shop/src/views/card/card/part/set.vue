@@ -5,6 +5,7 @@
     	描述：商品管理-商品编辑-高级设置
     -->
   <div class="basic-setting-content pl16 pr16">
+    <div class="common-form">{{$t('领取设置')}}</div>
     <el-form-item label="有效期：" :rules="[{ required: true, message: '请填写有效期' }]" prop="model.expire">
       <el-input v-model="form.model.expire" class="max-w460" type="number"></el-input>
       <div class="gray9">有效期限（月），0为永久有效</div>
