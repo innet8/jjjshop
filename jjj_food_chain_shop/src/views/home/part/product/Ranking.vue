@@ -15,7 +15,7 @@
                 <el-table-column prop="product_name" :label="$t('商品名称')">
                     <template #default="scope">
                         <div class="product-name">
-                            <span :class="scope.$index <=3 ? 'key-box':'key-box2'">{{ scope.$index }}</span>
+                            <span :class="scope.$index <=3 ? 'key-box':'key-box2'">{{ scope.$index  + 1 }}</span>
                             <span class="">{{ scope.row.product_name }}</span>
                         </div>
                     </template>

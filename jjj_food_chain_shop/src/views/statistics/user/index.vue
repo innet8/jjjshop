@@ -1,78 +1,138 @@
 <template>
-  <!--
-          作者：luoyiming
-          时间：2019-10-24
-          描述：统计-会员统计
-      -->
-  <div class="statistics-member" v-loading="loading" style="min-height: 400px;">
-    <div class="common-form">会员统计</div>
-    <div class="d-s-stretch bd-box">
-      <div class="d-s-c d-c left-box">
+    <div class="statistics-member" v-loading="loading">
+        <!--搜索表单-->
+        <div class="common-seach-wrap">
+            <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
 
-         <!--汇总-->
-         <Total v-if="!loading"></Total>
+                <el-form-item :label="$t('收银员')">
+                    <el-select size="small" v-model="searchForm.user_id" placeholder="请选择">
+                        <el-option label="全部" value=""></el-option>
+                        <el-option v-for="(item, index) in exStyle" :key="index" :label="item.name"
+                            :value="item.value"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item :label="$t('起始时间')">
+                    <div class="block">
+                        <span class="demonstration"></span>
+                        <el-date-picker size="small" v-model="searchForm.create_time" type="daterange"
+                            value-format="YYYY-MM-DD" range-separator="至" start-placeholder="开始日期"
+                            end-placeholder="结束日期"></el-date-picker>
+                    </div>
+                </el-form-item>
+                <el-form-item>
+                    <el-button size="small" type="primary" icon="Search" @click="onSubmit">查询</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button size="small" type="success" @click="onExport">导出</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+        <div class="table-wrap">
+            <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
+                <el-table-column prop="printer_id" label=""></el-table-column>
+                <el-table-column prop="printer_name" :label="$t('交班编号')"></el-table-column>
+                <el-table-column prop="sort" :label="$t('收银员')"></el-table-column>
+                <el-table-column prop="sort" :label="$t('当班时间')"></el-table-column>
+                <el-table-column prop="sort" :label="$t('营业收入')"></el-table-column>
+                <el-table-column prop="sort" :label="$t('现金收入')"></el-table-column>
+                <el-table-column prop="sort" :label="$t('上一班遗留备用金')"></el-table-column>
+                <el-table-column prop="sort" :label="$t('本班遗留备用金')"></el-table-column>
+                <el-table-column prop="create_time" label="添加时间"></el-table-column>
+                <el-table-column fixed="right" label="操作" width="120">
+                    <template #default="scope">
 
-        <!--新增会员-->
-        <LineChart v-if="!loading"></LineChart>
-      </div>
-      <!--成交会员占比-->
-      <!-- <Pie v-if="!loading"></Pie> -->
+                        <el-button @click="detailClick(scope.row)" type="primary" link size="small">{{ $t('详情')
+                        }}</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
+
+        <!--分页-->
+        <div class="pagination">
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" background
+                :current-page="curPage" :page-size="pageSize" layout="total, prev, pager, next, jumper"
+                :total="totalDataNumber">
+            </el-pagination>
+        </div>
     </div>
-
-    <!--排行榜-->
-    <Ranking v-if="!loading"></Ranking>
-
-  </div>
 </template>
 
 <script>
-import StatisticsApi from '@/api/statistics.js';
-import Total from './part/Total.vue';
-import LineChart from './part/LineChart.vue';
-import Pie from './part/Pie.vue'
-import Ranking from './part/Ranking.vue'
+import qs from 'qs';
+import { useUserStore } from '@/store';
+const { token } = useUserStore();
 export default {
-  components: {
-    Total,
-    LineChart,
-    Pie,
-    Ranking
-  },
-  data(){
-    return{
-      /*是否正在加载*/
-      loading:true,
-      /*数据对象*/
-      dataModel:{}
-    }
-  },
-  provide: function () {
-    return {
-      dataModel: this.dataModel
-    }
-  },
-  created() {
 
-    this.getData();
-  },
-  methods:{
+    data() {
+        return {
 
-    /*获取数据*/
-    getData() {
-      let self = this;
-      StatisticsApi.getUserTotal({}, true)
-        .then(res => {
-          Object.assign(self.dataModel, res.data);
-          self.loading = false;
-        })
-        .catch(error => {});
+            /*是否加载完成*/
+            loading: false,
+            /*列表数据*/
+            tableData: [],
+            /*一页多少条*/
+            pageSize: 20,
+            /*一共多少条数据*/
+            totalDataNumber: 0,
+            /*当前是第几页*/
+            curPage: 1,
+
+            searchForm: {
+                user_id: "",
+                create_time: "",
+            },
+            token,
+        }
+    },
+
+    created() {
+
+        this.getData();
+    },
+    methods: {
+        /*选择第几页*/
+        handleCurrentChange(val) {
+            let self = this;
+            self.loading = true;
+            self.curPage = val;
+            self.getData();
+        },
+
+        /*每页多少条*/
+        handleSizeChange(val) {
+            this.curPage = 1;
+            this.pageSize = val;
+            this.getData();
+        },
+        /*获取数据*/
+        getData() {
+            //   let self = this;
+            //   StatisticsApi.getUserTotal({}, true)
+            //     .then(res => {
+            //       Object.assign(self.dataModel, res.data);
+            //       self.loading = false;
+            //     })
+            //     .catch(error => {});
+        },
+        onSubmit() {
+
+        },
+        onExport: function () {
+            let baseUrl = window.location.protocol + '//' + window.location.host;
+            this.searchForm.token = this.token;
+            window.location.href = baseUrl + '/index.php/shop/takeout.operate/export?' + qs.stringify(this.searchForm);
+        },
     }
-
-  }
 };
 </script>
 
 <style scoped="scoped">
-  .statistics-member .bd-box{ border-top: 1px solid #EEEEEE;}
-  .statistics-member .left-box{ width: 100%;}
+.statistics-member .bd-box {
+    border-top: 1px solid #EEEEEE;
+}
+
+.statistics-member .left-box {
+    width: 100%;
+}
 </style>

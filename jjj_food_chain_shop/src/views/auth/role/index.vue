@@ -13,7 +13,7 @@
     <div class="product-content">
       <div class="table-wrap">
         <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-          <el-table-column prop="role_id" label="角色ID"></el-table-column>
+          <el-table-column prop="role_id" label="ID"></el-table-column>
           <el-table-column prop="role_name_h1" label="角色名称"></el-table-column>
           <el-table-column prop="sort" label="排序"></el-table-column>
           <el-table-column prop="create_time" label="添加时间"></el-table-column>
