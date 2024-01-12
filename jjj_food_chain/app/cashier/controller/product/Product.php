@@ -16,7 +16,7 @@ class Product extends Controller
      * @Apidoc\Title("列表")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/cashier/product.product/index")
-     * @Apidoc\Param("category_id", type="int", require=false, default="0", desc="分类id")
+     * @Apidoc\Param("category_id", type="int", require=true, desc="商品分类ID")
      * @Apidoc\Param("search", type="string", require=false, default="", desc="搜索关键字")
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("list",type="array",ref="app\cashier\model\product\Product\list")

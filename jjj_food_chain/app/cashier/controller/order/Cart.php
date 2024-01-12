@@ -28,7 +28,6 @@ class Cart extends Controller
      * @Apidoc\Param("attr", type="string", require=false, desc="商品属性，如：1,1")
      * @Apidoc\Param("feed", type="string", require=false, desc="商品加料，如：0,1")
      * @Apidoc\Param("describe", type="string", require=false, desc="商品描述，如：规格1;属性1;属性2;加料1,加料2")
-     * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned()
      */
     public function add()

@@ -15,48 +15,21 @@ class Table extends TableModel
     /**
      * 获取列表数据
      */
-    public function getList($area_id, $type_id, $user)
+    public function getList($area_id, $type_id, $user, $status = 0)
     {
         $model = $this;
         // 查询列表数据
-        $list = $model->with(['supplier'])
-            ->when($area_id, function ($query) use ($area_id) {
+        return $model->when($area_id, function ($query) use ($area_id) {
                 return $query->where('area_id', '=', $area_id);
             })
             ->when($type_id, function ($query) use ($type_id) {
                 return $query->where('type_id', '=', $type_id);
             })
+            ->when($status!=0, function ($query) use ($status) {
+                return $query->where('status', '=', $status);
+            })
             ->order(['sort' => 'asc', 'create_time' => 'desc'])
             ->select();
-        foreach ($list as &$item) {
-            $status = 10;//未开始
-            $orderInfo = OrderModel::getTableInfo($item['table_id']);
-            if ($orderInfo) {
-                if ($orderInfo['order_source'] == 10) {//小程序下单
-                    if ($orderInfo['pay_status']['value'] == 20 && $orderInfo['order_status']['value'] == 10) {
-                        $status = 30;//就餐中
-                        $item['use_time'] = $this->formatPayEndTime(time() - strtotime($orderInfo['create_time']));
-                    }
-                } else {//收银台下单
-                    if ($orderInfo['order_status']['value'] == 10) {
-                        $status = 30;//就餐中
-                        $item['use_time'] = $this->formatPayEndTime(time() - strtotime($orderInfo['create_time']));
-                    } else {
-                        $count = (new CartModel)->where('eat_type', '=', 10)
-                            ->where('table_id', '=', $item['table_id'])
-                            ->where('shop_supplier_id', '=', $user['shop_supplier_id'])
-                            ->where('is_stay', '=', 0)
-                            ->where('cashier_id', '=', $user['cashier_id'])
-                            ->count();
-                        if ($count > 0) {
-                            $status = 20;//已开始
-                        }
-                    }
-                }
-            }
-            $item['status'] = $status;
-        }
-        return $list;
     }
 
     private function formatPayEndTime($leftTime)
