@@ -3,8 +3,10 @@
 
 namespace app\common\model\user;
 
+use app\api\controller\points\Log;
 use app\common\model\BaseModel;
 use app\common\model\settings\Setting as SettingModel;
+use app\common\model\user\Grade as GradeModel;
 use app\common\model\user\PointsLog as PointsLogModel;
 
 /**
@@ -180,5 +182,37 @@ class User extends BaseModel
     public function setCardId($cardId)
     {
         return $this->save(['card_id' => $cardId]);
+    }
+
+    /*
+    * 添加会员
+    */
+    public function add($data)
+    {
+        if (empty($data['nick_name'])) {
+            $this->error = '昵称不能为空';
+            return false;
+        }
+        if (empty($data['mobile'])) {
+            $this->error = '手机号不能为空';
+            return false;
+        }
+        $user = $this->where('mobile', '=', $data['mobile'])
+            ->where('is_delete', '=', 0)
+            ->find();
+
+        if (!$user) {
+            return $this->save([
+                'mobile' => $data['mobile'],
+                'reg_source' => 'cashier',
+                //默认等级
+                'app_id' => self::$app_id,
+                'grade_id' => GradeModel::getDefaultGradeId(),
+                'nickName' => $data['nick_name']
+            ]);
+        } else {
+            $this->error = '会员已存在';
+            return false;
+        }
     }
 }
