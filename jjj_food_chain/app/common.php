@@ -487,6 +487,17 @@ function langTrans(string $val, string $language = 'zh'): string
 }
 
 /**
+ * 国际化（替换国际语言）
+ * @param $val
+ * @param string $language
+ * @return mixed
+ */
+function __(string $val): string
+{
+    return langTrans($val);
+}
+
+/**
  * 加载语言数据
  * @param string language 语言
  * @return array
@@ -501,4 +512,20 @@ function langData($language = 'zh')
         }
     }
     return [];
+}
+
+
+/**
+ * 打印文本
+ * @param string language 语言
+ * @return array
+ */
+function printText($leftText, $centerText, $rightText, $totalWidth, $leftWidth=0) {
+    $centerWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $centerText));
+    $rightWidth = strlen(iconv("UTF-8", "GBK//IGNORE",$rightText));
+    $remainingWidth = $totalWidth - ($leftWidth + $centerWidth + $rightWidth);
+    $leftPadding = $leftWidth ? str_repeat(" ", intval($leftWidth - strlen(iconv("UTF-8", "GBK//IGNORE",$leftText)))) : "";
+    $centerPadding = str_repeat(" ", intval($remainingWidth / 2));
+    $rightPadding = str_repeat(" ", intval($remainingWidth - ($remainingWidth / 2)));
+    return $leftText . $leftPadding . $centerText . $centerPadding . $rightText . $rightPadding;
 }

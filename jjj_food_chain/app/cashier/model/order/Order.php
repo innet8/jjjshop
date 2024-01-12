@@ -2,6 +2,7 @@
 
 namespace app\cashier\model\order;
 
+<<<<<<< Updated upstream
 use app\api\model\order\OrderProduct;
 use app\cashier\model\store\Table as TableModel;
 use app\cashier\service\order\paysuccess\type\MasterPaySuccessService;
@@ -11,8 +12,19 @@ use app\common\model\order\Order as OrderModel;
 use app\common\service\product\factory\ProductFactory;
 use app\common\model\settings\Setting as SettingModel;
 use app\common\service\order\OrderCompleteService;
+=======
+>>>>>>> Stashed changes
 use app\common\library\helper;
+use app\api\model\order\OrderProduct;
+use app\common\model\supplier\Supplier;
+use app\common\enum\order\OrderTypeEnum;
+use app\common\enum\order\OrderSourceEnum;
+use app\common\model\order\Order as OrderModel;
 use app\common\service\order\OrderRefundService;
+use app\common\service\order\OrderCompleteService;
+use app\common\model\settings\Setting as SettingModel;
+use app\common\service\product\factory\ProductFactory;
+use app\cashier\service\order\paysuccess\type\MasterPaySuccessService;
 
 /**
  * 普通订单模型
@@ -473,6 +485,7 @@ class Order extends OrderModel
             $startTime = strtotime($params['time'][0]);
             $endTime = strtotime($params['time'][0]) + 86399;
         }
+
         if ($startTime && $endTime) {
             $model = $model->where('a.create_time', 'between', [$startTime, $endTime]);
         }
@@ -486,18 +499,21 @@ class Order extends OrderModel
             ->where('a.eat_type', '<>', 0);
 
         return [
+            'supplier' => Supplier::field('shop_supplier_id,business_id,name,address,description,link_name,link_phone,logo,app_id')
+                ->where('shop_supplier_id', $params['shop_supplier_id'] ?? 0 )
+                ->find()?->toArray(),
             'categorys' => (clone $model)->group("c.category_id")
                 ->field("c.name, count(a.order_id) as sales, sum(a.pay_price - a.refund_money) as prices")
                 ->select()
-                ->append([]),
+                ->append([])?->toArray(),
             'sales_num' => (clone $model)->count(),
-            'balance_pay' => (clone $model)->where('pay_type', 10)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0,
-            'cash_pay' => (clone $model)->where('pay_type', 40)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0,
-            'wx_pay' => (clone $model)->where('pay_type', 50)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0,
-            'zfb_pay' => (clone $model)->where('pay_type', 60)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0,
-            'refund_amount' => (clone $model)->sum("refund_money"), 
-            'total_amount' => (clone $model)->sum("pay_price"), 
-
+            'balance_pay' => (clone $model)->where('pay_type', 10)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
+            'cash_pay' => (clone $model)->where('pay_type', 40)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
+            'wx_pay' => (clone $model)->where('pay_type', 50)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
+            'zfb_pay' => (clone $model)->where('pay_type', 60)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
+            'refund_amount' => number_format((clone $model)->sum("refund_money"), 2, '.', ''), 
+            'total_amount' => number_format((clone $model)->sum("pay_price"), 2, '.', ''), 
+            'times' => [$startTime, $endTime], 
         ];
     }
 }

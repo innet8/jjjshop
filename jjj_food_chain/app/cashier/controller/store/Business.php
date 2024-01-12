@@ -2,9 +2,11 @@
 
 namespace app\cashier\controller\store;
 
+use hg\apidoc\annotation as Apidoc;
 use app\cashier\controller\Controller;
 use app\cashier\model\order\Order as OrderModel;
-use hg\apidoc\annotation as Apidoc;
+use app\common\model\settings\Setting as SettingModel;
+use app\common\service\order\OrderBusinessPrinterService;
 
 /**
  * 营业数据
@@ -46,12 +48,16 @@ class Business extends Controller
      */
     public function print()
     {
-        // $order = OrderModel::detail($order_id);
+        $data = $this->postData();
+        $data['shop_supplier_id'] = $this->cashier['user']['shop_supplier_id'];
+        // 
+        $data = (new OrderModel)->businessData($data);
         // 打印机设置
-        // $printerConfig = SettingModel::getSupplierItem('printer', $this->cashier['user']['shop_supplier_id'], $order['app_id']);
-        // //发送打印
-        // (new OrderPrinterService)->sellerPrint($printerConfig, $order);
-        // return $this->renderSuccess('打印成功');
+        $printerConfig = SettingModel::getSupplierItem('printer', $data['supplier']['shop_supplier_id'], $data['supplier']['app_id']);
+        //发送打印
+        (new OrderBusinessPrinterService)->cashierPrint($printerConfig, $data);
+        // 
+        return $this->renderSuccess('打印成功');
     }
 
 }

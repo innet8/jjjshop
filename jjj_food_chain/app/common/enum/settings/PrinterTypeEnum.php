@@ -17,6 +17,10 @@ class PrinterTypeEnum extends Enum
     // 365云打印
     const PRINT_CENTER = 'PRINT_CENTER';
 
+    // 商米
+    const SUNMI = 'SUNMI';
+    
+
     // 获取打印机类型名称
     public static function getTypeName()
     {
@@ -24,6 +28,7 @@ class PrinterTypeEnum extends Enum
             self::FEI_E_YUN => '飞鹅打印机',
             self::FEI_E_YUN_TAG => '飞鹅标签打印机',
             self::PRINT_CENTER => '365云打印',
+            self::SUNMI => '商米打印机',
         ];
     }
 
