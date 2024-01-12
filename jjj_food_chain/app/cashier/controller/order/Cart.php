@@ -46,22 +46,29 @@ class Cart extends Controller
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/list")
      * @Apidoc\Param("delivery", type="int", require=true, default="40", desc="消费方式：10-外卖配送 20-上门取 30-打包带走 40-店内就餐")
+     * @Apidoc\Param("order_id", type="int", require=false, desc="订单id")
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("productList",type="array",ref="app\cashier\model\order\Cart\getList")
      * @Apidoc\Returned("cartInfo",type="array",ref="app\cashier\model\order\Cart\getCartPrice")
-     * @Apidoc\Returned("delivery",type="string", desc="消费方式：10-外卖配送 20-上门取 30-打包带走 40-店内就餐")
+     * @Apidoc\Returned("delivery",type="int", desc="消费方式：10-外卖配送 20-上门取 30-打包带走 40-店内就餐")
      * @Apidoc\Returned("stayNum",type="int", desc="挂单数量")
      */
-    public function list($delivery = 40)
+    public function list($delivery = 40, $order_id = 0)
     {
         $model = new CartModel();
+        // 挂单数量
+        $stayNum = $model->stayNum($this->cashier['user']);
         // 购物车商品列表
         $productList = $model->getList($this->cashier['user']);
-        //购物车金额
+        // 购物车金额
         $cartInfo = $model->getCartPrice($this->cashier['user'], $delivery);
-        //挂单数量
-        $stayNum = $model->stayNum($this->cashier['user']);
-        return $this->renderSuccess('', compact('productList', 'cartInfo', 'delivery', 'stayNum'));
+        // 送厨商品列表
+        $orderProductList = [];
+        if ($order_id) {
+            $orderProductList = OrderModel::detail($order_id)['product'];
+        }
+
+        return $this->renderSuccess('', compact('orderProductList','productList', 'cartInfo', 'delivery', 'stayNum', 'order_id'));
     }
 
     /**
@@ -101,12 +108,13 @@ class Cart extends Controller
      * @Apidoc\Title("整单取消")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/delStay")
+     * @Apidoc\Param("cart_no", type="string", require=false, desc="挂起单号")
      * @Apidoc\Returned()
      */
-    public function delStay()
+    public function delStay($cart_no)
     {
         $model = new CartModel();
-        if ($model->delStay()) {
+        if ($model->delStay($cart_no)) {
             return $this->renderSuccess('取消成功');
         };
         return $this->renderError($model->getError() ?: '取消失败');
@@ -131,12 +139,13 @@ class Cart extends Controller
      * @Apidoc\Title("挂单")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/stay")
+     * @Apidoc\Param("order_id", type="int", require=false, desc="订单id")
      * @Apidoc\Returned()
      */
-    public function stay()
+    public function stay($order_id)
     {
         $model = new CartModel();
-        if ($model->stayCart($this->cashier['user'])) {
+        if ($model->stayCart($this->cashier['user'], $order_id)) {
             return $this->renderSuccess('挂单成功');
         };
         return $this->renderError($model->getError() ?: '挂单失败');
@@ -153,7 +162,8 @@ class Cart extends Controller
     {
         $model = new CartModel();
         if ($model->pickCart($cart_no, $this->cashier['user'])) {
-            return $this->renderSuccess('取单成功');
+            $order_id = $model->checkOrderByCardNo($cart_no);
+            return $this->renderSuccess('取单成功', compact('order_id'));
         };
         return $this->renderError($model->getError() ?: '请先将购物车内的商品挂单或结账后再取单');
     }
@@ -242,11 +252,11 @@ class Cart extends Controller
     }
 
     /**
-     * @Apidoc\Title("送厨")
+     * @Apidoc\Title("收银-送厨")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/sendKitchen")
      * @Apidoc\Param("delivery", type="int", require=true, desc="消费方式：10-外卖配送 20-上门取 30-打包带走 40-店内就餐")
-     * @Apidoc\Param("user_id", type="int", require=false, default="0", desc="用户id")
+     * @Apidoc\Param("order_id", type="int", require=false, desc="订单id")
      * @Apidoc\Returned()
      */
     public function sendKitchen()
@@ -255,9 +265,7 @@ class Cart extends Controller
         $user = $this->cashier['user'];
         $model = new CartModel();
         if ($order_id = $model->sendKitchen($params, $user)) {
-            // 返回订单商品记录
-            $orderProductList = OrderModel::detail($order_id)['product'];
-            return $this->renderSuccess('送厨成功', compact('orderProductList'));
+            return $this->renderSuccess('送厨成功', compact('order_id'));
         }
         return $this->renderError($model->getError() ?: '送厨失败');
     }

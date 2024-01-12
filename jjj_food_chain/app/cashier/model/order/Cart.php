@@ -2,9 +2,12 @@
 
 namespace app\cashier\model\order;
 
+use app\common\model\order\OrderProduct;
 use app\common\model\plus\cashier\Cart as CartModel;
 use app\common\model\plus\discount\DiscountProduct;
+use app\common\model\order\Order as CommonOrderModel;
 use app\common\model\supplier\Supplier as SupplierModel;
+use app\cashier\model\order\Order as OrderModel;
 use app\cashier\model\product\Product as ProductModel;
 use app\cashier\model\product\ProductSku as ProductSkuModel;
 use app\cashier\service\order\settled\CashierOrderSettledService;
@@ -83,13 +86,42 @@ class Cart extends CartModel
     }
 
     /**
-     * 整单取消
+     * 是否已生成订单（已送厨）
+     *
+     * @param string $cart_no
+     * @return int
      */
-    public function delStay()
+    public function checkOrderByCardNo($cart_no)
     {
-        return $this->where('eat_type', '=', 20)
-            ->where('is_stay', '=', 0)
-            ->delete();
+        $order_id = $this->where('cart_no', '=', $cart_no)
+                    ->where('order_id', '>', 0)
+                    ->value('order_id');
+        return $order_id ?: 0;
+    }
+
+    /**
+     * 整单取消
+     *
+     * @param string $cart_no
+     * @return bool
+     */
+    public function delStay($cart_no = '')
+    {
+        $query = $this->where('eat_type', '=', 20);
+        if ($cart_no) {
+            $query = $query->where('cart_no', '=', $cart_no);
+        }else{
+            $query = $query->where('is_stay', '=', 0);
+        }
+        // 是否有订单（已送厨）
+        if ($order_id = $this->checkOrderByCardNo($cart_no)) {
+            // 把送厨的订单删除
+            (new OrderProduct)->where('order_id', '=', $order_id)->delete();
+            // 把订单取消
+            $detail = CommonOrderModel::detail($order_id);
+            $detail?->cancels();
+        }
+        return $query->delete();
     }
 
     /**
@@ -176,7 +208,7 @@ class Cart extends CartModel
     /**
      * 挂单
      */
-    public function stayCart($user)
+    public function stayCart($user, $order_id = 0)
     {
         // 获取当前购物车商品列表
         $model = $this;
@@ -196,6 +228,10 @@ class Cart extends CartModel
             $data['cart_no'] = date('YmdHis');
             $data['stay_time'] = time();
         }
+        // 送厨挂单
+        if ($order_id) {
+            $data['order_id'] = $order_id;
+        }
         return $this->where('cart_id', 'in', $cartIds)->update($data);
     }
 
@@ -204,12 +240,12 @@ class Cart extends CartModel
      */
     public function pickCart($cart_no, $user)
     {
-        $status = $this->where('shop_supplier_id', '=', $user['shop_supplier_id'])
+        $count = $this->where('shop_supplier_id', '=', $user['shop_supplier_id'])
             ->where('cashier_id', '=', $user['cashier_id'])
             ->where('eat_type', '=', 20)
             ->where('is_stay', '=', 0)
             ->count();
-        if ($status > 0) {
+        if ($count > 0) {
             $this->error = "购物车内存在商品,请先结账或者挂单后再取单";
             return false;
         }
@@ -512,7 +548,7 @@ class Cart extends CartModel
      *
      * @param int $cart_id
      * @param string $remark
-     * @return void
+     * @return static
      */
     public function updateRemark($cart_id, $remark)
     {
@@ -520,7 +556,7 @@ class Cart extends CartModel
     }
 
     /**
-     * 送厨
+     * 收银-送厨
      *
      * @param [type] $params
      * @param [type] $user
@@ -532,24 +568,37 @@ class Cart extends CartModel
         // 购物车商品列表
         $productList = $CartModel->getCartList($user);
         if (count($productList) <= 0) {
-            return $this->renderError('购物车商品不能为空');
+            $this->error = '购物车商品不能为空';
+            return false;
         }
         $params['eat_type'] = 20;
-        // 实例化订单service
-        $orderService = new CashierOrderSettledService($user, $productList, $params);
-        // 获取订单信息
-        $orderInfo = $orderService->settlement();
-        // 订单结算提交
-        if ($orderService->hasError()) {
-            return $this->renderError($orderService->getError());
+        $order_id = isset($params['order_id']) ? $params['order_id'] : 0;
+        if ($order_id > 0) {
+            // 加餐订单提交
+            if (!(new OrderModel)->mealHallOrder($productList, $params)) {
+                $this->error = '订单创建失败';
+                return false;
+            }
+        }else{
+            // 实例化订单service
+            $orderService = new CashierOrderSettledService($user, $productList, $params);
+            // 获取订单信息
+            $orderInfo = $orderService->settlement();
+            // 订单结算提交
+            if ($orderService->hasError()) {
+                $this->error = $orderService->getError();
+                return false;
+            }
+            // 创建订单
+            $order_id = $orderService->createOrder($orderInfo);
+            if (!$order_id) {
+                $this->error = $orderService->getError() ?: '订单创建失败';
+                return false;
+            }
         }
-        // 创建订单
-        $order_id = $orderService->createOrder($orderInfo);
-        if (!$order_id) {
-            return $this->renderError($orderService->getError() ?: '订单创建失败');
-        }
+
         // 移出购物车中已下单的商品
-        $CartModel->deleteAll($this->cashier['user']);
+        $CartModel->deleteAll($user);
         return $order_id;
     }
 }

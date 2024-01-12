@@ -33,7 +33,7 @@ class Order extends BaseModel
     protected $name = 'order';
     protected $deleteTime = 'delete_time';
     protected $defaultSoftDelete = 0;
-    
+
     /**
      * 追加字段
      * @var string[]
@@ -169,7 +169,7 @@ class Order extends BaseModel
     /**
      * 订单类型
      * @param $value
-     * @return array
+     * @return string
      */
     public function getOrderTypeTextAttr($value, $data)
     {
@@ -179,7 +179,7 @@ class Order extends BaseModel
     /**
      * 订单来源
      * @param $value
-     * @return array
+     * @return string
      */
     public function getOrderSourceTextAttr($value, $data)
     {
@@ -681,13 +681,16 @@ class Order extends BaseModel
      */
     public function mealHallOrder($productList, $data)
     {
+        $order_id = $data['order_id']; //订单id
+        $meal_num = $data['meal_num'] ?? 0; //就餐人数
+
         $this->startTrans();
         try {
-            if (!isset($data['order_id']) && $data['order_id'] == 0) {
+            if (!isset($order_id) && $order_id == 0) {
                 $this->error = "加餐订单号不能为空";
                 return false;
             }
-            $order = self::detail($data['order_id']);
+            $order = self::detail($order_id);
             if ($order['pay_status'] == 20) {
                 $this->error = '订单已支付，不允许加菜';
                 return false;
@@ -703,10 +706,10 @@ class Order extends BaseModel
             $serviceType = $order['supplier']['serviceType'];
             $service_money = $order['supplier']['service_money'];
             if ($serviceType == 0) {
-                $service_money = round($service_money * $data['meal_num'], 2);
+                $service_money = round($service_money * $meal_num, 2);
             }
             //查询加餐次数
-            $extra_times = OrderProductModel::where('order_id', '=', $data['order_id'])
+            $extra_times = OrderProductModel::where('order_id', '=', $order_id)
                 ->order('create_time desc')
                 ->value('extra_times');
             $productData = [];
@@ -781,7 +784,7 @@ class Order extends BaseModel
                 $points_bonus += $product_points_bonus;
                 $pay_money += $product['total_price'];
                 $item = [
-                    'order_id' => $data['order_id'],
+                    'order_id' => $order_id,
                     'user_id' => $order['user_id'],
                     'app_id' => self::$app_id,
                     'product_id' => $product['product_id'],
@@ -817,7 +820,7 @@ class Order extends BaseModel
                 'pay_price' => $order['pay_price'] + $pay_money - $order['service_money'] + $service_money,
                 'points_bonus' => $order['points_bonus'] + $points_bonus,
                 'service_money' => $service_money,
-                'meal_num' => $data['meal_num'],
+                'meal_num' => $meal_num,
                 'settle_type' => $settle_type,
             ];
             $order->save($addMeal);
