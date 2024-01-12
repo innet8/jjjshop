@@ -6,7 +6,7 @@
     -->
   <div class="product">
     <div>
-      <el-form size="small" :inline="true" :model="form" label-position="top" class="demo-form-inline d-s-c">
+      <el-form size="small" :inline="true" :model="form"  class="demo-form-inline d-s-c">
         <el-form-item label="编号">
           <el-input v-model="form.search" autocomplete="off"></el-input>
         </el-form-item>
@@ -38,13 +38,13 @@
         <el-table size="small" :data="tableData" style="width: 100%" v-loading="loading">
           <el-table-column prop="table_id" label="桌号id"></el-table-column>
           <el-table-column prop="area_name" label="所属区域"></el-table-column>
-          <el-table-column prop="type_name" label="桌位类型"></el-table-column>
-          <el-table-column prop="table_no" label="桌位编码"></el-table-column>
+          <el-table-column prop="type_name" label="所属类型"></el-table-column>
           <el-table-column prop="table_no" label="人数区间">
             <template #default="scope">
               {{scope.row.min_num}}-{{scope.row.max_num}}人
             </template>
           </el-table-column>
+          <el-table-column prop="table_no" label="桌位名称"></el-table-column>
           <el-table-column prop="sort" label="排序"></el-table-column>
           <el-table-column prop="create_time" label="添加时间"></el-table-column>
           <el-table-column fixed="right" label="操作" width="190">

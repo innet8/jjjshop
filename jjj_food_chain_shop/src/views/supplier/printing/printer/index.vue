@@ -39,15 +39,17 @@
             </div>
         </div>
 
-        <add v-if="open_add" :open_add="open_add" @close="() => { open_add = false }"></add>
+        <add v-if="open_add" :open_add="open_add" @close="(e) => { open_add = false; if(e==1){ this.getData();} }"></add>
+        <edit v-if="open_edit" :open_edit="open_edit" :printer_id="printerId" @close="(e) => { open_edit = false; if(e==1){ this.getData();} }"></edit>
     </div>
 </template>
 
 <script>
 import SettingApi from '@/api/setting.js';
 import add from './add.vue';
+import edit from './edit.vue'
 export default {
-    components: { add },
+    components: { add , edit},
     data() {
         return {
             /*是否加载完成*/
@@ -69,6 +71,7 @@ export default {
             open_add: false,
             /*是否打开编辑弹窗*/
             open_edit: false,
+            printerId: 0,
             /*当前编辑的对象*/
             userModel: {}
         };
@@ -119,13 +122,9 @@ export default {
 
         /*打开编辑*/
         editClick(item) {
-            let self = this;
-            this.$router.push({
-                path: '/supplier/printing/edit',
-                query: {
-                    printer_id: item.printer_id
-                }
-            })
+            this.printerId = item.printer_id
+            this.open_edit = true
+
         },
 
 

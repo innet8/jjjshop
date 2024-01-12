@@ -13,13 +13,13 @@
     <div class="product-content">
       <div class="table-wrap">
         <el-table size="small" :data="tableData" row-key="type_id"  style="width: 100%" v-loading="loading">
-          <el-table-column prop="sort" label="排序"></el-table-column>
           <el-table-column prop="type_name" label="类型名称" width="180"></el-table-column>
           <el-table-column prop="max_num" label="人数区间" width="180">
             <template #default="scope">
               {{scope.row.min_num}}-{{scope.row.max_num}}人
             </template>
           </el-table-column>
+          <el-table-column prop="sort" label="排序"></el-table-column>
           <el-table-column prop="create_time" label="添加时间"></el-table-column>
           <el-table-column fixed="right" label="操作" width="100">
             <template #default="scope">

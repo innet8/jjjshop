@@ -154,7 +154,7 @@ export default {
                                 message: '恭喜你，添加成功',
                                 type: 'success'
                             });
-                            self.$router.push('/setting/printer/index');
+                            this.$emit('close',1)
 
                         }).catch(error => {
                             self.loading = false;

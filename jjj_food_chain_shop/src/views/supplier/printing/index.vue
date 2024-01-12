@@ -5,12 +5,12 @@
     <div class="common-seach-wrap">
         <!--打印機管理-->
         <printer v-if="activeName == 'printer'"></printer>
-        <!--打印设置-->
-        <dishes v-if="activeName == 'dishes'"></dishes>
         <!-- 商品打印 -->
         <printing v-if="activeName == 'printing'"></printing>
         <!-- 打印模版 -->
         <preview v-if="activeName == 'preview'"></preview>
+        <!--打印设置-->
+        <dishes v-if="activeName == 'dishes'"></dishes>
     </div>
 </template>
 <script>
@@ -50,11 +50,6 @@ export default defineComponent({
                 path: '/supplier/printing/printer/index'
             },
             {
-                key: 'printing',
-                value: $t('打印设置'),
-                path: '/supplier/printing/printing/index'
-            },
-            {
                 key: 'dishes',
                 value: $t('商品打印'),
                 path: '/supplier/printing/dishes/index'
@@ -63,6 +58,11 @@ export default defineComponent({
                 key: 'preview',
                 value: $t('打印模版'),
                 path: '/supplier/printing/preview/index'
+            },
+            {
+                key: 'printing',
+                value: $t('打印设置'),
+                path: '/supplier/printing/printing/index'
             },
             ],
             /*权限筛选后的数据*/
