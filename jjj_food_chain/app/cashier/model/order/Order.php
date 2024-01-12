@@ -2,18 +2,6 @@
 
 namespace app\cashier\model\order;
 
-<<<<<<< Updated upstream
-use app\api\model\order\OrderProduct;
-use app\cashier\model\store\Table as TableModel;
-use app\cashier\service\order\paysuccess\type\MasterPaySuccessService;
-use app\common\enum\order\OrderSourceEnum;
-use app\common\enum\order\OrderTypeEnum;
-use app\common\model\order\Order as OrderModel;
-use app\common\service\product\factory\ProductFactory;
-use app\common\model\settings\Setting as SettingModel;
-use app\common\service\order\OrderCompleteService;
-=======
->>>>>>> Stashed changes
 use app\common\library\helper;
 use app\api\model\order\OrderProduct;
 use app\common\model\supplier\Supplier;
@@ -25,6 +13,7 @@ use app\common\service\order\OrderCompleteService;
 use app\common\model\settings\Setting as SettingModel;
 use app\common\service\product\factory\ProductFactory;
 use app\cashier\service\order\paysuccess\type\MasterPaySuccessService;
+use app\cashier\model\store\Table as TableModel;
 
 /**
  * 普通订单模型
