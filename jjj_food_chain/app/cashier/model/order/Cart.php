@@ -229,7 +229,7 @@ class Cart extends CartModel
             $data['stay_time'] = time();
         }
         // 送厨挂单
-        if ($order_id) {
+        if ($order_id > 0) {
             $data['order_id'] = $order_id;
         }
         return $this->where('cart_id', 'in', $cartIds)->update($data);
@@ -524,13 +524,13 @@ class Cart extends CartModel
     //获取购物车数据
     public function getCartPrice($user, $delivery = 40, $eat_type = 20, $table_id = 0)
     {
-        //购物车价格
+        // 购物车价格
         $cartInfo = $this->getCartInfo($user, $eat_type, $table_id);
         // 购物车商品总数量
         $cartInfo['cart_total_num'] = $this->getProductNum($user, $eat_type, $table_id);
-        //门店信息
+        // 门店信息
         $supplier = SupplierModel::detail($user['shop_supplier_id']);
-        //购物车总价
+        // 购物车总价
         $total_price = $cartInfo['total_price'];
         if ($supplier['storebag_type'] == 1) {
             $cartInfo['total_bag_price'] = $supplier['storebag_price'];

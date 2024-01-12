@@ -53,20 +53,28 @@ class Cart extends Controller
      * @Apidoc\Returned("delivery",type="int", desc="消费方式：10-外卖配送 20-上门取 30-打包带走 40-店内就餐")
      * @Apidoc\Returned("stayNum",type="int", desc="挂单数量")
      */
-    public function list($delivery = 40, $order_id = 0)
+    public function list($delivery = 40)
     {
+        $order_id = $this->postData('order_id') ?: 0;
         $model = new CartModel();
         // 挂单数量
         $stayNum = $model->stayNum($this->cashier['user']);
+
         // 购物车商品列表
         $productList = $model->getList($this->cashier['user']);
-        // 购物车金额
-        $cartInfo = $model->getCartPrice($this->cashier['user'], $delivery);
+        if (!empty($productList) && isset($productList[0])) {
+            $order_id = $order_id ? $order_id : $productList[0]['order_id'];
+        }
+
         // 送厨商品列表
         $orderProductList = [];
         if ($order_id) {
             $orderProductList = OrderModel::detail($order_id)['product'];
         }
+
+        // 购物车金额
+        $cartInfo = $model->getCartPrice($this->cashier['user'], $delivery);
+
 
         return $this->renderSuccess('', compact('orderProductList','productList', 'cartInfo', 'delivery', 'stayNum', 'order_id'));
     }
@@ -111,8 +119,9 @@ class Cart extends Controller
      * @Apidoc\Param("cart_no", type="string", require=false, desc="挂起单号")
      * @Apidoc\Returned()
      */
-    public function delStay($cart_no)
+    public function delStay()
     {
+        $cart_no = $this->postData('cart_no') ?: '';
         $model = new CartModel();
         if ($model->delStay($cart_no)) {
             return $this->renderSuccess('取消成功');
@@ -142,8 +151,9 @@ class Cart extends Controller
      * @Apidoc\Param("order_id", type="int", require=false, desc="订单id")
      * @Apidoc\Returned()
      */
-    public function stay($order_id)
+    public function stay()
     {
+        $order_id = $this->postData('order_id') ?: 0;
         $model = new CartModel();
         if ($model->stayCart($this->cashier['user'], $order_id)) {
             return $this->renderSuccess('挂单成功');
@@ -268,5 +278,22 @@ class Cart extends Controller
             return $this->renderSuccess('送厨成功', compact('order_id'));
         }
         return $this->renderError($model->getError() ?: '送厨失败');
+    }
+
+    /**
+     * @Apidoc\Title("收银-退菜")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.cart/moveProduct")
+     * @Apidoc\Param("order_id", type="int", require=true, desc="订单id")
+     * @Apidoc\Param("order_product_id", type="int", require=true, desc="订单商品记录id")
+     * @Apidoc\Param("num", type="int", require=true, desc="商品数量")
+     */
+    public function moveProduct($order_id, $order_product_id, $num)
+    {
+        $detail = OrderModel::detail($order_id);
+        if ($detail?->moveProduct($order_product_id, $num)) {
+            return $this->renderSuccess('退菜成功');
+        }
+        return $this->renderError($detail?->getError() ?: '退菜失败');
     }
 }
