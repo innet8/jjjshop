@@ -1,7 +1,7 @@
 <template>
 	<el-dialog title="下载推广码" v-model="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
 		:close-on-press-escape="false">
-		<el-form size="small" :model="form">
+		<el-form size="small" :model="form" label-position="top">
 			<el-form-item label="下载类型" :label-width="formLabelWidth">
 				<el-radio-group v-model="source">
 					<el-radio label="wx">微信小程序</el-radio>

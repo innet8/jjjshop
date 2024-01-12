@@ -11,7 +11,7 @@
         <div class="alert-icon"><span class="icon iconfont icon-gantanhao"></span></div>
         <span class="alert-desc"><div>1.新用户首次进入小程序的时候才会显示如图所示的弹窗提示，只显示一次！</div></span>
       </div>
-      <el-form ref="form" size="small" :model="form" :rules="rules" label-width="100px">
+      <el-form ref="form" size="small" :model="form" label-position="top" :rules="rules" label-width="100px">
         <el-form-item label="引导收藏" prop="status"><el-switch v-model="form.status"></el-switch></el-form-item>
         <!--提交-->
         <div class="common-button-wrapper"><el-button type="primary" @click="onSubmit" :loading="loading">提交</el-button></div>

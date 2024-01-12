@@ -4,7 +4,7 @@
   -->
   <div class="product-add">
     <!--form表单-->
-    <el-form size="small" ref="form" :model="form" label-width="200px">
+    <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
       <!--小票打印设置-->
       <el-form-item label="活动时间">
         <el-date-picker v-model="time" type="daterange" align="right" unlink-panels value-format="YYYY-MM-DD"

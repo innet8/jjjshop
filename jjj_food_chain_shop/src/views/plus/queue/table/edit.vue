@@ -6,7 +6,7 @@
     -->
   <el-dialog title="添加类型" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
     :close-on-press-escape="false">
-    <el-form size="small" :model="form" :rules="formRules" ref="form">
+    <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
       <el-form-item label="桌位名称" prop="table_name" :label-width="formLabelWidth">
         <el-input v-model="form.table_name" autocomplete="off"></el-input>
       </el-form-item>

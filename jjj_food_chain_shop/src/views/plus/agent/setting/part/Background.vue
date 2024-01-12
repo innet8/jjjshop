@@ -5,7 +5,7 @@
       	描述：插件中心-分销-分销设置-页面背景图
       -->
   <div class="test-wrap mt30">
-    <el-form size="small" ref="form" :model="form" label-width="200px">
+    <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
       <el-form-item label="分销中心首页">
         <el-button type="primary" plain icon="Upload" @click="openUpload(1)">上传图片</el-button>
         <div v-if="form.index != ''" class="img"><img :src="form.index" width="750" height="227" /></div>

@@ -5,7 +5,7 @@
     描述：插件中心-签到有礼-签到设置
   -->
   <div v-if="!loading">
-    <el-form size="small" :model="form" :rules="rules" ref="ruleForm" label-width="100px">
+    <el-form size="small" :model="form" label-position="top" :rules="rules" ref="ruleForm" label-width="100px">
       <div class="open-sign">
         <span class="gray9">是否开启签到有礼</span>
         <el-switch v-model="form.is_open" class="ml10"></el-switch>

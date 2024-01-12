@@ -6,7 +6,7 @@
       -->
   <div class="product-add mt30">
     <!--form表单-->
-    <el-form size="small" ref="form" :model="form" label-width="200px">
+    <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
 
       <el-form-item label="分销商申请协议  ">
         <el-input v-model="form.license" type="textarea" rows="5" class="max-w460"></el-input>

@@ -1,7 +1,7 @@
 <template >
     <el-dialog :title="title" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
         :close-on-press-escape="false">
-        <el-form size="small" ref="form" :model="form" label-width="120px">
+        <el-form size="small" ref="form" :model="form" label-position="top" label-width="120px">
             <!--店员修改-->
             <el-form-item label="昵称" prop="nickName">
                 <el-input class="max-w460" v-model="form.nickName" placeholder="请输入昵称"></el-input>

@@ -7,7 +7,7 @@
   <div class="mt30">
 
     <!--form表单-->
-    <el-form size="small" ref="form" :model="form" label-width="200px">
+    <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
 
       <el-form-item label="提现方式">
         <el-checkbox-group v-model="form.pay_type">

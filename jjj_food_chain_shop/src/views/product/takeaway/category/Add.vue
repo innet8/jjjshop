@@ -1,7 +1,7 @@
 <template>
   <el-dialog title="添加分类" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
     :close-on-press-escape="false">
-    <el-form size="small" :model="form" :rules="formRules" ref="form">
+    <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
       <el-form-item label="父级分类" :label-width="formLabelWidth">
         <el-select v-model="form.parent_id" label="无">
           <el-option :value="0" label="无"></el-option>

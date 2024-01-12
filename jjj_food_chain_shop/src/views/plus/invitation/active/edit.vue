@@ -2,7 +2,7 @@
   <div class="user">
     <div class="common-form">新增活动会场</div>
     <div class="product-content">
-      <el-form ref="form" :model="form" :rules="formRules" label-width="150px">
+      <el-form ref="form" :model="form" label-position="top" :rules="formRules" label-width="150px">
         <el-form-item label="活动标题" prop="name" :rules="[{required: true,message: ' '}]">
           <el-input type="text" v-model="form.name" placeholder="请输入活动标题" class="max-w460"></el-input>
         </el-form-item>

@@ -12,7 +12,7 @@
       <el-button size="small" type="primary" icon="Plus" @click="addClick">添加优惠券</el-button>
     </div>
     <div class="product-content">
-      <el-form ref="form" :model="form" label-width="100px">
+      <el-form ref="form" :model="form" label-position="top" label-width="100px">
         <div class="table-wrap">
           <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
             <el-table-column label="商家名称">

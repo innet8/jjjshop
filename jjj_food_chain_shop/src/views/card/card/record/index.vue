@@ -23,12 +23,16 @@
     <div class="product-content">
       <div class="table-wrap">
         <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-          <el-table-column prop="order_id" label="编号"></el-table-column>
-          <el-table-column prop="card_name" label="客户信息">
+          <el-table-column prop="order_id" label="ID"></el-table-column>
+          <el-table-column prop="card_name" :label="$t('昵称')">
             <template #default="scope">
               <img :src="scope.row.user.avatarUrl" width="30px" height="30px" />
               <span>{{scope.row.user.nickName}}</span>
             </template>
+          </el-table-column>
+          <el-table-column prop="card.card_tel" :label="$t('手机号')">
+          </el-table-column>
+          <el-table-column prop="card.user_id" :label="$t('用户ID')">
           </el-table-column>
           <el-table-column prop="card.card_name" label="会员卡名称">
           </el-table-column>
@@ -41,8 +45,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="pay_price" label="价格"></el-table-column>
-          <el-table-column prop="pay_type_text" label="支付方式" >
-          </el-table-column>
+
           <el-table-column prop="pay_time_text" label="领取时间"></el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template #default="scope">
@@ -162,7 +165,6 @@
       /*打开编辑*/
       putClick(item) {
         this.userModel = item;
-        console.log(this.userModel)
         this.open_edit = true;
       },
       /*关闭弹窗*/

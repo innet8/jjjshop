@@ -4,7 +4,7 @@
     -->
     <el-dialog title="编辑加料" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
         :close-on-press-escape="false">
-        <el-form size="small" :model="form" :rules="formRules" ref="form">
+        <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
             <el-form-item :label="$t('加料名称') + '(ภาษาไทย)'" prop="feed_name">
                 <el-input type="text" v-model="form.feed_name"></el-input>
             </el-form-item>

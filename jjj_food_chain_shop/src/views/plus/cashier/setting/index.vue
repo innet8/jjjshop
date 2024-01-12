@@ -6,7 +6,7 @@
   -->
   <div class="product-add">
     <!--form表单-->
-    <el-form size="small" ref="form" :model="form" label-width="200px">
+    <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
       <div class="common-form ">访问路径</div>
       <div class="show-input">
         <el-input class="ml30 max-w460" disabled v-model="url" placeholder="">

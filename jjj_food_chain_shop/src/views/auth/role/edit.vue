@@ -6,7 +6,7 @@
     -->
   <div v-loading="loading">
     <!--form表单-->
-    <el-form size="small" ref="form" :model="form" label-width="180px">
+    <el-form size="small" ref="form" :model="form" label-position="top" label-width="180px">
       <!--编辑角色-->
       <div class="common-form">编辑角色</div>
 

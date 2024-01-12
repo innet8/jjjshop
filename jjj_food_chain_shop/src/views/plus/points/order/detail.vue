@@ -212,7 +212,7 @@
         <div v-if="detail.delivery_status.value == 10">
           <!-- 去发货 -->
           <div class="common-form mt16">去发货</div>
-          <el-form size="small" ref="form" :model="form" label-width="100px">
+          <el-form size="small" ref="form" :model="form" label-position="top" label-width="100px">
             <el-form-item label="物流公司">
               <el-select v-model="form.express_id" placeholder="请选择快递公司">
                 <el-option :label="item.express_name" v-for="(item, index) in expressList" :key="index"

@@ -6,7 +6,7 @@
   -->
   <el-dialog title="编辑充值套餐" v-model="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
     :close-on-press-escape="false" width="600px">
-    <el-form size="small" :model="form" ref="form">
+    <el-form size="small" :model="form" label-position="top" ref="form">
       <el-form-item label="套餐名称" :label-width="formLabelWidth" prop="plan_name" :rules="[{required: true,message: '请输入套餐名称'}]">
         <el-input v-model="form.plan_name" placeholder="请输入套餐名称"></el-input>
       </el-form-item>

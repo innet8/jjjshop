@@ -7,7 +7,7 @@
   <div class="user">
     <div class="common-form">发送优惠券</div>
     <div class="product-content">
-      <el-form ref="form" size="small" :model="form" label-width="150px">
+      <el-form ref="form" size="small" :model="form" label-position="top" label-width="150px">
         <el-form-item label="发送对象">
           <el-radio v-model="form.send_type" label="1">全站会员</el-radio>
           <el-radio v-model="form.send_type" label="2">会员等级</el-radio>

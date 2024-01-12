@@ -6,7 +6,7 @@
       -->
   <div v-if="status != 30">
     <el-dialog title="分销商审核" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false" :close-on-press-escape="false">
-      <el-form :model="form">
+      <el-form :model="form" label-position="top">
         <el-form-item label="审核状态" :label-width="formLabelWidth">
           <div>
             <el-radio v-model="form.apply_status" label="20">审核通过</el-radio>

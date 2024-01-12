@@ -2,7 +2,7 @@
 
   <div class="product-add">
     <!--form表单-->
-    <el-form size="small" ref="form" :model="form" label-width="200px">
+    <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
       <!--添加门店-->
       <div class="common-form">编辑小票打印机</div>
       <el-form-item label="打印机名称 " prop="printer_name" :rules="[{required: true,message: ' '}]">

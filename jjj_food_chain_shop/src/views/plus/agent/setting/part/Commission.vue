@@ -6,7 +6,7 @@
       -->
   <div class="product-add mt30">
     <!--form表单-->
-    <el-form size="small" ref="form" :model="form" label-width="200px">
+    <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
 
       <el-form-item label="一级佣金比例 ">
         <el-input v-model="form.first_money" type="number" class="max-w460"></el-input>

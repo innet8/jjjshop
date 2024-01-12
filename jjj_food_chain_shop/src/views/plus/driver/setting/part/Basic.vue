@@ -6,7 +6,7 @@
       -->
   <div class="product-add mt30">
     <!--form表单-->
-    <el-form size="small" ref="form" :model="form" label-width="200px">
+    <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
       <el-form-item label="配送费" :rules="[{required: true,message: ' '}]" prop="take_fee">
         <el-input v-model="form.take_fee" placeholder="" class="max-w460"></el-input>
       </el-form-item>

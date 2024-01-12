@@ -5,7 +5,7 @@
         描述：权限-操作日志-详情
     -->
   <el-dialog title="详情" v-model="dialogVisible" @close="dialogFormVisible" :close-on-press-escape="false">
-    <el-form size="" :model="form">
+    <el-form size="" :model="form" label-position="top">
       <el-form-item label="标题：" :label-width="formLabelWidth">
         <div class="item-content-box">{{ form.title }}</div>
       </el-form-item>

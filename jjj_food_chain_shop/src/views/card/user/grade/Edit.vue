@@ -6,7 +6,7 @@
   -->
   <el-dialog title="编辑等级" v-model="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
     :close-on-press-escape="false" width="600px">
-    <el-form size="small" :model="form" ref="form">
+    <el-form size="small" :model="form" label-position="top" ref="form">
       <el-form-item label="等级名称" :label-width="formLabelWidth" prop="name" :rules="[{required: true,message: ' '}]">
         <el-input v-model="form.name" autocomplete="off"></el-input>
       </el-form-item>

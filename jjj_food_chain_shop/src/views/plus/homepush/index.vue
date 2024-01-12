@@ -5,7 +5,7 @@
         描述：插件中心-首页推送
     -->
   <div class="pb50">
-    <el-form size="small" ref="form" :model="form" label-width="100px">
+    <el-form size="small" ref="form" :model="form" label-position="top" label-width="100px">
       <el-form-item label="开启首页推送" prop="is_open"><el-switch v-model="form.is_open"></el-switch></el-form-item>
       <el-form-item label="活动名称" :rules="[{ required: true, message: ' ' }]" prop="name">
         <el-input class="max-w460" v-model="form.name" placeholder="" type="text"></el-input>

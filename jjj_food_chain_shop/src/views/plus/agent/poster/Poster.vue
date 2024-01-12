@@ -37,7 +37,7 @@
         </div>
       </div>
       <div class="right-box flex-1">
-        <el-form size="small" ref="form" :model="form" label-width="200px">
+        <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
           <el-form-item label="海报背景图">
             <el-button type="primary" @click="openUpload(1)">上传图片</el-button>
             <div class="tips">尺寸：宽750像素 高大于(等于)1200像素</div>

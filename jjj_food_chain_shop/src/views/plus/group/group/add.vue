@@ -11,7 +11,7 @@
       <el-tab-pane label="团购详情" name="content"></el-tab-pane>
     </el-tabs>
     <!--添加团购-->
-    <el-form size="small" :model="form" ref="form" label-width="100px">
+    <el-form size="small" :model="form" label-position="top" ref="form" label-width="100px">
       <!--基础信息-->
       <Basic v-if="activeName == 'basic'"></Basic>
 

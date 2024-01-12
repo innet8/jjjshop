@@ -13,7 +13,7 @@
 
     <!--编辑文章-->
     <!--添加团购-->
-    <el-form size="small" :model="form" ref="form" label-width="100px" v-if="!loading">
+    <el-form size="small" :model="form" label-position="top" ref="form" label-width="100px" v-if="!loading">
       <!--基础信息-->
       <Basic v-if="activeName == 'basic'"></Basic>
 

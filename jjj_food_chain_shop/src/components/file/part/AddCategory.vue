@@ -9,7 +9,7 @@
     v-model="dialogVisible"
     width="30%"
     :before-close="handleClose" :append-to-body="true">
-    <el-form size="small" :model="form" ref="form" label-width="100px" class="demo-ruleForm">
+    <el-form size="small" :model="form" label-position="top" ref="form" label-width="100px" class="demo-ruleForm">
       <el-form-item
         label="分类名称"
         prop="categoryname"

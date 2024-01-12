@@ -6,7 +6,7 @@
       -->
   <div class="product-add mt30">
     <!--form表单-->
-    <el-form size="small" ref="form" :model="form" label-width="200px">
+    <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
       <el-form-item label="是否审核">
         <div>
           <el-radio v-model="form.become" label="10">需后台审核</el-radio>

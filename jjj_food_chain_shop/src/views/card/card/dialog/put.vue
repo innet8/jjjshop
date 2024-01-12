@@ -6,7 +6,7 @@
   -->
   <el-dialog title="会员等级" v-model="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
     :close-on-press-escape="false" :modal-append-to-body="false" width='600px'>
-    <el-form size="small" :model="form">
+    <el-form size="small" :model="form" label-position="top">
       <el-form-item>
         <div class="d-s-s">
             <div class="d-b-s">

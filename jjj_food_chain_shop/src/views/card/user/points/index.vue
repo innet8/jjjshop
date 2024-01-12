@@ -5,7 +5,7 @@
       描述：会员-积分管理-积分设置
   -->
   <div class="pb50">
-    <el-form ref="form" size="small" :model="form" label-width="200px">
+    <el-form ref="form" size="small" :model="form" label-position="top" label-width="200px">
       <div class="common-form">积分设置</div>
       <el-form-item label="积分名称 " prop="points_name" :rules="[{required: true,message: ' '}]">
         <el-input v-model="form.points_name" autocomplete="off" class="max-w460"></el-input>

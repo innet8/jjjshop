@@ -6,7 +6,7 @@
     -->
   <div class="product-add" v-loading="loading">
     <!--form表单-->
-    <el-form size="small" ref="form" :model="form" label-width="180px" v-if="!loading">
+    <el-form size="small" ref="form" :model="form" label-position="top" label-width="180px" v-if="!loading">
       <!--基础信息-->
       <Basic></Basic>
       <!--规格设置-->

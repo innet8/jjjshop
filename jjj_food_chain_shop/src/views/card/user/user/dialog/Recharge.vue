@@ -8,7 +8,7 @@
     :close-on-press-escape="false">
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="充值余额" name="first">
-        <el-form size="small" :model="form">
+        <el-form size="small" :model="form" label-position="top">
           <el-form-item label="当前余额" :label-width="formLabelWidth">
             <el-input v-model="form.balance" autocomplete="off" disabled="disabled"></el-input>
           </el-form-item>
@@ -28,7 +28,7 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="充值积分" name="second">
-        <el-form size="small" :model="form">
+        <el-form size="small" :model="form" label-position="top">
           <el-form-item label="积分" :label-width="formLabelWidth">
             <el-input v-model="form.points" autocomplete="off" disabled="disabled"></el-input>
           </el-form-item>

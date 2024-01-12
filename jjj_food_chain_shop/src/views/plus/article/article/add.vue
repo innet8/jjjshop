@@ -6,7 +6,7 @@
     -->
   <div class="product-add pb50">
    <!--添加文章-->
-    <el-form size="small" :model="form" ref="form" :rules="rules" label-width="100px">
+    <el-form size="small" :model="form" label-position="top" ref="form" :rules="rules" label-width="100px">
       <div class="common-form">添加资讯</div>
       <el-form-item label="资讯标题" prop="article_title"><el-input v-model="form.article_title" placeholder="请输入文章标题" class="max-w460"></el-input></el-form-item>
       <el-form-item label="描述" prop="dec"><el-input v-model="form.dec" placeholder="请输入文章描述" class="max-w460"></el-input></el-form-item>

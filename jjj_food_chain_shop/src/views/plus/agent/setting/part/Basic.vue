@@ -6,7 +6,7 @@
       -->
   <div class="product-add mt30">
     <!--form表单-->
-    <el-form size="small" ref="form" :model="form" label-width="200px">
+    <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
       <el-form-item label="是否开启分销功能">
         <div>
           <el-radio v-model="form.is_open" label="1">开启</el-radio>

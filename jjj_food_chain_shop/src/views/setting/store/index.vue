@@ -6,7 +6,7 @@
   -->
   <div class="product-add">
     <!--form表单-->
-    <el-form size="small" ref="form" :model="form" label-width="150px">
+    <el-form size="small" ref="form" :model="form" label-position="top" label-width="150px">
       <!--添加门店-->
       <div class="common-form">商城设置</div>
       <el-form-item label="商城名称" :rules="[{required: true,message: ' '}]" prop="name">

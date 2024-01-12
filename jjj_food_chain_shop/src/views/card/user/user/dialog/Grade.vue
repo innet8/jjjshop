@@ -6,7 +6,7 @@
   -->
   <el-dialog title="会员等级" v-model="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
     :close-on-press-escape="false">
-    <el-form size="small" :model="form">
+    <el-form size="small" :model="form" label-position="top">
       <el-form-item label="昵称" :label-width="formLabelWidth">
         <el-input v-model="form.nickName" autocomplete="off" disabled></el-input>
       </el-form-item>

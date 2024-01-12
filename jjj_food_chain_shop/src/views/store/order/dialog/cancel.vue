@@ -7,7 +7,7 @@
   <div>
     <el-dialog title="取消订单" v-model="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
       :close-on-press-escape="false">
-      <el-form size="small" ref="form" :model="form">
+      <el-form size="small" ref="form" :model="form" label-position="top">
         <el-form-item label="订单号" :label-width="formLabelWidth" prop="order_no"
           :rules="[{required: true,message: ' '}]">
           <el-input v-model="form.order_no" placeholder="请输入订单号" class="max-w460" :readonly="true"></el-input>

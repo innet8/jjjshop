@@ -6,7 +6,7 @@
   -->
   <div class="product-add">
     <!--form表单-->
-    <el-form size="small" ref="form" :model="form" label-width="200px">
+    <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
       <!--清理缓存-->
       <div class="common-form">清理缓存</div>
 

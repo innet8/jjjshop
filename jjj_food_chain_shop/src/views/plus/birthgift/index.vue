@@ -4,7 +4,7 @@
   -->
   <div class="product-add">
     <!--form表单-->
-    <el-form size="small" ref="form" :model="form" label-width="200px">
+    <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
       <!--小票打印设置-->
       <div class="common-form">生日设置</div>
       <el-form-item label="是否开启活动">

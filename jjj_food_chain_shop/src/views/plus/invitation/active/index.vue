@@ -14,7 +14,7 @@
     </div>
     <div class="common-form">活动列表</div>
     <div class="product-content point-list">
-      <el-form ref="form" :model="form">
+      <el-form ref="form" :model="form" label-position="top">
         <div class="table-wrap">
           <el-table :data="tableData" border style="width: 100%" v-loading="loading">
             <el-table-column prop="name" label="活动名称" width="220"></el-table-column>

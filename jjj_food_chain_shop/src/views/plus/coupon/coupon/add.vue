@@ -6,7 +6,7 @@
       -->
 	<div class="product-add">
 		<!--form表单-->
-		<el-form size="small" ref="form" :model="form" label-width="200px">
+		<el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
 			<!--添加门店-->
 			<div class="common-form">添加优惠券</div>
 			<el-form-item label="优惠券名称" prop="name" :rules="[{ required: true, message: ' ' }]">

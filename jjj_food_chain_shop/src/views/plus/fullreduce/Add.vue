@@ -6,7 +6,7 @@
   -->
   <el-dialog title="添加活动" v-model="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
     :close-on-press-escape="false" width="600px">
-    <el-form size="small" :model="form" ref="form">
+    <el-form size="small" :model="form" label-position="top" ref="form">
       <el-form-item label="活动名称" :label-width="formLabelWidth" prop="active_name" :rules="[{required: true,message: ' '}]">
         <el-input v-model="form.active_name" placeholder="请输入活动名称"></el-input>
       </el-form-item>

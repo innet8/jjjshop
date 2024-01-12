@@ -1,7 +1,7 @@
 <template>
 	<el-dialog title="修改密码" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
 		:close-on-press-escape="false" width="30%">
-		<el-form size="small" :model="form" ref="form">
+		<el-form size="small" :model="form" label-position="top" ref="form">
 			<el-form-item label="原始密码" :label-width="formLabelWidth" prop="oldpass"
 				:rules="[{required: true,message: ' '}]">
 				<el-input type="password" v-model="form.oldpass" autocomplete="off"></el-input>

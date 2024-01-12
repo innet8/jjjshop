@@ -5,7 +5,7 @@
       描述：会员-积分管理-积分设置
   -->
   <div class="pb50">
-    <el-form ref="form" size="small" :model="form" label-width="200px">
+    <el-form ref="form" size="small" :model="form" label-position="top" label-width="200px">
       <div class="common-form">提现设置</div>
       <el-form-item label="是否开启提现">
         <el-radio-group v-model="form.is_open">

@@ -6,7 +6,7 @@
     -->
   <el-dialog title="取号记录" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
     :close-on-press-escape="false">
-    <el-form size="small" :model="form" :rules="formRules" ref="form">
+    <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
       <el-form-item label="就餐号" prop="queue_no" :label-width="formLabelWidth">
         <el-input v-model="form.queue_no" autocomplete="off" :disabled="true"></el-input>
       </el-form-item>

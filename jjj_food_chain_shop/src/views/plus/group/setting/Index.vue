@@ -5,7 +5,7 @@
     描述：插件中心-团购设置
   -->
   <div>
-    <el-form size="small" :model="form" ref="ruleForm" label-width="100px">
+    <el-form size="small" :model="form" label-position="top" ref="ruleForm" label-width="100px">
       <!--订单设置-->
       <div class="common-form">订单设置</div>
       <el-form-item label="未支付订单" prop="close_time" :rules="[{ required: true, message: '请输入关闭时间' }]">

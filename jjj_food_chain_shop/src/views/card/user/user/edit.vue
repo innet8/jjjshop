@@ -1,7 +1,7 @@
 <template>
   <div class="product-add">
     <!--form表单-->
-    <el-form size="small" ref="form" :model="form" label-width="200px">
+    <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
       <!--店员修改-->
       <div class="common-form">会员编辑</div>
       <el-form-item label="昵称" prop="nickName">

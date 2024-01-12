@@ -1,7 +1,7 @@
 <template>
   <div class="product-add">
     <!--form表单-->
-    <el-form size="small" ref="form" :model="form" label-width="180px" :loading="loading">
+    <el-form size="small" ref="form" :model="form" label-position="top" label-width="180px" :loading="loading">
       <!--基础信息-->
       <Basic></Basic>
 

@@ -6,7 +6,7 @@
     -->
   <div class="product">
     <div>
-      <el-form size="small" :inline="true" :model="form" class="demo-form-inline d-s-c">
+      <el-form size="small" :inline="true" :model="form" label-position="top" class="demo-form-inline d-s-c">
         <el-form-item label="关键词">
           <el-input v-model="form.search" autocomplete="off"></el-input>
         </el-form-item>

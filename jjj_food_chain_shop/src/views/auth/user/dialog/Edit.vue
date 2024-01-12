@@ -6,7 +6,7 @@
     -->
   <el-dialog title="修改管理员" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false" :close-on-press-escape="false">
     <!--form表单-->
-    <el-form size="small" ref="form" :model="form" :rules="formRules" :label-width="formLabelWidth" v-loading="loading">
+    <el-form size="small" ref="form" :model="form" label-position="top" :rules="formRules" :label-width="formLabelWidth" v-loading="loading">
       <el-form-item label="用户名" prop="user_name"><el-input v-model="form.user_name" placeholder="请输入用户名"></el-input></el-form-item>
       <el-form-item label="所属角色" prop="access_id">
         <el-select v-model="form.access_id" :multiple="true">

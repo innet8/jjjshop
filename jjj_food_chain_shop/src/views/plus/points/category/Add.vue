@@ -6,7 +6,7 @@
     -->
   <el-dialog title="添加分类" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
     :close-on-press-escape="false">
-    <el-form size="small" :model="form" :rules="formRules" ref="form">
+    <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
       <el-form-item label="分类名称" prop="name" :label-width="formLabelWidth">
         <el-input v-model="form.name" autocomplete="off"></el-input>
       </el-form-item>

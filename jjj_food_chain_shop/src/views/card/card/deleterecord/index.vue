@@ -24,7 +24,6 @@
           </el-table-column>
           <el-table-column prop="money" label="价格"></el-table-column>
           <el-table-column prop="receive_num" label="领取人数"></el-table-column>
-          <el-table-column prop="money" label="价格"></el-table-column>
           <el-table-column prop="create_time" label="创建时间"></el-table-column>
           <el-table-column prop="update_time" label="删除时间"></el-table-column>
           <!-- <el-table-column fixed="right" label="操作" width="120">

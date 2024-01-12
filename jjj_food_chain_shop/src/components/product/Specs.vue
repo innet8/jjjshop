@@ -4,7 +4,7 @@
     	时间：2020-06-28
     	描述：组件-选择规格
     -->
-<el-dialog title="选择规格" ="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false" :close-on-press-escape="false" width="600px">
+<el-dialog title="选择规格" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false" :close-on-press-escape="false" width="600px">
 
     <!--内容-->
     <div>

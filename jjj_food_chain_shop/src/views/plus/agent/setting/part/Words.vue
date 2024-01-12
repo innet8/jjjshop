@@ -6,7 +6,7 @@
       -->
   <div class="product-add mt30">
     <!--form表单-->
-    <el-form size="small" ref="form" :model="form" label-width="200px">
+    <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
       <div class="common-form">分销中心页面</div>
       <el-form-item label="页面标题 ">
         <el-input v-model="form.index.title.value" placeholder="分销中心" class="max-w460"></el-input>

@@ -414,6 +414,10 @@ body,
   margin-bottom: 0;
 }
 
+.el-form-item--small{
+    margin-bottom: 16px !important;
+}
+
 /*表格中的商品展示*/
 .table-wrap .product-info {
   display: flex;

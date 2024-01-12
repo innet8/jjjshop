@@ -1,7 +1,7 @@
 <template>
   <div class="product-add">
     <!--form表单-->
-    <el-form size="small" ref="form" :model="form" label-width="200px">
+    <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
       <!--添加门店-->
       <div class="common-form">菜品打印</div>
       <el-form-item label="名称" prop="name" :rules="[{ required: true, message: ' ' }]"><el-input v-model="form.name" class="max-w460"></el-input></el-form-item>

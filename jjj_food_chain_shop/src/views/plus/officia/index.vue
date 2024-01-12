@@ -22,7 +22,7 @@
           </div>
         </span>
       </div>
-      <el-form ref="form" size="small" :model="form" :rules="rules" label-width="100px">
+      <el-form ref="form" size="small" :model="form" label-position="top" :rules="rules" label-width="100px">
         <el-form-item label="公众号关注" prop="status"><el-switch v-model="form.status"></el-switch></el-form-item>
         <!--提交-->
         <div class="common-button-wrapper"><el-button type="primary" size="small" @click="onSubmit" :loading="loading">提交</el-button></div>
