@@ -23,7 +23,7 @@ class User extends Controller
     public function index($mobile)
     {
         $detail = UserModel::detail(['mobile' => $mobile]);
-        return $this->renderSuccess('', $detail);
+        return $this->renderSuccess('', compact('detail'));
     }
 
     /**
