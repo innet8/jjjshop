@@ -5,6 +5,7 @@ namespace app\cashier\controller\order;
 use app\cashier\controller\Controller;
 use app\cashier\model\order\Cart as CartModel;
 use app\cashier\model\order\Order as OrderModel;
+use app\cashier\model\store\Table as TableModel;
 use hg\apidoc\annotation as Apidoc;
 
 /**
@@ -135,6 +136,8 @@ class HallCart extends Controller
     {
         $model = new OrderModel;
         if ($model->cancel($table_id)) {
+            // 修改桌台状态
+            TableModel::close($table_id);
             return $this->renderSuccess('订单取消成功');
         }
         return $this->renderError($model->getError() ?: '订单取消失败');

@@ -22,6 +22,14 @@ class Table extends BaseModel
     }
 
     /**
+     * 关联进行中订单
+     */
+    public function underwayOrder()
+    {
+        return $this->hasOne('app\\common\\model\\order\\Order', 'table_id', 'table_id')->where('order_status', 10);
+    }
+
+    /**
      * 桌位详情
      */
     public static function detail($where)

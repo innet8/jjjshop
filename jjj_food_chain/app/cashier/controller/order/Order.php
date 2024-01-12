@@ -4,6 +4,7 @@ namespace app\cashier\controller\order;
 
 use app\cashier\model\order\Cart as CartModel;
 use app\cashier\model\order\Order as OrderModel;
+use app\cashier\model\store\Table as TableModel;
 use app\common\model\order\Order as CommonOrderModel;
 use app\cashier\service\order\settled\CashierOrderSettledService;
 use app\cashier\controller\Controller;
@@ -117,6 +118,8 @@ class Order extends Controller
         }
         // 移出购物车中已下单的商品
         $CartModel->deleteTableAll($this->cashier['user'], $params['table_id']);
+        // 修改桌台状态
+        TableModel::open($params['table_id']);
         // 返回结算信息
         return $this->renderSuccess('下单成功');
     }
@@ -206,6 +209,7 @@ class Order extends Controller
     {
         $detail = OrderModel::detail($order_id);
         if ($detail->orderPay($this->postData())) {
+            TableModel::close($detail['table_id']);
             return $this->renderSuccess('结账成功');
         }
         return $this->renderError($detail->getError() ?: '结账失败');

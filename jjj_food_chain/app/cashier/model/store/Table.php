@@ -19,7 +19,8 @@ class Table extends TableModel
     {
         $model = $this;
         // 查询列表数据
-        return $model->when($area_id, function ($query) use ($area_id) {
+        return $model->with(['underwayOrder'])
+            ->when($area_id, function ($query) use ($area_id) {
                 return $query->where('area_id', '=', $area_id);
             })
             ->when($type_id, function ($query) use ($type_id) {
@@ -50,5 +51,15 @@ class Table extends TableModel
         return $str;
     }
 
+    // 开台
+    public static function open($table_id)
+    {
+        return self::where('table_id', '=', $table_id)->update(['status' => 30]);
+    }
 
+    // 关台
+    public static function close($table_id)
+    {
+        return self::where('table_id', '=', $table_id)->update(['status' => 10]);
+    }
 }

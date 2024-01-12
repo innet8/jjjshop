@@ -3,6 +3,7 @@
 namespace app\cashier\model\order;
 
 use app\api\model\order\OrderProduct;
+use app\cashier\model\store\Table as TableModel;
 use app\cashier\service\order\paysuccess\type\MasterPaySuccessService;
 use app\common\enum\order\OrderSourceEnum;
 use app\common\enum\order\OrderTypeEnum;
@@ -117,11 +118,13 @@ class Order extends OrderModel
             ->find();
 
         if (!$detail) {
+            TableModel::close($table_id);
             $this->error = "订单不存在";
             return false;
         }
 
         if ($detail['pay_status']['value'] == 20) {
+            TableModel::close($table_id);
             $this->error = "订单已付款，不允许取消";
             return false;
         }
