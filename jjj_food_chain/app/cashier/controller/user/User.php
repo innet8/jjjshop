@@ -4,6 +4,7 @@ namespace app\cashier\controller\user;
 
 use app\cashier\controller\Controller;
 use app\cashier\model\user\User as UserModel;
+use app\common\model\user\User as MemberModel;
 use hg\apidoc\annotation as Apidoc;
 
 /**
@@ -37,5 +38,43 @@ class User extends Controller
     {
         $detail = UserModel::detail($user_id);
         return $this->renderSuccess('', $detail);
+    }
+
+    /**
+     * @Apidoc\Title("添加会员")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/user.User/add")
+     * @Apidoc\Param("nick_name", type="string", require=true, desc="昵称")
+     * @Apidoc\Param("password", type="string", require=true, desc="手机号")
+     * @Apidoc\Returned()
+     */
+    public function add()
+    {
+        $model = new MemberModel();
+        if ($model->add($this->postData())) {
+            return $this->renderSuccess('添加会员成功');
+        }
+        return $this->renderError($model->getError() ?: '添加会员失败');
+    }
+
+    /**
+     * @Apidoc\Title("会员充值")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/user.User/recharge")
+     * @Apidoc\Param("user_id", type="int", require=true, default="", desc="用户ID")
+     * @Apidoc\Param("source", type="int", require=true, default="", desc="充值类型 0-金额 1-积分")
+     * @Apidoc\Param("recharge_value", type="float", require=true, default="", desc="充值数额")
+     * @Apidoc\Param("mode", type="string", require=true, default="", desc="inc-增加 dec-减少 final-最终结果")
+     * @Apidoc\Returned()
+     */
+    public function recharge($user_id, $source)
+    {
+        // 用户详情
+        $model = MemberModel::detail($user_id);
+
+        if ($model->recharge($this->cashier['user']['user_name'], $source, $this->postData())) {
+            return $this->renderSuccess('操作成功');
+        }
+        return $this->renderError($model->getError() ?: '操作失败');
     }
 }

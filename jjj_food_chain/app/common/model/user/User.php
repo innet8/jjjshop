@@ -4,10 +4,12 @@
 namespace app\common\model\user;
 
 use app\api\controller\points\Log;
+use app\common\enum\user\balanceLog\BalanceLogSceneEnum as SceneEnum;
 use app\common\model\BaseModel;
 use app\common\model\settings\Setting as SettingModel;
 use app\common\model\user\Grade as GradeModel;
 use app\common\model\user\PointsLog as PointsLogModel;
+use app\shop\model\user\BalanceLog as BalanceLogModel;
 
 /**
  * 用户模型
@@ -214,5 +216,95 @@ class User extends BaseModel
             $this->error = '会员已存在';
             return false;
         }
+    }
+
+    /**
+     * 用户充值
+     */
+    public function recharge($storeUserName, $source, $data)
+    {
+        trace($source);
+        if ($source == 0) {
+            return $this->rechargeToBalance($storeUserName, $data);
+        } elseif ($source == 1) {
+            return $this->rechargeToPoints($storeUserName, $data);
+        }
+        return false;
+    }
+
+    /**
+     * 用户充值：余额
+     */
+    private function rechargeToBalance($storeUserName, $data)
+    {
+        if (!isset($data['recharge_value']) || $data['recharge_value'] === '' || $data['recharge_value'] < 0) {
+            $this->error = '请输入正确的金额';
+            return false;
+        }
+        // 判断充值方式，计算最终金额
+        $money = 0;
+        if ($data['mode'] === 'inc') {
+            $diffMoney = $this['balance'] + $data['recharge_value'];
+            $money = $data['recharge_value'];
+        } elseif ($data['mode'] === 'dec') {
+            $diffMoney = $this['balance'] - $data['recharge_value'] <= 0 ? 0 : $this['balance'] - $data['recharge_value'];
+            $money = -$data['recharge_value'];
+        } else {
+            $diffMoney = $data['recharge_value'];
+            $money = $diffMoney - $this['balance'];
+        }
+        // 更新记录
+        $this->transaction(function () use ($storeUserName, $data, $diffMoney, $money) {
+            // 更新账户余额
+            $this->where('user_id', '=', $this['user_id'])->update(['balance' => $diffMoney]);
+            // 新增余额变动记录
+            BalanceLogModel::add(SceneEnum::ADMIN, [
+                'user_id' => $this['user_id'],
+                'money' => $money,
+                'remark' => $data['remark']??'',
+            ], [$storeUserName]);
+        });
+        return true;
+    }
+
+    /**
+     * 用户充值：积分
+     */
+    private function rechargeToPoints($storeUserName, $data)
+    {
+        if (!isset($data['value']) || $data['value'] === '' || $data['value'] < 0) {
+            $this->error = '请输入正确的积分数量';
+            return false;
+        }
+        $points = 0;
+        // 判断充值方式，计算最终积分
+        if ($data['mode'] === 'inc') {
+            $diffMoney = $this['points'] + $data['value'];
+            $points = $data['value'];
+        } elseif ($data['mode'] === 'dec') {
+            $diffMoney = $this['points'] - $data['value'] <= 0 ? 0 : $this['points'] - $data['value'];
+            $points = -$data['value'];
+        } else {
+            $diffMoney = $data['value'];
+            $points = $data['value'] - $this['points'];
+        }
+        // 更新记录
+        $this->transaction(function () use ($storeUserName, $data, $diffMoney, $points) {
+            $totalPoints = $this['total_points'] + $points <= 0 ? 0 : $this['total_points'] + $points;
+            // 更新账户积分
+            $this->where('user_id', '=', $this['user_id'])->update([
+                'points' => $diffMoney,
+                'total_points' => $totalPoints
+            ]);
+            // 新增积分变动记录
+            PointsLogModel::add([
+                'user_id' => $this['user_id'],
+                'value' => $points,
+                'describe' => "后台管理员 [{$storeUserName}] 操作",
+                'remark' => $data['remark']??'',
+            ]);
+        });
+        event('UserGrade', $this['user_id']);
+        return true;
     }
 }

@@ -67,20 +67,4 @@ class Passport extends Controller
         return $this->renderError($model->getError() ?: '修改失败');
     }
 
-    /**
-     * @Apidoc\Title("添加会员")
-     * @Apidoc\Method ("POST")
-     * @Apidoc\Url ("/index.php/cashier/passport/add")
-     * @Apidoc\Param("nick_name", type="string", require=true, desc="昵称")
-     * @Apidoc\Param("password", type="string", require=true, desc="手机号")
-     * @Apidoc\Returned()
-     */
-    public function add()
-    {
-        $model = new MemberModel();
-        if ($model->add($this->postData())) {
-            return $this->renderSuccess('添加会员成功');
-        }
-        return $this->renderError($model->getError() ?: '添加会员失败');
-    }
 }
