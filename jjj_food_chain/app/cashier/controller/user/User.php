@@ -22,8 +22,8 @@ class User extends Controller
      */
     public function index($mobile)
     {
-        $detail = UserModel::detail(['mobile' => $mobile]);
-        return $this->renderSuccess('', compact('detail'));
+        $list = UserModel::detail(['mobile' => $mobile]);
+        return $this->renderSuccess('', compact('list'));
     }
 
     /**
