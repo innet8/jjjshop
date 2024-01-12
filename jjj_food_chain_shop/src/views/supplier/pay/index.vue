@@ -34,7 +34,7 @@
                 </el-pagination>
             </div>
         </div>
-        <addEdit v-if="open" :open="open" @close="(e) => { open = false; if(e==1){ this.getData();} }"></addEdit>
+        <addEdit v-if="open" :open="open" :title="title" @close="(e) => { open = false; if(e==1){ this.getData();} }"></addEdit>
     </div>
 </template>
 <script>
@@ -57,6 +57,7 @@ export default {
             /*是否打开添加弹窗*/
             open: false,
             /*是否打开编辑弹窗*/
+            title:'',
         }
     },
     methods: {
@@ -78,6 +79,7 @@ export default {
 
         /*打开添加*/
         addClick() {
+            this.title = $t('添加支付方式')
             this.open = true
         },
 
