@@ -8,7 +8,6 @@
     <!--form表单-->
     <el-form size="small" ref="form" :model="form" label-position="top" label-width="150px">
       <!--添加门店-->
-      <div class="common-form">商城设置</div>
       <el-form-item label="商城名称" :rules="[{required: true,message: ' '}]" prop="name">
         <el-input v-model="form.name" placeholder="商城名称" class="max-w460"></el-input>
       </el-form-item>
@@ -18,35 +17,11 @@
         </div>
         <img class="mt10" v-img-url="form.logoUrl" :width="100">
       </el-form-item>
-      <div class="common-form">会员设置</div>
-      <el-form-item label="默认头像" :rules="[{required: true,message: '请选择默认头像'}]">
-        <div class="ww100">
-        <el-button @click="chooseImg('avatarUrl')">选择图片</el-button>
-        </div>
-        <img class="mt10" v-img-url="form.avatarUrl" :width="100">
-      </el-form-item>
-      <div class="common-form">h5注册设置</div>
-      <el-form-item label="是否开启短信验证" prop="sms_open">
-        <el-checkbox v-model="form.sms_open">是否开启短信验证</el-checkbox>
-        <div class="tips">用户注册是否开启短信验证</div>
-      </el-form-item>
-      <el-form-item label="是否开启微信授权" prop="wx_open">
-        <el-checkbox v-model="form.wx_open">是否开启微信授权</el-checkbox>
-        <div class="tips">用户登录是否开启微信授权</div>
-      </el-form-item>
-      <div class="common-form">日志记录</div>
-      <el-form-item label="是否记录查询日志" prop="is_get_log">
-        <el-checkbox v-model="form.is_get_log">是否记录查询日志</el-checkbox>
-        <div class="tips">如果记录，日志量会有点大</div>
-      </el-form-item>
-      <div class="common-form">物流查询api</div>
-      <el-form-item label="快递100 Customer" prop="customer">
+      
+      <el-form-item label="店铺ID" prop="customer">
         <el-input v-model="form.customer" placeholder="" class="max-w460"></el-input>
-        <div class="tips">用于查询物流信息,<el-link :underline="false" href="https://www.kuaidi100.com/openapi/" target="_blank"
-            type="primary">快递100申请</el-link>
-        </div>
       </el-form-item>
-      <el-form-item label="快递100 Key" prop="key">
+      <el-form-item label="机器码" prop="key">
         <el-input v-model="form.key" placeholder="" class="max-w460"></el-input>
       </el-form-item>
       <!--提交-->

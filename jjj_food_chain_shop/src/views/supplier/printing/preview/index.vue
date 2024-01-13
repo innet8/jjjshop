@@ -26,19 +26,45 @@
                 </el-pagination>
             </div>
         </div>
-        <preview v-if="open" :open="open" @close="(e) => { open = false; if(e==1){ this.getData();} }"></preview>
+        <preview v-if="open" :open="open" :title="title" @close="(e) => { open = false; if (e == 1) { this.getData(); } }"></preview>
     </div>
 </template>
 <script>
-    import preview from './preview.vue';
+import preview from './preview.vue';
 export default {
-    components:{preview},
+    components: { preview },
     data() {
         return {
             /*是否加载完成*/
             loading: false,
             /*列表数据*/
-            tableData: [],
+            tableData: [
+                {
+                    printer_id: 1,
+                    printer_name: $t('交班单'),
+                    create_time: '',
+                },
+                {
+                    printer_id: 2,
+                    printer_name: $t('结账单'),
+                    create_time: '',
+                },
+                {
+                    printer_id: 3,
+                    printer_name: $t('预结账单'),
+                    create_time: '',
+                },
+                {
+                    printer_id: 4,
+                    printer_name: $t('一菜一单'),
+                    create_time: '',
+                },
+                {
+                    printer_id: 5,
+                    printer_name: $t('营业数据'),
+                    create_time: '',
+                },
+            ],
             /*一页多少条*/
             pageSize: 20,
             /*一共多少条数据*/
@@ -46,11 +72,13 @@ export default {
             /*当前是第几页*/
             curPage: 1,
 
-            open:false,
+            open: false,
+            title:'',
         }
     },
     methods: {
-        previewClick(){
+        previewClick(e) {
+            this.title = e.printer_name
             this.open = true
         },
 
@@ -68,7 +96,7 @@ export default {
             this.pageSize = val;
             this.getData();
         },
-        getData(){
+        getData() {
 
         },
     },

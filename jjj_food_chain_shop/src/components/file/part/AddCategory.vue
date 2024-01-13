@@ -75,7 +75,6 @@ export default {
 				group_name: model.categoryname,
 				group_id:model.group_id
 			};
-			console.log(param);
 			FileApi.editCategory(param,).then(data => {
 				ElMessage({
 					message: '修改成功',
@@ -98,7 +97,6 @@ export default {
 						this.addCategory(this.form.categoryname);
 					}
 				} else {
-					console.log('error submit!!');
 					return false;
 				}
 			});
