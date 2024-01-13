@@ -51,6 +51,12 @@ class SettingEnum extends Enum
     const BALANCE_CASH = 'balance_cash';
     // 直播设置
     const LIVE = 'live';
+    // 货币单位设置
+    const CURRENCY = 'currency';
+    // 税率设置
+    const TAX_RATE = 'tax_rate';
+    // 服务费设置
+    const SERVICE_CHARGE = 'service_charge';
 
     /**
      * 获取订单类型值
@@ -141,6 +147,18 @@ class SettingEnum extends Enum
             self::LIVE => [
                 'value' => self::LIVE,
                 'describe' => '直播设置',
+            ],
+            self::CURRENCY => [
+                'value' => self::CURRENCY,
+                'describe' => '货币单位',
+            ],
+            self::TAX_RATE => [
+                'value' => self::TAX_RATE,
+                'describe' => '税率管理',
+            ],
+            self::SERVICE_CHARGE => [
+                'value' => self::SERVICE_CHARGE,
+                'describe' => '服务费',
             ],
         ];
     }

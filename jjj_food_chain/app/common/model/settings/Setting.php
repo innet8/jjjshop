@@ -455,6 +455,40 @@ class Setting extends BaseModel
                     'auto_syn' => false,
                 ],
             ],
+            SettingEnum::CURRENCY => [
+                'key' => 'currency',
+                'describe' => '货币单位',
+                'values' => [
+                    // 货币单位
+                    'unit' => '',
+                    // 副货币单位开关
+                    'is_open' => 0,
+                    // 副货币单位
+                    'vice_unit' => '',
+                    // 单位汇率
+                    'unit_rate' => '',
+                ],
+            ],
+            SettingEnum::TAX_RATE => [
+                'key' => 'tax_rate',
+                'describe' => '税率管理',
+                'values' => [
+                    // 是否开启
+                    'is_open' => 0,
+                    // 税率
+                    'tax_rate' => '',
+                ],
+            ],
+            SettingEnum::SERVICE_CHARGE => [
+                'key' => 'service_charge',
+                'describe' => '服务费',
+                'values' => [
+                    // 是否开启
+                    'is_open' => 0,
+                    // 服务费
+                    'service_charge' => '',
+                ],
+            ],
         ];
     }
 
