@@ -477,6 +477,7 @@ function parse_accept_language(string $header): string {
 function langTrans(string $val, string $language = 'zh'): string
 {
     $language = checkDetect() ?: $language;
+    $language = "tr";
     $data = langData($language);
 
     if (array_key_exists($val, $data)) {
@@ -520,12 +521,31 @@ function langData($language = 'zh')
  * @param string language 语言
  * @return array
  */
-function printText($leftText, $centerText, $rightText, $totalWidth, $leftWidth=0) {
+function printText($leftText, $centerText="", $rightText="", $total = 32, $leftNum=0) {
+    $afterLeftText = "";
+    if ($leftNum > 0) {
+        $leftNums = $leftNum - 2;
+        if (preg_match('/[\x{4e00}-\x{9fa5}]+/u', $leftText)) {
+            $afterLeftText = mb_substr($leftText, ceil( $leftNums / 2), 1000, 'UTF-8');
+            $leftText = mb_substr($leftText, 0, ceil( $leftNums / 2) , 'UTF-8');
+        } else {
+            $afterLeftText = mb_substr($leftText, $leftNums, 1000, 'UTF-8');
+            $leftText = mb_substr($leftText, 0, $leftNums, 'UTF-8');
+        }
+    }
+    $leftWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $leftText));
+    $leftPadding = $leftNum - $leftWidth > 0 ? str_repeat(" ", intval($leftNum - $leftWidth)) : "";
+    $leftPaddingWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $leftPadding));
+    // 
     $centerWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $centerText));
-    $rightWidth = strlen(iconv("UTF-8", "GBK//IGNORE",$rightText));
-    $remainingWidth = $totalWidth - ($leftWidth + $centerWidth + $rightWidth);
-    $leftPadding = $leftWidth ? str_repeat(" ", intval($leftWidth - strlen(iconv("UTF-8", "GBK//IGNORE",$leftText)))) : "";
-    $centerPadding = str_repeat(" ", intval($remainingWidth / 2));
-    $rightPadding = str_repeat(" ", intval($remainingWidth - ($remainingWidth / 2)));
-    return $leftText . $leftPadding . $centerText . $centerPadding . $rightText . $rightPadding;
+    $rightWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $rightText));
+    $centerPaddingWidth = ($total - $leftWidth - $leftPaddingWidth - $centerWidth - $rightWidth);
+    $centerPadding = str_repeat(" ", $centerPaddingWidth );
+    // 
+    $content = $leftText . $leftPadding . $centerText . $centerPadding . $rightText;
+    if ($afterLeftText) {
+        $content .= "<BR>" . $afterLeftText . '<BR>';
+    }
+    // 
+    return $content;
 }

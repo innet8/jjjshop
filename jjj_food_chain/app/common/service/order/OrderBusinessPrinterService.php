@@ -118,35 +118,33 @@ class OrderBusinessPrinterService
 
         // 飞蛾打印机
         $width = 32;
-        $leftWidth = 14;
+        $leftWidth = 16;
         $content = "<C>*" . __('店铺名称') . "({$data['supplier']['name']})*</C><BR>";
         $content .= "<CB>" . __('营业数据') . "</CB><BR>";
-        $content .= __('时间') . "：{$startTime} " . __('至') . " {$endTime}<BR>";
-        $content .= "<BR>";
-        $content .= printText(__('分类'), __('数量'),  __('金额'), $width + 3, $leftWidth). ' <BR>';
+        $content .= __('时间') . "：{$startTime} " . __('至') . " {$endTime}<BR><BR>";
+        $content .= printText(__('分类'), __('数量'),  __('金额'), $width, $leftWidth);
         $content .= "--------------------------------<BR>";
         foreach ($data['categorys'] as $key => $category) {
-            $content .= printText($category['name'], $category['sales'], "￥" . strval($category['prices']), $width + 6, $leftWidth)  . '<BR>';
+            $content .= printText($category['name'], $category['sales'], "￥" . strval($category['prices']), $width, $leftWidth)  . '<BR>';
         }
-        $content .= "--------------------------------<BR>";
-        $content .= "<BR>";
-        $content .= printText(__('销售笔数'), ' ', $data['sales_num'], $width + 8) . "<BR>";
+        $content .= "--------------------------------<BR><BR>";
+        $content .= printText(__('销售笔数'), ' ', $data['sales_num'], $width) . "<BR><BR>";
         if ($data['balance_pay'] > 0) { 
-            $content .= printText(__('余额收入'), '', "￥" . strval($data['balance_pay']), $width + 6, $leftWidth) . "<BR>";
+            $content .= printText(__('余额收入'), '', "￥" . strval($data['balance_pay']), $width) . "<BR><BR>";
         }
         if ($data['cash_pay'] > 0) { 
-            $content .= printText(__('现金收入'), '', "￥" . strval($data['cash_pay']), $width + 6, $leftWidth) . "<BR>";
+            $content .= printText(__('现金收入'), '', "￥" . strval($data['cash_pay']), $width) . "<BR><BR>";
         }
         if ($data['wx_pay'] > 0) { 
-            $content .= printText(__('微信收入'), '', "￥" . strval($data['wx_pay']), $width + 6, $leftWidth) . "<BR>";
+            $content .= printText(__('微信收入'), '', "￥" . strval($data['wx_pay']), $width) . "<BR><BR>";
         }
         if ($data['zfb_pay'] > 0) { 
-            $content .= printText(__('支付宝收入'), '', "￥" . strval($data['zfb_pay']), $width + 6, $leftWidth) . "<BR>";
+            $content .= printText(__('支付宝收入'), '', "￥" . strval($data['zfb_pay']), $width) . "<BR><BR>";
         }
         if ($data['refund_amount'] > 0) { 
-            $content .= printText(__('退款金额'), '', "￥" . strval($data['refund_amount']), $width + 6, $leftWidth) . "<BR>";
+            $content .= printText(__('退款金额'), '', "￥" . strval($data['refund_amount']), $width) . "<BR><BR>";
         }
-        $content .= printText(__('营业总额'), '', "￥" . strval($data['total_amount']), $width + 6, $leftWidth) . "<BR>";
+        $content .= printText(__('营业总额'), '', "￥" . strval($data['total_amount']), $width) . "<BR>";
         $content .= "<BR>";
         // 
         return $content;
