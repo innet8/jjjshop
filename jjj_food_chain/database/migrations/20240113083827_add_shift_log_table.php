@@ -4,7 +4,7 @@ use think\migration\Migrator;
 use think\migration\db\Column;
 use Phinx\Db\Adapter\MysqlAdapter;
 
-class AddshiftLogTable extends Migrator
+class AddShiftLogTable extends Migrator
 {
     /**
      * Change Method.
