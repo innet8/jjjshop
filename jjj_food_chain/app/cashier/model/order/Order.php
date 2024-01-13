@@ -227,13 +227,14 @@ class Order extends OrderModel
             $discount_money = 0;
             switch ($data['type']) {
                 case '1'://改价
-                    if ($data['money'] > $detail['pay_price']) {
+                    if ($data['money'] > $detail['order_price']) {
                         $this->error = "修改价应小于原价";
                         return false;
                     }
-                    if ($detail['pay_price'] > 0) {
-                        $discount_money = round($detail['order_price'] - $data['money'] + $detail['discount_money'], 2);
-                    }
+//                    if ($detail['pay_price'] > 0) {
+//                        $discount_money = round($detail['order_price'] - $data['money'] + $detail['discount_money'], 2);
+//                    }
+                    $discount_money = round($detail['order_price'] - $data['money'], 2);
                     break;
                 case '2'://折扣
                     if ($data['rate'] > 10) {
@@ -245,6 +246,7 @@ class Order extends OrderModel
                     }
                     break;
                 case '3'://抹零
+                    trace($detail['order_price']);
                     if ($data['discountType'] == 1) {//抹分
                         $discount_money = round($detail['order_price'] - intval($detail['pay_price'] * 10) / 10, 2);
                     } elseif ($data['discountType'] == 2) {//抹角
@@ -256,19 +258,19 @@ class Order extends OrderModel
                     }
                     break;
             }
-            if ($discount_money > 0) {
-                foreach ($detail['product'] as &$product) {
-                    //计算优惠金额
-                    $dicount_money = round($product['total_price'] / $detail['total_price'] * $discount_money, 2);
-                    $value = $product['total_price'];
-                    // 减去优惠金额
-                    $value = helper::bcsub($value, $dicount_money);
-                    $total_pay_price = helper::number2($value);
-                    if ($total_pay_price <= 0) {
-                        $total_pay_price = 0;
-                    }
-                    $product->save(['total_pay_price' => $total_pay_price, 'discount_money' => $dicount_money]);
-                }
+            if ($discount_money >= 0) {
+//                foreach ($detail['product'] as &$product) {
+//                    //计算优惠金额
+//                    $dicount_money = round($product['total_price'] / $detail['total_price'] * $discount_money, 2);
+//                    $value = $product['total_price'];
+//                    // 减去优惠金额
+//                    $value = helper::bcsub($value, $dicount_money);
+//                    $total_pay_price = helper::number2($value);
+//                    if ($total_pay_price <= 0) {
+//                        $total_pay_price = 0;
+//                    }
+//                    $product->save(['total_pay_price' => $total_pay_price, 'discount_money' => $dicount_money]);
+//                }
                 $pay_price = round($detail['order_price'] - $discount_money, 2);
                 if ($pay_price <= 0) {
                     $pay_price = 0;
