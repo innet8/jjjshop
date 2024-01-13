@@ -110,7 +110,7 @@ window.apidocFeConfig = {
         'common.page.404': '404-未知页面',
         'common.notdata': '暂无数据',
         'common.group': '分组',
-        'common.notGroup': '未分组',
+        'common.notGroup': '基础 (未分组)',
         'common.currentApp': '当前应用',
         'common.please.input': '请输入',
         'common.please.select': '请选择',

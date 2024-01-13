@@ -45,7 +45,7 @@ class Category extends BaseModel
     /**
      * 所有分类
      */
-    public static function getALL($type, $is_special, $store = '')
+    public static function getALL($type, $is_special, $store = '', $name = '')
     {
         $user = $store['user'];
         $supplier = $store['supplier'];
@@ -56,13 +56,16 @@ class Category extends BaseModel
             $shop_supplier_id = $detail['shop_supplier_id'];
         }
         $model = new static;
-        if (!Cache::get('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special)) {
+        if (!$name && !Cache::get('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. $name)) {
             $data = $model->with(['images', 'child'])
                 ->where('parent_id', '=', 0)
                 ->where('type', '=', $type)
                 ->where('is_special', '=', $is_special)
                 ->order(['sort' => 'asc', 'create_time' => 'asc'])
                 ->where('shop_supplier_id', '=', $shop_supplier_id)
+                ->when($name, function($q) use($name) {
+                    $q->where('name', 'like', '%' . trim($name) . '%');
+                })
                 ->select();
             $all = !empty($data) ? $data->toArray() : [];
             if ($is_special == 1 && empty($all)) {
@@ -70,14 +73,17 @@ class Category extends BaseModel
                 $data = $model->with(['images'])
                     ->where('type', '=', $type)
                     ->where('is_special', '=', $is_special)
+                    ->when($name, function($q) use($name) {
+                        $q->where('name', 'like', '%' . trim($name) . '%');
+                    })
                     ->order(['sort' => 'asc', 'create_time' => 'asc'])
                     ->where('shop_supplier_id', '=', $shop_supplier_id)
                     ->select();
                 $all = !empty($data) ? $data->toArray() : [];
             }
-            Cache::tag('cache')->set('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special, $all);
+            Cache::tag('cache')->set('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. $name, $all);
         }
-        return Cache::get('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special);
+        return Cache::get('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. $name);
     }
 
     /**
@@ -172,17 +178,17 @@ class Category extends BaseModel
     /**
      * 获取所有分类
      */
-    public static function getCacheAll($type, $is_special, $store = '')
+    public static function getCacheAll($type, $is_special, $store = '', $name = '')
     {
-        return self::getALL($type, $is_special, $store);
+        return self::getALL($type, $is_special, $store, $name);
     }
 
     /**
      * 获取所有分类(树状结构)
      */
-    public static function getCacheTree($type, $is_special, $store = '')
+    public static function getCacheTree($type, $is_special, $store = '', $name = '')
     {
-        return self::getALL($type, $is_special, $store);
+        return self::getALL($type, $is_special, $store, $name);
     }
 
     /**

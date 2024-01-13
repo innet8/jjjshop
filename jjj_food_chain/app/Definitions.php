@@ -12,8 +12,8 @@ class Definitions
 {
     /**
      * 获取分页数据列表的参数
-     * @param("page",type="int",require=true,default="1",desc="查询页数")
-     * @param("list_rows",type="int",require=true,default="10",desc="查询条数")
+     * @param("page",type="int",require=true,default=1,desc="查询页数")
+     * @param("list_rows",type="int",require=true,default=10,desc="查询条数")
      * @returned("total",type="int",desc="总条数")
      * @returned("per_page",type="int",desc="每页多少条")
      * @returned("current_page",type="int",desc="当面页码")

@@ -10,8 +10,10 @@ use app\shop\model\auth\Role;
 use app\shop\model\auth\User as AuthUserModel;
 use hg\apidoc\annotation as Apidoc;
 
-/**
+ /**
  * 用户管理
+ * @Apidoc\Group("user")
+ * @Apidoc\Sort(1)
  */
 class User extends Controller
 {

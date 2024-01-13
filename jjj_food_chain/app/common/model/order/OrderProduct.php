@@ -73,6 +73,14 @@ class OrderProduct extends BaseModel
     /**
      * 获取商品数据 (可指定某天)
      */
+    public function getProductNameAttr($value)
+    {
+        return $value; 
+    }
+
+    /**
+     * 获取商品数据 (可指定某天)
+     */
     public function getProductData($startDate, $endDate, $type, $shop_supplier_id)
     {
         $model = $this;

@@ -5,9 +5,12 @@ namespace app\shop\controller\user;
 use app\shop\controller\Controller;
 use app\shop\model\user\User as UserModel;
 use app\shop\model\user\Grade;
+use hg\apidoc\annotation as Apidoc;
 
-/**
- * 用户管理
+ /**
+ * 商户
+ * @Apidoc\Group("user")
+ * @Apidoc\Sort(1)
  */
 class User extends Controller
 {

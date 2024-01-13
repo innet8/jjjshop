@@ -35,6 +35,10 @@ return [
             'path'=>'app\shop\controller',
             // （必须）唯一的key
             'key'=>'shop',
+            'groups'  => [
+                ['title'=>'商品管理','name'=>'product'],
+                ['title'=>'会员管理','name'=>'user'],
+            ],
         ],
         [
             // （必须）标题

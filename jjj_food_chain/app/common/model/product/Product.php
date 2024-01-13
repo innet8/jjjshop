@@ -184,6 +184,11 @@ class Product extends BaseModel
                 $model = $model->where('product_status', '=', 10);
             }
         }
+        // 
+        if (isset($params['stock']) && $params['stock'] > 0) {
+            $model = $model->where('product_stock', '<' , $params['stock']);
+        }
+        // 
         if (isset($params['shop_supplier_id']) && $params['shop_supplier_id']) {
             $model = $model->where('product.shop_supplier_id', '=', $params['shop_supplier_id']);
         }

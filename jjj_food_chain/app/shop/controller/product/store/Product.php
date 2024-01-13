@@ -6,20 +6,35 @@ use app\shop\model\product\Product as ProductModel;
 use app\shop\model\product\Category as CategoryModel;
 use app\shop\service\ProductService;
 use app\shop\controller\Controller;
+use hg\apidoc\annotation as Apidoc;
 
 /**
- * 商品管理控制器
+ * 店内商品
+ * @Apidoc\Group("product")
+ * @Apidoc\Sort(4)
  */
 class Product extends Controller
 {
     /**
-     * 商品列表(全部)
+     * @Apidoc\Title("商品列表(全部)")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/product.store.product/index")
+     * @Apidoc\Param("product_name", type="string", require=false, desc="商品名称")
+     * @Apidoc\Param("category_id", type="int", default=0, require=false, desc="分类id")
+     * @Apidoc\Param("type", type="string", require=false, desc="是否上架 sell-上架 lower-下架")
+     * @Apidoc\Param("stock", type="int", default=0, require=false, desc="库存 0-全部 10-低于10 20-低于20 ....")
+     * @Apidoc\Param(ref="pageParam")
+     * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Product\getList")
      */
     public function index()
     {
         // 获取全部商品列表
         $model = new ProductModel;
-        $list = $model->getList(array_merge(['status' => -1, 'product_type' => 1, 'shop_supplier_id' => $this->store['user']['shop_supplier_id']], $this->postData()));
+        $list = $model->getList(array_merge([
+            'status' => -1, 
+            'product_type' => 1, 
+            'shop_supplier_id' => $this->store['user']['shop_supplier_id']
+        ], $this->postData()));
         // 商品分类
         $category = CategoryModel::getCacheTree(1, 0, $this->store);
         // 数量
@@ -30,7 +45,15 @@ class Product extends Controller
     }
 
     /**
-     * 商品列表(在售)
+     * @Apidoc\Title("商品列表(在售)")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/product.store.product/lists")
+     * @Apidoc\Param("product_name", type="string", require=false, desc="商品名称")
+     * @Apidoc\Param("category_id", type="int", default=0, require=false, desc="分类id")
+     * @Apidoc\Param("type", type="string", require=false, desc="是否上架 sell-上架 lower-下架")
+     * @Apidoc\Param("stock", type="int", default=0, require=false, desc="库存 0-全部 10-低于10 20-低于20 ....")
+     * @Apidoc\Param(ref="pageParam")
+     * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Product\getList")
      */
     public function lists()
     {
@@ -43,7 +66,15 @@ class Product extends Controller
     }
 
     /**
-     * 添加商品
+     * @Apidoc\Title("添加商品")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/product.store.product/add")
+     * @Apidoc\Param("product_name", type="string", require=false, desc="商品名称")
+     * @Apidoc\Param("category_id", type="int", default=0, require=false, desc="分类id")
+     * @Apidoc\Param("type", type="string", require=false, desc="是否上架 sell-上架 lower-下架")
+     * @Apidoc\Param("stock", type="int", default=0, require=false, desc="库存 0-全部 10-低于10 20-低于20 ....")
+     * @Apidoc\Param(ref="pageParam")
+     * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Product\getList")
      */
     public function add($scene = 'add')
     {

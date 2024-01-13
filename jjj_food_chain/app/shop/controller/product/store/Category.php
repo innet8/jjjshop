@@ -4,34 +4,48 @@ namespace app\shop\controller\product\store;
 
 use app\shop\controller\Controller;
 use app\shop\model\product\Category as CategoryModel;
+use hg\apidoc\annotation as Apidoc;
 
 /**
- * 商品分类
+ * 店内商品分类
+ * @Apidoc\Group("product")
+ * @Apidoc\Sort(4)
  */
 class Category extends Controller
 {
     /**
-     * 普通商品分类列表
+     * @Apidoc\Title("普通商品分类列表")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.store.category/index")
+     * @Apidoc\Param("name", type="string", require=false, desc="分类名称")
+     * @Apidoc\Returned()
      */
     public function index()
     {
+        $params = $this->postData();
         $model = new CategoryModel;
-        $list = $model->getCacheAll(1, 0, $this->store);
+        $list = $model->getCacheAll(1, 0, $this->store, $params['name'] ?? '') ?: [];
         return $this->renderSuccess('', compact('list'));
     }
 
     /**
-     * 特殊商品分类列表
+     * @Apidoc\Title("特殊商品分类列表")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.store.category/list")
+     * @Apidoc\Returned()
      */
     public function list()
     {
         $model = new CategoryModel;
-        $list = $model->getCacheAll(1, 1, $this->store);
+        $list = $model->getCacheAll(1, 1, $this->store) ?: [];
         return $this->renderSuccess('', compact('list'));
     }
 
     /**
-     * 删除商品分类
+     * @Apidoc\Title("删除商品分类")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.store.category/Delete")
+     * @Apidoc\Returned()
      */
     public function Delete($category_id)
     {
@@ -43,7 +57,10 @@ class Category extends Controller
     }
 
     /**
-     * 添加商品分类
+     * @Apidoc\Title("添加商品分类")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.store.category/Add")
+     * @Apidoc\Returned()
      */
     public function Add()
     {
@@ -59,7 +76,10 @@ class Category extends Controller
     }
 
     /**
-     * 编辑商品分类
+     * @Apidoc\Title("编辑商品分类")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.store.category/Add")
+     * @Apidoc\Returned()
      */
     public function Edit($category_id)
     {
@@ -73,7 +93,10 @@ class Category extends Controller
     }
 
     /**
-     * 设置状态
+     * @Apidoc\Title("设置状态")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.store.category/Add")
+     * @Apidoc\Returned()
      */
     public function set($category_id)
     {
@@ -87,7 +110,10 @@ class Category extends Controller
     }
 
     /**
-     * 普通商品顶级分类列表
+     * @Apidoc\Title("普通商品顶级分类列表")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.store.category/Add")
+     * @Apidoc\Returned()
      */
     public function parent()
     {
