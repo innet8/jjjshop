@@ -133,6 +133,26 @@ class Setting extends BaseModel
     }
 
     /**
+     * 更新设置
+     */
+    public static function updateSetting(string $key, array $values, int $shop_supplier_id = 0): bool
+    {
+        $model = self::detail($key, $shop_supplier_id);
+
+        // 删除系统设置缓存
+        Cache::delete('setting_' . self::$app_id. '_' . $shop_supplier_id);
+
+        return $model->save([
+            'key' => $key,
+            'describe' => SettingEnum::data()[$key]['describe'],
+            'values' => $values,
+            'app_id' => self::$app_id,
+            'shop_supplier_id' => $shop_supplier_id
+        ]) !== false;
+    }
+
+
+    /**
      * 默认配置
      */
     public function defaultData($storeName = null)
@@ -487,6 +507,73 @@ class Setting extends BaseModel
                     'is_open' => 0,
                     // 服务费
                     'service_charge' => '',
+                ],
+            ],
+            SettingEnum::CASHIER => [
+                'key' => 'cashier',
+                'describe' => '收银机设置',
+                'values' => [
+                    // 上传后的轮播内容url（图片 + 视频）
+                    'carousel' => [],
+                    // 收银结账自动送厨房
+                    'is_auto_send' => 0,
+                    // 钱箱密码
+                    'cashier_password' => '',
+                    // 自动锁屏 默认5分钟
+                    'auto_lock_screen' => [
+                        'unit' => 'minute', // 单位，'second'、'minute' 或 'never'
+                        'value' => 5,
+                    ],
+                    // 常用语言 泰语、英语、中文、繁体
+                    'language' => ['th', 'en', 'zh', 'zh-tw'],
+                    // 默认语言
+                    'default_language' => 'en',
+                ],
+            ],
+            SettingEnum::TABLET => [
+                'key' => 'tablet',
+                'describe' => '平板端设置',
+                'values' => [
+                    // 轮播内容（图片 + 视频）
+                    'carousel' => [],
+                    // 是否开启呼叫服务员
+                    'is_call_service' => 1,
+                    // 是否开启顾客自助下单
+                    'is_customer_order' => 1,
+                    // 是否显示售罄商品
+                    'is_show_sold_out' => 1,
+                    // 平板服务器连接
+                    'server' => [
+                        'ip' => '',
+                        'port' => '',
+                        'password' => '',
+                    ],
+                    // 常用语言 泰语、英语、中文、繁体
+                    'language' => ['th', 'en', 'zh', 'zh-tw'],
+                    // 默认语言
+                    'default_language' => 'en',
+                ],
+            ],
+            SettingEnum::KITCHEN => [
+                'key' => 'kitchen',
+                'describe' => '厨显设置',
+                'values' => [
+                    // 厨显服务器连接
+                    'server' => [
+                        'ip' => '',
+                        'port' => '',
+                    ],
+                    // 是否开启等待时长颜色
+                    'is_wait_color' => 1,
+                    // 时长颜色 10-黄色 20-红色
+                    'wait_color' => [
+                        '10' => '#ffff00',
+                        '20' => '#ff0000',
+                    ],
+                    // 常用语言 泰语、英语、中文、繁体
+                    'language' => ['th', 'en', 'zh', 'zh-tw'],
+                    // 默认语言
+                    'default_language' => 'en',
                 ],
             ],
         ];

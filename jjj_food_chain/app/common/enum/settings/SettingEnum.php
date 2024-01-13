@@ -51,12 +51,19 @@ class SettingEnum extends Enum
     const BALANCE_CASH = 'balance_cash';
     // 直播设置
     const LIVE = 'live';
-    // 货币单位设置
+    // 门店-货币单位
     const CURRENCY = 'currency';
-    // 税率设置
+    // 门店-税率管理
     const TAX_RATE = 'tax_rate';
-    // 服务费设置
+    // 门店-服务费
     const SERVICE_CHARGE = 'service_charge';
+    // 各端-收银机设置
+    const CASHIER = 'cashier';
+    // 各端-平板端设置
+    const TABLET = 'tablet';
+    // 各端-厨显设置
+    const KITCHEN = 'kitchen';
+
 
     /**
      * 获取订单类型值
@@ -159,6 +166,18 @@ class SettingEnum extends Enum
             self::SERVICE_CHARGE => [
                 'value' => self::SERVICE_CHARGE,
                 'describe' => '服务费',
+            ],
+            self::CASHIER => [
+                'value' => self::CASHIER,
+                'describe' => '收银机设置',
+            ],
+            self::TABLET => [
+                'value' => self::TABLET,
+                'describe' => '平板端设置',
+            ],
+            self::KITCHEN => [
+                'value' => self::KITCHEN,
+                'describe' => '厨显设置',
             ],
         ];
     }
