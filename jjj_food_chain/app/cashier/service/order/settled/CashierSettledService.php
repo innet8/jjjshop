@@ -3,6 +3,7 @@
 namespace app\cashier\service\order\settled;
 
 use app\cashier\model\order\Order as OrderModel;
+use app\common\enum\settings\SettingEnum;
 use app\common\model\order\OrderProduct;
 use app\common\enum\order\OrderPayTypeEnum;
 use app\common\model\settings\Setting as SettingModel;
@@ -168,6 +169,14 @@ abstract class CashierSettledService extends BaseService
     {
         // 订单商品的总金额(不含优惠券折扣)
         $this->orderData['order_total_price'] = helper::number2(helper::getArrayColumnSum($this->productList, 'line_money'));
+        // 消费税计算
+        $consumeFee = SettingModel::getSupplierItem(SettingEnum::TAX_RATE, $this->orderData['supplier']['shop_supplier_id']);
+        $consume_fee = 0;
+        if ($consumeFee['is_open']) {
+            $consume_rate = $consumeFee['tax_rate'];
+            $consume_fee = helper::bcmul($this->orderData['order_total_price'], $consume_rate);
+        }
+        $this->orderData['consumption_tax_money'] = $consume_fee;
         $this->orderData['order_pay_price'] = helper::number2(helper::getArrayColumnSum($this->productList, 'total_price'));
         if ($this->orderData['delivery'] == 30) {
             if ($this->orderData['supplier']['storebag_type'] == 1) {
@@ -183,6 +192,13 @@ abstract class CashierSettledService extends BaseService
             if ($this->orderData['serviceType'] == 0) {
                 $this->orderData['service_money'] = round($this->orderData['service_money'] * $this->orderData['meal_num'], 2);
             }
+            $serviceFee = SettingModel::getSupplierItem(SettingEnum::SERVICE_CHARGE, $this->orderData['supplier']['shop_supplier_id']);
+            // 订单服务费（非桌台）
+            if ($serviceFee['is_open']) {
+                $this->orderData['setting_service_money'] = $serviceFee['service_charge'];
+            } else {
+                $this->orderData['setting_service_money'] = 0;
+            }
         }
     }
 
@@ -197,6 +213,10 @@ abstract class CashierSettledService extends BaseService
         $this->orderData['order_pay_price'] = helper::number2(helper::bcadd($this->orderData['order_pay_price'], $this->orderData['order_bag_price']));
         // 订单实付款金额(订单金额 + 服务费)
         $this->orderData['order_pay_price'] = helper::number2(helper::bcadd($this->orderData['order_pay_price'], $this->orderData['service_money']));
+        // 订单实付款金额(订单金额 + 服务费2)
+        $this->orderData['order_pay_price'] = helper::number2(helper::bcadd($this->orderData['order_pay_price'], $this->orderData['setting_service_money']));
+        // 订单实付款金额(订单金额 + 消费税)
+        $this->orderData['order_pay_price'] = helper::number2(helper::bcadd($this->orderData['order_pay_price'], $this->orderData['consumption_tax_money']));
         // 订单实付款金额(订单金额 - 优惠金额)
         $this->orderData['order_pay_price'] = helper::number2(helper::bcsub($this->orderData['order_pay_price'], $this->orderData['discount_money']));
 
@@ -204,6 +224,10 @@ abstract class CashierSettledService extends BaseService
         $this->orderData['total_order_price'] = helper::number2(helper::bcadd($this->orderData['order_total_price'], $this->orderData['order_bag_price']));
         //应付金额+服务费
         $this->orderData['total_order_price'] = helper::number2(helper::bcadd($this->orderData['total_order_price'], $this->orderData['service_money']));
+        //应付金额+服务费2
+        $this->orderData['total_order_price'] = helper::number2(helper::bcadd($this->orderData['total_order_price'], $this->orderData['setting_service_money']));
+        //应付金额+消费税
+        $this->orderData['total_order_price'] = helper::number2(helper::bcadd($this->orderData['total_order_price'], $this->orderData['consumption_tax_money']));
 
     }
 
@@ -295,6 +319,8 @@ abstract class CashierSettledService extends BaseService
             'settle_type' => $order['settle_type'],
             'discount_money' => $order['discount_money'],
             'app_id' => $this->app_id,
+            'setting_service_money' => $order['setting_service_money'],
+            'consumption_tax_money' => $order['consumption_tax_money'],
         ];
         if ($data['eat_type'] == 20) {
             $startTime = strtotime(date('Y-m-d'));

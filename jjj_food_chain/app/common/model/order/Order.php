@@ -4,6 +4,7 @@ namespace app\common\model\order;
 
 use app\api\model\user\CardRecord as CardRecordModel;
 use app\common\enum\order\OrderSourceEnum;
+use app\common\enum\settings\SettingEnum;
 use app\common\model\BaseModel;
 use app\common\enum\settings\DeliveryTypeEnum;
 use app\common\enum\order\OrderPayStatusEnum;
@@ -691,6 +692,7 @@ class Order extends BaseModel
                 return false;
             }
             $order = self::detail($order_id);
+            trace($order);
             if ($order['pay_status'] == 20) {
                 $this->error = '订单已支付，不允许加菜';
                 return false;
@@ -813,15 +815,25 @@ class Order extends BaseModel
             ProductFactory::getFactory($order['order_source'])->updateProductStock($productList);
             $model = new OrderProductModel();
             $model->saveAll($productData);
+
+            $total_price = $order['total_price'] + $pay_money;  // 原本 + 新加
+            // 消费税计算
+            $consumeFee = SettingModel::getSupplierItem(SettingEnum::TAX_RATE, $order['supplier']['shop_supplier_id']);
+            $consume_fee = 0;
+            if ($consumeFee['is_open']) {
+                $consume_rate = $consumeFee['tax_rate'];
+                $consume_fee = helper::bcmul($total_price, $consume_rate);
+            }
             $addMeal = [
                 'order_no' => $this->orderNo(),  // TODO 又重新生成了订单号
                 'total_price' => $order['total_price'] + $pay_money,
-                'order_price' => $order['order_price'] + $pay_money - $order['service_money'] + $service_money,
-                'pay_price' => $order['pay_price'] + $pay_money - $order['service_money'] + $service_money,
+                'order_price' => $order['order_price'] + $pay_money - $order['service_money'] + $service_money -$order['consumption_tax_money'] + $consume_fee,
+                'pay_price' => $order['pay_price'] + $pay_money - $order['service_money'] + $service_money - $order['consumption_tax_money'] + $consume_fee,
                 'points_bonus' => $order['points_bonus'] + $points_bonus,
                 'service_money' => $service_money,
                 'meal_num' => $meal_num,
                 'settle_type' => $settle_type,
+                'consumption_tax_money' => $consume_fee
             ];
             $order->save($addMeal);
             $order['product'] = $productData;
