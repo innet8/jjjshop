@@ -477,7 +477,6 @@ function parse_accept_language(string $header): string {
 function langTrans(string $val, string $language = 'zh'): string
 {
     $language = checkDetect() ?: $language;
-    $language = "tr";
     $data = langData($language);
 
     if (array_key_exists($val, $data)) {
@@ -523,7 +522,7 @@ function langData($language = 'zh')
  */
 function printText($leftText, $centerText="", $rightText="", $total = 32, $leftNum=0) {
     $afterLeftText = "";
-    if ($leftNum > 0) {
+    if ($leftNum > 0 && $leftText) {
         $leftNums = $leftNum - 2;
         if (preg_match('/[\x{4e00}-\x{9fa5}]+/u', $leftText)) {
             $afterLeftText = mb_substr($leftText, ceil( $leftNums / 2), 1000, 'UTF-8');

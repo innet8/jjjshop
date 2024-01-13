@@ -168,6 +168,7 @@ class OrderCompleteService
                 'user_id' => $order['user_id'],
                 'value' => $pointsBonus,
                 'describe' => "订单赠送：{$order['order_no']}",
+                'order_id' => $order['order_id'],
                 'app_id' => $order['app_id'],
             ];
         }

@@ -2,12 +2,16 @@
 
 namespace app\common\service\order;
 
-use app\common\model\settings\Setting as SettingModel;
-use app\common\model\settings\Printer as PrinterModel;
+use app\common\model\user\User as UserModel;
+use app\common\enum\settings\PrinterTypeEnum;
 use app\common\enum\settings\DeliveryTypeEnum;
-use app\common\library\printer\Driver as PrinterDriver;
-use app\common\model\supplier\Printing as PrintingModel;
 use app\common\model\product\Product as ProductModel;
+use app\common\model\settings\Printer as PrinterModel;
+use app\common\model\settings\Setting as SettingModel;
+use app\common\model\user\PointsLog as PointsLogModel;
+use app\common\library\printer\Driver as PrinterDriver;
+use app\common\library\printer\party\SunmiCloudPrinter;
+use app\common\model\supplier\Printing as PrintingModel;
 
 /**
  * 订单打印服务类
@@ -32,11 +36,13 @@ class OrderPrinterService
     /**
      * 商家打印
      */
-    public function sellerPrint($printerConfig, $order)
+    public function sellerPrint($printerConfig, $order, $isForce= false )
     {
         // 判断是否开启商家打印设置
-        if (!$printerConfig['seller_open'] || !$printerConfig['seller_printer_id']) {
-            return false;
+        if (!$isForce) {
+            if (!$printerConfig['seller_open'] || !$printerConfig['seller_printer_id']) {
+                return false;
+            }
         }
         // 获取当前的打印机
         $printer = PrinterModel::detail($printerConfig['seller_printer_id']);
@@ -46,7 +52,7 @@ class OrderPrinterService
         // 实例化打印机驱动
         $PrinterDriver = new PrinterDriver($printer);
         // 获取订单打印内容
-        $content = $this->getPrintContent($order);
+        $content = $this->getPrintContent($order,$printer);
         // 执行打印请求
         return $PrinterDriver->printTicket($content);
     }
@@ -68,7 +74,7 @@ class OrderPrinterService
         // 实例化打印机驱动
         $PrinterDriver = new PrinterDriver($printer);
         // 获取订单打印内容
-        $content = $this->getPrintContent($order);
+        $content = $this->getPrintContent($order, $printer);
         // 执行打印请求
         return $PrinterDriver->printTicket($content);
     }
@@ -90,97 +96,181 @@ class OrderPrinterService
         // 实例化打印机驱动
         $PrinterDriver = new PrinterDriver($printer);
         // 获取订单打印内容
-        $content = $this->getPrintContent($order);
+        $content = $this->getPrintContent($order, $printer);
         // 执行打印请求
         return $PrinterDriver->printTicket($content);
     }
 
     /**
-     * 构建订单打印的内容
+     * 构建结账订单打印的内容
      */
-    private function getPrintContent($order)
+    private function getPrintContent($order, $printer = null)
     {
-        // 商城名称
-        $storeName = SettingModel::getItem('store', $order['app_id'])['name'];
-        // 收货地址
-        $address = $order['address'];
-        // 拼接模板内容
-        $content = "<C>*店铺名称({$order['supplier']['name']})*</C><BR>";
-        $content .= "<CB>{$order['pay_type']['text']}</CB><BR>";
-        if ($order['delivery_type']['value'] == DeliveryTypeEnum::EXPRESS || $order['delivery_type']['value'] == DeliveryTypeEnum::EXTRACT) {
-            $content .= "<CB>立即送达</CB><BR>";
-            $content .= $order['delivery_type']['value'] == 10 ? "预计送达时间：" . $order['mealtime'] . "<BR>" : "预计送达时间：" . "立即自取" . "<BR>";
-        }
-        if ($order['delivery_type']['value'] == DeliveryTypeEnum::TAKEAWAY) {
-            $content .= "<CB>打包带走</CB><BR>";
-        }
-        if ($order['delivery_type']['value'] == DeliveryTypeEnum::DINNER) {
-            $content .= "<CB>店内就餐</CB><BR>";
-        }
-        $content .= '--------------------------------<BR>';
-        if ($order['user']) {
-            $content .= "昵称：{$order['user']['nickName']}<BR>";
-        }
-        $content .= "订单编号：{$order['order_no']}<BR>";
-        $content .= '下单时间：' . ($order['pay_time'] > 0 ? date('Y-m-d H:i:s', $order['pay_time']) : $order['create_time']) . '<BR>';
-        // 买家备注
-        if (!empty($order['buyer_remark'])) {
-            $content .= "<B>备注:{$order['buyer_remark']}</B><BR>";
-            $content .= '--------------------------------<BR>';
-        } else {
-            $content .= '--------------------------------<BR>';
-        }
-        $content .= '名称               数量    金额<BR>';
-        $content .= '--------------------------------<BR>';
-        foreach ($order['product'] as $key => $product) {
-            if ($product['product_attr']) {
-                $content .= $product['product_name'] . '(' . $product['product_attr'] . ')' . '<BR>';
-            } else {
-                $content .= $product['product_name'] . '<BR>';
+        // 商米打印机
+        if ($printer && $printer['printer_type']['value'] == PrinterTypeEnum::SUNMI) {
+            $printer = new SunmiCloudPrinter(567);
+            $printer->lineFeed();
+            $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
+            $printer->appendText("*".__("店铺名称")."({$order['supplier']['name']})*\n");
+            $printer->lineFeed();
+            $printer->setLineSpacing(80);
+            $printer->setPrintModes(true, true, false);
+            if ($order['table_no']) {
+                $printer->appendText(__("桌号")."：{$order['table_no']}\n");
             }
-            $content .= '<RIGHT>' . $product['total_num'] . '     ' . $product['total_price'] . '</RIGHT>' . '<BR>';
+            if ($order['callNo']) {
+                $printer->appendText(__("取单号")."：{$order['callNo']}\n");
+            }
+            // 
+            $printer->restoreDefaultLineSpacing();
+            $printer->setPrintModes(false, false, false);
+            $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
+            $printer->setupColumns(
+                [160, SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
+            );
+            $printer->printInColumns(__("订单号"), $order->order_no);
+            $printer->printInColumns(__("收银员"), $order->cashier?->real_name);
+            $printer->printInColumns(__("时间"), date('Y-m-d H:i:s', $order->pay_time));
+            $printer->lineFeed();
+            // 
+            $printer->restoreDefaultLineSpacing();
+            $printer->setPrintModes(false, false, false);
+            $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
+            $printer->setupColumns(
+                [320, SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [96, SunmiCloudPrinter::ALIGN_CENTER, 0],
+                [0, SunmiCloudPrinter::ALIGN_RIGHT, 0]
+            );
+            $printer->printInColumns(__("商品"), __("数量"), __("金额"));
+            $printer->appendText("------------------------------------------------\n");
+            foreach ($order['product'] as $key => $product) {
+                $productName = $product['product_name'] . ($product['product_attr'] ?  '(' . $product['product_attr'] . ')'  : '');
+                $printer->printInColumns($productName, $product['total_num'] . '', "￥" . $product['total_price']);
+                if ($product['remark']) {
+                    // $printer->printInColumns(__("备注")."：".$product['remark']);
+                    $printer->printInColumns($product['remark']);
+                    $printer->lineFeed();
+                }
+            }
+            // 
+            $printer->appendText("------------------------------------------------\n");
+            $printer->setupColumns(
+                [200, SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
+            );
+            $printer->printInColumns(__("合计金额"), "￥" . strval($order['total_price']));
+            if ($order['setting_service_money'] > 0) { 
+                $printer->printInColumns(__("服务费"),  "￥" . strval($order['setting_service_money']));
+            }
+            if ($order['consumption_tax_money'] > 0) { 
+                $printer->printInColumns(__("消费税"),  "￥" . strval($order['consumption_tax_money']));
+            }
+            if ($order['discount_money'] > 0) { 
+                $printer->printInColumns(__("优惠折扣"),  "￥" . strval($order['discount_money']));
+            }
+            if ($order['user_discount_money'] > 0) { 
+                $printer->printInColumns(__("会员折扣"),  "￥" . strval($order['user_discount_money']));
+            }
+            if ($order['delivery_type']['value'] == DeliveryTypeEnum::EXPRESS) {
+                $printer->printInColumns(__("配送费"),  "￥" . strval($order['express_price']));
+            }
+            if ($order['bag_price'] > 0) {
+                $printer->printInColumns(__("包装费"),  "￥" . strval($order['bag_price']));
+            }
+            if ($order['coupon_money'] > 0) {
+                $printer->printInColumns(__("优惠券优惠"),  "￥" . strval($order['coupon_money']));
+            }
+            if ($order['fullreduce_money'] > 0) {
+                $printer->printInColumns(__("满减优惠"),  "￥" . strval($order['fullreduce_money']));
+            }
+            $printer->setPrintModes(true, false, false);
+            $printer->printInColumns(__("应收"),  "￥" . strval($order['total_price']));
+            $printer->lineFeed();
+            // 
+            $printer->setPrintModes(false, false, false);
+            $printer->appendText("------------------------------------------------\n");
+            $printer->printInColumns(__("支付方式"),  __($order['pay_type']['text']));
+            $printer->printInColumns(__("实付金额"), "￥" . strval($order['pay_price']));
+            // 
+            if ($order->user) {
+                $printer->lineFeed();
+                $printer->appendText("------------------------------------------------\n");
+                $printer->printInColumns(__("会员剩余余额"), "￥" . strval($order->user->balance));
+                $pointnum = PointsLogModel::where('user_id', $order->user_id)->where('order_id',$order->order_id)->value("value") ?: 0;
+                $printer->printInColumns(__("本次积分"), strval($pointnum));
+            }
+            $printer->lineFeed();
+            // Print and exit page mode
+            $printer->printAndExitPageMode();
+            $printer->lineFeed(4);
+            $printer->cutPaper(false);
+            // 
+            return $printer->orderData;
         }
-        $content .= '------------其它费用------------<BR>';
-        // 配送费
-        if ($order['delivery_type']['value'] == DeliveryTypeEnum::EXPRESS) {
-            $content .= "[配送费：+{$order['express_price']}]<BR>";
-        }
-        //包装费
-        if ($order['bag_price'] > 0) {
-            $content .= "[包装费：+{$order['bag_price']}]<BR>";
-        }
-        // 优惠券
-        if ($order['coupon_money'] > 0) {
-            $content .= "[优惠券优惠：-{$order['coupon_money']}]<BR>";
-        }
-        // 订单金额
-        if ($order['fullreduce_money'] > 0) {
-            $content .= "[满减优惠：-{$order['fullreduce_money']}]<BR>";
-        }
-        $content .= "<BR>";
-        // 实付款
-        //$content .= "<RIGHT>实付款：<BOLD><B>{$order['pay_price']}</B></BOLD>元</RIGHT><BR>";
-        $content .= "<BOLD><B>实付：￥{$order['pay_price']}</B></BOLD><BR>";
-        // 收货人信息
-        if ($order['delivery_type']['value'] == DeliveryTypeEnum::EXPRESS) {
-            $content .= "--------------------------------<BR>";
-            $content .= "收货人：{$address['name']}<BR>";
-            $content .= "联系电话：{$address['phone']}<BR>";
-            $content .= '收货地址：' . $address->getFullAddress() . '<BR>';
-        }
-        // 自提信息
-        if ($order['delivery_type']['value'] == DeliveryTypeEnum::EXTRACT && !empty($order['extract'])) {
-            $content .= "--------------------------------<BR>";
-            $content .= "联系电话：{$order['extract']['phone']}<BR>";
-        }
+
+        // 飞蛾打印机
+        $width = 32;
+        $leftWidth = 16;
+        $content = "<C>*" . __('店铺名称') . "({$order['supplier']['name']})*</C><BR>";
         if ($order['table_no']) {
-            $content .= "<CB>桌号：{$order['table_no']}</CB><BR>";
+            $content .= "<CB>".__('桌号')."：{$order['table_no']}</CB><BR>";
         }
         if ($order['callNo']) {
-            $content .= "<CB>取单号：{$order['callNo']}</CB><BR>";
+            $content .= "<CB>".__('取单号')."：{$order['callNo']}</CB><BR>";
         }
+        $content .= printText(__('订单号'), '', $order->order_no) . "<BR>";
+        $content .= printText(__('收银员'), '', $order->cashier?->real_name) . "<BR>";
+        $content .= printText(__('时间'), '',  date('Y-m-d H:i:s', $order->pay_time)) . "<BR><BR>";
+        // 
+        $content .= printText(__('商品'), __('数量'),  __('金额'), $width, $leftWidth);
         $content .= "--------------------------------<BR>";
-        $content .= "<CB>----#1完----</CB><BR>";
+        foreach ($order['product'] as $key => $product) {
+            $productName = $product['product_name'] . ($product['product_attr'] ?  '(' . $product['product_attr'] . ')'  : '');
+            $content .= printText($productName, $product['total_num'], "￥".$product['total_price'], $width, $leftWidth);
+            if ($product['remark']) {
+                $content .= '<TEXT x="10" y="180" font="10" w="-1" h="-1" r="0">' . $product['remark'] . '</TEXT><BR><BR>';
+            }
+        }
+        // 
+        $content .= "--------------------------------<BR>";
+        $content .= printText(__('合计金额'), '', "￥" . strval($order['total_price'])) . "<BR>";
+        if ($order['setting_service_money'] > 0) {
+            $content .= printText(__('服务费'), '', "￥" . strval($order['setting_service_money'])) . "<BR>";
+        }
+        if ($order['consumption_tax_money'] > 0) {
+            $content .= printText(__('消费税'), '', "￥" . strval($order['consumption_tax_money'])) . "<BR>";
+        }
+        if ($order['discount_money'] > 0) {
+            $content .= printText(__('优惠折扣'), '', "-￥" . strval($order['discount_money'])) . "<BR>";
+        }
+        if ($order['user_discount_money'] > 0) {
+            $content .= printText(__('会员折扣'), '', "-￥" . strval($order['user_discount_money'])) . "<BR>";
+        }
+        if ($order['delivery_type']['value'] == DeliveryTypeEnum::EXPRESS) {
+            $content .= printText(__('配送费'), '', "-￥" . strval($order['express_price'])) . "<BR>";
+        }
+        if ($order['bag_price'] > 0) {
+            $content .= printText(__('包装费'), '', "-￥" . strval($order['bag_price'])) . "<BR>";
+        }
+        if ($order['coupon_money'] > 0) {
+            $content .= printText(__('优惠券优惠'), '', "-￥" . strval($order['coupon_money'])) . "<BR>";
+        }
+        if ($order['fullreduce_money'] > 0) {
+            $content .= printText(__('满减优惠'), '', "-￥" . strval($order['fullreduce_money'])) . "<BR>";
+        }
+        $content .= '<BOLD>' . printText(__('应收'), '', "￥" . strval($order['total_price'])) . "</BOLD><BR>";
+        // 
+        $content .= '--------------------------------<BR>';
+        $content .= printText(__('支付方式'), '', __($order['pay_type']['text'])) . "<BR>";
+        $content .= printText(__('实付金额'), '', "￥" . strval($order['pay_price'])) . "<BR>";
+        // 
+        if ($order->user) {
+            $content .= '--------------------------------<BR>';
+            $content .= printText(__('会员剩余余额'), '', "￥" . $order->user->balance) . "<BR>";
+            $pointnum = PointsLogModel::where('user_id', $order->user_id)->where('order_id',$order->order_id)->value("value") ?: 0;
+            $content .= printText(__('本次积分'), '', $pointnum ) . "<BR>";
+        }
         return $content;
     }
 
@@ -203,7 +293,7 @@ class OrderPrinterService
     }
 
     /**
-     * 构建订单打印的内容
+     * 构建取号打印的内容
      */
     private function getQueuePrintContent($data)
     {
@@ -221,10 +311,11 @@ class OrderPrinterService
     }
 
     /**
-     * 菜品打印
+     * 菜品打印 （一菜一單）
      */
     public function printProductTicket($order, $print_type)
     {
+        
         //打印列表
         $list = (new PrintingModel())->getList($print_type, $order['shop_supplier_id'], $order['order_type']);
         if (count($list) > 0) {
@@ -237,10 +328,31 @@ class OrderPrinterService
                 // 实例化打印机驱动
                 $PrinterDriver = new PrinterDriver($printer);
                 if ($item['type'] == 10) {
-                    // 获取订单打印内容
-                    $content = $this->getPrintProductContent($item, $order);
-                    // 执行打印请求
-                    $content && $PrinterDriver->printTicket($content);
+                    // DOTO 是否开一菜一单
+                    if ($item['print_method'] == 40) { 
+                        foreach ($order['product'] as $key => $product) {
+                            $prodcutDetail = ProductModel::detail($product['product_id']);
+                            if ($item['print_method'] == 20) {
+                                if ($item['category_id'] && !in_array($prodcutDetail['special_id'], $item['category_id']) && !in_array($prodcutDetail['category_id'], $data['category_id'])) {
+                                    continue;
+                                }
+                            } elseif ($item['print_method'] == 30) {
+                                if ($item['label_id'] && !in_array($prodcutDetail['label_id'], $item['label_id'])) {
+                                    continue;
+                                }
+                            }
+                            // 获取订单打印内容
+                            $content = $this->getPrintProductContent($item, $order, $printer, $product);
+                            // 执行打印请求
+                            $content && $PrinterDriver->printTicket($content);
+                        }
+                    } else { 
+                        // 获取订单打印内容
+                        $content = $this->getPrintProductContent($item, $order, $printer);
+                        //执行打印请求
+                        $content && $PrinterDriver->printTicket($content);
+                    }
+                   
                 } else {
                     // 获取订单打印内容
                     $this->getPrintTagProductContent($item, $order, $printer);
@@ -254,43 +366,94 @@ class OrderPrinterService
     }
 
     /**
-     * 构建订单打印的内容
+     * 构建订单打印的内容 （一菜一单）
      */
-    private function getPrintProductContent($data, $order)
+    private function getPrintProductContent($data, $order, $printer = null, $products = null)
     {
-        // 商城名称
-        $storeName = SettingModel::getItem('store', $order['app_id'])['name'];
-        // 收货地址
-        $address = $order['address'];
-        // 拼接模板内容
-        $content = "<C>*店铺名称({$order['supplier']['name']})*</C><BR>";
-        $content .= "<CB>{$order['pay_type']['text']}</CB><BR>";
-        if ($order['delivery_type']['value'] == DeliveryTypeEnum::EXPRESS || $order['delivery_type']['value'] == DeliveryTypeEnum::EXTRACT) {
-            $content .= "<CB>立即送达</CB><BR>";
-            $content .= $order['delivery_type']['value'] == 10 ? "预计送达时间：" . $order['mealtime'] . "<BR>" : "预计送达时间：" . "立即自取" . "<BR>";
+        // 商米打印机
+        if ($printer && $printer['printer_type']['value'] == PrinterTypeEnum::SUNMI) {
+            $printer = new SunmiCloudPrinter(567);
+            $printer->lineFeed();
+            $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
+            $printer->appendText("*".__("店铺名称")."({$order['supplier']['name']})*\n");
+            $printer->lineFeed();
+            $printer->setLineSpacing(80);
+            $printer->setPrintModes(true, true, false);
+            if ($order['table_no']) {
+                $printer->appendText(__("桌号")."：{$order['table_no']}\n");
+            }
+            if ($order['callNo']) {
+                $printer->appendText(__("取单号")."：{$order['callNo']}\n");
+            }
+            // 
+            $printer->restoreDefaultLineSpacing();
+            $printer->setPrintModes(false, false, false);
+            $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
+            $printer->setupColumns(
+                [160, SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
+            );
+            $printer->printInColumns(__("订单号"), $order->order_no);
+            $printer->printInColumns(__("打印时间"), date('Y-m-d H:i:s', $order->pay_time));
+            $printer->lineFeed();
+            // 
+            $printer->restoreDefaultLineSpacing();
+            $printer->setPrintModes(false, false, false);
+            $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
+            $printer->setupColumns(
+                [320, SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [96, SunmiCloudPrinter::ALIGN_CENTER, 0],
+                [0, SunmiCloudPrinter::ALIGN_RIGHT, 0]
+            );
+            $printer->printInColumns(__("商品"), __("数量"), __("金额"));
+            $printer->appendText("------------------------------------------------\n");
+            foreach ($order['product'] as $key => $product) {
+                $prodcutDetail = ProductModel::detail($product['product_id']);
+                if ($data['print_method'] == 20) {
+                    if ($data['category_id'] && !in_array($prodcutDetail['special_id'], $data['category_id']) && !in_array($prodcutDetail['category_id'], $data['category_id'])) {
+                        continue;
+                    }
+                } elseif ($data['print_method'] == 30) {
+                    if ($data['label_id'] && !in_array($prodcutDetail['label_id'], $data['label_id'])) {
+                        continue;
+                    }
+                }
+                if ($products && md5(json_encode($products)) != md5(json_encode($product))) {
+                    continue;
+                }
+                $productName = $product['product_name'] . ($product['product_attr'] ?  '(' . $product['product_attr'] . ')'  : '');
+                $printer->printInColumns($productName, $product['total_num'] . '', "￥" . $product['total_price']);
+                if ($product['remark']  ?? '') {
+                    // $printer->printInColumns(__("备注")."：".$product['remark']);
+                    $printer->printInColumns($product['remark']);
+                    $printer->lineFeed();
+                }
+            }
+            $printer->lineFeed();
+            $printer->lineFeed();
+            // Print and exit page mode
+            $printer->printAndExitPageMode();
+            $printer->lineFeed(4);
+            $printer->cutPaper(false);
+            // 
+            return $printer->orderData;
         }
-        if ($order['delivery_type']['value'] == DeliveryTypeEnum::TAKEAWAY) {
-            $content .= "<CB>打包带走</CB><BR>";
+
+        // 飞蛾打印机
+        $width = 32;
+        $leftWidth = 16;
+        $content = "<C>*" . __('店铺名称') . "({$order['supplier']['name']})*</C><BR>";
+        if ($order['table_no']) {
+            $content .= "<CB>".__('桌号')."：{$order['table_no']}</CB><BR>";
         }
-        if ($order['delivery_type']['value'] == DeliveryTypeEnum::DINNER) {
-            $content .= "<CB>店内就餐</CB><BR>";
+        if ($order['callNo']) {
+            $content .= "<CB>".__('取单号')."：{$order['callNo']}</CB><BR>";
         }
-        $content .= '--------------------------------<BR>';
-        if ($order['user']) {
-            $content .= "昵称：{$order['user']['nickName']}<BR>";
-        }
-        $content .= "订单编号：{$order['order_no']}<BR>";
-        $content .= '下单时间：' . ($order['pay_time'] > 0 ? date('Y-m-d H:i:s', $order['pay_time']) : $order['create_time']) . '<BR>';
-        // 买家备注
-        if (!empty($order['buyer_remark'])) {
-            $content .= "<B>备注:{$order['buyer_remark']}</B><BR>";
-            $content .= '--------------------------------<BR>';
-        } else {
-            $content .= '--------------------------------<BR>';
-        }
-        $content .= '名称               数量    金额<BR>';
-        $content .= '--------------------------------<BR>';
-        $num = 0;
+        $content .= printText(__('订单号'), '', $order->order_no) . "<BR>";
+        $content .= printText(__('打印时间'), '',  date('Y-m-d H:i:s', $order->pay_time)) . "<BR><BR>";
+        // 
+        $content .= printText(__('商品'), __('数量'),  __('金额'), $width, $leftWidth);
+        $content .= "--------------------------------<BR>";
         foreach ($order['product'] as $key => $product) {
             $prodcutDetail = ProductModel::detail($product['product_id']);
             if ($data['print_method'] == 20) {
@@ -302,63 +465,16 @@ class OrderPrinterService
                     continue;
                 }
             }
-
-            if ($product['product_attr']) {
-                $content .= $product['product_name'] . '(' . $product['product_attr'] . ')' . '<BR>';
-            } else {
-                $content .= $product['product_name'] . '<BR>';
+            if ($products && md5(json_encode($products)) != md5(json_encode($product))) {
+                continue;
             }
-            $content .= '<RIGHT>' . $product['total_num'] . '     ' . $product['total_price'] . '</RIGHT>' . '<BR>';
-            $num++;
+            $productName = $product['product_name'] . ($product['product_attr'] ?  '(' . $product['product_attr'] . ')'  : '');
+            $content .= printText($productName, $product['total_num'], "￥".$product['total_price'], $width, $leftWidth);
+            if ($product['remark'] ?? '') {
+                $content .= '<TEXT x="10" y="180" font="10" w="-1" h="-1" r="0">' . $product['remark'] . '</TEXT><BR><BR>';
+            }
         }
-        $content .= '------------其它费用------------<BR>';
-        // 配送费
-        if ($order['delivery_type']['value'] == DeliveryTypeEnum::EXPRESS) {
-            $content .= "[配送费：+{$order['express_price']}]<BR>";
-        }
-        //包装费
-        if ($order['bag_price'] > 0) {
-            $content .= "[包装费：+{$order['bag_price']}]<BR>";
-        }
-        // 优惠券
-        if ($order['coupon_money'] > 0) {
-            $content .= "[优惠券优惠：-{$order['coupon_money']}]<BR>";
-        }
-        // 订单金额
-        if ($order['fullreduce_money'] > 0) {
-            $content .= "[满减优惠：-{$order['fullreduce_money']}]<BR>";
-        }
-        $content .= "<BR>";
-        // 实付款
-        //$content .= "<RIGHT>实付款：<BOLD><B>{$order['pay_price']}</B></BOLD>元</RIGHT><BR>";
-        $content .= "<BOLD><B>实付：￥{$order['pay_price']}</B></BOLD><BR>";
-        // 收货人信息
-        if ($order['delivery_type']['value'] == DeliveryTypeEnum::EXPRESS) {
-            $content .= "--------------------------------<BR>";
-            $content .= "收货人：{$address['name']}<BR>";
-            $content .= "联系电话：{$address['phone']}<BR>";
-            $content .= '收货地址：' . $address->getFullAddress() . '<BR>';
-        }
-        // 自提信息
-        if ($order['delivery_type']['value'] == DeliveryTypeEnum::EXTRACT && !empty($order['extract'])) {
-            $content .= "--------------------------------<BR>";
-            $content .= "联系电话：{$order['extract']['phone']}<BR>";
-        }
-        if ($order['table_no']) {
-            $content .= "<CB>桌号：{$order['table_no']}</CB><BR>";
-        }
-        if ($order['callNo']) {
-            $content .= "<CB>取单号：{$order['callNo']}</CB><BR>";
-        }
-        $content .= "--------------------------------<BR>";
-        $content .= "<C>----菜品打印----</C><BR>";
-        $content .= "<CB>----#1完----</CB><BR>";
-        if ($num > 0) {
-            return $content;
-        } else {
-            return "";
-        }
-
+        return $content;
     }
 
     /**

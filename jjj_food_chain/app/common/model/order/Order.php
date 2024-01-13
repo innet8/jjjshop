@@ -53,12 +53,12 @@ class Order extends BaseModel
         return $this->hasMany('app\\common\\model\\order\\OrderProduct', 'order_id', 'order_id')->hidden(['content']);
     }
 
-     /**
-     * 订单商品列表
+    /**
+     * 收银员
      */
-    public function aaaaa()
+    public function cashier()
     {
-        return $this->hasMany('app\\common\\model\\order\\OrderProduct', 'order_id', 'order_id')->hidden(['content']);
+        return $this->hasOne('app\\common\\model\\shop\\User', 'shop_user_id', 'cashier_id')->hidden(['update_time','password','user_name']);
     }
     /**
      * 关联订单收货地址表
