@@ -328,5 +328,19 @@ class Order extends Controller
         return $this->renderError($detail?->getError() ?: '操作失败');
     }
 
-
+    /**
+     * @Apidoc\Title("订单商品改价")
+     * @Apidoc\Tag("订单商品改价")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/cashier/order.order/changeProductPrice")
+     * @Apidoc\Param("order_id", type="int",require=true, default=0, desc="订单id")
+     */
+    public function changeProductPrice($order_id, $order_product_id, $money)
+    {
+        $detail = OrderModel::detail($order_id);
+        if ($detail?->changeProductPrice($order_product_id, $money)) {
+            return $this->renderSuccess('改价成功');
+        }
+        return $this->renderError($detail->getError() ?: '改价失败');
+    }
 }

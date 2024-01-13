@@ -507,4 +507,39 @@ class Order extends OrderModel
             'times' => [$startTime, $endTime], 
         ];
     }
+
+    // 修改订单商品价格
+    public function changeProductPrice($order_product_id, $money)
+    {
+        if ($money < 0) {
+            $this->error = "价格错误";
+            return false;
+        }
+
+        $p = OrderProduct::where('order_product_id', '=', $order_product_id)->find();
+        if (!$p) {
+            $this->error = "商品不存在";
+            return false;
+        }
+        $p->product_price = $money;
+        $p->total_price = helper::bcmul($money, $p->total_num);
+        if ($p->save()) {
+            // 更新主表价格
+            return $this->updateTotalPrice();
+        }
+        return false;
+    }
+
+    // 更新商品总价
+    public function updateTotalPrice()
+    {
+        // 商品总价 - 优惠抵扣
+        $total_price = 0;
+        foreach ($this['product'] as $product) {
+            $total_price = helper::bcadd($total_price, $product['total_price']);
+        }
+        $order_price = helper::bcadd($total_price, $this['service_money']);
+        $pay_price = round(helper::bcsub($order_price, $this['discount_money']), 2);
+        return $this->save(['total_price' => $total_price, 'order_price' => $order_price, 'pay_price' => $pay_price]);
+    }
 }

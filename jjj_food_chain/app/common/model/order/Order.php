@@ -814,7 +814,7 @@ class Order extends BaseModel
             $model = new OrderProductModel();
             $model->saveAll($productData);
             $addMeal = [
-                'order_no' => $this->orderNo(),
+                'order_no' => $this->orderNo(),  // TODO 又重新生成了订单号
                 'total_price' => $order['total_price'] + $pay_money,
                 'order_price' => $order['order_price'] + $pay_money - $order['service_money'] + $service_money,
                 'pay_price' => $order['pay_price'] + $pay_money - $order['service_money'] + $service_money,

@@ -191,16 +191,20 @@ abstract class CashierSettledService extends BaseService
      */
     private function setOrderPayPrice()
     {
+        // 这里是生成订单表时order_price、pay_price的计算，有额外费用都在这里添加 TODO
+
         // 订单实付款金额(订单金额 + 包装费)
         $this->orderData['order_pay_price'] = helper::number2(helper::bcadd($this->orderData['order_pay_price'], $this->orderData['order_bag_price']));
         // 订单实付款金额(订单金额 + 服务费)
         $this->orderData['order_pay_price'] = helper::number2(helper::bcadd($this->orderData['order_pay_price'], $this->orderData['service_money']));
         // 订单实付款金额(订单金额 - 优惠金额)
         $this->orderData['order_pay_price'] = helper::number2(helper::bcsub($this->orderData['order_pay_price'], $this->orderData['discount_money']));
+
         //应付金额+包装费
         $this->orderData['total_order_price'] = helper::number2(helper::bcadd($this->orderData['order_total_price'], $this->orderData['order_bag_price']));
         //应付金额+服务费
         $this->orderData['total_order_price'] = helper::number2(helper::bcadd($this->orderData['total_order_price'], $this->orderData['service_money']));
+
     }
 
     /**

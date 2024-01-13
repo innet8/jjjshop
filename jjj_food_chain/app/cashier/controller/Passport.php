@@ -3,8 +3,8 @@
 namespace app\cashier\controller;
 
 use app\cashier\model\cashier\User;
-use app\common\model\user\User as MemberModel;
 use hg\apidoc\annotation as Apidoc;
+
 /**
  * 用户
  * @Apidoc\Group("base")
