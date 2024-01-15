@@ -35,7 +35,8 @@ class User extends UserModel
             $this->error = '账号被禁用，请联系管理员';
             return false;
         }
-        if ($cashierUser = $this->where(['cashier_online' => 1])->find()) {
+        $cashierUser = $this->where(['cashier_online' => 1])->find();
+        if ($cashierUser && $cashierUser['shop_user_id'] != $user['shop_user_id']) {
             $this->error = '收银员' . $cashierUser['real_name'] . '未交班，请先交班';
             return false;
         }
