@@ -2,10 +2,9 @@
 
 namespace app\shop\controller\setting;
 
-use think\Cache;
+use think\facade\Cache;
 use app\common\model\settings\Setting as SettingModel;
 use app\common\enum\settings\SettingEnum;
-
 
 /**
  * 系统设置模型
@@ -18,18 +17,24 @@ class Setting extends SettingModel
     public function edit($key, $values)
     {
         $model = self::detail($key) ?: $this;
+
         // 数据验证
         if (!$this->validValues($key, $values)) {
             return false;
         }
+
         // 删除系统设置缓存
         Cache::delete('setting_' . self::$app_id);
-        return $model->save([
-                'key' => $key,
-                'describe' => SettingEnum::data()[$key]['describe'],
-                'values' => $values,
-                'app_id' => self::$app_id,
-            ]) !== false;
+
+        // 使用模型验证器进行数据验证
+        $result = $model->validate(true)->save([
+            'key' => $key,
+            'describe' => SettingEnum::data()[$key]['describe'],
+            'values' => $values,
+            'app_id' => self::$app_id,
+        ]);
+
+        return $result !== false;
     }
 
     /**

@@ -123,7 +123,7 @@ class User extends UserModel
             $model = new UserRole();
             UserRole::destroy($where);
             $add_arr = [];
-            foreach ($data['access_id'] as $val) {
+            foreach ($data['role_id'] as $val) {
                 $add_arr[] = [
                     'shop_user_id' => $data['shop_user_id'],
                     'role_id' => $val,
@@ -152,9 +152,15 @@ class User extends UserModel
             $this->error = '不能删除当前登录账号';
             return false;
         }
-        $where = ['shop_user_id' => $shop_user_id];
-        self::update(['is_delete' => 1], $where);
-        return UserRole::destroy($where);
+
+        $userToDelete = self::find($shop_user_id);
+        if (!$userToDelete) {
+            $this->error = '用户不存在';
+            return false;
+        }
+
+        $userToDelete->update(['is_delete' => 1]);
+        return UserRole::destroy(['shop_user_id' => $shop_user_id]);
     }
 
     /**

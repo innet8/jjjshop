@@ -2,18 +2,25 @@
 
 namespace app\shop\controller\setting;
 
-use app\common\enum\order\OrderPayTypeEnum;
 use app\shop\controller\Controller;
+use app\common\enum\settings\SettingEnum;
 use app\shop\model\settings\Setting as SettingModel;
-use app\common\enum\settings\DeliveryTypeEnum;
+use hg\apidoc\annotation as Apidoc;
 
 /**
- * 商城设置控制器
+ * 商城设置
+ * @Apidoc\Group("system_setting")
+ * @Apidoc\Sort(11)
  */
 class Store extends Controller
 {
     /**
-     * 商城设置
+     * @Apidoc\Title("商城设置(get-获取/post-设置)")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/setting.Store/index")
+     * @Apidoc\Param("name", type="string", require=true, default="", desc="商城名称")
+     * @Apidoc\Param("logoUrl", type="string", require=true, default="", desc="商城logo")
+     * @Apidoc\Returned()
      */
     public function index()
     {
@@ -22,16 +29,23 @@ class Store extends Controller
         }
         $model = new SettingModel;
         $data = $this->request->param();
+        //
+        if (empty($data['name'])) {
+            return $this->renderError('名称不能为空');
+        }
+        if (empty($data['logoUrl'])) {
+            return $this->renderError('商城logo不能为空');
+        }
         $arr = [
             'name' => $data['name'],
-            'kuaidi100' => ['customer' => $data['customer'], 'key' => $data['key']],
-            'sms_open' => $data['sms_open'],
-            'is_get_log' => $data['is_get_log'],
-            'wx_open' => $data['wx_open'],
-            'avatarUrl' => $data['avatarUrl'],
-            'logoUrl' => $data['logoUrl'],
+            'kuaidi100' => ['customer' => $data['customer'] ?? '', 'key' => $data['key'] ?? ''],
+           'sms_open' => $data['sms_open'] ?? 0,
+            'is_get_log' => $data['is_get_log'] ?? 0,
+            'wx_open' => $data['wx_open'] ?? 0,
+            'avatarUrl' => $data['avatarUrl'] ?? '',
+            'logoUrl' => $data['logoUrl'] ?? '',
         ];
-        if ($model->edit('store', $arr)) {
+        if ($model->edit(SettingEnum::STORE, $arr)) {
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model->getError() ?: '操作失败');
@@ -42,7 +56,7 @@ class Store extends Controller
      */
     public function fetchData()
     {
-        $vars['values'] = SettingModel::getItem('store');
+        $vars['values'] = SettingModel::getItem(SettingEnum::STORE);
         return $this->renderSuccess('', compact('vars'));
     }
 

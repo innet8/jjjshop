@@ -4,16 +4,22 @@ namespace app\shop\controller\setting;
 
 use app\shop\controller\Controller;
 use app\shop\model\settings\Setting as SettingModel;
-
+use hg\apidoc\annotation as Apidoc;
 use think\facade\Cache;
 
 /**
- * 清理缓存控制器
+ * 清理缓存
+ * @Apidoc\Group("system_setting")
+ * @Apidoc\Sort(11)
  */
 class Clear extends Controller
 {
     /**
-     * 清理缓存
+     * @Apidoc\Title("清理缓存")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/setting.Clear/index")
+     * @Apidoc\Param("keys", type="array", require=true, desc="缓存key（category-商品分类,setting-商城设置,app-应用设置,agent-分销设置,temp-临时图片）")
+     * @Apidoc\Returned()
      */
     public function index()
     {

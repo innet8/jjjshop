@@ -37,7 +37,13 @@ return [
             'key'=>'shop',
             'groups'  => [
                 ['title'=>'商品管理','name'=>'product'],
+                ['title'=>'订单管理','name'=>'order'],
                 ['title'=>'会员管理','name'=>'user'],
+                ['title'=>'门店管理','name'=>'supplier'],
+                ['title'=>'统计报表','name'=>'statistics'],
+                ['title'=>'用户管理','name'=>'shop_user'],
+                ['title'=>'各端设置','name'=>'terminal_setting'],
+                ['title'=>'系统设置','name'=>'system_setting'],
             ],
         ],
         [
