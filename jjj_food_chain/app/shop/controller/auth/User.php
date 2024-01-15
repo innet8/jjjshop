@@ -12,14 +12,18 @@ use hg\apidoc\annotation as Apidoc;
 
  /**
  * 用户管理
- * @Apidoc\Group("user")
- * @Apidoc\Sort(1)
+ * @Apidoc\Group("shop_user")
+ * @Apidoc\Sort(8)
  */
 class User extends Controller
 {
     /**
-     * 首页列表
-     * @return \think\response\Json
+     * @Apidoc\Title("列表")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/auth.user/index")
+     * @Apidoc\Param(ref="pageParam")
+     * @Apidoc\Returned("list", type="array", ref="app\shop\model\auth\User\getList", desc="管理员列表")
+     * @Apidoc\Returned("roleList", type="array", ref="app\shop\model\auth\Role\getTreeData", desc="角色列表")
      */
     public function index()
     {
@@ -93,9 +97,16 @@ class User extends Controller
     }
 
     /**
-     * 编辑
-     * @param $shop_user_id
-     * @return \think\response\Json
+     * @Apidoc\Title("编辑")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/auth.user/edit")
+     * @Apidoc\Param("shop_user_id", type="int", require=true, desc="管理员id")
+     * @Apidoc\Param("user_name", type="string", require=true, default="001", desc="用户名")
+     * @Apidoc\Param("role_id", type="array", require=true, desc="角色ids")
+     * @Apidoc\Param("password", type="string", require=true, default="123456", desc="密码")
+     * @Apidoc\Param("confirm_password", type="string", require=true, default="123456", desc="确认密码")
+     * @Apidoc\Param("real_name", type="string", require=true, desc="真实姓名")
+     * @Apidoc\Returned()
      */
     public function edit($shop_user_id)
     {
@@ -109,7 +120,7 @@ class User extends Controller
         if ($num > 0) {
             return $this->renderError('用户名已存在');
         }
-        if (!isset($data['access_id'])) {
+        if (!isset($data['role_id'])) {
             return $this->renderError('请选择所属角色');
         }
         if (isset($data['password']) && !empty($data['password'])) {
@@ -137,7 +148,11 @@ class User extends Controller
     }
 
     /**
-     * 删除
+     * @Apidoc\Title("删除")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/auth.user/delete")
+     * @Apidoc\Param("shop_user_id", type="int", require=true, desc="管理员id")
+     * @Apidoc\Returned()
      */
     public function delete($shop_user_id)
     {
@@ -194,11 +209,22 @@ class User extends Controller
     }
 
     /**
-     * 权限状态
+     * @Apidoc\Title("权限状态")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/auth.user/setStatus")
+     * @Apidoc\Param("shop_user_id", type="int", require=true, desc="管理员id")
+     * @Apidoc\Param("status", type="int", require=true, desc="状态")
+     * @Apidoc\Returned()
      */
     public function setStatus($shop_user_id, $status)
     {
+        if (in_array($status, [0, 1]) === false) {
+            return $this->renderError('状态参数错误');
+        }
         $model = UserModel::detail($shop_user_id);
+        if (!$model) {
+            return $this->renderError('用户不存在');
+        }
         if ($model->setStatus($status)) {
             return $this->renderSuccess('修改成功');
         }

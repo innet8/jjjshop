@@ -3,17 +3,23 @@
 namespace app\shop\controller\auth;
 
 use app\shop\controller\Controller;
-
 use app\shop\model\auth\Role as RoleModel;
 use app\shop\model\shop\Access as AccessModel;
+use hg\apidoc\annotation as Apidoc;
 
 /**
- * 管理后台角色
+ * 角色管理
+ * @Apidoc\Group("shop_user")
+ * @Apidoc\Sort(8)
  */
 class Role extends Controller
 {
     /**
-     * 角色列表
+     * @Apidoc\Title("列表")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Param(ref="pageParam")
+     * @Apidoc\Url ("/index.php/shop/auth.role/index")
+     * @Apidoc\Returned("list", type="array", ref="app\shop\model\auth\Role\getTreeData", desc="角色列表")
      */
     public function index()
     {
@@ -35,7 +41,14 @@ class Role extends Controller
     }
 
     /**
-     * 新增
+     * @Apidoc\Title("新增")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/auth.role/add")
+     * @Apidoc\Param("params", type="object", require=true, desc="角色数据")
+     * @Apidoc\Param("params.role_name", type="string", require=true, desc="角色名称")
+     * @Apidoc\Param("params.sort", type="integer", require=true, desc="排序")
+     * @Apidoc\Param("params.access_id", type="array", require=true, desc="权限id数组")
+     * @Apidoc\Returned()
      */
     public function add()
     {
@@ -65,7 +78,15 @@ class Role extends Controller
     }
 
     /**
-     * 修改
+     * @Apidoc\Title("修改")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/auth.role/edit")
+     * @Apidoc\Param("role_id", type="int", require=true, desc="角色id")
+     * @Apidoc\Param("params", type="object", require=true, desc="角色数据")
+     * @Apidoc\Param("params.role_name", type="string", require=true, desc="角色名称")
+     * @Apidoc\Param("params.sort", type="integer", require=true, desc="排序")
+     * @Apidoc\Param("params.access_id", type="array", require=true, desc="权限id数组")
+     * @Apidoc\Returned()
      */
     public function edit($role_id)
     {
@@ -87,7 +108,11 @@ class Role extends Controller
     }
 
     /**
-     * 删除
+     * @Apidoc\Title("删除")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/auth.role/delete")
+     * @Apidoc\Param("role_id", type="int", require=true, desc="角色id")
+     * @Apidoc\Returned()
      */
     public function delete($role_id)
     {
