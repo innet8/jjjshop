@@ -54,8 +54,8 @@ class UserShiftLog extends BaseModel
         if (isset($params['shop_supplier_id']) && $params['shop_supplier_id']) {
             $orderModel = $orderModel->where('a.shop_supplier_id', '=', $params['shop_supplier_id']);
         }
-        $startTime = strtotime(date('Y-m-d')); // 今天
-        $endTime = $startTime + 86399;
+        $startTime = $shopUser->cashier_login_time;
+        $endTime = time();
         if ($startTime && $endTime) {
             $orderModel = $orderModel->where('a.create_time', 'between', [$startTime, $endTime]);
         }
@@ -77,7 +77,6 @@ class UserShiftLog extends BaseModel
             $this->error = '本班遗留备用金不能大于当前钱箱现金总额';
             return false;
         }
-        // todo 对接打印机
         $this->startTrans();
         try {
            $this->save([
@@ -111,22 +110,12 @@ class UserShiftLog extends BaseModel
                 $this->is_printed = 1;
                 $this->save();
             }
-            // 
+            //
             return true;
         } catch (\Exception $e) {
             $this->rollback();
             $this->error = $e->getMessage();
             return false;
         }
-    }
-
-    /**
-     * 打印
-     *
-     * @return bool
-     */
-    public function print()
-    {
-        return true;
     }
 }
