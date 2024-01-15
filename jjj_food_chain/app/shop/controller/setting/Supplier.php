@@ -8,7 +8,7 @@ use app\common\enum\settings\SettingEnum;
 use hg\apidoc\annotation as Apidoc;
 
 /**
- * 门店管理相关设置
+ * 相关设置
  * @Apidoc\Group("supplier")
  * @Apidoc\Sort(5)
  */

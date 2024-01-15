@@ -20,15 +20,37 @@ class UserShiftLog extends BaseModel
      */
     public function user()
     {
-        return $this->belongsTo('app\\common\\model\\shop\\User', 'shop_user_id', 'shift_user_id');
+        return $this->belongsTo('app\\common\\model\\shop\\User', 'shift_user_id', 'shop_user_id');
     }
 
     /**
      * 获取列表记录
      */
-    public function getList(int $shopSupplierId = 0)
+    public function getList($params)
     {
-        return $this->withoutGlobalScope()->where('shop_supplier_id', $shopSupplierId)->select();
+        $username = $params['user_name'] ?? '';
+        $startTime = $params['start_time'] ?? 0;
+        $endTime = $params['end_time'] ?? 0;
+        $model = $this;
+        $model = $model->alias('a')
+        ->leftJoin('shop_user su','a.shift_user_id = su.shop_user_id');
+
+        if ($username) {
+            $model = $model->where(function ($q) use ($username) {
+                $q->where('su.user_name', 'like', '%' . $username . '%')
+                      ->whereOr('su.real_name', 'like', '%' . $username . '%');
+            });
+        }
+
+        if ($startTime && $endTime) {
+            $model = $model->where('a.create_time', 'between', [$startTime, $endTime]);
+        }
+
+        $orderSort = ['a.create_time' => 'desc'];
+        $list = $model->with('user')
+            ->order($orderSort)
+            ->paginate($params);
+        return $list;
     }
 
     /**

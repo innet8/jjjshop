@@ -54,7 +54,7 @@ class User extends UserModel
             $model = $model->where('nickName|mobile|user_id', 'like', '%' . $data['nick_name'] . '%');
         }
         // 检索：会员等级
-        if ($data['grade_id'] > 0) {
+        if (isset($data['grade_id']) && $data['grade_id'] > 0) {
             $model = $model->where('grade_id', '=', (int)$data['grade_id']);
         }
         //检索：注册时间
