@@ -9,7 +9,7 @@ use hg\apidoc\annotation as Apidoc;
 
 /**
  * 商城设置
- * @Apidoc\Group("system")
+ * @Apidoc\Group("system_setting")
  * @Apidoc\Sort(11)
  */
 class Store extends Controller

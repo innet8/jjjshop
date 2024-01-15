@@ -9,7 +9,7 @@ use think\facade\Cache;
 
 /**
  * 清理缓存
- * @Apidoc\Group("system")
+ * @Apidoc\Group("system_setting")
  * @Apidoc\Sort(11)
  */
 class Clear extends Controller

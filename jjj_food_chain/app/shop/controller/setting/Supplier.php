@@ -9,6 +9,8 @@ use hg\apidoc\annotation as Apidoc;
 
 /**
  * 门店管理相关设置
+ * @Apidoc\Group("supplier")
+ * @Apidoc\Sort(5)
  */
 class Supplier extends Controller
 {

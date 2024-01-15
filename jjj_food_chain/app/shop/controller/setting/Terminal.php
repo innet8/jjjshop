@@ -9,13 +9,15 @@ use hg\apidoc\annotation as Apidoc;
 
 /**
  * 各端设置
+ * @Apidoc\Group("terminal_setting")
+ * @Apidoc\Sort(10)
  */
-class EachTerminal extends Controller
+class Terminal extends Controller
 {
     /**
      * @Apidoc\Title("收银机设置(get-获取/post-设置)")
      * @Apidoc\Method ("POST")
-     * @Apidoc\Url ("/index.php/shop/setting.EachTerminal/cashier")
+     * @Apidoc\Url ("/index.php/shop/setting.Terminal/cashier")
      * @Apidoc\Param("carousel", type="array", require=true, desc="上传后的轮播内容url（图片 + 视频）")
      * @Apidoc\Param("is_auto_send", type="int", require=true, default=0, desc="收银结账自动送厨房")
      * @Apidoc\Param("cashier_password", type="string", require=true, default="", desc="钱箱密码")
@@ -62,7 +64,7 @@ class EachTerminal extends Controller
     /**
      * @Apidoc\Title("平板端设置(get-获取/post-设置)")
      * @Apidoc\Method ("POST")
-     * @Apidoc\Url ("/index.php/shop/setting.EachTerminal/tablet")
+     * @Apidoc\Url ("/index.php/shop/setting.Terminal/tablet")
      * @Apidoc\Param("carousel", type="array", require=true, desc="上传后的轮播内容url（图片 + 视频）")
      * @Apidoc\Param("is_call_service", type="int", require=true, default=0, desc="呼叫服务员")
      * @Apidoc\Param("is_customer_order", type="int", require=true, default=0, desc="顾客可开桌")
@@ -111,7 +113,7 @@ class EachTerminal extends Controller
     /**
      * @Apidoc\Title("厨显设置(get-获取/post-设置)")
      * @Apidoc\Method ("POST")
-     * @Apidoc\Url ("/index.php/shop/setting.EachTerminal/kitchen")
+     * @Apidoc\Url ("/index.php/shop/setting.Terminal/kitchen")
      * @Apidoc\Param("server", type="array", require=true, desc="厨显服务器连接")
      * @Apidoc\Param("is_wait_color", type="int", require=true, default=0, desc="是否开启等待颜色")
      * @Apidoc\Param("wait_color", type="array", require=true, desc="等待颜色")
