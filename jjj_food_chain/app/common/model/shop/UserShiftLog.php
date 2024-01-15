@@ -13,7 +13,7 @@ class UserShiftLog extends BaseModel
 {
 
     protected $name = 'shop_user_shift_log';
-    protected $pk = 'shift_user_id';
+    protected $pk = 'id';
 
     /**
      * 关联用户表
@@ -78,10 +78,9 @@ class UserShiftLog extends BaseModel
             return false;
         }
         // todo 对接打印机
-        $is_printed = $this->print() ?? 0;
         $this->startTrans();
         try {
-            $this->save([
+           $this->save([
                 'shift_user_id' => $params['shop_user_id'] ?? 0, // 交班人id
                 'shift_no' => generateNumber(), // 交班编号
                 'previous_shift_cash' => $previous_shift_cash, // 上一班遗留备用金
@@ -93,7 +92,7 @@ class UserShiftLog extends BaseModel
                 'refund_amount' => number_format((clone $orderModel)->sum("refund_money"), 2, '.', '') ?? 0, // 退款金额
                 'cash_taken_out' => $cash_taken_out, // 本班取出现金
                 'cash_left' => $cash_left, // 本班遗留备用金
-                'is_printed' => $is_printed, // 是否打印 0-未打印 1-已打印
+                'is_printed' => 0, // 是否打印 0-未打印 1-已打印
                 'remark' => $params['remark'] ?? '', // 备注
                 'app_id' => self::$app_id,
                 'shop_supplier_id' => $params['shop_supplier_id'] ?? 0,
@@ -107,7 +106,11 @@ class UserShiftLog extends BaseModel
             $this->commit();
             // 打印
             $printerConfig = SettingModel::getSupplierItem('printer', $this->shop_supplier_id, $this->app_id);
-            (new OrderHandoverPrinterService)->cashierPrint($printerConfig, $this);
+            $res = (new OrderHandoverPrinterService)->cashierPrint($printerConfig, $this);
+            if ($res) {
+                $this->is_printed = 1;
+                $this->save();
+            }
             // 
             return true;
         } catch (\Exception $e) {

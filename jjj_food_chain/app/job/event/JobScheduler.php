@@ -35,6 +35,9 @@ class JobScheduler
         event('AgentOrder');
         //团购订单
         event('GroupOrder');
+        // 交班打印
+        trace("ssdsdsadsa");
+        // 
         return true;
     }
 

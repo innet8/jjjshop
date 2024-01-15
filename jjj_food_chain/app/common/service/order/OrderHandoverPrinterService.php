@@ -165,23 +165,23 @@ class OrderHandoverPrinterService
         }
         if ($data['balance_income'] > 0) { 
             $totalAmount += $data['balance_income'];
-            $content .= printText(__('余额收入'), ' ', $data['balance_income'], $width) . "<BR>";
+            $content .= printText(__('余额收入'), ' ', '￥'. strval($data['balance_income']), $width) . "<BR>";
         }
         if ($data['cash_income'] > 0) { 
             $totalAmount += $data['cash_income'];
-            $content .= printText(__('现金收入'), ' ', $data['cash_income'], $width) . "<BR>";
+            $content .= printText(__('现金收入'), ' ', '￥'. strval($data['cash_income']), $width) . "<BR>";
         }
         if ($data['wechat_income'] > 0) { 
             $totalAmount += $data['wechat_income'];
-            $content .= printText(__('现金收入'), ' ', $data['wechat_income'], $width) . "<BR>";
+            $content .= printText(__('现金收入'), ' ', '￥'. strval($data['wechat_income']), $width) . "<BR>";
         }
         if ($data['alipay_income'] > 0) { 
             $totalAmount += $data['alipay_income'];
-            $content .= printText(__('支付宝收入'), ' ', $data['alipay_income'], $width) . "<BR>";
+            $content .= printText(__('支付宝收入'), ' ', '￥'. strval($data['alipay_income']), $width) . "<BR>";
         }
         if ($data['refund_amount'] > 0) { 
             $totalAmount -= $data['refund_amount'];
-            $content .= printText(__('退款金额'), ' ', $data['退款金额'], $width) . "<BR>";
+            $content .= printText(__('退款金额'), ' ', '￥'. strval($data['refund_amount']), $width) . "<BR>";
         }
         $totalAmount = number_format($totalAmount, 2);
         $content .= "<BR>--------------------------------<BR>";
