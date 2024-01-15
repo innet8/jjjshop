@@ -6,6 +6,7 @@ use app\common\enum\settings\PrinterTypeEnum;
 use app\common\model\settings\Printer as PrinterModel;
 use app\common\library\printer\Driver as PrinterDriver;
 use app\common\library\printer\party\SunmiCloudPrinter;
+use app\common\model\product\Category as CategoryModel;
 
 /**
  * 营业数据打印服务类
@@ -72,7 +73,7 @@ class OrderBusinessPrinterService
             $printer->appendText("------------------------------------------------\n");
             $printer->lineFeed();
             foreach ($data['categorys'] as $key => $category) {
-                $printer->printInColumns($category['name'] . '', $category['sales'] . '', "￥" . $category['prices']);
+                $printer->printInColumns((new CategoryModel)->getNameTextAttr($category['name']) . '', $category['sales'] . '', "￥" . $category['prices']);
                 $printer->lineFeed();
             }
             $printer->appendText("------------------------------------------------\n");
@@ -125,7 +126,7 @@ class OrderBusinessPrinterService
         $content .= printText(__('分类'), __('数量'),  __('金额'), $width, $leftWidth);
         $content .= "--------------------------------<BR>";
         foreach ($data['categorys'] as $key => $category) {
-            $content .= printText($category['name'], $category['sales'], "￥" . strval($category['prices']), $width, $leftWidth)  . '<BR>';
+            $content .= printText((new CategoryModel)->getNameTextAttr($category['name']), $category['sales'], "￥" . strval($category['prices']), $width, $leftWidth)  . '<BR>';
         }
         $content .= "--------------------------------<BR><BR>";
         $content .= printText(__('销售笔数'), ' ', $data['sales_num'], $width) . "<BR><BR>";

@@ -19,9 +19,9 @@ class Category extends BaseModel
      * 处理多语言
      */
     protected $append = ['name_text'];
-    public function getNameTextAttr($value, $data)
+    public function getNameTextAttr($value, $data=[])
     {
-        return extractLanguage($data['name']);
+        return extractLanguage($value ?: $data['name']);
     }
 
     /**
@@ -65,7 +65,8 @@ class Category extends BaseModel
             $shop_supplier_id = $detail['shop_supplier_id'];
         }
         $model = new static;
-        if (!$name && !Cache::get('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. $name)) {
+        // DOTO 去缓存
+        // if (!$name && !Cache::get('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. $name)) {
             $data = $model->with(['images', 'child'])
                 ->where('parent_id', '=', 0)
                 ->where('type', '=', $type)
@@ -90,9 +91,10 @@ class Category extends BaseModel
                     ->select();
                 $all = !empty($data) ? $data->toArray() : [];
             }
-            Cache::tag('cache')->set('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. $name, $all);
-        }
-        return Cache::get('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. $name);
+            return $all;
+            // Cache::tag('cache')->set('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. $name, $all);
+        // }
+        // return Cache::get('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. $name);
     }
 
     /**
@@ -169,7 +171,17 @@ class Category extends BaseModel
             $detail = SupplierModel::where('is_main', '=', 1)->find();
             $shop_supplier_id = $detail['shop_supplier_id'];
         }
-        if (!Cache::get('category_cashier_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special)) {
+        // TODO 干掉缓存
+        return $model->with(['images', 'child'])
+            ->where('parent_id', '=', 0)
+            ->where('type', '=', $type)
+            ->where('status', '=', 1)
+            ->where('is_special', '=', $is_special)
+            ->order(['sort' => 'asc', 'create_time' => 'asc'])
+            ->where('shop_supplier_id', '=', $shop_supplier_id)
+            ->select();
+        // 
+        if (!Cache::get('categ2ory_cashier_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special)) {
             $data = $model->with(['images', 'child'])
                 ->where('parent_id', '=', 0)
                 ->where('type', '=', $type)

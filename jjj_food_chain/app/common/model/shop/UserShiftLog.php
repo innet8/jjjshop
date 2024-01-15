@@ -4,7 +4,8 @@ namespace app\common\model\shop;
 
 use app\common\model\BaseModel;
 use app\common\model\order\Order as OrderModel;
-
+use app\common\service\order\OrderHandoverPrinterService;
+use app\common\model\settings\Setting as SettingModel;
 /**
  * 用户交班记录模型
  */
@@ -102,8 +103,12 @@ class UserShiftLog extends BaseModel
                 'update_time' => time()
             ]);
             // 更新收银员在线状态
-            $shopUser->update(['cashier_online' => 0, 'cashier_login_time' => 0]);
+            // $shopUser->update(['cashier_online' => 0, 'cashier_login_time' => 0]);
             $this->commit();
+            // 打印
+            $printerConfig = SettingModel::getSupplierItem('printer', $this->shop_supplier_id, $this->app_id);
+            (new OrderHandoverPrinterService)->cashierPrint($printerConfig, $this);
+            // 
             return true;
         } catch (\Exception $e) {
             $this->rollback();

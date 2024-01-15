@@ -279,7 +279,7 @@ class Order extends Controller
     }
 
     /**
-     * @Apidoc\Title("打印小票")
+     * @Apidoc\Title("打印小票(預結賬單)")
      * @Apidoc\Tag("打印小票")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url("/index.php/cashier/order.order/print")
@@ -291,9 +291,9 @@ class Order extends Controller
         // 打印机设置
         $printerConfig = SettingModel::getSupplierItem('printer', $order['shop_supplier_id'], $order['app_id']);
         //发送打印
-        (new OrderPrinterService)->sellerPrint($printerConfig, $order);
-        return $this->renderSuccess('打印成功');
-
+        $res = (new OrderPrinterService)->sellerPrint($printerConfig, $order, true);
+        // 
+        return  $res ? $this->renderSuccess('打印成功') : $this->renderError('打印失败');
     }
 
     /**
@@ -343,4 +343,5 @@ class Order extends Controller
         }
         return $this->renderError($detail->getError() ?: '改价失败');
     }
+
 }

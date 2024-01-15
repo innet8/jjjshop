@@ -538,10 +538,24 @@ function printText($leftText, $centerText="", $rightText="", $total = 32, $leftN
     $centerWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $centerText));
     $rightWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $rightText));
     $centerPaddingWidth = ($total - $leftWidth - $leftPaddingWidth - $centerWidth - $rightWidth);
-    $centerPadding = str_repeat(" ", $centerPaddingWidth );
-    //
+    $centerPadding = $centerPaddingWidth > 0 ? str_repeat(" ", $centerPaddingWidth ) : "";
+    // 
     $content = $leftText . $leftPadding . $centerText . $centerPadding . $rightText;
     if ($afterLeftText) {
+        $length = mb_strlen($afterLeftText);
+        $result = array();
+        if (preg_match('/[\x{4e00}-\x{9fa5}]+/u', $leftText)) {
+            $interval = $leftNum - 2 > 0 ? ceil( ($leftNums - 2) / 2)  : 1000; // 每隔4个字符插入一次"-"
+            for ($i = 0; $i < $length; $i += $interval) {
+                $result[] = mb_substr($afterLeftText, $i, $interval);
+            }
+        } else {
+            $interval = $leftNum - 2 > 0 ? $leftNum - 2 : 1000; // 每隔4个字符插入一次"-"
+            for ($i = 0; $i < $length; $i += $interval) {
+                $result[] = mb_substr($afterLeftText, $i, $interval);
+            }
+        }
+        $afterLeftText = implode("\n", $result);
         $content .= "<BR>" . $afterLeftText . '<BR>';
     }
     //
