@@ -11,7 +11,22 @@ class Cart extends BaseModel
 {
     protected $pk = 'cart_id';
     protected $name = 'cashier_cart';
-
+    protected $append = [
+        'describe_text'
+    ];
+    
+    /**
+     * 属性
+     */
+    public function getDescribeTextAttr($value, $data)
+    {
+        $values = explode(";", $data['describe'] ?? '');
+        foreach ($values as $key => $data) {
+            $values[$key] = extractLanguage($values[$key]);
+        }
+        return implode(";", $values);
+    }
+    
     /**
      * 购物车详情
      */

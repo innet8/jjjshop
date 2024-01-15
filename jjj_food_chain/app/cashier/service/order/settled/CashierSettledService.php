@@ -214,7 +214,7 @@ abstract class CashierSettledService extends BaseService
         // 订单实付款金额(订单金额 + 服务费)
         $this->orderData['order_pay_price'] = helper::number2(helper::bcadd($this->orderData['order_pay_price'], $this->orderData['service_money']));
         // 订单实付款金额(订单金额 + 服务费2)
-        $this->orderData['order_pay_price'] = helper::number2(helper::bcadd($this->orderData['order_pay_price'], $this->orderData['setting_service_money']));
+        $this->orderData['order_pay_price'] = helper::number2(helper::bcadd($this->orderData['order_pay_price'], $this->orderData['setting_service_money'] ?? 0));
         // 订单实付款金额(订单金额 + 消费税)
         $this->orderData['order_pay_price'] = helper::number2(helper::bcadd($this->orderData['order_pay_price'], $this->orderData['consumption_tax_money']));
         // 订单实付款金额(订单金额 - 优惠金额)
@@ -225,7 +225,7 @@ abstract class CashierSettledService extends BaseService
         //应付金额+服务费
         $this->orderData['total_order_price'] = helper::number2(helper::bcadd($this->orderData['total_order_price'], $this->orderData['service_money']));
         //应付金额+服务费2
-        $this->orderData['total_order_price'] = helper::number2(helper::bcadd($this->orderData['total_order_price'], $this->orderData['setting_service_money']));
+        $this->orderData['total_order_price'] = helper::number2(helper::bcadd($this->orderData['total_order_price'], $this->orderData['setting_service_money'] ?? 0));
         //应付金额+消费税
         $this->orderData['total_order_price'] = helper::number2(helper::bcadd($this->orderData['total_order_price'], $this->orderData['consumption_tax_money']));
 
@@ -319,7 +319,7 @@ abstract class CashierSettledService extends BaseService
             'settle_type' => $order['settle_type'],
             'discount_money' => $order['discount_money'],
             'app_id' => $this->app_id,
-            'setting_service_money' => $order['setting_service_money'],
+            'setting_service_money' => $order['setting_service_money'] ?? 0,
             'consumption_tax_money' => $order['consumption_tax_money'],
         ];
         if ($data['eat_type'] == 20) {

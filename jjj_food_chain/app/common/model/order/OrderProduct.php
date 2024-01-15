@@ -12,6 +12,30 @@ class OrderProduct extends BaseModel
     protected $name = 'order_product';
     protected $pk = 'order_product_id';
 
+    protected $append = [
+        'product_name_text'
+    ];
+
+    /**
+     * 获取商品数据 (可指定某天)
+     */
+    public function getProductNameTextAttr($value, $data)
+    {
+        return extractLanguage($data['product_name']); 
+    }
+
+    /**
+     * 属性
+     */
+    public function getProductAttrAttr($value)
+    {
+        $values = explode(";", $value);
+        foreach ($values as $key => $data) {
+            $values[$key] = extractLanguage($values[$key]);
+        }
+        return implode(";", $values);
+    }
+
     /**
      * 订单商品列表
      * @return \think\model\relation\BelongsTo
@@ -68,14 +92,6 @@ class OrderProduct extends BaseModel
     public static function detail($where)
     {
         return static::with(['image', 'orderM'])->find($where);
-    }
-
-    /**
-     * 获取商品数据 (可指定某天)
-     */
-    public function getProductNameAttr($value)
-    {
-        return $value; 
     }
 
     /**

@@ -16,6 +16,15 @@ class Category extends BaseModel
     protected $name = 'category';
 
     /**
+     * 处理多语言
+     */
+    protected $append = ['name_text'];
+    public function getNameTextAttr($value, $data)
+    {
+        return extractLanguage($data['name']);
+    }
+
+    /**
      * 分类图片
      */
     public function images()

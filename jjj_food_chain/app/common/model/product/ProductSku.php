@@ -14,6 +14,15 @@ class ProductSku extends BaseModel
     protected $pk = 'product_sku_id';
 
     /**
+     * 处理多语言
+     */
+    protected $append = ['spec_name_text'];
+    public function getSpecNameTextAttr($value, $data)
+    {
+        return extractLanguage($data['spec_name']);
+    }
+
+    /**
      * 隐藏字段
      */
     protected $hidden = [

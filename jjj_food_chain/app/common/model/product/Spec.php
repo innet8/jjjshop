@@ -13,6 +13,15 @@ class Spec extends BaseModel
     protected $pk = 'spec_id';
     protected $updateTime = false;
 
+    /**
+     * 处理多语言
+     */
+    protected $append = ['spec_name_text'];
+    public function getSpecNameTextAttr($value, $data)
+    {
+        return extractLanguage($data['spec_name']);
+    }
+    
     //更新规格
     public function updateSpec($data)
     {

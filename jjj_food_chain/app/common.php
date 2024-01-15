@@ -517,7 +517,6 @@ function langData($language = 'zh')
 
 /**
  * 打印文本
- * @param string language 语言
  * @return array
  */
 function printText($leftText, $centerText="", $rightText="", $total = 32, $leftNum=0) {
@@ -547,4 +546,18 @@ function printText($leftText, $centerText="", $rightText="", $total = 32, $leftN
     }
     // 
     return $content;
+}
+
+/**
+ * 提取语言
+ * @return array
+ */
+function extractLanguage($json)
+{
+    try {
+        $texts = json_decode($json, true);
+        return $texts ? $texts[checkDetect()] : $json;
+    } catch (\Throwable $th) {
+        return $json;
+    }
 }

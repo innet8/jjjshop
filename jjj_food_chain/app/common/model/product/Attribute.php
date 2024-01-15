@@ -13,7 +13,7 @@ class Attribute extends BaseModel
     protected $pk = 'attribute_id';
 
     /**
-     * 获取属性值
+     * 设置属性值
      */
     public function setAttributeValueAttr($value)
     {

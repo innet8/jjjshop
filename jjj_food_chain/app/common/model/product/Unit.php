@@ -12,6 +12,15 @@ class Unit extends BaseModel
     protected $name = 'product_unit';
     protected $pk = 'unit_id';
 
+    /**
+     * 处理多语言
+     */
+    protected $append = ['unit_name_text'];
+    public function getUnitNameTextAttr($value, $data)
+    {
+        return extractLanguage($data['unit_name']);
+    }
+
     //更新单位
     public function updateUnit($unit_name, $shop_supplier_id)
     {

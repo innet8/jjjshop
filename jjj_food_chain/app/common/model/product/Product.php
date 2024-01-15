@@ -2,7 +2,6 @@
 
 namespace app\common\model\product;
 
-use app\common\library\helper;
 use app\common\model\BaseModel;
 use app\common\model\order\OrderProduct;
 use app\shop\model\product\Category as CategoryModel;
@@ -14,22 +13,46 @@ class Product extends BaseModel
 {
     protected $name = 'product';
     protected $pk = 'product_id';
-    protected $append = ['product_sales'];
+    protected $append = ['product_sales', 'product_name_text', 'product_unit_text'];
+
+    /**
+     * 获取商品数据 
+     */
+    public function getProductNameTextAttr($value, $data)
+    {
+        return extractLanguage($data['product_name']);
+    }
+
+    /**
+     * 获取单位
+     */
+    public function getProductUnitTextAttr($value, $data)
+    {
+        return extractLanguage($data['product_unit']);
+    }
 
     /**
      * 属性
      */
     public function getProductAttrAttr($value)
     {
-        return $value ? json_decode($value, true) : [];
+        $datas = $value ? json_decode($value, true) : [];
+        foreach($datas as $key=>$data){
+            $datas[$key]['attribute_name_text'] = extractLanguage($datas[$key]['attribute_name']);
+        }
+        return $datas;
     }
 
     /**
-     * 属性
+     * 饲料
      */
     public function getProductFeedAttr($value)
     {
-        return $value ? json_decode($value, true) : [];
+        $datas = $value ? json_decode($value, true) : [];
+        foreach($datas as $key=>$data){
+            $datas[$key]['feed_name_text'] = extractLanguage($datas[$key]['feed_name']);
+        }
+        return $datas;
     }
 
     /**
@@ -44,7 +67,7 @@ class Product extends BaseModel
      * 属性配置
      */
     public function setProductAttrAttr($value)
-    {
+    {   
         return $value ? json_encode($value) : '';
     }
 
