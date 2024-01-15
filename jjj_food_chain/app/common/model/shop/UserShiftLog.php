@@ -45,7 +45,7 @@ class UserShiftLog extends BaseModel
         $shopUserModel = new User;
         $shopUser = $shopUserModel->where('shop_user_id', '=', $shop_user_id)->where('cashier_online', '=', 1)->find();
         if (!$shopUser) {
-            $this->error = '收银员不存在或未登录';
+            $this->error = '收银员不存在或未交班';
             return false;
         }
         //
@@ -82,6 +82,7 @@ class UserShiftLog extends BaseModel
         try {
             $this->save([
                 'shift_user_id' => $params['shop_user_id'] ?? 0, // 交班人id
+                'shift_no' => generateNumber(), // 交班编号
                 'previous_shift_cash' => $previous_shift_cash, // 上一班遗留备用金
                 'current_cash_total' => $previous_shift_cash + $cash_income, // 当前钱箱现金总计(现金收入+上一班遗留备用金)
                 'cash_income' => $cash_income, // 现金收入
@@ -93,14 +94,15 @@ class UserShiftLog extends BaseModel
                 'cash_left' => $cash_left, // 本班遗留备用金
                 'is_printed' => $is_printed, // 是否打印 0-未打印 1-已打印
                 'remark' => $params['remark'] ?? '', // 备注
-                'app_id' => $params['app_id'] ?? 0,
+                'app_id' => self::$app_id,
                 'shop_supplier_id' => $params['shop_supplier_id'] ?? 0,
-                'shift_time' => time(),
+                'shift_start_time' => $shopUser->cashier_login_time,
+                'shift_end_time' => time(),
                 'create_time' => time(),
                 'update_time' => time()
             ]);
             // 更新收银员在线状态
-            $shopUser->update(['cashier_online' => 0]);
+            $shopUser->update(['cashier_online' => 0, 'cashier_login_time' => 0]);
             $this->commit();
             return true;
         } catch (\Exception $e) {

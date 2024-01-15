@@ -44,7 +44,7 @@ class AddShiftLogTable extends Migrator
         ->addColumn('remark', 'text', ['null' => true, 'comment' => '备注'])
         ->addColumn('app_id', 'integer', ['default' => 0, 'comment' => '应用id'])
         ->addColumn('shop_supplier_id', 'integer', ['default' => 0, 'comment' => '门店id'])
-        ->addColumn('shift_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR,'null' => false,'default' => 0,'signed' => true, 'comment' => '交班时间'])
+        ->addColumn('shift_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR,'null' => false,'default' => 0,'signed' => true, 'comment' => '当班结束时间'])
         ->addColumn('create_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR,'null' => false,'default' => 0,'signed' => true,'comment' => '创建时间',])
         ->addColumn('update_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR,'null' => false,'default' => 0,'signed' => true,'comment' => '更新时间',])
         ->addIndex(['shift_user_id'], ['name' => 'idx_shift_user_id'])

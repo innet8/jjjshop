@@ -42,8 +42,12 @@ class User extends UserModel
         }
         // 保存登录状态
         $user['token'] = signToken($user['shop_user_id'], 'cashier');
-        // 更新收银员在线状态
-        $user->save(['cashier_online' => 1]);
+        // 更新收银员信息
+        $userData = ['cashier_online' => 1];
+        if ($user['cashier_login_time'] == 0) {
+            $userData['cashier_login_time'] = time();
+        }
+        $user->save($userData);
         return $user;
     }
 

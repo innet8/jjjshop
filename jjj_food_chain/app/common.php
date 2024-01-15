@@ -517,7 +517,7 @@ function langData($language = 'zh')
 
 /**
  * 打印文本
- * @return array
+ * @return string
  */
 function printText($leftText, $centerText="", $rightText="", $total = 32, $leftNum=0) {
     $afterLeftText = "";
@@ -534,17 +534,17 @@ function printText($leftText, $centerText="", $rightText="", $total = 32, $leftN
     $leftWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $leftText));
     $leftPadding = $leftNum - $leftWidth > 0 ? str_repeat(" ", intval($leftNum - $leftWidth)) : "";
     $leftPaddingWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $leftPadding));
-    // 
+    //
     $centerWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $centerText));
     $rightWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $rightText));
     $centerPaddingWidth = ($total - $leftWidth - $leftPaddingWidth - $centerWidth - $rightWidth);
     $centerPadding = str_repeat(" ", $centerPaddingWidth );
-    // 
+    //
     $content = $leftText . $leftPadding . $centerText . $centerPadding . $rightText;
     if ($afterLeftText) {
         $content .= "<BR>" . $afterLeftText . '<BR>';
     }
-    // 
+    //
     return $content;
 }
 
@@ -560,4 +560,18 @@ function extractLanguage($json)
     } catch (\Throwable $th) {
         return $json;
     }
+}
+
+/**
+ * 生成编号
+ *
+ * @return string
+ */
+function generateNumber()
+{
+    $datePart = date('Ymd'); // 获取当前日期
+    $fixedPart = '01'; // 固定部分
+    $randomPart = str_pad(rand(0, 99999999), 8, '0', STR_PAD_LEFT); // 生成一个8位的随机数
+
+    return $datePart . $fixedPart . $randomPart;
 }
