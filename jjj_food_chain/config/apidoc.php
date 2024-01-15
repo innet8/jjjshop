@@ -38,6 +38,7 @@ return [
             'groups'  => [
                 ['title'=>'商品管理','name'=>'product'],
                 ['title'=>'会员管理','name'=>'user'],
+                ['title'=>'系统设置','name'=>'system'],
             ],
         ],
         [

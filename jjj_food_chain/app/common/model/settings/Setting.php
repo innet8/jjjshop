@@ -368,19 +368,19 @@ class Setting extends BaseModel
                 'key' => 'sys_config',
                 'describe' => '系统设置',
                 'values' => [
-                    'shop_name' => '点餐管理系统',
-                    'shop_bg_img' => '',
-                    'shop_logo_img' => '',
-                    'cashier_name' => '收银台',
-                    'cashier_bg_img' => '',
+                    'shop_name' => '点餐管理系统', // 商城名称
+                    'shop_bg_img' => '', // 商城背景图
+                    'shop_logo_img' => '', // 商城logo
+                    'cashier_name' => '收银台', // 收银台名称
+                    'cashier_bg_img' => '', // 收银台背景图
                     // 微信服务商支付
                     'weixin_service' => [
-                        'is_open' => 0,
-                        'app_id' => '',
-                        'mch_id' => '',
-                        'apikey' => '',
-                        'cert_pem' => '',
-                        'key_pem' => ''
+                        'is_open' => 0, // 是否开启
+                        'app_id' => '', // 公众号appid
+                        'mch_id' => '', // 商户号
+                        'apikey' => '', // apikey
+                        'cert_pem' => '', // 证书pem
+                        'key_pem' => '' // 证书key
                     ],
                 ]
             ],
@@ -479,34 +479,26 @@ class Setting extends BaseModel
                 'key' => 'currency',
                 'describe' => '货币单位',
                 'values' => [
-                    // 货币单位
-                    'unit' => '',
-                    // 副货币单位开关
-                    'is_open' => 0,
-                    // 副货币单位
-                    'vice_unit' => '',
-                    // 单位汇率
-                    'unit_rate' => '',
+                    'unit' => '', // 货币单位
+                    'is_open' => 0, // 副货币单位开关
+                    'vice_unit' => '', // 副货币单位
+                    'unit_rate' => '', // 单位汇率
                 ],
             ],
             SettingEnum::TAX_RATE => [
                 'key' => 'tax_rate',
                 'describe' => '税率管理',
                 'values' => [
-                    // 是否开启
-                    'is_open' => 0,
-                    // 税率
-                    'tax_rate' => '',
+                    'is_open' => 0, // 是否开启
+                    'tax_rate' => '', // 税率
                 ],
             ],
             SettingEnum::SERVICE_CHARGE => [
                 'key' => 'service_charge',
                 'describe' => '服务费',
                 'values' => [
-                    // 是否开启
-                    'is_open' => 0,
-                    // 服务费
-                    'service_charge' => '',
+                    'is_open' => 0, // 是否开启
+                    'service_charge' => '', // 服务费
                 ],
             ],
             SettingEnum::CASHIER => [
@@ -515,14 +507,12 @@ class Setting extends BaseModel
                 'values' => [
                     // 上传后的轮播内容url（图片 + 视频）
                     'carousel' => [],
-                    // 收银结账自动送厨房
-                    'is_auto_send' => 0,
-                    // 钱箱密码
-                    'cashier_password' => '',
+                    'is_auto_send' => 0, // 收银结账自动送厨房
+                    'cashier_password' => '', // 钱箱密码
                     // 自动锁屏 默认5分钟
                     'auto_lock_screen' => [
                         'unit' => 'minute', // 单位，'second'、'minute' 或 'never'
-                        'value' => 5,
+                        'value' => 5, // 时间值
                     ],
                     // 常用语言 泰语、英语、中文、繁体
                     'language' => ['th', 'en', 'zh', 'zh-tw'],
@@ -534,14 +524,11 @@ class Setting extends BaseModel
                 'key' => 'tablet',
                 'describe' => '平板端设置',
                 'values' => [
-                    // 轮播内容（图片 + 视频）
+                    // 上传后的轮播内容url（图片 + 视频）
                     'carousel' => [],
-                    // 是否开启呼叫服务员
-                    'is_call_service' => 1,
-                    // 是否开启顾客自助下单
-                    'is_customer_order' => 1,
-                    // 是否显示售罄商品
-                    'is_show_sold_out' => 1,
+                    'is_call_service' => 1, // 是否开启呼叫服务员
+                    'is_customer_order' => 1, // 是否开启顾客自助下单
+                    'is_show_sold_out' => 1, // 是否显示售罄商品
                     // 平板服务器连接
                     'server' => [
                         'ip' => '',
@@ -550,8 +537,7 @@ class Setting extends BaseModel
                     ],
                     // 常用语言 泰语、英语、中文、繁体
                     'language' => ['th', 'en', 'zh', 'zh-tw'],
-                    // 默认语言
-                    'default_language' => 'en',
+                    'default_language' => 'en', // 默认语言
                 ],
             ],
             SettingEnum::KITCHEN => [
@@ -563,8 +549,7 @@ class Setting extends BaseModel
                         'ip' => '',
                         'port' => '',
                     ],
-                    // 是否开启等待时长颜色
-                    'is_wait_color' => 1,
+                    'is_wait_color' => 1, // 是否开启等待时长颜色
                     // 时长颜色 10-黄色 20-红色
                     'wait_color' => [
                         '10' => '#ffff00',
@@ -572,8 +557,7 @@ class Setting extends BaseModel
                     ],
                     // 常用语言 泰语、英语、中文、繁体
                     'language' => ['th', 'en', 'zh', 'zh-tw'],
-                    // 默认语言
-                    'default_language' => 'en',
+                    'default_language' => 'en', // 默认语言
                 ],
             ],
         ];
