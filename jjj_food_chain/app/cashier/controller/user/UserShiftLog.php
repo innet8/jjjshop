@@ -21,14 +21,21 @@ class UserShiftLog extends Controller
      * @Apidoc\Param("cash_left", type="float", require=true, desc="本班遗留备用金")
      * @Apidoc\Returned()
      */
-    public function index($mobile)
+    public function index()
     {
         $data = $this->postData();
+        if (!isset($data['cash_taken_out'])) {
+            return $this->renderError('请输入本班取出現金');
+        }
+        if (!isset($data['cash_left'])) {
+            return $this->renderError('请输入本班遗留备用金');
+        }
         $data['shop_supplier_id'] = $this->cashier['user']['shop_supplier_id'];
         $data['shop_user_id'] = $this->cashier['user']['cashier_id'];
-        if (UserShiftLogModel::shiftLog($data)) {
+        $UserShiftLogModel = new UserShiftLogModel;
+        if ($UserShiftLogModel->shiftLog($data)) {
             return $this->renderSuccess('交班成功');
         }
-        return $this->renderError('交班失败');
+        return $this->renderError($UserShiftLogModel->getError() ?: '交班失败');
     }
 }

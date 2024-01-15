@@ -15,7 +15,7 @@ use hg\apidoc\annotation as Apidoc;
 class User extends Controller
 {
     /**
-     * @Apidoc\Title("查找会员")
+     * @Apidoc\Title("查找会员列表（手机号）")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/cashier/user.User/index")
      * @Apidoc\Param("mobile", type="string", require=true, default="", desc="用户手机号")
@@ -28,15 +28,26 @@ class User extends Controller
     }
 
     /**
-     * @Apidoc\Title("会员详情")
+     * @Apidoc\Title("查找会员详情")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/cashier/user.User/detail")
-     * @Apidoc\Param("user_id", type="int", require=true, default="", desc="用户id")
+     * @Apidoc\Param("user_id", type="int", require=false, desc="用户id")
+     * @Apidoc\Param("mobile", type="string", require=false, desc="用户手机号")
      * @Apidoc\Returned()
      */
-    public function detail($user_id)
+    public function detail($user_id = 0, $mobile = '')
     {
-        $detail = UserModel::detail($user_id);
+        if (!$user_id && !$mobile) {
+            return $this->renderError('请输入用户信息');
+        }
+        $where = [];
+        if ($user_id) {
+            $where['user_id'] = $user_id;
+        }
+        if ($mobile) {
+            $where['mobile'] = $mobile;
+        }
+        $detail = UserModel::detail($where);
         return $this->renderSuccess('', $detail);
     }
 
