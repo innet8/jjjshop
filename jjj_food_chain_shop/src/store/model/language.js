@@ -14,14 +14,20 @@ export const languageStore = defineStore({
                 label: '简体'
             },
             {
-                key: 'tc',
+                key: 'zhtw',
                 label: '繁体'
             },
             {
                 key: 'en',
                 label: 'English'
             },
-        ]
+        ],
+        languageData:{
+            th: "",
+            zh: "",
+            zhtw: "",
+            en: "",
+        },
     }),
     getters: {
 

@@ -25,8 +25,8 @@
                 </div>
                 <div class="leval-item upload-btn">
                     <el-upload class="avatar-uploader" multiple ref="upload" action=""
-                        accept="image/jpeg,image/png,image/jpg" :before-upload="onBeforeUploadImage" :show-file-list="false"
-                        :on-change="fileChange">
+                        accept="image/jpeg,image/png,image/jpg" :before-upload="onBeforeUploadImage" :auto-upload="false"
+                        :show-file-list="false" :on-change="fileChange">
                         <el-button size="small" icon="Upload" type="primary">点击上传</el-button>
                     </el-upload>
 
@@ -78,8 +78,11 @@
                     :page-sizes="[12, 24, 36, 42, 48]" :page-size="pageSize"
                     layout="total, sizes, prev, pager, next, jumper" :total="totalDataNumber"></el-pagination>
             </div>
-            <div>
-
+            <div class="pagination-cropper">
+                <!-- 图片裁剪 -->
+                <el-dialog v-model="cropperShow" :title="$t('图片裁剪')" :before-close="handleClose">
+                    <cropperImg v-if="cropperShow" ref="cropperImg" :imgSrc="imgSrc" @upload="UploadImage" @handleClose="handleClose"></cropperImg>
+                </el-dialog>
             </div>
             <template #footer>
                 <el-button size="small" @click="cancelFunc">取 消</el-button>
@@ -91,16 +94,7 @@
 
         <!--图片类别-->
         <AddCategory v-if="isShowCategory" :category="category" @closeCategory="closeCategoryFunc"></AddCategory>
-        <!-- 图片裁剪 -->
-        <el-dialog v-model="cropperShow" :title="$t('图片裁剪')" :before-close="handleClose">
-            <cropperImg v-if="cropperShow" ref="cropperImg" :imgSrc="imgSrc" @upload="UploadImage"></cropperImg>
-            <template #footer>
-                <span class="dialog-footer">
-                    <el-button @click="handleClose"> {{ $t('取消') }}</el-button>
-                    <el-button type="primary" @click="handelCropper"> {{ $t('确定') }} </el-button>
-                </span>
-            </template>
-        </el-dialog>
+
 
     </div>
 </template>
@@ -362,7 +356,7 @@ export default {
 
         /*选择图片之前*/
         onBeforeUploadImage(file) {
-            return false;
+            return true;
         },
 
         /*上传图片*/
@@ -374,7 +368,6 @@ export default {
                 background: "rgba(0, 0, 0, 0.7)",
             });
             const formData = new FormData();
-            console.log(param)
             const file = new File([param], self.imgName)
             formData.append("iFile", file);
             formData.append("group_id", self.activeType);
@@ -387,6 +380,7 @@ export default {
                         message: "本次上传图成功",
                         type: "success",
                     });
+                    self.cropperShow = false
                 })
                 .catch((response) => {
                     loading.close();
@@ -499,7 +493,6 @@ export default {
 
         handelCropper() {
             this.$refs.cropperImg.sureSava();
-            this.cropperShow = false
         },
 
         handleClose() {

@@ -16,27 +16,27 @@
                     <el-button type="primary" @click="addIngredients">{{ $t('添加属性') }}+</el-button>
                 </el-form-item>
                 <!--多规格表格-->
-                <el-form-item class=" mb18" v-for="(item, index) in form.model.product_feed" :key="index"
+                <el-form-item class="product-box mb18" v-for="(item, index) in form.model.product_feed" :key="index"
                     v-if="form.model.product_feed.length > 0">
                     <template #label>
                         <el-icon class="delete-icon" @click="handleDelete(index)">
                             <Delete />
                         </el-icon>
                     </template>
-                    <el-form  class="product-attr" v-for="(items, indexs) in item" :key="indexs">
-                        <el-form-item>
+                    <el-form class="product-attr">
+                        <el-form-item v-for="(items, indexs) in item.placeholder" :key="indexs">
                             <template #label>
-                                {{ $t('加料名称：') }}<span class="product-tips">{{ items.placeholder }}</span>
+                                {{ $t('加料名称：') }}<span class="product-tips">{{ items }}</span>
                             </template>
-                            <el-input class="inline-input" v-model="items.feed_name" maxlength="128"
+                            <el-input class="inline-input" v-model="item.feed_name[keyName(indexs)]" maxlength="128"
                                 :placeholder="$t('如:杯型')"></el-input>
                         </el-form-item>
                         <el-form-item :label="$t('价格：')">
-                            <el-input class="inline-input" type="number" size="medium" v-model="items.price"
-                                placeholder="">
+                            <el-input class="inline-input" type="number" size="small" v-model="item.price" placeholder="">
                             </el-input>
                         </el-form-item>
                     </el-form>
+
                 </el-form-item>
                 <!-- </el-form-item> -->
             </div>
@@ -46,6 +46,8 @@
 </template>
 
 <script>
+import { languageStore } from '@/store/model/language.js';
+const languageData = JSON.stringify(languageStore().languageData)
 export default {
     data() {
         return {
@@ -63,52 +65,31 @@ export default {
     methods: {
         addIngredients() {
             this.form.model.product_feed.push(
-                [
-                    {
-                        placeholder: '(ภาษาไทย)',
-                        feed_name: '',
-                        price: ''
-                    },
-                    {
-                        placeholder: '(简体中文)',
-                        feed_name: '',
-                        price: ''
-                    },
-                    {
-                        placeholder: '(繁體中文)',
-                        feed_name: '',
-                        price: ''
-                    },
-                    {
-                        placeholder: '(English)',
-                        feed_name: '',
-                        price: ''
-                    },
-                ]
+                {
+                    placeholder: ['(ภาษาไทย)', '(简体中文)', '(繁體中文)', '(English)'],
+                    feed_name:JSON.parse(languageData),
+                    price: ''
+                }
             )
         },
         handleDelete(index) {
             this.form.model.product_feed.splice(index, 1);
         },
-        querySearch(queryString, cb) {
-            let self = this;
-            if (self.restaurants.length == 0) {
-                self.form.feed.forEach((item, index) => {
-                    self.restaurants.push({
-                        value: item.feed_name
-                    })
-                })
+        keyName(index) {
+            let results = ''
+            if (index == 0) {
+                results = 'th'
             }
-
-            var restaurants = self.restaurants;
-            var results = queryString ? restaurants.filter(self.createFilter(queryString)) : restaurants;
-            // 调用 callback 返回建议列表的数据
-            cb(results);
-        },
-        createFilter(queryString) {
-            return (restaurant) => {
-                return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-            };
+            if (index == 1) {
+                results = 'zh'
+            }
+            if (index == 2) {
+                results = 'zhtw'
+            }
+            if (index == 3) {
+                results = 'en'
+            }
+            return results
         },
     }
 };
@@ -127,5 +108,9 @@ export default {
     padding: 16px 16px 0 16px;
     border-radius: var(--el-input-border-radius, var(--el-border-radius-base));
     margin-bottom: 12px;
+}
+
+.product-box {
+    display: flex;
 }
 </style>

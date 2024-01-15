@@ -1,31 +1,29 @@
 <template>
-  <div class="login-bg" :style="'background-image:url(' + bgimg_url + ');'">
-    <div>
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="left" label-width="0px"
-        class="demo-ruleForm login-container d-b-c">
-        <div class="log_img">
-          <img :src="log_url">
-        </div>
-        <div class="flex-1 login-box">
-          <h3 class="title" style="margin-bottom: 20px;">{{shop_name}}</h3>
-          <!--用户名-->
-          <el-form-item prop="account">
-            <div class="left-img-input"><img class="l-img" src="/src/assets/img/user.png">
-              <el-input class="l-input" type="text" v-model="ruleForm.account" auto-complete="off" placeholder="账号">
-              </el-input>
-            </div>
-            <!-- <el-input type="text" v-model="ruleForm.account" auto-complete="off" placeholder="账号"></el-input> -->
-          </el-form-item>
-          <!--密码-->
-          <el-form-item prop="checkPass">
-            <div class="left-img-input"><img class="l-img" src="/src/assets/img/password.png">
-              <el-input type="password" class="l-input" v-model="ruleForm.checkPass" auto-complete="off"
-                placeholder="密码">
-              </el-input>
-            </div>
-            <!-- <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off" placeholder="密码"></el-input> -->
-          </el-form-item>
-          <!-- <el-form-item prop="verifycode" style="line-height:0px;">
+    <div class="login-bg" :style="'background-image:url(' + bgimg_url + ');'">
+        <div class="login-main">
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="left" label-width="0px"
+                class="demo-ruleForm login-container d-b-c">
+                <div class="flex-1 login-box">
+                    <h3 class="title" style="margin-bottom: 40px;">{{ shop_name }}</h3>
+                    <!--用户名-->
+                    <el-form-item prop="account">
+                        <div class="left-img-input"><img class="l-img" src="/src/assets/img/user.png">
+                            <el-input class="l-input" type="text" v-model="ruleForm.account" auto-complete="off"
+                                placeholder="账号">
+                            </el-input>
+                        </div>
+                        <!-- <el-input type="text" v-model="ruleForm.account" auto-complete="off" placeholder="账号"></el-input> -->
+                    </el-form-item>
+                    <!--密码-->
+                    <el-form-item prop="checkPass">
+                        <div class="left-img-input"><img class="l-img" src="/src/assets/img/password.png">
+                            <el-input type="password" class="l-input" v-model="ruleForm.checkPass" auto-complete="off"
+                                placeholder="密码">
+                            </el-input>
+                        </div>
+                        <!-- <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off" placeholder="密码"></el-input> -->
+                    </el-form-item>
+                    <!-- <el-form-item prop="verifycode" style="line-height:0px;">
             <div class="d-b-c">
               <div class="left-img-input" style="width: auto;">
                 <el-input v-model="ruleForm.verifycode" ref="verifycode" placeholder="验证码" class="l-input"
@@ -36,184 +34,224 @@
               </div>
             </div>
           </el-form-item> -->
-          <!--登录-->
-          <el-form-item>
-            <el-button type="primary" style="width:100%;height: 51px;font-size: 18px;"
-              @click.native.prevent="SubmitFunc" :loading="logining">登录
-            </el-button>
-          </el-form-item>
+                    <!--登录-->
+                    <el-button type="primary" style="width:100%;height: 48px;font-size: 18px;margin-top: 6px;"
+                        @click.native.prevent="SubmitFunc" :loading="logining">登录
+                    </el-button>
+                </div>
+
+            </el-form>
         </div>
-
-      </el-form>
+        <div class="language-box">
+            <el-dropdown trigger="click" @command="setLanguage">
+                <span class="el-dropdown-link">
+                    <SvgIcon class="data-box-icon" name="language"></SvgIcon>{{ languageNow }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
+                </span>
+                <template #dropdown>
+                    <el-dropdown-menu>
+                        <el-dropdown-item v-for="item in languageList" :command="item.key">{{ item.label
+                        }}</el-dropdown-item>
+                    </el-dropdown-menu>
+                </template>
+            </el-dropdown>
+        </div>
     </div>
-
-  </div>
 </template>
 
 <script>
-  import sidentify from '@/components/sidentify.vue';
-  import IndexApi from '@/api/index.js';
-  import bgimg from '@/assets/img/login_bg.png';
-  import logimg from '@/assets/img/login_logo.png';
-  import UserApi from '@/api/user.js';
-  import { useUserStore } from '@/store';
-  import { useLockscreenStore } from "@/store/model/lockscreen.js"
-  const useLockscreen = useLockscreenStore();
-   const { afterLogin } = useUserStore();
-  export default {
+import sidentify from '@/components/sidentify.vue';
+import IndexApi from '@/api/index.js';
+import bgimg from '@/assets/img/login_bg.png';
+import logimg from '@/assets/img/login_logo.png';
+import UserApi from '@/api/user.js';
+import { useUserStore } from '@/store';
+import { useLockscreenStore } from "@/store/model/lockscreen.js"
+import { languageStore } from '@/store/model/language.js';
+import SvgIcon from "@/components/svg-icon/SvgIcon.vue";
+const useLockscreen = useLockscreenStore();
+const { afterLogin } = useUserStore();
+const language = languageStore()
+const languageNow = language.getLanguage().language
+const languageList = language.getLanguageList()
+export default {
 
     components: {
-      sidentify
+        sidentify,
+        SvgIcon
     },
 
     data() {
-      // 验证码自定义验证规则
-      const validateVerifycode = (rule, value, callback) => {
-        if (value === "") {
-          this.refreshCode();
-          callback(new Error('请输入验证码'))
-        } else if (value !== this.identifyCode) {
-          this.refreshCode();
-          callback(new Error('验证码不正确!'))
-        } else {
-          callback()
+        // 验证码自定义验证规则
+        const validateVerifycode = (rule, value, callback) => {
+            if (value === "") {
+                this.refreshCode();
+                callback(new Error('请输入验证码'))
+            } else if (value !== this.identifyCode) {
+                this.refreshCode();
+                callback(new Error('验证码不正确!'))
+            } else {
+                callback()
+            }
         }
-      }
-      return {
-        loginForm: {
+        return {
+            loginForm: {
 
-        },
-        identifyCodes: "1234567890", //验证码的数字库
-        identifyCode: "", // 验证码组件传值
-        /*是否正在加载*/
-        loading: true,
-        /*商城名称*/
-        shop_name: '',
-        /*背景图片*/
-        bgimg_url: '',
-        log_url: '',
-        /*是否正在提交*/
-        logining: false,
-        /*表单对象*/
-        ruleForm: {
-          /*用户名*/
-          account: '',
-          /*密码*/
-          checkPass: '',
-          verifycode: ''
-        },
-        /*验证规则*/
-        rules: {
-          /*用户名*/
-          account: [{
-            required: true,
-            message: '请输入用户名',
-            trigger: 'blur'
-          }],
-          /*密码*/
-          checkPass: [{
-            required: true,
-            message: '请输入密码',
-            trigger: 'blur'
-          }],
-          verifycode: [{
-            required: true,
-            trigger: 'blur',
-            validator: validateVerifycode
-          }]
-        },
-        /*基础配置*/
-        baseData: {},
-
-      };
+            },
+            identifyCodes: "1234567890", //验证码的数字库
+            identifyCode: "", // 验证码组件传值
+            /*是否正在加载*/
+            loading: true,
+            /*商城名称*/
+            shop_name: '',
+            /*背景图片*/
+            bgimg_url: '',
+            log_url: '',
+            /*是否正在提交*/
+            logining: false,
+            /*表单对象*/
+            ruleForm: {
+                /*用户名*/
+                account: '',
+                /*密码*/
+                checkPass: '',
+                verifycode: ''
+            },
+            /*验证规则*/
+            rules: {
+                /*用户名*/
+                account: [{
+                    required: true,
+                    message: '请输入用户名',
+                    trigger: 'blur'
+                }],
+                /*密码*/
+                checkPass: [{
+                    required: true,
+                    message: '请输入密码',
+                    trigger: 'blur'
+                }],
+                verifycode: [{
+                    required: true,
+                    trigger: 'blur',
+                    validator: validateVerifycode
+                }]
+            },
+            /*基础配置*/
+            baseData: {},
+            language: language,
+            languageNow: languageNow,
+            languageList: languageList,
+        };
     },
     created() {
-      this.refreshCode();
-      this.getData();
+        this.refreshCode();
+        this.getData();
     },
     mounted() {
-      this.identifyCode = '';
-      this.makeCode(this.identifyCodes, 4);
+        this.identifyCode = '';
+        this.makeCode(this.identifyCodes, 4);
     },
     methods: {
-      //验证码----start
-      randomNum(min, max) {
-        return Math.floor(Math.random() * (max - min) + min);
-      },
-      refreshCode() {
-        this.identifyCode = "";
-        this.makeCode(this.identifyCodes, 4);
-      },
-      makeCode(o, l) {
-        for (let i = 0; i < l; i++) {
-          this.identifyCode += this.identifyCodes[
-            this.randomNum(0, this.identifyCodes.length)
-          ];
-        }
-        // console.log("this.identifyCode:", this.identifyCode);
-      },
-      /*获取基础配置*/
-      getData() {
-        let self = this;
-        IndexApi.base(true)
-          .then(res => {
-            self.loading = false;
-            // self.shop_name = res.data.settings.shop_name;
-            const { data: { settings: { shop_bg_img, shop_name,shop_logo_img } }} = res;
-            self.shop_name = shop_name;
-            if (shop_bg_img) {
-              self.bgimg_url = shop_bg_img;
-            } else {
-              self.bgimg_url = bgimg;
+        //验证码----start
+        randomNum(min, max) {
+            return Math.floor(Math.random() * (max - min) + min);
+        },
+        refreshCode() {
+            this.identifyCode = "";
+            this.makeCode(this.identifyCodes, 4);
+        },
+        makeCode(o, l) {
+            for (let i = 0; i < l; i++) {
+                this.identifyCode += this.identifyCodes[
+                    this.randomNum(0, this.identifyCodes.length)
+                ];
             }
-            if (shop_logo_img) {
-              self.log_url = shop_logo_img;
-            } else {
-              self.log_url = logimg;
-            }
-          })
-          .catch(error => {
-            self.loading = false;
-          });
-      },
+            // console.log("this.identifyCode:", this.identifyCode);
+        },
+        /*获取基础配置*/
+        getData() {
+            let self = this;
+            IndexApi.base(true)
+                .then(res => {
+                    self.loading = false;
+                    // self.shop_name = res.data.settings.shop_name;
+                    const { data: { settings: { shop_bg_img, shop_name, shop_logo_img } } } = res;
+                    self.shop_name = shop_name;
+                    if (shop_bg_img) {
+                        self.bgimg_url = shop_bg_img;
+                    } else {
+                        self.bgimg_url = bgimg;
+                    }
+                    if (shop_logo_img) {
+                        self.log_url = shop_logo_img;
+                    } else {
+                        self.log_url = logimg;
+                    }
+                })
+                .catch(error => {
+                    self.loading = false;
+                });
+        },
 
-      /*登录方法*/
-      SubmitFunc(ev) {
-        var _this =this;
-        this.$refs.ruleForm.validate(valid => {
-          if (valid) {
-            this.logining = true;
-            var Params = {
-              username: this.ruleForm.account,
-              password: this.ruleForm.checkPass
-            };
-            /*调用登录接口*/
-            UserApi.login(Params,true)
-            .then(async (data) => {
-              await afterLogin(data);
-              _this.logining = false; 
-              _this.$router.push({
-                path: '/home'
-              })
-              useLockscreen.setLock(false);
-            })
-              .catch(error => {
-                //接口调用方法统一处理
-                _this.logining = false;
-              });
-          }
-        });
-      }
+        /*登录方法*/
+        SubmitFunc(ev) {
+            var _this = this;
+            this.$refs.ruleForm.validate(valid => {
+                if (valid) {
+                    this.logining = true;
+                    var Params = {
+                        username: this.ruleForm.account,
+                        password: this.ruleForm.checkPass
+                    };
+                    /*调用登录接口*/
+                    UserApi.login(Params, true)
+                        .then(async (data) => {
+                            await afterLogin(data);
+                            _this.logining = false;
+                            _this.$router.push({
+                                path: '/home'
+                            })
+                            useLockscreen.setLock(false);
+                        })
+                        .catch(error => {
+                            //接口调用方法统一处理
+                            _this.logining = false;
+                        });
+                }
+            });
+        },
+        setLanguage(e) {
+            ElMessageBox.confirm(
+                '切换语言需要刷新后生效，是否确定刷新?',
+                '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+            }
+            )
+                .then(() => {
+                    this.language.setLanguage(e)
+                    location.reload();
+                })
+                .catch(() => {
+                    ElMessage({
+                        type: 'info',
+                        message: '已取消',
+                    });
+                });
+
+        },
     }
-  };
+};
 </script>
 
 <style lang="scss">
-  .login-bg {
+.login-bg {
     width: 100%;
-    height: 100%;
+    min-height: 100%;
     background: no-repeat;
-    background-size: cover;
+    background-color: #FFF6DE;
+    background-position: right bottom;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -224,53 +262,53 @@
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-  }
+    justify-content: center;
+}
 
-  .login-container {
-    box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.1), 0 1px 0px 0 rgba(0, 0, 0, 0.04);
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
+.login-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-container {
+    -webkit-border-radius: 16px;
+    border-radius: 16px;
+    -moz-border-radius: 16px;
     background-clip: padding-box;
-    position: fixed;
-    width: 961px;
-    height: 408px;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
+    width: 480px;
     margin: auto;
     background-color: #FFFFFF;
 
     .title {
-      margin: 0px auto 40px auto;
-      text-align: center;
-      font-size: 28px;
-      font-family: Microsoft YaHei;
-      font-weight: bold;
-      color: #333333;
+        margin: 0px auto 40px auto;
+        text-align: center;
+        font-size: 28px;
+        font-family: Microsoft YaHei;
+        font-weight: bold;
+        color: #333333;
     }
 
     .remember {
-      margin: 0px 0px 35px 0px;
+        margin: 0px 0px 35px 0px;
     }
-  }
+}
 
-  .log_img {
+.log_img {
     img {
-      width: 514px;
-      height: 408px;
+        width: 514px;
+        height: 408px;
     }
-  }
+}
 
-  .login-box {
-    padding: 45px 39px 31px 39px;
-    height: 408px;
+.login-box {
+    padding: 56px 40px;
     box-sizing: border-box;
-  }
+    border-radius: 16px;
+}
 
-  .left-img-input {
-    width: 370px;
+.left-img-input {
+    width: 100%;
     height: 44px;
     line-height: 44px;
     background: #FFFFFF;
@@ -281,24 +319,52 @@
     padding: 0 14px;
 
     .l-img {
-      width: 20px;
-      height: 20px;
-      margin-right: 10px;
-      flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        flex-shrink: 0;
     }
 
     .l-input {
-      flex: 1;
-      border: none;
-      background: none;
-      font-size: 14px;
-      color: #666666;
+        flex: 1;
+        border: none;
+        background: none;
+        font-size: 14px;
+        color: #666666;
 
+        .el-input__wrapper {
+            box-shadow: none;
+        }
     }
 
     .el-input__inner {
-      border: none;
-      padding: 0;
+        border: none;
+        padding: 0;
     }
-  }
+}
+
+.language-box {
+    position: fixed;
+    margin: auto;
+    left: 0;
+    right: 0;
+    bottom: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .el-dropdown-link{
+        color: var(--el-color-black);
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+    .data-box-icon{
+        width: 16px;
+        height: 16px;
+        color: var(--el-color-black);
+    }
+}
+
 </style>

@@ -1,7 +1,7 @@
 import { createI18n } from "vue-i18n"
 import auto_zh from "./auto/zh.json"
 import auto_en from "./auto/en.json"
-import auto_tc from "./auto/tc.json"
+import auto_zhtw from "./auto/zhtw.json"
 import auto_th from "./auto/th.json"
 
 let lang = 'th'
@@ -16,7 +16,7 @@ const i18n = createI18n({
     messages: {
         zh: { ...auto_zh },
         en: { ...auto_en },
-        tc: { ...auto_tc },
+        tc: { ...auto_zhtw },
         th: { ...auto_th },
     },
     warnHtmlMessage: false,

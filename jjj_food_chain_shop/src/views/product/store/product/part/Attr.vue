@@ -21,19 +21,24 @@
                             <Delete />
                         </el-icon>
                     </template>
-                    <el-form size="small" class="product-attr" v-for="(items, indexs) in item" :key="indexs">
+                    <el-form size="small" class="product-attr" v-for="(items, indexs) in item.placeholder"
+                        :key="indexs">
                         <el-form-item>
                             <template #label>
-                                    {{ $t('属性名称：') }}<span class="product-tips">{{ items.placeholder }}</span>
+                                {{ $t('属性名称：') }}<span class="product-tips">{{ items }}</span>
                             </template>
-                            <el-input class="inline-input"  v-model="items.attribute_name" maxlength="128"
-                                :placeholder="$t('如：温度')"></el-input>
+                            <el-input class="inline-input" v-model="item.attribute_name[attributeName(indexs)]"
+                                maxlength="128" :placeholder="$t('如：温度')"></el-input>
                         </el-form-item>
-                        <el-form-item :label="$t('属性：')">
-                            <template v-for="(aitem, aindex) in items.much" :key="aindex">
-                                <el-input style="width: 100px; margin-right: 16px;" 
-                                    v-model="items.attribute_value[aindex]" :placeholder="$t('请输入')">
+                        <el-form-item>
+                            <template #label>
+                                {{ $t('属性：') }}<span class="product-tips">{{ items }}</span>
+                            </template>
+                            <template v-for="(aitem, aindex) in item.much" :key="aindex">
+                                <el-input style="width: 100px; margin-right: 16px;"
+                                    v-model="item.attribute_value[aindex][attributeName(indexs)]" :placeholder="$t('请输入')">
                                 </el-input>
+
                             </template>
                             <el-icon class="add-button" @click="handleAdd(index)">
                                 <CirclePlusFilled />
@@ -52,7 +57,8 @@
 
 <script>
 import { handleError } from 'vue';
-
+import { languageStore } from '@/store/model/language.js';
+const languageData = JSON.stringify(languageStore().languageData)
 export default {
     data() {
         return {
@@ -63,47 +69,27 @@ export default {
     inject: ['form'],
     methods: {
         addAttr() {
-            this.form.model.product_attr.push([{
-                placeholder: '(ภาษาไทย)',
-                attribute_name: '',
-                attribute_value: [],
+            this.form.model.product_attr.push({
+                placeholder: ['(ภาษาไทย)', '(简体中文)', '(繁體中文)', '(English)'],
+                attribute_name: JSON.parse(languageData),
+                attribute_value: [JSON.parse(languageData), JSON.parse(languageData)],
                 much: 2,
             },
-            {
-                placeholder: '(简体中文)',
-                attribute_name: '',
-                attribute_value: [],
-                much: 2,
-            },
-            {
-                placeholder: '(繁體中文)',
-                attribute_name: '',
-                attribute_value: [],
-                much: 2,
-            },
-            {
-                placeholder: '(English)',
-                attribute_name: '',
-                attribute_value: [],
-                much: 2,
-            }
-            ])
+            )
+            console.log(this.form.model.product_attr);
         },
         handleDelete(index) {
             this.form.model.product_attr.splice(index, 1);
         },
         handleAdd(index) {
-            this.form.model.product_attr[index].map((item, indexs) => {
-                this.form.model.product_attr[index][indexs].much++;
-            })
+            this.form.model.product_attr[index].much++;
+            this.form.model.product_attr[index].attribute_value.push(JSON.parse(languageData));
         },
         handleDecrease(index) {
-            this.form.model.product_attr[index].map((item, indexs) => {
-                if(this.form.model.product_attr[index][indexs].much > 2){
-                    this.form.model.product_attr[index][indexs].much--;
+                if (this.form.model.product_attr[index].much > 2) {
+                    this.form.model.product_attr[index].much--;
+                    this.form.model.product_attr[index].attribute_value.pop();
                 }
-                this.form.model.product_attr[index][indexs].attribute_value.pop();
-            })
         },
         querySearch(queryString, cb) {
             let self = this;
@@ -125,7 +111,24 @@ export default {
                 return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
             };
         },
-    }
+        attributeName(index) {
+            let results = ''
+            if (index == 0) {
+                results = 'th'
+            }
+            if (index == 1) {
+                results = 'zh'
+            }
+            if (index == 2) {
+                results = 'zhtw'
+            }
+            if (index == 3) {
+                results = 'en'
+            }
+            return results
+        },
+    },
+
 };
 </script>
 
@@ -143,7 +146,8 @@ export default {
     font-size: 24px;
     margin-right: 16px;
 }
-.inline-input{
+
+.inline-input {
     max-width: 460px;
 }
 
@@ -152,8 +156,12 @@ export default {
     font-size: 24px;
     margin-right: 16px;
 }
-.product-tips{
+
+.product-tips {
     font-size: 12px;
     color: var(--el-color-tips);
+}
+.product-box{
+    display: flex;
 }
 </style>

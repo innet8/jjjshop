@@ -13,9 +13,9 @@
                     <el-select size="small" v-model="searchForm.category_id" :placeholder="$t('所有分类')">
                         <el-option :label="$t('全部')" value="0"></el-option>
                         <template v-for="cat in categoryList" :key="cat.category_id">
-                            <el-option :value="cat.category_id" :label="cat.name"></el-option>
+                            <el-option :value="cat.category_id" :label="cat.name_text"></el-option>
                             <template v-for="cat_c in cat.child" :key="cat_c.category_id">
-                                <el-option :value="cat_c.category_id" :label="cat_c.name">|—{{ cat_c.name }}</el-option>
+                                <el-option :value="cat_c.category_id" :label="cat_c.name_text">|—{{ cat_c.name_text }}</el-option>
                             </template>
                         </template>
                     </el-select>
@@ -35,8 +35,8 @@
                         <el-option :label="$t('下架中')" value="lower"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="商品名称"><el-input size="small" v-model="searchForm.product_name"
-                        placeholder="请输入商品名称"></el-input></el-form-item>
+                <el-form-item :label="$t('商品名称')"><el-input size="small" v-model="searchForm.product_name"
+                        :placeholder="$t('请输入商品名称')"></el-input></el-form-item>
                 <el-form-item>
                     <el-button size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
                 </el-form-item>
@@ -57,7 +57,7 @@
                             <div class="product-info">
                                 <div class="pic"><img v-img-url="scope.row.image[0].file_path" alt="" /></div>
                                 <div class="info">
-                                    <div class="name">{{ scope.row.product_name }}</div>
+                                    <div class="name">{{ scope.row.product_name_text }}</div>
                                     <div class="price">{{ $t('销售价：') }}{{ scope.row.product_price }}</div>
                                 </div>
                             </div>
@@ -200,13 +200,13 @@ export default {
             let war = "";
             let war_ = '';
             if (state == 20) {
-                war = "强制下架",
-                    war_ = '下架'
+                war = $t("强制下架"),
+                    war_ = $t('下架')
             } else if (state == 10) {
-                war = "重新上架",
-                    war_ = '上架'
+                war = $t("重新上架"),
+                    war_ = $t('上架')
             }
-            ElMessageBox.confirm("确认要" + war + "吗?", '提示', {
+            ElMessageBox.confirm($t("确认要") + war + $t("吗?"), $t('提示'), {
                 type: 'warning'
             })
                 .then(() => {
@@ -215,7 +215,7 @@ export default {
                         state
                     }).then(data => {
                         ElMessage({
-                            message: war_ + '成功',
+                            message: war_ + $t('成功'),
                             type: 'success'
                         });
                         self.getData();
@@ -236,7 +236,7 @@ export default {
         /*删除*/
         deleteClick: function (row) {
             let self = this;
-            ElMessageBox.confirm('删除后不可恢复，确认删除该记录吗?', '提示', {
+            ElMessageBox.confirm($t('删除后不可恢复，确认删除该记录吗?'), $t('提示'), {
                 type: 'warning'
             })
                 .then(() => {
@@ -244,7 +244,7 @@ export default {
                         product_id: row.product_id
                     }).then(data => {
                         ElMessage({
-                            message: '删除成功',
+                            message: $t('删除成功'),
                             type: 'success'
                         });
                         self.getData();

@@ -1,54 +1,56 @@
 <template>
-    <el-dialog title="添加分类" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
+    <el-dialog :title="$t('添加分类')" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
         :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
-            <el-form-item label="父级分类">
-                <el-select v-model="form.parent_id" label="无">
-                    <el-option :value="0" label="无"></el-option>
+            <el-form-item :label="$t('父级分类')">
+                <el-select v-model="form.parent_id" :label="$t('无')">
+                    <el-option :value="0" :label="$t('无')"></el-option>
                     <template v-for="cat in category" :key="cat.category_id">
                         <el-option :value="cat.category_id" :label="cat.name"></el-option>
                     </template>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$t('分类名称') + '(ภาษาไทย)'" prop="name">
-                <el-input v-model="form.name" autocomplete="off"></el-input>
+            <el-form-item :label="$t('分类名称') + '(ภาษาไทย)'" prop="name.th" :rules="[{ required: true, message: $t('请输入分类名称') }]">
+                <el-input v-model="form.name.th" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('分类名称') + '(简体中文)'" prop="name">
-                <el-input v-model="form.name" autocomplete="off"></el-input>
+            <el-form-item :label="$t('分类名称') + '(简体中文)'" prop="name.zh" :rules="[{ required: true, message: $t('请输入分类名称') }]">
+                <el-input v-model="form.name.zh" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('分类名称') + '(繁體中文)'" prop="name">
-                <el-input v-model="form.name" autocomplete="off"></el-input>
+            <el-form-item :label="$t('分类名称') + '(繁體中文)'" prop="name.zhtw" :rules="[{ required: true, message: $t('请输入分类名称') }]">
+                <el-input v-model="form.name.zhtw" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('分类名称') + '(English)'" prop="name">
-                <el-input v-model="form.name" autocomplete="off"></el-input>
+            <el-form-item :label="$t('分类名称') + '(English)'" prop="name.en" :rules="[{ required: true, message: $t('请输入分类名称') }]">
+                <el-input v-model="form.name.en" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="分类图片" prop="image_id">
                 <el-row>
-                    <el-button type="primary" @click="openUpload">选择图片</el-button>
+                    <el-button type="primary" @click="openUpload">{{ $t('选择图片') }}</el-button>
                     <div v-if="form.image_id != ''" class="img">
                         <img :src="file_path" width="100" height="100" />
                     </div>
                 </el-row>
             </el-form-item>
 
-            <el-form-item label="分类排序" prop="sort">
+            <el-form-item :label="$t('分类排序')" prop="sort">
                 <el-input v-model.number="form.sort" autocomplete="off"></el-input>
             </el-form-item>
         </el-form>
         <template #footer>
             <div class="dialog-footer">
-                <el-button @click="dialogFormVisible">取 消</el-button>
-                <el-button type="primary" @click="addUser" :loading="loading">确 定</el-button>
+                <el-button @click="dialogFormVisible">{{ $t('取消') }}</el-button>
+                <el-button type="primary" @click="addUser" :loading="loading">{{ $t('确定') }}</el-button>
             </div>
         </template>
         <!--上传图片组件-->
-        <Upload v-if="isupload" :isupload="isupload" :type="type" @returnImgs="returnImgsFunc">上传图片</Upload>
+        <Upload v-if="isupload" :isupload="isupload" :type="type" @returnImgs="returnImgsFunc">{{ $t('上传图片') }}</Upload>
     </el-dialog>
 </template>
 
 <script>
 import PorductApi from '@/api/product.js';
 import Upload from '@/components/file/Upload.vue';
+import { languageStore } from '@/store/model/language.js';
+const languageData = JSON.stringify(languageStore().languageData)
 export default {
     components: {
         Upload
@@ -59,27 +61,22 @@ export default {
             form: {
                 parent_id: 0,
                 category_id: 0,
-                name: '',
+                name: JSON.parse(languageData),
                 sort: 100,
                 image_id: ''
             },
             formRules: {
-                name: [{
-                    required: true,
-                    message: '请输入分类名称',
-                    trigger: 'blur'
-                }],
                 image_id: [{
                     required: true,
-                    message: '请上传分类图片',
+                    message: $t('请上传分类图片'),
                     trigger: 'blur'
                 }],
                 sort: [{
                     required: true,
-                    message: '分类排序不能为空'
+                    message: $t('分类排序不能为空')
                 }, {
                     type: 'number',
-                    message: '分类排序必须为数字'
+                    message: $t('分类排序必须为数字')
                 }]
             },
             /*左边长度*/
@@ -115,14 +112,15 @@ export default {
         /*添加用户*/
         addUser() {
             let self = this;
-            let params = self.form;
+            let params = JSON.parse(JSON.stringify(self.form));
+            params.name = JSON.stringify(params.name)
             self.$refs.form.validate((valid) => {
                 if (valid) {
                     self.loading = true;
                     PorductApi.storeCatAdd(params).then(data => {
                         self.loading = false;
                         ElMessage({
-                            message: '添加成功',
+                            message: $t('添加成功'),
                             type: 'success'
                         });
                         self.dialogFormVisible(true);

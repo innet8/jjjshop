@@ -5,25 +5,25 @@
   <div class="product-list">
     <!--添加属性-->
     <div class="common-level-rail">
-      <el-button size="small" type="primary" icon="Plus" v-auth="'/product/expand/attr/add'" @click="addClick">添加属性</el-button>
-      <el-button size="small" v-auth="'/product/expand/attr/delete'" @click="deleteBatch">批量删除</el-button>
+      <el-button size="small" type="primary" icon="Plus" v-auth="'/product/expand/attr/add'" @click="addClick">{{$t('添加属性')}}</el-button>
+      <el-button size="small" v-auth="'/product/expand/attr/delete'" @click="deleteBatch">{{$t('批量删除')}}</el-button>
     </div>
     <!--内容-->
     <div class="product-content">
       <div class="table-wrap">
         <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="45"></el-table-column>
-          <el-table-column prop="attribute_name" label="属性名" width="400px"></el-table-column>
-          <el-table-column prop="attribute_value" label="属性值">
+          <el-table-column prop="attribute_name_text" :label="$t('属性名')" width="400px"></el-table-column>
+          <el-table-column prop="attribute_value_text" :label="$t('属性值')">
             <template  #default="scope">
              {{attrjoin(scope.row.attribute_value)}}
             </template>
           </el-table-column>
-          <el-table-column prop="sort" label="排序"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="120">
+          <el-table-column prop="sort" :label="$t('排序')"></el-table-column>
+          <el-table-column fixed="right" :label="$t('操作')" width="120">
             <template  #default="scope">
-              <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/product/expand/attr/edit'" >编辑</el-button>
-              <el-button @click="deleteClick(scope.row.attribute_id)" type="primary" link size="small" v-auth="'/product/expand/attr/delete'" >删除</el-button>
+              <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/product/expand/attr/edit'" >{{$t('编辑')}}</el-button>
+              <el-button @click="deleteClick(scope.row.attribute_id)" type="primary" link size="small" v-auth="'/product/expand/attr/delete'" >{{$t('删除')}}</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -147,7 +147,7 @@ export default {
     },
     deleteClick(id){
       let self = this;
-      ElMessageBox.confirm('删除后不可恢复，确认删除吗?', '提示', {
+      ElMessageBox.confirm($t('删除后不可恢复，确认删除吗?'), $t('提示'), {
           type: 'warning'
         })
         .then(() => {
@@ -155,7 +155,7 @@ export default {
              attribute_id : id
           }).then(data => {
             ElMessage({
-              message: '删除成功',
+              message: $t('删除成功'),
               type: 'success'
             });
             self.getData();
@@ -170,7 +170,7 @@ export default {
           arr.push(item.attribute_id);
        })
        let attribute_id=arr.join(',');
-      ElMessageBox.confirm('删除后不可恢复，确认删除吗?', '提示', {
+      ElMessageBox.confirm($t('删除后不可恢复，确认删除吗?'), $t('提示'), {
           type: 'warning'
         })
         .then(() => {
@@ -178,7 +178,7 @@ export default {
              attribute_id : attribute_id
           }).then(data => {
             ElMessage({
-              message: '删除成功',
+              message: $t('删除成功'),
               type: 'success'
             });
             self.getData();

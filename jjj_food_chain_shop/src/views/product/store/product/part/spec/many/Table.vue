@@ -5,21 +5,21 @@
     	描述：商品管理-商品编辑-规格/库存-多规格-表格
     -->
     <div class="mt16 ">
-        <el-form-item label="规格明细：" v-if="form.model.sku.length > 0">
+        <el-form-item :label="$t('规格明细：')" v-if="form.model.sku.length > 0">
             <!--多规格表格-->
             <div class="ww100">
                 <el-table size="" :data="form.model.sku" border style="width: 100%; margin-top: 20px">
-                    <el-table-column label="规格名称" width="400">
+                    <el-table-column :label="$t('规格名称')" width="400">
                         <template #default="scope">
                             <div label="" class="spec-name" style="margin-bottom: 0;">
-                                <el-input size="small" prop="spec_name" v-model="scope.row.spec_name" :placeholder="$t('请输入')+'(ภาษาไทย)'"></el-input>
-                                <el-input size="small" prop="spec_name" v-model="scope.row.spec_name" :placeholder="$t('请输入')+'(简体中文)'"></el-input>
-                                <el-input size="small" prop="spec_name" v-model="scope.row.spec_name" :placeholder="$t('请输入')+'(繁體中文)'"></el-input>
-                                <el-input size="small" prop="spec_name" v-model="scope.row.spec_name" :placeholder="$t('请输入')+'(English)'"></el-input>
+                                <template v-for="(item,index) in languageList" :key="index">
+                                    <el-input size="small" prop="spec_name" v-model="scope.row.spec_name[key]" :placeholder="$t('请输入')+`(${item.label})`"></el-input>
+                                </template>
+
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column label="价格">
+                    <el-table-column :label="$t('价格')">
                         <template #default="scope">
                             <el-form-item label="" style="margin-bottom: 0;">
                                 <el-input type="number" size="small" prop="product_price"
@@ -27,7 +27,7 @@
                             </el-form-item>
                         </template>
                     </el-table-column>
-                    <el-table-column label="包装费">
+                    <el-table-column :label="$t('包装费')">
                         <template #default="scope">
                             <el-form-item label="" style="margin-bottom: 0;">
                                 <el-input type="number" size="small" prop="bag_price"
@@ -35,7 +35,7 @@
                             </el-form-item>
                         </template>
                     </el-table-column>
-                    <el-table-column label="库存">
+                    <el-table-column :label="$t('库存')">
                         <template #default="scope">
                             <el-form-item label="" style="margin-bottom: 0;">
                                 <el-input type="number" size="small" prop="stock_num"
@@ -65,12 +65,15 @@
 
 <script>
 import PorductApi from '@/api/product.js';
+import { languageStore } from '@/store/model/language.js';
+const languageList = languageStore().languageList;
 export default {
     components: {
 
     },
     data() {
         return {
+            languageList:languageList,
             restaurants: [],
             formData: {},
             /*批量设置sku属性*/
@@ -98,25 +101,7 @@ export default {
         deleteAttr(i) {
             this.form.model.sku.splice(i, 1)
         },
-        querySearch(queryString, cb) {
-            let self = this;
-            if (self.restaurants.length == 0) {
-                self.formData.spec.forEach((item, index) => {
-                    self.restaurants.push({
-                        value: item.spec_name
-                    })
-                })
-            }
-            var restaurants = this.restaurants;
-            var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
-            // 调用 callback 返回建议列表的数据
-            cb(results);
-        },
-        createFilter(queryString) {
-            return (restaurant) => {
-                return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-            };
-        },
+
     }
 }
 </script>
