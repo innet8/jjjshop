@@ -16,7 +16,7 @@ class Product extends BaseModel
     protected $append = ['product_sales', 'product_name_text', 'product_unit_text'];
 
     /**
-     * 获取商品数据 
+     * 获取商品数据
      */
     public function getProductNameTextAttr($value, $data)
     {
@@ -67,7 +67,7 @@ class Product extends BaseModel
      * 属性配置
      */
     public function setProductAttrAttr($value)
-    {   
+    {
         return $value ? json_encode($value) : '';
     }
 
@@ -207,11 +207,11 @@ class Product extends BaseModel
                 $model = $model->where('product_status', '=', 10);
             }
         }
-        // 
+        //
         if (isset($params['stock']) && $params['stock'] > 0) {
             $model = $model->where('product_stock', '<' , $params['stock']);
         }
-        // 
+        //
         if (isset($params['shop_supplier_id']) && $params['shop_supplier_id']) {
             $model = $model->where('product.shop_supplier_id', '=', $params['shop_supplier_id']);
         }
@@ -374,19 +374,26 @@ class Product extends BaseModel
      */
     public static function getShowSku($product)
     {
+        $result = [];
+
         //如果是单规格
         if ($product['spec_type'] == 10) {
-            return $product['sku'][0];
+            $result[] = $product['sku'][0];
         } else {
             //多规格返回最低价
             foreach ($product['sku'] as $sku) {
                 if ($product['product_price'] == $sku['product_price']) {
-                    return $sku;
+                    $result[] = $sku;
                 }
             }
         }
+
         // 兼容历史数据，如果找不到返回第一个
-        return $product['sku'][0];
+        if (empty($result)) {
+            $result[] = $product['sku'][0];
+        }
+
+        return $result;
     }
 
     /**

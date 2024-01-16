@@ -2,6 +2,7 @@
 
 namespace app\cashier\model\order;
 
+use app\common\enum\settings\SettingEnum;
 use app\common\library\helper;
 use app\api\model\order\OrderProduct;
 use app\common\model\supplier\Supplier;
@@ -10,10 +11,10 @@ use app\common\enum\order\OrderSourceEnum;
 use app\common\model\order\Order as OrderModel;
 use app\common\service\order\OrderRefundService;
 use app\common\service\order\OrderCompleteService;
-use app\common\model\settings\Setting as SettingModel;
 use app\common\service\product\factory\ProductFactory;
 use app\cashier\service\order\paysuccess\type\MasterPaySuccessService;
 use app\cashier\model\store\Table as TableModel;
+use think\facade\Log;
 
 /**
  * 普通订单模型
@@ -341,23 +342,23 @@ class Order extends OrderModel
         }
         $this->startTrans();
         try {
-            $setting = SettingModel::getItem('points');
-            $total_pay_price = $orderProduct['product_price'] * $num;
-            $discount_money = round($num / $orderProduct['total_num'] * $orderProduct['discount_money'], 2);
-            $money = $total_pay_price - $discount_money;
-            $points = 0;
-            if ($orderProduct['points_bonus'] > 0) {
-                // 积分赠送比例
-                $ratio = $setting['gift_ratio'] / 100;
-                $points = helper::bcmul($money, $ratio, 2);
-            }
-            $this->save([
-                'points_bonus' => $this['points_bonus'] - $points,
-                'pay_price' => $this['pay_price'] - $money,
-                'discount_money' => $this['discount_money'] - $discount_money,
-                'order_price' => $this['order_price'] - $total_pay_price,
-                'total_price' => $this['total_price'] - $total_pay_price
-            ]);
+//            $setting = SettingModel::getItem('points');
+//            $total_pay_price = $orderProduct['product_price'] * $num;
+//            $discount_money = round($num / $orderProduct['total_num'] * $orderProduct['discount_money'], 2);
+//            $money = $total_pay_price - $discount_money;
+//            $points = 0;
+//            if ($orderProduct['points_bonus'] > 0) {
+//                // 积分赠送比例
+//                $ratio = $setting['gift_ratio'] / 100;
+//                $points = helper::bcmul($money, $ratio, 2);
+//            }
+//            $this->save([
+//                'points_bonus' => $this['points_bonus'] - $points,
+//                'pay_price' => $this['pay_price'] - $money,
+//                'discount_money' => $this['discount_money'] - $discount_money,
+//                'order_price' => $this['order_price'] - $total_pay_price,
+//                'total_price' => $this['total_price'] - $total_pay_price
+//            ]);
             $isPay = $this['pay_status']['value'] == 20 ? 1 : 0;
 //          $orderProduct['total_num'] = $num;
             // 退回商品库存
@@ -368,12 +369,14 @@ class Order extends OrderModel
                 $total_num = $orderProduct['total_num'] - $num;
                 $orderProduct->save([
                     'total_num' => $total_num,
-                    'total_price' => round($total_num * $orderProduct['product_price'], 2),
-                    'total_pay_price' => $money,
-                    'discount_money' => round($orderProduct['discount_money'] - $discount_money, 2),
-                    'points_bonus' => round($orderProduct['points_bonus'] - $points, 2),
+//                    'total_price' => round($total_num * $orderProduct['product_price'], 2),
+//                    'total_pay_price' => $money,
+//                    'discount_money' => round($orderProduct['discount_money'] - $discount_money, 2),
+//                    'points_bonus' => round($orderProduct['points_bonus'] - $points, 2),
                 ]);
             }
+            //
+            $this->reloadPrice($this['order_id']);
             $this->commit();
             return true;
         } catch (\Exception $e) {
@@ -511,23 +514,35 @@ class Order extends OrderModel
     // 修改订单商品价格
     public function changeProductPrice($order_product_id, $money)
     {
-        if ($money < 0) {
-            $this->error = "价格错误";
+        $this->startTrans();
+        try {
+            if ($money < 0) {
+                $this->error = "价格错误";
+                return false;
+            }
+            $p = OrderProduct::where('order_product_id', '=', $order_product_id)->find();
+            if (!$p) {
+                $this->error = "商品不存在";
+                return false;
+            }
+            $p->product_price = $money;
+            $p->total_price = helper::bcmul($money, $p->total_num);
+            if ($p->save()) {
+                // 更新
+                $this->reloadPrice($this['order_id']);
+                $this->commit();
+                return true;
+            } else {
+                $this->error = "商品不存在";
+                return false;
+            }
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
+            $this->error = $e->getMessage();
+            $this->rollback();
             return false;
         }
 
-        $p = OrderProduct::where('order_product_id', '=', $order_product_id)->find();
-        if (!$p) {
-            $this->error = "商品不存在";
-            return false;
-        }
-        $p->product_price = $money;
-        $p->total_price = helper::bcmul($money, $p->total_num);
-        if ($p->save()) {
-            // 更新主表价格
-            return $this->updateTotalPrice();
-        }
-        return false;
     }
 
     // 更新商品总价
@@ -542,4 +557,25 @@ class Order extends OrderModel
         $pay_price = round(helper::bcsub($order_price, $this['discount_money']), 2);
         return $this->save(['total_price' => $total_price, 'order_price' => $order_price, 'pay_price' => $pay_price]);
     }
+
+    // 订单使用会员
+    public function useMember($user_id)
+    {
+        $this->startTrans();
+        try {
+            // 订单表更新user_id
+            $user_id = !empty($user_id) ? $user_id : 0;
+            $this->save(['user_id' => $user_id]);
+            // 重载订单价格信息
+            $this->reloadPrice($this['order_id']);
+            $this->commit();
+            return true;
+        } catch (\Exception $e) {
+            $this->error = $e->getMessage();
+            $this->rollback();
+            return false;
+        }
+    }
+
+
 }

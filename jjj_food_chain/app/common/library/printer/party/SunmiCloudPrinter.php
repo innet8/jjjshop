@@ -2,78 +2,6 @@
 
 namespace app\common\library\printer\party;
 
-function unicode_to_utf8($unicode)
-{
-    if ($unicode <= 0x7f) {
-        $n = $unicode & 0x7f;
-        return sprintf("%02x", $n);
-    }
-    if ($unicode >= 0x80 && $unicode <= 0x7ff) {
-        $n  = ((($unicode >> 6) & 0x1f) | 0xc0) << 8;
-        $n |= ((($unicode     ) & 0x3f) | 0x80);
-        return sprintf("%04x", $n);
-    }
-    if ($unicode >= 0x800 && $unicode <= 0xffff) {
-        $n  = ((($unicode >> 12) & 0x0f) | 0xe0) << 16;
-        $n |= ((($unicode >> 6 ) & 0x3f) | 0x80) << 8;
-        $n |= ((($unicode      ) & 0x3f) | 0x80);
-        return sprintf("%06x", $n);
-    }
-    if ($unicode >= 0x10000 && $unicode <= 0x10ffff) {
-        $n  = ((($unicode >> 18) & 0x07) | 0xf0) << 24;
-        $n |= ((($unicode >> 12) & 0x3f) | 0x80) << 16;
-        $n |= ((($unicode >> 6 ) & 0x3f) | 0x80) << 8;
-        $n |= ((($unicode      ) & 0x3f) | 0x80);
-        return sprintf("%08x", $n);
-    }
-    return "";
-}
-
-function utf8_to_unicode($str, $size, &$unicode)
-{
-    $unicode = 0;
-
-    if ($size < 1)
-        return 0;
-    $v0 = ord($str[0]);
-    if (($v0 & 0x80) == 0x00) {
-        $unicode = $v0;
-        return 1;
-    }
-
-    if ($size < 2)
-        return $size;
-    $v1 = ord($str[1]);
-    if (($v0 & 0xe0) == 0xc0 &&
-        ($v1 & 0xc0) == 0x80) {
-        $unicode = (($v0 & 0x1f) << 6) + ($v1 & 0x3f);
-        return 2;
-    }
-
-    if ($size < 3)
-        return $size;
-    $v2 = ord($str[2]);
-    if (($v0 & 0xf0) == 0xe0 &&
-        ($v1 & 0xc0) == 0x80 &&
-        ($v2 & 0xc0) == 0x80) {
-        $unicode = (($v0 & 0x0f) << 12) + (($v1 & 0x3f) << 6) + ($v2 & 0x3f);
-        return 3;
-    }
-
-    if ($size < 4)
-        return $size;
-    $v3 = ord($str[3]);
-    if (($v0 & 0xF8) == 0xf0 &&
-        ($v1 & 0xc0) == 0x80 &&
-        ($v2 & 0xc0) == 0x80 &&
-        ($v3 & 0xc0) == 0x80) {
-        $unicode = (($v0 & 0x07) << 18) + (($v1 & 0x3f) << 12) + (($v2 & 0x3f) << 6) + ($v3 & 0x3f);
-        return 4;
-    }
-
-    return 1;
-}
-
 class SunmiCloudPrinter
 {
     // 替换为您申请的APPID&APPKEY Replace the applied APPID&APPKEY
@@ -249,10 +177,82 @@ class SunmiCloudPrinter
         $this->orderData .= strtolower($data);
     }
 
+    function unicode_to_utf8($unicode)
+    {
+        if ($unicode <= 0x7f) {
+            $n = $unicode & 0x7f;
+            return sprintf("%02x", $n);
+        }
+        if ($unicode >= 0x80 && $unicode <= 0x7ff) {
+            $n  = ((($unicode >> 6) & 0x1f) | 0xc0) << 8;
+            $n |= ((($unicode     ) & 0x3f) | 0x80);
+            return sprintf("%04x", $n);
+        }
+        if ($unicode >= 0x800 && $unicode <= 0xffff) {
+            $n  = ((($unicode >> 12) & 0x0f) | 0xe0) << 16;
+            $n |= ((($unicode >> 6 ) & 0x3f) | 0x80) << 8;
+            $n |= ((($unicode      ) & 0x3f) | 0x80);
+            return sprintf("%06x", $n);
+        }
+        if ($unicode >= 0x10000 && $unicode <= 0x10ffff) {
+            $n  = ((($unicode >> 18) & 0x07) | 0xf0) << 24;
+            $n |= ((($unicode >> 12) & 0x3f) | 0x80) << 16;
+            $n |= ((($unicode >> 6 ) & 0x3f) | 0x80) << 8;
+            $n |= ((($unicode      ) & 0x3f) | 0x80);
+            return sprintf("%08x", $n);
+        }
+        return "";
+    }
+
+    function utf8_to_unicode($str, $size, &$unicode)
+    {
+        $unicode = 0;
+
+        if ($size < 1)
+            return 0;
+        $v0 = ord($str[0]);
+        if (($v0 & 0x80) == 0x00) {
+            $unicode = $v0;
+            return 1;
+        }
+
+        if ($size < 2)
+            return $size;
+        $v1 = ord($str[1]);
+        if (($v0 & 0xe0) == 0xc0 &&
+            ($v1 & 0xc0) == 0x80) {
+            $unicode = (($v0 & 0x1f) << 6) + ($v1 & 0x3f);
+            return 2;
+        }
+
+        if ($size < 3)
+            return $size;
+        $v2 = ord($str[2]);
+        if (($v0 & 0xf0) == 0xe0 &&
+            ($v1 & 0xc0) == 0x80 &&
+            ($v2 & 0xc0) == 0x80) {
+            $unicode = (($v0 & 0x0f) << 12) + (($v1 & 0x3f) << 6) + ($v2 & 0x3f);
+            return 3;
+        }
+
+        if ($size < 4)
+            return $size;
+        $v3 = ord($str[3]);
+        if (($v0 & 0xF8) == 0xf0 &&
+            ($v1 & 0xc0) == 0x80 &&
+            ($v2 & 0xc0) == 0x80 &&
+            ($v3 & 0xc0) == 0x80) {
+            $unicode = (($v0 & 0x07) << 18) + (($v1 & 0x3f) << 12) + (($v2 & 0x3f) << 6) + ($v3 & 0x3f);
+            return 4;
+        }
+
+        return 1;
+    }
+
     // Append unicode character.
     function appendUnicode($unicode, $count)
     {
-        $utf8 = unicode_to_utf8($unicode);
+        $utf8 = $this->unicode_to_utf8($unicode);
         for ($i = 0; $i < $count; $i++)
             $this->orderData .= $utf8;
     }
@@ -549,7 +549,7 @@ class SunmiCloudPrinter
         $i = 0;
         while ($i < strlen($str)) {
             $s = substr($str, $i);
-            $i += utf8_to_unicode($s, strlen($s), $c);
+            $i += $this->utf8_to_unicode($s, strlen($s), $c);
             $w += $this->widthOfChar($c) * $this->charHSize;
         }
         return $w;
@@ -607,7 +607,7 @@ class SunmiCloudPrinter
                 $strcur[$i] = "";
                 $strwidth[$i] = 0;
                 while (strlen($strrem[$i]) > 0) {
-                    $bytes = utf8_to_unicode($strrem[$i], strlen($strrem[$i]), $c);
+                    $bytes = $this->utf8_to_unicode($strrem[$i], strlen($strrem[$i]), $c);
                     if ($c == 0x0a) {
                         $strrem[$i] = substr($strrem[$i], 1);
                         break;

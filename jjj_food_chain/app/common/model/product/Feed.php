@@ -12,6 +12,15 @@ class Feed extends BaseModel
     protected $name = 'product_feed';
     protected $pk = 'feed_id';
 
+    /**
+     * 处理多语言
+     */
+    protected $append = ['feed_name_text'];
+    public function getFeedNameTextAttr($value, $data=[])
+    {
+        return extractLanguage($value ?: $data['feed_name']);
+    }
+
     //更新加料库库
     public function updateFeed($data, $shop_supplier_id)
     {

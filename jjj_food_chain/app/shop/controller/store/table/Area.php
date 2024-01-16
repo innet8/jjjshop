@@ -4,15 +4,22 @@ namespace app\shop\controller\store\table;
 
 use app\shop\controller\Controller;
 use app\shop\model\store\TableArea as TableAreaModel;
+use hg\apidoc\annotation as Apidoc;
 
 /**
- * 区域控制器
+ * 区域管理
+ * @Apidoc\Group("supplier")
+ * @Apidoc\Sort(6)
  */
 class Area extends Controller
 {
 
     /**
-     * 区域列表
+     * @Apidoc\Title("区域列表")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/store.table.area/index")
+     * @Apidoc\Param(ref="pageParam")
+     * @Apidoc\Returned("list", type="array", ref="app\shop\model\store\TableArea\getList", desc="列表")
      */
     public function index()
     {
@@ -22,7 +29,12 @@ class Area extends Controller
     }
 
     /**
-     * 添加
+     * @Apidoc\Title("添加")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/store.table.area/add")
+     * @Apidoc\Param("area_name", type="string", require=true, default="", desc="区域名称")
+     * @Apidoc\Param("sort", type="int", require=true, default=0, desc="排序")
+     * @Apidoc\Returned()
      */
     public function add()
     {
@@ -38,7 +50,13 @@ class Area extends Controller
     }
 
     /**
-     * 编辑
+     * @Apidoc\Title("编辑")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/store.table.area/edit")
+     * @Apidoc\Param("area_id", type="int", require=true, default=0, desc="区域id")
+     * @Apidoc\Param("area_name", type="string", require=true, default="", desc="区域名称")
+     * @Apidoc\Param("sort", type="int", require=true, default=0, desc="排序")
+     * @Apidoc\Returned()
      */
     public function edit($area_id)
     {
@@ -52,7 +70,11 @@ class Area extends Controller
     }
 
     /**
-     * 删除
+     * @Apidoc\Title("删除")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/store.table.area/delete")
+     * @Apidoc\Param("area_id", type="int", require=true, default=0, desc="区域id")
+     * @Apidoc\Returned()
      */
     public function delete($area_id)
     {
@@ -63,5 +85,4 @@ class Area extends Controller
         }
         return $this->renderSuccess('', $model->getError() ?: '删除成功');
     }
-
 }

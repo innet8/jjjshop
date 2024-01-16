@@ -163,18 +163,19 @@ class Order extends Controller
      * @Apidoc\Param("meal_num", type="int", require=true, desc="就餐人数")
      * @Apidoc\Returned()
      */
-    public function updateMealNum()
+    public function updateMealNum($table_id, $order_id, $meal_num)
     {
-        // 获取加菜商品列表
-        $params = $this->postData();
-        $params['eat_type'] = 10;
-        $user = $this->cashier['user'];
-        // 加餐订单提交
-        $orderModel = new OrderModel;
-        if ($orderModel->updateMealNum($params)) {
+        $detail = OrderModel::detail([
+            ['order_id', '=', $order_id],
+            ['table_id', '=', $table_id]
+        ]);
+        if (!$detail) {
+            return $this->renderError('记录不存在');
+        }
+        if ($detail->updateMealNum($meal_num)) {
             return $this->renderSuccess('修改就餐人数成功');
         }
-        return $this->renderError($orderModel->getError() ?: '修改就餐人数失败');
+        return $this->renderError($detail->getError() ?: '修改就餐人数失败');
     }
 
     /**
@@ -288,12 +289,15 @@ class Order extends Controller
     public function print($order_id)
     {
         $order = OrderModel::detail($order_id);
+        if (!$order) {
+            return $this->renderError('订单不存在');
+        }
         // 打印机设置
         $printerConfig = SettingModel::getSupplierItem('printer', $order['shop_supplier_id'], $order['app_id']);
         //发送打印
         $res = (new OrderPrinterService)->sellerPrint($printerConfig, $order, true);
         // 
-        return  $res ? $this->renderSuccess('打印成功') : $this->renderError('打印失败');
+        return  $res ? $this->renderSuccess('打印成功') : $this->renderError('打印失败，未连接打印机');
     }
 
     /**
@@ -344,4 +348,23 @@ class Order extends Controller
         return $this->renderError($detail->getError() ?: '改价失败');
     }
 
+    /**
+     * @Apidoc\Title("使用会员")
+     * @Apidoc\Tag("使用会员")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/cashier/order.order/useMember")
+     * @Apidoc\Param("order_id", type="int",require=true, default=0, desc="订单ID")
+     * @Apidoc\Param("user_id", type="int",require=true, default=0, desc="会员ID")
+     */
+    public function useMember($order_id, $user_id)
+    {
+        $detail = OrderModel::detail($order_id);
+        if (!$detail || $detail['order_status']['value'] != 10) {
+            return $this->renderError('订单不存在');
+        }
+        if ($detail?->useMember($user_id)) {
+            return $this->renderSuccess('使用会员成功');
+        }
+        return $this->renderError($detail->getError() ?: '使用会员失败');
+    }
 }

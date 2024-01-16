@@ -52,13 +52,12 @@ class HallCart extends Controller
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.HallCart/tableProductList")
      * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
-     * @Apidoc\Returned("list",type="array",ref="app\cashier\model\order\Order\getOrderInfo")
+     * @Apidoc\Returned("list",type="array")
      */
     public function tableProductList($table_id)
     {
-        $orderProductList = (new OrderModel())->getOrderInfo($table_id)['product'] ?? [];
-        $cartProductList = (new CartModel())->getTableCartInfo($this->cashier['user'], $table_id) ?? [];
-        return $this->renderSuccess('', compact('orderProductList', 'cartProductList'));
+        $allProductInfo = (new CartModel())->getOrderCartDetail($this->cashier['user'], $table_id);
+        return $this->renderSuccess('', $allProductInfo);
     }
 
     /**
@@ -105,6 +104,8 @@ class HallCart extends Controller
         if (!$model->add($data, $this->cashier['user'])) {
             return $this->renderError($model->getError() ?: '加入购物车失败');
         }
+        // 更新购物车价格统计
+        $model->reloadPrice($this->cashier['user'], $data['table_id']);
         return $this->renderSuccess('加入购物车成功');
     }
 
@@ -120,6 +121,7 @@ class HallCart extends Controller
     {
         $model = CartModel::detail($cart_id);
         if ($model && $model->sub($this->postData())) {
+            $model->reloadPrice($this->cashier['user'], $model['table_id']);
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model ? $model->getError() : '操作失败');

@@ -567,7 +567,7 @@ function printText($leftText, $centerText="", $rightText="", $total = 32, $leftN
             }
         }
         $afterLeftText = implode("\n", $result);
-        $content .= "<BR>" . $afterLeftText . '<BR>';
+        $content .= "\n" . $afterLeftText . "\n";
     }
     //
     return $content;

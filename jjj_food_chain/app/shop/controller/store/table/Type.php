@@ -4,15 +4,21 @@ namespace app\shop\controller\store\table;
 
 use app\shop\controller\Controller;
 use app\shop\model\store\TableType as TableTypeModel;
+use hg\apidoc\annotation as Apidoc;
 
 /**
- * 区域控制器
+ * 桌位类型
+ * @Apidoc\Group("supplier")
+ * @Apidoc\Sort(6)
  */
 class Type extends Controller
 {
-
     /**
-     * 区域列表
+     * @Apidoc\Title("类型列表")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/store.table.type/index")
+     * @Apidoc\Param(ref="pageParam")
+     * @Apidoc\Returned("list", type="array", ref="app\shop\model\store\TableType\getList", desc="列表")
      */
     public function index()
     {
@@ -22,7 +28,14 @@ class Type extends Controller
     }
 
     /**
-     * 添加
+     * @Apidoc\Title("添加")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/store.table.type/add")
+     * @Apidoc\Param("type_name", type="string", require=true, default="", desc="类型名称")
+     * @Apidoc\Param("min_num", type="int", require=true, default=0, desc="最小人数")
+     * @Apidoc\Param("max_num", type="int", require=true, default=0, desc="最大人数")
+     * @Apidoc\Param("sort", type="int", require=true, default=0, desc="排序")
+     * @Apidoc\Returned()
      */
     public function add()
     {
@@ -38,7 +51,15 @@ class Type extends Controller
     }
 
     /**
-     * 编辑
+     * @Apidoc\Title("编辑")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/store.table.type/edit")
+     * @Apidoc\Param("type_id", type="int", require=true, default=0, desc="类型id")
+     * @Apidoc\Param("type_name", type="string", require=true, default="", desc="类型名称")
+     * @Apidoc\Param("min_num", type="int", require=true, default=0, desc="最小人数")
+     * @Apidoc\Param("max_num", type="int", require=true, default=0, desc="最大人数")
+     * @Apidoc\Param("sort", type="int", require=true, default=0, desc="排序")
+     * @Apidoc\Returned()
      */
     public function edit($type_id)
     {
@@ -52,7 +73,11 @@ class Type extends Controller
     }
 
     /**
-     * 删除
+     * @Apidoc\Title("删除")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/store.table.type/delete")
+     * @Apidoc\Param("type_id", type="int", require=true, default=0, desc="类型id")
+     * @Apidoc\Returned()
      */
     public function delete($type_id)
     {
@@ -63,5 +88,4 @@ class Type extends Controller
         }
         return $this->renderSuccess('', $model->getError() ?: '删除成功');
     }
-
 }

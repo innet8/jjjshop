@@ -5,14 +5,26 @@ namespace app\shop\controller\setting;
 use app\shop\controller\Controller;
 use app\shop\model\settings\Setting as SettingModel;
 use app\shop\model\settings\Printer as PrinterModel;
+use hg\apidoc\annotation as Apidoc;
 
 /**
  * 打印设置
+ * @Apidoc\Group("supplier")
+ * @Apidoc\Sort(6)
  */
 class Printing extends Controller
 {
     /**
-     * 打印设置
+     * @Apidoc\Title("打印设置(get-获取/post-设置)")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/setting.Printing/index")
+     * @Apidoc\Param("room_open", type="int", require=true, default=0, desc="是否开启打印 0-关闭 1-开启")
+     * @Apidoc\Param("room_printer_id", type="int", require=true, default=0, desc="打印机id")
+     * @Apidoc\Param("buyer_open", type="int", require=true, default=0, desc="顾客是否开启打印 0-关闭 1-开启")
+     * @Apidoc\Param("buyer_printer_id", type="int", require=true, default=0, desc="顾客打印机id")
+     * @Apidoc\Param("seller_open", type="int", require=true, default=0, desc="商家是否开启打印 0-关闭 1-开启")
+     * @Apidoc\Param("seller_printer_id", type="int", require=true, default=0, desc="商家打印机id")
+     * @Apidoc\Returned()
      */
     public function index()
     {

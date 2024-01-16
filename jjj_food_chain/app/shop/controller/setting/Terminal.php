@@ -19,7 +19,7 @@ class Terminal extends Controller
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/shop/setting.Terminal/cashier")
      * @Apidoc\Param("carousel", type="array", require=true, desc="上传后的轮播内容url（图片 + 视频）")
-     * @Apidoc\Param("is_auto_send", type="int", require=true, default=0, desc="收银结账自动送厨房")
+     * @Apidoc\Param("is_auto_send", type="int", require=true, default=0, desc="收银结账自动送厨房 0-关闭 1-开启")
      * @Apidoc\Param("cashier_password", type="string", require=true, default="", desc="钱箱密码")
      * @Apidoc\Param("auto_lock_screen", type="int", require=true, default=0, desc="自动锁屏")
      * @Apidoc\Param("language", type="array", require=true, desc="常用语言")
@@ -75,11 +75,10 @@ class Terminal extends Controller
         $model = new SettingModel;
         $data = $this->request->param();
         //
-        if (empty($data['cashier_password'])) {
+        $setting = SettingModel::getItem(SettingEnum::CASHIER);
+        if (empty($data['cashier_password']) && !empty($setting['cashier_password'])) {
             return $this->renderError('请输入原密码');
         }
-        //
-        $setting = SettingModel::getItem(SettingEnum::CASHIER);
         if ($setting['cashier_password'] != $data['cashier_password']) {
             return $this->renderError('原密码错误');
         }
@@ -102,9 +101,9 @@ class Terminal extends Controller
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/shop/setting.Terminal/tablet")
      * @Apidoc\Param("carousel", type="array", require=true, desc="上传后的轮播内容url（图片 + 视频）")
-     * @Apidoc\Param("is_call_service", type="int", require=true, default=0, desc="呼叫服务员")
-     * @Apidoc\Param("is_customer_order", type="int", require=true, default=0, desc="顾客可开桌")
-     * @Apidoc\Param("is_show_sold_out", type="int", require=true, default=0, desc="显示售罄商品")
+     * @Apidoc\Param("is_call_service", type="int", require=true, default=0, desc="呼叫服务员 0-关闭 1-开启")
+     * @Apidoc\Param("is_customer_order", type="int", require=true, default=0, desc="顾客可开桌 0-关闭 1-开启")
+     * @Apidoc\Param("is_show_sold_out", type="int", require=true, default=0, desc="显示售罄商品 0-关闭 1-开启")
      * @Apidoc\Param("server", type="array", require=true, desc="平板服务器连接，【ip、port】")
      * @Apidoc\Param("advanced_password", type="int", require=true, default=0, desc="高级设置密码")
      * @Apidoc\Param("language", type="array", require=true, desc="常用语言")
@@ -161,11 +160,10 @@ class Terminal extends Controller
         $model = new SettingModel;
         $data = $this->request->param();
         //
-        if (empty($data['advanced_password'])) {
+        $setting = SettingModel::getItem(SettingEnum::TABLET);
+        if (empty($data['advanced_password']) && !empty($setting['advanced_password'])) {
             return $this->renderError('请输入原密码');
         }
-        //
-        $setting = SettingModel::getItem(SettingEnum::TABLET);
         if ($setting['advanced_password'] != $data['advanced_password']) {
             return $this->renderError('原密码错误');
         }
@@ -188,13 +186,12 @@ class Terminal extends Controller
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/shop/setting.Terminal/kitchen")
      * @Apidoc\Param("server", type="array", require=true, desc="厨显服务器连接")
-     * @Apidoc\Param("is_wait_color", type="int", require=true, default=0, desc="是否开启等待颜色")
+     * @Apidoc\Param("is_wait_color", type="int", require=true, default=0, desc="是否开启等待颜色 0-关闭 1-开启")
      * @Apidoc\Param("wait_color", type="array", require=true, desc="等待颜色")
      * @Apidoc\Param("language", type="array", require=true, desc="常用语言")
      * @Apidoc\Param("default_language", type="string", require=true, default="", desc="默认语言")
      * @Apidoc\Returned()
      */
-
     public function kitchen()
     {
         if($this->request->isGet()){
@@ -236,7 +233,16 @@ class Terminal extends Controller
         if ($key == '') {
             return $this->renderError('缺少参数');
         }
-        $vars['values'] = SettingModel::getItem($key);
+        $ret = SettingModel::getItem($key);
+        // 收银机密码
+        if (!empty($ret['cashier_password'])) {
+            $ret['cashier_password'] = true;
+        }
+        // 平板端高级设置密码
+        if (!empty($ret['advanced_password'])) {
+            $ret['advanced_password'] = true;
+        }
+        $vars['values'] = $ret;
         return $this->renderSuccess('', compact('vars'));
     }
 }
