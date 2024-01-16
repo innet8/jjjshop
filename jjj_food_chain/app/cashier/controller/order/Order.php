@@ -288,6 +288,9 @@ class Order extends Controller
     public function print($order_id)
     {
         $order = OrderModel::detail($order_id);
+        if (!$order) {
+            return $this->renderError('订单不存在');
+        }
         // 打印机设置
         $printerConfig = SettingModel::getSupplierItem('printer', $order['shop_supplier_id'], $order['app_id']);
         //发送打印

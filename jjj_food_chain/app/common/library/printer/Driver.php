@@ -18,7 +18,8 @@ class Driver
         PrinterTypeEnum::FEI_E_YUN => 'Feie',
         PrinterTypeEnum::FEI_E_YUN_TAG => 'FeieTag',
         PrinterTypeEnum::PRINT_CENTER => 'PrintCenter',
-        PrinterTypeEnum::SUNMI => 'Sunmi',
+        PrinterTypeEnum::SUNMI_LAN => 'Sunmi',
+        PrinterTypeEnum::XPRINTER_LAN => 'Xprinter',
     ];
 
     /**

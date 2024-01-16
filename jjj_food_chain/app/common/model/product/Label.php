@@ -12,6 +12,15 @@ class Label extends BaseModel
     protected $name = 'product_print_label';
     protected $pk = 'label_id';
 
+    /**
+     * 处理多语言
+     */
+    protected $append = ['label_name_text'];
+    public function getLabelNameTextAttr($value, $data=[])
+    {
+        return extractLanguage($value ?: $data['label_name']);
+    }
+
     //更新标签
     public function updateLabel($data)
     {

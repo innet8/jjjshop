@@ -13,11 +13,20 @@ class Attribute extends BaseModel
     protected $pk = 'attribute_id';
 
     /**
+     * 处理多语言
+     */
+    protected $append = ['attribute_name_text', 'attribute_value_text'];
+    public function getAttributeNameTextAttr($value, $data=[])
+    {
+        return extractLanguage($value ?: $data['attribute_name']);
+    }
+
+    /**
      * 设置属性值
      */
     public function setAttributeValueAttr($value)
     {
-        return $value ? json_encode($value) : '';
+        return $value && is_array($value) ? json_encode($value) : ($value ?: '');
     }
 
     /**
@@ -26,6 +35,21 @@ class Attribute extends BaseModel
     public function getAttributeValueAttr($value)
     {
         return $value ? json_decode($value, true) : '';
+    }
+
+     /**
+     * 获取属性值
+     */
+    public function getAttributeValueTextAttr($value, $data)
+    {
+        $datas = $data['attribute_value'] ? json_decode($data['attribute_value'], true) : [];
+        $res = [];
+        if ($datas) {
+            foreach ($datas as $key => $data) {
+                $res[] = extractLanguage(json_encode($data));
+            }
+        }
+        return $res;
     }
 
     //更新属性库

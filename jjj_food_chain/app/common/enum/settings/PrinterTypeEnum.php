@@ -18,7 +18,10 @@ class PrinterTypeEnum extends Enum
     const PRINT_CENTER = 'PRINT_CENTER';
 
     // 商米
-    const SUNMI = 'SUNMI';
+    const SUNMI_LAN = 'SUNMI_LAN';
+    
+    // 芯烨
+    const XPRINTER_LAN = 'XPRINTER_LAN';
     
 
     // 获取打印机类型名称
@@ -28,7 +31,8 @@ class PrinterTypeEnum extends Enum
             self::FEI_E_YUN => '飞鹅打印机',
             self::FEI_E_YUN_TAG => '飞鹅标签打印机',
             self::PRINT_CENTER => '365云打印',
-            self::SUNMI => '商米打印机',
+            self::SUNMI_LAN => '商米打印机（局域网）',
+            self::XPRINTER_LAN => '芯烨打印机（局域网）',
         ];
     }
 
