@@ -55,9 +55,9 @@ class Business extends Controller
         // 打印机设置
         $printerConfig = SettingModel::getSupplierItem('printer', $data['supplier']['shop_supplier_id'], $data['supplier']['app_id']);
         //发送打印
-        (new OrderBusinessPrinterService)->cashierPrint($printerConfig, $data);
+        $res = (new OrderBusinessPrinterService)->cashierPrint($printerConfig, $data);
         // 
-        return $this->renderSuccess('打印成功');
+        return $res ? $this->renderSuccess('打印成功') : $this->renderError('打印失败，未连接打印机');
     }
 
 }

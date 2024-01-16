@@ -79,7 +79,7 @@ class OrderBusinessPrinterService
             $printer->appendText("------------------------------------------------\n");
             $printer->lineFeed();
             foreach ($data['categorys'] as $key => $category) {
-                $printer->printInColumns((new CategoryModel)->getNameTextAttr($category['name']), $category['sales'] . '', "￥" . $category['prices']);
+                $printer->printInColumns( (new CategoryModel)->getNameTextAttr($category['name']) .'' , "{$category['sales']}", "￥{$category['prices']}" );
                 $printer->lineFeed();
             }
             $printer->appendText("------------------------------------------------\n");

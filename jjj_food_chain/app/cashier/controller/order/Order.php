@@ -296,7 +296,7 @@ class Order extends Controller
         //发送打印
         $res = (new OrderPrinterService)->sellerPrint($printerConfig, $order, true);
         // 
-        return  $res ? $this->renderSuccess('打印成功') : $this->renderError('打印失败');
+        return  $res ? $this->renderSuccess('打印成功') : $this->renderError('打印失败，未连接打印机');
     }
 
     /**
