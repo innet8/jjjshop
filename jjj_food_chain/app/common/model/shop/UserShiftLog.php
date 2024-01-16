@@ -54,6 +54,36 @@ class UserShiftLog extends BaseModel
     }
 
     /**
+     * 获取详情
+     */
+    public function detail($id)
+    {
+        $detail = $this->with('user')->find($id);
+        return $detail;
+    }
+
+    /**
+     * 获取销售信息
+     */
+    public function getSalesInfo($shift_user_id, $shop_user_id, $startTime, $endTime)
+    {
+        return OrderModel::alias('a')
+            ->leftJoin('order_product rp','a.order_id = rp.order_id')
+            ->leftJoin('product p','p.product_id = rp.product_id')
+            ->leftJoin('category c','c.category_id = p.category_id')
+            ->where('a.pay_status', '=', 20)
+            ->where('a.order_status', '=', 30)
+            ->where('a.eat_type', '<>', 0)
+            ->where('a.shop_supplier_id', '=', $shop_user_id)
+            ->where('a.cashier_id', '=', $shift_user_id)
+            ->where('a.create_time', 'between', [$startTime, $endTime])
+            ->group("c.category_id")
+            ->field("c.name, count(a.order_id) as sales, sum(a.pay_price - a.refund_money) as prices")
+            ->select()
+            ->append([])?->toArray();
+    }
+
+    /**
      * 创建交班记录
      *
      * @param array $params

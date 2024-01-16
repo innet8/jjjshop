@@ -266,6 +266,17 @@ function format_time($value)
     return date('Y-m-d', $value);
 }
 
+/**
+ * 格式化时间
+ *
+ * @param int $value
+ * @return string
+ */
+function format_time_his($value)
+{
+    return date('Y-m-d H:i:s', $value);
+}
+
 
 /**
  * curl请求指定url (get)
@@ -539,7 +550,7 @@ function printText($leftText, $centerText="", $rightText="", $total = 32, $leftN
     $rightWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $rightText));
     $centerPaddingWidth = ($total - $leftWidth - $leftPaddingWidth - $centerWidth - $rightWidth);
     $centerPadding = $centerPaddingWidth > 0 ? str_repeat(" ", $centerPaddingWidth ) : "";
-    // 
+    //
     $content = $leftText . $leftPadding . $centerText . $centerPadding . $rightText;
     if ($afterLeftText) {
         $length = mb_strlen($afterLeftText);
