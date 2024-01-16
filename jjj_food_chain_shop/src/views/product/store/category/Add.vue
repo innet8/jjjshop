@@ -6,7 +6,7 @@
                 <el-select v-model="form.parent_id" :label="$t('无')">
                     <el-option :value="0" :label="$t('无')"></el-option>
                     <template v-for="cat in category" :key="cat.category_id">
-                        <el-option :value="cat.category_id" :label="cat.name"></el-option>
+                        <el-option :value="cat.category_id" :label="cat.name_text"></el-option>
                     </template>
                 </el-select>
             </el-form-item>

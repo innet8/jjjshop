@@ -1,13 +1,12 @@
 <template>
     <el-upload v-model:file-list="fileList" class="upload-demo"
         action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" multiple :on-preview="handlePreview"
-        :on-remove="handleRemove" :before-remove="beforeRemove" :limit="3" :on-exceed="handleExceed">
+        :on-remove="handleRemove" :before-remove="beforeRemove" :on-exceed="handleExceed">
         <el-button type="primary">{{ $t('上传') }}</el-button>
         <template #tip>
             <div class="el-upload__tip">
-                <p>{{ $t('图片：支持JPG、JPEG、PNG格式，小于2MB，尺寸：48*48px') }}</p>
-                <p>{{ $t('视频：支持AVI、MPEG、MOV、MP4格式，小于10MB，尺寸：1920*1080') }}</p>
-                
+                <p>{{ $t('图片：支持JPG、JPEG、PNG格式，小于2MB，尺寸：1024*600px') }}</p>
+                <p>{{ $t('视频：支持AVI、MPEG、MOV、MP4格式，小于10MB，尺寸：1024*600px') }}</p>
             </div>
         </template>
     </el-upload>

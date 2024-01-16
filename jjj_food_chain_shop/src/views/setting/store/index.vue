@@ -8,25 +8,25 @@
     <!--form表单-->
     <el-form size="small" ref="form" :model="form" label-position="top" label-width="150px">
       <!--添加门店-->
-      <el-form-item label="商城名称" :rules="[{required: true,message: ' '}]" prop="name">
-        <el-input v-model="form.name" placeholder="商城名称" class="max-w460"></el-input>
+      <el-form-item :label="$t('商城名称')" :rules="[{required: true,message: ' '}]" prop="name">
+        <el-input v-model="form.name" :placeholder="$t('商城名称')" class="max-w460"></el-input>
       </el-form-item>
-      <el-form-item label="商城LOGO" :rules="[{required: true,message: ' '}]" prop="name">
+      <el-form-item :label="$t('商城LOGO')" :rules="[{required: true,message: ' '}]" prop="name">
         <div class="ww100">
-          <el-button @click="chooseImg('logoUrl')">选择图片</el-button>
+          <el-button @click="chooseImg('logoUrl')">{{$t('选择图片')}}</el-button>
         </div>
         <img class="mt10" v-img-url="form.logoUrl" :width="100">
       </el-form-item>
       
-      <el-form-item label="店铺ID" prop="customer">
+      <!-- <el-form-item label="店铺ID" prop="customer">
         <el-input v-model="form.customer" placeholder="" class="max-w460"></el-input>
       </el-form-item>
       <el-form-item label="机器码" prop="key">
         <el-input v-model="form.key" placeholder="" class="max-w460"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <!--提交-->
       <div class="common-button-wrapper">
-        <el-button type="primary" @click="onSubmit" :loading="loading">提交</el-button>
+        <el-button type="primary" @click="onSubmit" :loading="loading">{{$t('提交')}}</el-button>
       </div>
     </el-form>
     <!--上传图片-->

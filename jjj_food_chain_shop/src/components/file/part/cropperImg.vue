@@ -1,6 +1,6 @@
 <template >
     <div>
-        <vue-cropper ref="cropper" :src="img" :aspectRatio="1.333" alt="Source Image"></vue-cropper>
+        <vue-cropper ref="cropper" :src="img" :aspectRatio="1" alt="Source Image"></vue-cropper>
         <span class="dialog-footer" >
             <el-button @click="handleClose"> {{ $t('取消') }}</el-button>
             <el-button type="primary" @click="handelCropper"> {{ $t('确定') }} </el-button>

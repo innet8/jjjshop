@@ -13,10 +13,16 @@
                     <el-radio :label="2">保密</el-radio>
                 </el-radio-group>
             </el-form-item>
+            <el-form-item label="等级" >
+                <el-select v-model="form.grade_id" placeholder="-请选择等级-">
+                    <el-option v-for="(item, index) in gradeList" :key="index" :label="item.name"
+                        :value="item.grade_id"></el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="手机号" prop="mobile">
                 <el-input class="max-w460" v-model="form.mobile" placeholder="请输入手机号"></el-input>
             </el-form-item>
-            <el-form-item label="密码" prop="password" >
+            <el-form-item label="密码" prop="password">
                 <el-input class="max-w460" v-model="form.password" placeholder="请输入密码"></el-input>
             </el-form-item>
             <el-form-item label="生日">
@@ -49,7 +55,7 @@ export default {
             loading: false,
         };
     },
-    props: ['open', 'editform', 'title'],
+    props: ['open', 'editform', 'title', 'gradeList'],
     created() {
         this.dialogVisible = this.open;
     },

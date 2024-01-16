@@ -5,42 +5,49 @@
             <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
 
                 <el-form-item :label="$t('收银员')">
-                    <el-select size="small" v-model="searchForm.user_id" placeholder="请选择">
-                        <el-option label="全部" value=""></el-option>
-                        <el-option v-for="(item, index) in exStyle" :key="index" :label="item.name"
-                            :value="item.value"></el-option>
+                    <el-select size="small" v-model="searchForm.user_id" :placeholder="$t('请选择')">
+                        <el-option :label="$t('全部')" value=""></el-option>
+                        <el-option v-for="(item, index) in exStyle" :key="index" :label="item.user_name"
+                            :value="item.shop_user_id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('起始时间')">
                     <div class="block">
                         <span class="demonstration"></span>
                         <el-date-picker size="small" v-model="searchForm.create_time" type="daterange"
-                            value-format="YYYY-MM-DD" range-separator="至" start-placeholder="开始日期"
-                            end-placeholder="结束日期"></el-date-picker>
+                            value-format="YYYY-MM-DD" :range-separator="$t('至')" :start-placeholder="$t('开始日期')"
+                            :end-placeholder="$t('结束日期')"></el-date-picker>
                     </div>
                 </el-form-item>
                 <el-form-item>
-                    <el-button size="small" type="primary" icon="Search" @click="onSubmit">查询</el-button>
+                    <el-button size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-button size="small" type="success" @click="onExport">导出</el-button>
+                    <el-button size="small" type="success" @click="onExport">{{ $t('导出') }}</el-button>
                 </el-form-item>
             </el-form>
         </div>
         <div class="table-wrap">
             <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-                <el-table-column prop="printer_id" label=""></el-table-column>
-                <el-table-column prop="printer_name" :label="$t('交班编号')"></el-table-column>
-                <el-table-column prop="sort" :label="$t('收银员')"></el-table-column>
-                <el-table-column prop="sort" :label="$t('当班时间')"></el-table-column>
-                <el-table-column prop="sort" :label="$t('营业收入')"></el-table-column>
-                <el-table-column prop="sort" :label="$t('现金收入')"></el-table-column>
-                <el-table-column prop="sort" :label="$t('上一班遗留备用金')"></el-table-column>
-                <el-table-column prop="sort" :label="$t('本班遗留备用金')"></el-table-column>
+                <el-table-column prop="id" label="ID" width="80"></el-table-column>
+                <el-table-column prop="shift_no" :label="$t('交班编号')"></el-table-column>
+                <el-table-column prop="user.real_name" :label="$t('收银员')"></el-table-column>
+                <el-table-column prop="" :label="$t('当班时间')">
+                    <template #default="scope">
+                        <div>
+                            {{ scope.row.shift_start_time }}
+                            {{ $t('至') }}
+                            {{ scope.row.shift_end_time }}
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="total_money" :label="$t('营业收入')"></el-table-column>
+                <el-table-column prop="cash_income" :label="$t('现金收入')"></el-table-column>
+                <el-table-column prop="previous_shift_cash" :label="$t('上一班遗留备用金')"></el-table-column>
+                <el-table-column prop="cash_left" :label="$t('本班遗留备用金')"></el-table-column>
                 <el-table-column prop="create_time" label="添加时间"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="120">
                     <template #default="scope">
-
                         <el-button @click="detailClick(scope.row)" type="primary" link size="small">{{ $t('详情')
                         }}</el-button>
                     </template>
@@ -55,15 +62,18 @@
                 :total="totalDataNumber">
             </el-pagination>
         </div>
+        <detail v-if="open" :detailData="detailData" :open="open" @closeDialog="()=>{ open = false }"></detail>
     </div>
 </template>
 
 <script>
 import qs from 'qs';
 import { useUserStore } from '@/store';
+import StatisticsApi from '@/api/statistics.js';
+import detail from './detail.vue'
 const { token } = useUserStore();
 export default {
-
+    components: { detail },
     data() {
         return {
 
@@ -77,12 +87,14 @@ export default {
             totalDataNumber: 0,
             /*当前是第几页*/
             curPage: 1,
-
+            exStyle: [],
             searchForm: {
                 user_id: "",
                 create_time: "",
             },
             token,
+            detailData: {},
+            open: false,
         }
     },
 
@@ -107,21 +119,31 @@ export default {
         },
         /*获取数据*/
         getData() {
-            //   let self = this;
-            //   StatisticsApi.getUserTotal({}, true)
-            //     .then(res => {
-            //       Object.assign(self.dataModel, res.data);
-            //       self.loading = false;
-            //     })
-            //     .catch(error => {});
+            let self = this;
+            let params = self.searchForm;
+            params.page = self.curPage;
+            params.list_rows = self.pageSize;
+            StatisticsApi.getUserShiftLog(params, true)
+                .then(res => {
+                    Object.assign(self.tableData, res.data.list.data);
+                    Object.assign(self.exStyle, res.data.cashierList.data);
+                    self.loading = false;
+                })
+                .catch(error => { });
         },
         onSubmit() {
-
+            this.curPage = 1;
+            this.tableData = [];
+            this.getData();
+        },
+        detailClick(data) {
+            this.detailData = data;
+            this.open = true;
         },
         onExport: function () {
             let baseUrl = window.location.protocol + '//' + window.location.host;
             this.searchForm.token = this.token;
-            window.location.href = baseUrl + '/index.php/shop/takeout.operate/export?' + qs.stringify(this.searchForm);
+            window.location.href = baseUrl + '/index.php/shop/user.UserShiftLog/export?' + qs.stringify(this.searchForm);
         },
     }
 };

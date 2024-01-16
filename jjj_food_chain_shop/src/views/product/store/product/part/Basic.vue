@@ -8,7 +8,7 @@
         <!--基本信息-->
         <div class="common-form">{{ $t('基本信息') }}</div>
         <template v-for="(item,index) in languageList" :key="index">
-            <el-form-item :label="$t('商品名称：') + `(${item.label})`" :prop="`product_name.${[item.key]}`" :rules="[{ required: true, message: $t('请填写商品名称') }]">
+            <el-form-item :label="$t('商品名称：') + `(${item.label})`" :prop="`model.product_name.${item.key}`" :rules="[{ required: true, message: $t('请填写商品名称') }]">
                 <el-input v-model="form.model.product_name[item.key]" class="max-w460"></el-input>
             </el-form-item>
         </template>
@@ -23,6 +23,18 @@
                 </template>
             </el-select>
         </el-form-item>
+
+        <el-form-item :label="$t('特色分类：')" >
+            <el-select v-model="form.model.category_id">
+                <template v-for="cat in form.category" :key="cat.category_id">
+                    <el-option :value="cat.category_id" :label="cat.name_text"></el-option>
+                    <template v-for="cat_c in cat.child" :key="cat_c.category_id">
+                        <el-option :value="cat_c.category_id" :label="cat_c.name_text">|—{{ cat_c.name_text }}</el-option>
+                    </template>
+                </template>
+            </el-select>
+        </el-form-item>
+
         <el-form-item :label="$t('商品图片：')" :rules="[{ required: true, message: $t('请上传商品图片') }]" prop="model.image">
             <div class="draggable-list">
                 <draggable class="wrapper" v-model="form.model.image">

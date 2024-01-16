@@ -8,66 +8,68 @@
         <!--搜索表单-->
         <div class="common-seach-wrap">
             <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
-                <el-form-item label="昵称/手机号/ID"><el-input v-model="formInline.nick_name"
-                        placeholder="请输入昵称/手机号/ID"></el-input></el-form-item>
-                <el-form-item label="会员等级">
-                    <el-select v-model="formInline.grade_id" placeholder="请选择">
-                        <el-option label="全部" value="0"></el-option>
+                <el-form-item :label="$t('昵称/手机号/ID')"><el-input v-model="formInline.nick_name"
+                    :placeholder="$t('请输入昵称/手机号/ID')"></el-input></el-form-item>
+                <el-form-item :label="$t('会员等级')">
+                    <el-select v-model="formInline.grade_id" :placeholder="$t('请选择')">
+                        <el-option :label="$t('全部')" value="0"></el-option>
                         <el-option v-for="(item, index) in gradeList" :key="index" :label="item.name"
                             :value="item.grade_id"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="注册时间">
+                <el-form-item :label="$t('注册时间')">
                     <div class="block">
                         <span class="demonstration"></span>
                         <el-date-picker v-model="formInline.reg_date" type="daterange" value-format="YYYY-MM-DD"
-                            range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+                        :range-separator="$t('至')" :start-placeholder="$t('开始日期')" :end-placeholder="$t('结束日期')"></el-date-picker>
                     </div>
                 </el-form-item>
-                <el-form-item><el-button type="primary" icon="Search" @click="onSubmit">查询</el-button></el-form-item>
+                <el-form-item><el-button type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button></el-form-item>
 
             </el-form>
-            <div class="common-level-rail"> <el-button type="primary" icon="Plus" @click="addMenber">添加会员</el-button></div>
+            <div class="common-level-rail"> <el-button type="primary" icon="Plus" @click="addMenber">{{ $t('添加会员') }}</el-button></div>
         </div>
         <!--内容-->
         <div class="product-content">
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
                     <el-table-column prop="user_id" label="ID" width="80"></el-table-column>
-                    <el-table-column prop="nickName" label="昵称"></el-table-column>
-                    <el-table-column prop="nickName" label="微信头像">
+                    <el-table-column prop="nickName" :label="$t('昵称')"></el-table-column>
+
+                    <el-table-column prop="gender" :label="$t('性别')">
                         <template #default="scope">
-                            <img :src="scope.row.avatarUrl" :width="30" :height="30" />
+                            <span v-if="scope.row.gender == 0">{{ $t('女') }}</span>
+                            <span v-else-if="scope.row.gender == 1">{{ $t('男') }}</span>
+                            <span v-else>{{ $t('其他') }}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="gender" label="性别">
+                    <el-table-column prop="" :label="$t('会员卡')">
                         <template #default="scope">
-                            <span v-if="scope.row.gender == 0">女</span>
-                            <span v-else-if="scope.row.gender == 1">男</span>
-                            <span v-else>其他</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="" label="会员等级">
-                        <template #default="scope">
-                            <span v-if="scope.row.grade_id == 0">无等级</span>
+                            <span v-if="scope.row.grade_id == 0">{{ $t('无等级') }}</span>
                             <span v-else>{{ scope.row.grade.name }}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="balance" label="余额"></el-table-column>
-                    <el-table-column prop="points" label="积分"></el-table-column>
-                    <el-table-column prop="mobile" label="手机号"></el-table-column>
-                    <el-table-column prop="birthday" label="生日"></el-table-column>
-                    <el-table-column prop="create_time" label="注册时间" width="140"></el-table-column>
-                    <el-table-column fixed="right" label="操作" width="160">
+                    <el-table-column prop="" :label="$t('会员等级')">
+                        <template #default="scope">
+                            <span v-if="scope.row.grade_id == 0">{{ $t('无等级') }}</span>
+                            <span v-else>{{ scope.row.grade.name }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="balance" :label="$t('余额')"></el-table-column>
+                    <el-table-column prop="points" :label="$t('积分')"></el-table-column>
+                    <el-table-column prop="mobile" :label="$t('手机号')"></el-table-column>
+                    <el-table-column prop="birthday" :label="$t('生日')"></el-table-column>
+                    <el-table-column prop="create_time" :label="$t('添加时间')" width="140"></el-table-column>
+                    <el-table-column fixed="right" :label="$t('操作')" width="160">
                         <template #default="scope">
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/user/user/edit'">编辑</el-button>
+                                v-auth="'/user/user/edit'">{{ $t('编辑') }}</el-button>
                             <el-button @click="addClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/user/user/recharge'">充值</el-button>
-                            <el-button @click="gradeClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/user/user/grade'">会员等级</el-button>
+                                v-auth="'/user/user/recharge'">{{ $t('充值') }}</el-button>
+                            <!-- <el-button @click="gradeClick(scope.row)" type="primary" link size="small"
+                                v-auth="'/user/user/grade'">会员等级</el-button> -->
                             <el-button @click="deleteClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/user/user/delete'">删除</el-button>
+                                v-auth="'/user/user/delete'">{{ $t('删除') }}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -89,7 +91,8 @@
         <Grade v-if="open_edit" :open_edit="open_edit" :form="userModel" :gradeList="gradeList"
             @closeDialog="closeDialogFunc($event, 'edit')"></Grade>
 
-        <addEdit v-if="open_addDdit" :title="title" :open="open_addDdit" :editform="model" @closeDialog="closeAddMenber"></addEdit>
+        <addEdit v-if="open_addDdit" :title="title" :open="open_addDdit" :gradeList="gradeList" :editform="editform" @closeDialog="closeAddMenber">
+        </addEdit>
     </div>
 </template>
 
@@ -127,16 +130,16 @@ export default {
             /*是否打开编辑弹窗*/
             open_add: false,
             open_edit: false,
-            
+
             open_addDdit: false,
             /*当前编辑的对象*/
             userModel: {},
             /*等级*/
             gradeList: [],
-            model: {
+            editform: {
 
             },
-            title:"",
+            title: "",
         };
     },
     created() {

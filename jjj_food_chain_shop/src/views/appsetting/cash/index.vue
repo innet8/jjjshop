@@ -35,8 +35,8 @@
                 </el-radio-group>
             </el-form-item>
 
-            <el-form-item :label="$t('默认语言')" prop="defaultLanguage" :rules="[{ required: true, message: $t('请选择常用语言') }]">
-                <el-radio-group v-model="form.defaultLanguage">
+            <el-form-item :label="$t('默认语言')" prop="default_language" :rules="[{ required: true, message: $t('请选择常用语言') }]">
+                <el-radio-group v-model="form.default_language">
                     <el-radio label="th">ภาษาไทย</el-radio>
                     <el-radio label="zh">简体中文</el-radio>
                     <el-radio label="tc">繁體中文</el-radio>
@@ -49,13 +49,14 @@
             <el-button size="small" type="primary" @click="onSubmit" :loading="loading">{{ $t('保存') }}</el-button>
         </div>
 
-        <setPassword v-if="open" :open="open"  @close="(e) => { open = false; if (e == 1) { this.getData(); } }">
+        <setPassword v-if="open" :open="open" @close="(e) => { open = false; if (e == 1) { this.getData(); } }">
         </setPassword>
     </div>
 </template>
 <script>
 import flieUpload from '@/components/flieUpload/upLoad.vue'
 import setPassword from './setPassword.vue';
+import Terminal from '@/api/terminal.js';
 export default {
     components: { flieUpload, setPassword },
     data() {
@@ -68,7 +69,7 @@ export default {
                 auto: 1,
                 lock: 300,
                 commonLanguage: 'th',
-                defaultLanguage: 'th',
+                default_language: 'th',
             },
             lockList: [
                 {
@@ -98,11 +99,44 @@ export default {
             ],
         }
     },
+    created() {
+        this.getData();
+    },
     methods: {
         setPassword() {
             this.open = true
         },
 
+        getData() {
+            let self = this;
+            self.loading = true;
+            Terminal.getTerminal().then(data => {
+                self.loading = false;
+                console.log(data);
+            }).catch(error => {
+                self.loading = false;
+            });
+        },
+
+        onSubmit() {
+            let self = this;
+            let params = JSON.parse(JSON.stringify(self.form));
+            self.$refs.form.validate((valid) => {
+                if (valid) {
+                    self.loading = true;
+                    Terminal.saveTerminal(params).then(data => {
+                        self.loading = false;
+                        ElMessage({
+                            message: $t('保存成功'),
+                            type: 'success'
+                        });
+                        self.dialogFormVisible(true);
+                    }).catch(error => {
+                        self.loading = false;
+                    });
+                }
+            });
+        },
 
     },
 }
