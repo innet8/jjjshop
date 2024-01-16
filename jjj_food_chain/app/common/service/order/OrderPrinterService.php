@@ -3,6 +3,7 @@
 namespace app\common\service\order;
 
 use app\common\model\order\OrderProduct;
+use app\common\enum\order\OrderPayStatusEnum;
 use app\common\enum\settings\PrinterTypeEnum;
 use app\common\enum\settings\DeliveryTypeEnum;
 use app\common\model\product\Product as ProductModel;
@@ -193,7 +194,7 @@ class OrderPrinterService
             $printer->lineFeed();
             $printer->setPrintModes(false, false, false);
             // 
-            if ($order->pay_status == 20){
+            if ($order->pay_status['value'] == OrderPayStatusEnum::SUCCESS){
                 $printer->appendText("------------------------------------------------\n");
                 $printer->printInColumns(__("支付方式"),  __($order['pay_type']['text']));
                 $printer->printInColumns(__("实付金额"), "￥" . strval($order['pay_price']));
@@ -304,10 +305,9 @@ class OrderPrinterService
             $printer->setPrintModes(true, false, false);
             $printer->appendText(printText(__("应收"),'', "￥" . strval($order['total_price']) ,$width, $leftWidth));
             $printer->lineFeed();
-            
             $printer->setPrintModes(false, false, false);
             // 
-            if ($order->pay_status == 20){
+            if ($order->pay_status['value'] == OrderPayStatusEnum::SUCCESS){
                 $printer->lineFeed();
                 $printer->appendText("------------------------------------------------\n");
                 $printer->appendText(printText(__("支付方式"),'', __($order['pay_type']['text']) ,$width, $leftWidth));

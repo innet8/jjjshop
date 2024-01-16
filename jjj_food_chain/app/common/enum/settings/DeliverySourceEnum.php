@@ -27,23 +27,23 @@ class DeliverySourceEnum extends Enum
     {
         return [
             self::SELLER => [
-                'name' => '商家配送',
+                'name' => __('商家配送'),
                 'value' => self::SELLER,
             ],
             self::DADA => [
-                'name' => '达达配送',
+                'name' => __('达达配送'),
                 'value' => self::DADA,
             ],
             self::DRIVER => [
-                'name' => '配送员配送',
+                'name' => __('配送员配送'),
                 'value' => self::DRIVER,
             ],
             self::MEITUAN => [
-                'name' => '美团配送',
+                'name' => __('美团配送'),
                 'value' => self::MEITUAN,
             ],
             self::UU => [
-                'name' => 'uu跑腿',
+                'name' => __('uu跑腿'),
                 'value' => self::UU,
             ],
         ];

@@ -31,31 +31,31 @@ class OrderTypeEnum extends Enum
     {
         return [
             self::MASTER => [
-                'name' => '商城订单',
+                'name' => __('商城订单'),
                 'value' => self::MASTER,
             ],
             self::POINTS => [
-                'name' => '积分商城订单',
+                'name' => __('积分商城订单'),
                 'value' => self::POINTS,
             ],
             self::BALANCE => [
-                'name' => '余额充值订单',
+                'name' => __('余额充值订单'),
                 'value' => self::BALANCE,
             ],
             self::CARD => [
-                'name' => '购卡订单',
+                'name' => __('购卡订单'),
                 'value' => self::CARD,
             ],
             self::PACKAGE => [
-                'name' => '券包订单',
+                'name' => __('券包订单'),
                 'value' => self::PACKAGE,
             ],
             self::DRIVER => [
-                'name' => '配送员押金订单',
+                'name' => __('配送员押金订单'),
                 'value' => self::DRIVER,
             ],
             self::Group => [
-                'name' => '团购订单',
+                'name' => __('团购订单'),
                 'value' => self::Group,
             ],
         ];

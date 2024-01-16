@@ -23,26 +23,27 @@ class OrderStatusEnum extends Enum
     /**
      * 获取枚举数据
      */
-    public static function data()
+    public static function data($key=0)
     {
-        return [
+        $arr = [
             self::NORMAL => [
-                'name' => '进行中',
+                'name' => __('进行中'),
                 'value' => self::NORMAL,
             ],
             self::CANCELLED => [
-                'name' => '已取消',
+                'name' => __('已取消'),
                 'value' => self::CANCELLED,
             ],
             self::APPLY_CANCEL => [
-                'name' => '待取消',
+                'name' => __('待取消'),
                 'value' => self::APPLY_CANCEL,
             ],
             self::COMPLETED => [
-                'name' => '已完成',
+                'name' => __('已完成'),
                 'value' => self::COMPLETED,
             ],
         ];
+        return $key  > 0 ? $arr[$key] : $arr;
     }
 
 }

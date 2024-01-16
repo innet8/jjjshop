@@ -51,7 +51,10 @@ class Product extends BaseModel
      */
     public function getProductStatusAttr($value, $data)
     {
-        $status = [10 => '已上架', 20 => '已下架'];
+        $status = [
+            10 => __('已上架'),
+            20 => __('已下架')
+        ];
         return ['text' => $status[$value], 'value' => $value];
     }
 

@@ -18,17 +18,18 @@ class OrderPayStatusEnum extends Enum
     /**
      * 获取枚举数据
      */
-    public static function data()
+    public static function data($key=0)
     {
-        return [
+        $arr = [
             self::PENDING => [
-                'name' => '待付款',
+                'name' => __('待付款'),
                 'value' => self::PENDING,
             ],
             self::SUCCESS => [
-                'name' => '已付款',
+                'name' => __('已付款'),
                 'value' => self::SUCCESS,
             ],
         ];
+        return $key  > 0 ? $arr[$key] : $arr;
     }
 }

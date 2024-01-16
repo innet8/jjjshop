@@ -25,19 +25,19 @@ class OrderSourceEnum extends Enum
     {
         return [
             self::MASTER => [
-                'name' => '用户下单',
+                'name' => __('用户下单'),
                 'value' => self::MASTER,
             ],
             self::CASHIER => [
-                'name' => '收银台下单',
+                'name' => __('收银台下单'),
                 'value' => self::CASHIER,
             ],
             self::SCAN => [
-                'name' => '扫码下单',
+                'name' => __('扫码下单'),
                 'value' => self::SCAN,
             ],
             self::GROUP => [
-                'name' => '团购下单',
+                'name' => __('团购下单'),
                 'value' => self::GROUP,
             ],
         ];

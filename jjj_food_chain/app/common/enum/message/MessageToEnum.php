@@ -26,15 +26,15 @@ class MessageToEnum extends Enum
         return [
             self::MEMBER => [
                 'value' => self::MEMBER,
-                'name' => '会员',
+                'name' => __('会员'),
             ],
             self::SHOP => [
                 'value' => self::SHOP,
-                'name' => '商家',
+                'name' => __('商家'),
             ],
             self::SUPPLIER => [
                 'value' => self::SUPPLIER,
-                'name' => '供应商',
+                'name' => __('供应商'),
             ],
         ];
     }

@@ -18,7 +18,7 @@ class GetPhoneTypeEnum extends Enum
     {
         return [
             self::USER => [
-                'name' => '个人中心',
+                'name' => __('个人中心'),
                 'value' => self::USER,
             ],
         ];

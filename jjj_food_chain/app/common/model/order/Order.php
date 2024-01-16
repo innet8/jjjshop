@@ -2,29 +2,31 @@
 
 namespace app\common\model\order;
 
-use app\api\model\user\CardRecord as CardRecordModel;
+use think\facade\Log;
+use app\common\library\helper;
+use app\common\model\BaseModel;
+use think\model\concern\SoftDelete;
+use app\common\exception\BaseException;
+use app\common\enum\order\OrderTypeEnum;
+use app\common\model\order\OrderDeliver;
+use app\common\enum\settings\SettingEnum;
+use app\common\service\deliveryapi\UuApi;
 use app\common\enum\order\OrderSourceEnum;
 use app\common\enum\order\OrderStatusEnum;
-use app\common\enum\settings\SettingEnum;
-use app\common\model\BaseModel;
-use app\common\enum\settings\DeliveryTypeEnum;
-use app\common\enum\order\OrderPayStatusEnum;
-use app\common\enum\order\OrderTypeEnum;
-use app\common\enum\order\OrderPayTypeEnum;
-use app\common\library\helper;
-use app\common\model\order\OrderProduct as OrderProductModel;
-use app\common\model\plus\discount\DiscountProduct;
-use app\common\model\settings\Setting as SettingModel;
-use app\common\service\order\OrderPrinterService;
 use app\common\service\order\OrderService;
-use app\common\service\order\OrderCompleteService;
+use app\common\enum\order\OrderPayTypeEnum;
 use app\common\service\deliveryapi\DadaApi;
-use app\common\exception\BaseException;
+use app\common\enum\order\OrderPayStatusEnum;
+use app\common\model\plus\group\OrderProduct;
 use app\common\service\deliveryapi\MeTuanApi;
-use app\common\service\deliveryapi\UuApi;
+use app\common\enum\settings\DeliveryTypeEnum;
+use app\common\service\order\OrderPrinterService;
+use app\common\service\order\OrderCompleteService;
+use app\common\model\plus\discount\DiscountProduct;
+use app\api\model\user\CardRecord as CardRecordModel;
+use app\common\model\settings\Setting as SettingModel;
 use app\common\service\product\factory\ProductFactory;
-use think\facade\Log;
-use think\model\concern\SoftDelete;
+use app\common\model\order\OrderProduct as OrderProductModel;
 
 /**
  * 订单模型模型
@@ -111,24 +113,24 @@ class Order extends BaseModel
      */
     public function getStateTextAttr($value, $data)
     {
+
         // 订单状态
         if (in_array($data['order_status'], [20, 30])) {
-            $orderStatus = [20 => '已取消', 30 => '已完成'];
-            return $orderStatus[$data['order_status']];
+            return OrderStatusEnum::data($data['order_status'])['name'];
         }
         // 付款状态
         if ($data['pay_status'] == 10) {
-            return '待付款';
+            return OrderPayStatusEnum::data($data['pay_status'])['name'];
         }
         // 发货状态
         if ($data['order_status'] == 10) {
             if ($data['delivery_type'] == 10 && $data['delivery_status'] == 10) {
-                return '待配送';
+                return __('待配送');
             }
             if ($data['delivery_type'] == 10 && $data['delivery_status'] == 20) {
-                return '配送中';
+                return __('配送中');
             }
-            return '进行中';
+            return OrderStatusEnum::data($data['order_status'])['name'];
         }
 
         return $value;
@@ -144,16 +146,15 @@ class Order extends BaseModel
     {
         // 订单状态待接单＝1,待取货＝2,配送中＝3,已完成＝4,已取消＝5, 指派单=8
         if (in_array($data['order_status'], [20, 30])) {
-            $orderStatus = [20 => '已取消', 30 => '已完成'];
-            return $orderStatus[$data['order_status']];
+            return OrderStatusEnum::data($data['order_status'])['name'];
         }
         // 发货状态
         if ($data['delivery_status'] == 10) {
-            return '待配送';
+            return __('待配送');
         }
         // 发货状态
         if ($data['delivery_status'] == 20) {
-            $deliverStatus = [1 => '待接单', 2 => '待取货', 3 => '配送中', 4 => '已完成'];
+            $deliverStatus = [1 => __('待接单'), 2 => __('待取货'), 3 => __('配送中'), 4 => __('已完成')];
             return $deliverStatus[$data['deliver_status']];
         }
         return $value;
@@ -176,7 +177,7 @@ class Order extends BaseModel
      */
     public function getOrderTypeTextAttr($value, $data)
     {
-        return $data['order_type'] == 0 ? '外卖订单' : '店内订单';
+        return $data['order_type'] == 0 ? __('外卖订单') : __('店内订单');
     }
 
     /**
@@ -219,7 +220,7 @@ class Order extends BaseModel
      */
     public function getDeliveryStatusAttr($value)
     {
-        $status = [10 => '待配送', 20 => '已配送'];
+        $status = [10 => __('待配送'), 20 => __('已配送')];
         return ['text' => $status[$value], 'value' => $value];
     }
 
@@ -230,7 +231,7 @@ class Order extends BaseModel
      */
     public function getReceiptStatusAttr($value)
     {
-        $status = [10 => '待收货', 20 => '已收货'];
+        $status = [10 => __('待收货'), 20 => __('已收货')];
         return ['text' => $status[$value], 'value' => $value];
     }
 
@@ -241,8 +242,10 @@ class Order extends BaseModel
      */
     public function getOrderStatusAttr($value)
     {
-        $status = [10 => '进行中', 20 => '已取消', 21 => '待取消', 30 => '已完成'];
-        return ['text' => $status[$value], 'value' => $value];
+        return [
+            'text' => OrderStatusEnum::data($value)['name'],
+            'value' => $value
+        ];
     }
 
     /**
@@ -252,7 +255,10 @@ class Order extends BaseModel
      */
     public function getDeliveryTypeAttr($value)
     {
-        return ['text' => DeliveryTypeEnum::data()[$value]['name'], 'value' => $value];
+        return [
+            'text' => DeliveryTypeEnum::data()[$value]['name'], 
+            'value' => $value
+        ];
     }
 
     /**

@@ -30,29 +30,29 @@ class BalanceLogSceneEnum extends Enum
     {
         return [
             self::RECHARGE => [
-                'name' => '用户充值',
+                'name' => __('用户充值'),
                 'value' => self::RECHARGE,
-                'describe' => '用户充值：%s',
+                'describe' => __('用户充值：%s'),
             ],
             self::CONSUME => [
-                'name' => '用户消费',
+                'name' => __('用户消费'),
                 'value' => self::CONSUME,
-                'describe' => '用户消费：%s',
+                'describe' => __('用户消费：%s'),
             ],
             self::ADMIN => [
-                'name' => '管理员操作',
+                'name' => __('管理员操作'),
                 'value' => self::ADMIN,
-                'describe' => '后台管理员 [%s] 操作',
+                'describe' => __('后台管理员 [%s] 操作'),
             ],
             self::REFUND => [
-                'name' => '订单退款',
+                'name' => __('订单退款'),
                 'value' => self::REFUND,
-                'describe' => '订单退款：%s',
+                'describe' => __('订单退款：%s'),
             ],
             self::CASH => [
-                'name' => '余额提现',
+                'name' => __('余额提现'),
                 'value' => self::CASH,
-                'describe' => '余额提现',
+                'describe' => __('余额提现'),
             ],
         ];
     }

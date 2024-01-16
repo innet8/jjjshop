@@ -22,14 +22,14 @@ class GiftLogSceneEnum extends Enum
     {
         return [
             self::RECHARGE => [
-                'name' => '用户充值',
+                'name' => __('用户充值'),
                 'value' => self::RECHARGE,
-                'describe' => '用户充值：%s',
+                'describe' => __('用户充值：%s'),
             ],
             self::CONSUME => [
-                'name' => '用户消费',
+                'name' => __('用户消费'),
                 'value' => self::CONSUME,
-                'describe' => '用户消费：%s',
+                'describe' => __('用户消费：%s'),
             ],
         ];
     }

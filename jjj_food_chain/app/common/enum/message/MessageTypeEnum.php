@@ -25,15 +25,15 @@ class MessageTypeEnum extends Enum
         return [
             self::ORDER => [
                 'value' => self::ORDER,
-                'name' => '订单',
+                'name' => __('订单'),
             ],
             self::AGENT => [
                 'value' => self::AGENT,
-                'name' => '分销',
+                'name' => __('分销'),
             ],
             self::NOTICE => [
                 'value' => self::NOTICE,
-                'name' => '通知',
+                'name' => __('通知'),
             ],
         ];
     }

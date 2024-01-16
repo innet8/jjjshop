@@ -28,19 +28,19 @@ class DeliveryTypeEnum extends Enum
     {
         return [
             self::EXPRESS => [
-                'name' => '外卖配送',
+                'name' => __('外卖配送'),
                 'value' => self::EXPRESS,
             ],
             self::EXTRACT => [
-                'name' => '到店自提',
+                'name' => __('到店自提'),
                 'value' => self::EXTRACT,
             ],
             self::TAKEAWAY => [
-                'name' => '打包带走',
+                'name' => __('打包带走'),
                 'value' => self::TAKEAWAY,
             ],
             self::DINNER => [
-                'name' => '店内就餐',
+                'name' => __('店内就餐'),
                 'value' => self::DINNER,
             ],
         ];
@@ -53,11 +53,11 @@ class DeliveryTypeEnum extends Enum
     {
         return [
             self::EXPRESS => [
-                'name' => '外卖配送',
+                'name' => __('外卖配送'),
                 'value' => self::EXPRESS,
             ],
             self::EXTRACT => [
-                'name' => '到店自提',
+                'name' => __('到店自提'),
                 'value' => self::EXTRACT,
             ],
         ];
@@ -70,11 +70,11 @@ class DeliveryTypeEnum extends Enum
     {
         return [
             self::TAKEAWAY => [
-                'name' => '打包带走',
+                'name' => __('打包带走'),
                 'value' => self::TAKEAWAY,
             ],
             self::DINNER => [
-                'name' => '店内就餐',
+                'name' => __('店内就餐'),
                 'value' => self::DINNER,
             ],
         ];
@@ -87,11 +87,11 @@ class DeliveryTypeEnum extends Enum
     {
         return [
             self::EXPRESS => [
-                'name' => '快递配送',
+                'name' => __('快递配送'),
                 'value' => self::EXPRESS,
             ],
             self::EXTRACT => [
-                'name' => '到店自提',
+                'name' => __('到店自提'),
                 'value' => self::EXTRACT,
             ],
         ];

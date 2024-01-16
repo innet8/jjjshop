@@ -73,111 +73,111 @@ class SettingEnum extends Enum
         return [
             self::STORE => [
                 'value' => self::STORE,
-                'describe' => '商城设置',
+                'describe' => __('商城设置'),
             ],
             self::TRADE => [
                 'value' => self::TRADE,
-                'describe' => '交易设置',
+                'describe' => __('交易设置'),
             ],
             self::SMS => [
                 'value' => self::SMS,
-                'describe' => '短信通知',
+                'describe' => __('短信通知'),
             ],
             self::TPL_MSG => [
                 'value' => self::TPL_MSG,
-                'describe' => '模板消息',
+                'describe' => __('模板消息'),
             ],
             self::STORAGE => [
                 'value' => self::STORAGE,
-                'describe' => '上传设置',
+                'describe' => __('上传设置'),
             ],
             self::PRINTER => [
                 'value' => self::PRINTER,
-                'describe' => '小票打印',
+                'describe' => __('小票打印'),
             ],
             self::FULL_FREE => [
                 'value' => self::FULL_FREE,
-                'describe' => '满额包邮设置',
+                'describe' => __('满额包邮设置'),
             ],
             self::RECHARGE => [
                 'value' => self::RECHARGE,
-                'describe' => '充值设置',
+                'describe' => __('充值设置'),
             ],
             self::POINTS => [
                 'value' => self::POINTS,
-                'describe' => '积分设置',
+                'describe' => __('积分设置'),
             ],
             self::OFFICIA => [
                 'value' => self::OFFICIA,
-                'describe' => '公众号设置',
+                'describe' => __('公众号设置'),
             ],
             self::SIGN => [
                 'value' => self::SIGN,
-                'describe' => '签到有礼',
+                'describe' => __('签到有礼'),
             ],
             self::HOMEPUSH => [
                 'value' => self::HOMEPUSH,
-                'describe' => '首页推送',
+                'describe' => __('首页推送'),
             ],
             self::COLLECTION => [
                 'value' => self::COLLECTION,
-                'describe' => '引导收藏',
+                'describe' => __('引导收藏'),
             ],
             self::GETPHOME => [
                 'value' => self::GETPHOME,
-                'describe' => '获取手机号',
+                'describe' => __('获取手机号'),
             ],
             self::SYS_CONFIG => [
                 'value' => self::SYS_CONFIG,
-                'describe' => '系统设置',
+                'describe' => __('系统设置'),
             ],
             self::BALANCE => [
                 'value' => self::BALANCE,
-                'describe' => '充值设置',
+                'describe' => __('充值设置'),
             ],
             self::THEME => [
                 'value' => self::THEME,
-                'describe' => '主题设置',
+                'describe' => __('主题设置'),
             ],
             self::DELIVER => [
                 'value' => self::DELIVER,
-                'describe' => '配送设置',
+                'describe' => __('配送设置'),
             ],
             self::GROUP => [
                 'value' => self::GROUP,
-                'describe' => '团购设置',
+                'describe' => __('团购设置'),
             ],
             self::BALANCE_CASH => [
                 'value' => self::BALANCE_CASH,
-                'describe' => '余额提现设置',
+                'describe' => __('余额提现设置'),
             ],
             self::LIVE => [
                 'value' => self::LIVE,
-                'describe' => '直播设置',
+                'describe' => __('直播设置'),
             ],
             self::CURRENCY => [
                 'value' => self::CURRENCY,
-                'describe' => '货币单位',
+                'describe' => __('货币单位'),
             ],
             self::TAX_RATE => [
                 'value' => self::TAX_RATE,
-                'describe' => '税率管理',
+                'describe' => __('税率管理'),
             ],
             self::SERVICE_CHARGE => [
                 'value' => self::SERVICE_CHARGE,
-                'describe' => '服务费',
+                'describe' => __('服务费'),
             ],
             self::CASHIER => [
                 'value' => self::CASHIER,
-                'describe' => '收银机设置',
+                'describe' => __('收银机设置'),
             ],
             self::TABLET => [
                 'value' => self::TABLET,
-                'describe' => '平板端设置',
+                'describe' => __('平板端设置'),
             ],
             self::KITCHEN => [
                 'value' => self::KITCHEN,
-                'describe' => '厨显设置',
+                'describe' => __('厨显设置'),
             ],
         ];
     }

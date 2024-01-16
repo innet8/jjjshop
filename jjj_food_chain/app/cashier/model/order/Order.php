@@ -2,18 +2,20 @@
 
 namespace app\cashier\model\order;
 
-use app\common\enum\settings\SettingEnum;
 use app\common\library\helper;
 use app\api\model\order\OrderProduct;
 use app\common\model\supplier\Supplier;
 use app\common\enum\order\OrderTypeEnum;
 use app\common\enum\order\OrderSourceEnum;
+use app\common\enum\order\OrderStatusEnum;
+use app\common\enum\order\OrderPayTypeEnum;
+use app\common\enum\order\OrderPayStatusEnum;
 use app\common\model\order\Order as OrderModel;
+use app\cashier\model\store\Table as TableModel;
 use app\common\service\order\OrderRefundService;
 use app\common\service\order\OrderCompleteService;
 use app\common\service\product\factory\ProductFactory;
 use app\cashier\service\order\paysuccess\type\MasterPaySuccessService;
-use app\cashier\model\store\Table as TableModel;
 use think\facade\Log;
 
 /**
@@ -488,8 +490,8 @@ class Order extends OrderModel
             ->leftJoin('order_product rp','a.order_id = rp.order_id')
             ->leftJoin('product p','p.product_id = rp.product_id')
             ->leftJoin('category c','c.category_id = p.category_id')
-            ->where('a.pay_status', '=', 20)
-            ->where('a.order_status', '=', 30)
+            ->where('a.pay_status', '=', OrderPayStatusEnum::SUCCESS)
+            ->where('a.order_status', '=', OrderStatusEnum::COMPLETED)
             ->where('a.eat_type', '<>', 0);
 
         return [
@@ -501,10 +503,11 @@ class Order extends OrderModel
                 ->select()
                 ->append([])?->toArray(),
             'sales_num' => (clone $model)->count(),
-            'balance_pay' => (clone $model)->where('pay_type', 10)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
-            'cash_pay' => (clone $model)->where('pay_type', 40)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
-            'wx_pay' => (clone $model)->where('pay_type', 50)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
-            'zfb_pay' => (clone $model)->where('pay_type', 60)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
+            'balance_pay' => (clone $model)->where('pay_type', OrderPayTypeEnum::BALANCE)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
+            'cash_pay' => (clone $model)->where('pay_type', OrderPayTypeEnum::CASH)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
+            'wx_pay' => (clone $model)->where('pay_type', OrderPayTypeEnum::OWECHAT)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
+            'zfb_pay' => (clone $model)->where('pay_type', OrderPayTypeEnum::OALIPAY)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
+            'pos_pay' => (clone $model)->where('pay_type', OrderPayTypeEnum::POS)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
             'refund_amount' => number_format((clone $model)->sum("refund_money"), 2, '.', ''), 
             'total_amount' => number_format((clone $model)->sum("pay_price"), 2, '.', ''), 
             'times' => [$startTime, $endTime], 

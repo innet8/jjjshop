@@ -2,13 +2,14 @@
 
 namespace app\common\model\plus\points;
 
-use app\common\model\BaseModel;
-use app\common\enum\settings\DeliveryTypeEnum;
-use app\common\enum\order\OrderPayStatusEnum;
-use app\common\enum\order\OrderPayTypeEnum;
 use app\common\library\helper;
+use app\common\model\BaseModel;
+use app\common\enum\order\OrderStatusEnum;
 use app\common\service\order\OrderService;
+use app\common\enum\order\OrderPayTypeEnum;
 use app\common\model\user\User as UserModel;
+use app\common\enum\order\OrderPayStatusEnum;
+use app\common\enum\settings\DeliveryTypeEnum;
 
 /**
  * 订单模型模型
@@ -96,22 +97,21 @@ class Order extends BaseModel
     {
         // 订单状态
         if (in_array($data['order_status'], [20, 30])) {
-            $orderStatus = [20 => '已取消', 30 => '已完成'];
-            return $orderStatus[$data['order_status']];
+            return OrderStatusEnum::data($data['order_status'])['name'];
         }
         // 付款状态
         if ($data['pay_status'] == 10) {
-            return '待付款';
+            return OrderPayStatusEnum::data($data['pay_status'])['name'];
         }
         if ($data['delivery_type'] == 20) {
-            return '待取货';
+            return __('待取货');
         }
         // 发货状态
         if ($data['delivery_type'] == 10 && $data['delivery_status'] == 10) {
-            return '待发货';
+            return __('待发货');
         }
         if ($data['delivery_type'] == 10 && $data['receipt_status'] == 10) {
-            return '待收货';
+            return __('待收货');
         }
         return $value;
     }
@@ -143,7 +143,7 @@ class Order extends BaseModel
      */
     public function getDeliveryStatusAttr($value)
     {
-        $status = [10 => '待发货', 20 => '已发货'];
+        $status = [10 => __('待发货'), 20 => __('已发货')];
         return ['text' => $status[$value], 'value' => $value];
     }
 
@@ -154,7 +154,7 @@ class Order extends BaseModel
      */
     public function getReceiptStatusAttr($value)
     {
-        $status = [10 => '待收货', 20 => '已收货'];
+        $status = [10 => __('待收货'), 20 => __('已收货')];
         return ['text' => $status[$value], 'value' => $value];
     }
 
@@ -165,8 +165,10 @@ class Order extends BaseModel
      */
     public function getOrderStatusAttr($value)
     {
-        $status = [10 => '进行中', 20 => '已取消', 21 => '待取消', 30 => '已完成'];
-        return ['text' => $status[$value], 'value' => $value];
+        return [
+            'text' => OrderStatusEnum::data($value)['name'], 
+            'value' => $value
+        ];
     }
 
     /**
