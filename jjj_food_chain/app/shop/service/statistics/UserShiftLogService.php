@@ -42,7 +42,7 @@ class UserShiftLogService
             $total_money = $item['cash_income'] ?? 0 + $item['balance_income'] ?? 0 + $item['wechat_income'] ?? 0 + $item['alipay_income'] ?? 0 - $item['refund_amount'] ?? 0;
             $sheet->setCellValue('A' . ($index + 2), "\t" . $item['shift_no'] . "\t");
             $sheet->setCellValue('B' . ($index + 2), $item['user']['real_name'] ?? '');
-            $sheet->setCellValue('C' . ($index + 2), format_time_his($item['shift_start_time']) . '至' . format_time_his($item['shift_end_time']));
+            $sheet->setCellValue('C' . ($index + 2), $item['shift_start_time'] . '至' . $item['shift_end_time']);
             $sheet->setCellValue('D' . ($index + 2), $total_money);
             $sheet->setCellValue('E' . ($index + 2), $item['cash_money'] ?? 0);
             $sheet->setCellValue('F' . ($index + 2), $item['previous_shift_cash'] ?? 0);
