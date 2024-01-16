@@ -1,7 +1,6 @@
 <template>
-    <el-upload v-model:file-list="fileList" class="upload-demo"
-        action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" multiple :on-preview="handlePreview"
-        :on-remove="handleRemove" :before-remove="beforeRemove" :on-exceed="handleExceed">
+    <el-upload class="upload-demo" accept="image/jpeg,image/png,image/jpg,video/*" action="" multiple
+        :show-file-list="false" :before-upload="onBeforeUploadImage" :on-change="fileChange" :http-request="UploadImage">
         <el-button type="primary">{{ $t('上传') }}</el-button>
         <template #tip>
             <div class="el-upload__tip">
@@ -11,41 +10,55 @@
         </template>
     </el-upload>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+<script >
+import FileApi from '@/api/file.js';
+export default {
+    methods: {
+        /*选择上传图片*/
+        fileChange(e) {
 
-import type { UploadProps, UploadUserFile } from 'element-plus'
+        },
 
-const fileList = ref<UploadUserFile[]>([])
+        /*选择图片之前*/
+        onBeforeUploadImage(file) {
+            return true;
+        },
 
-const handleRemove: UploadProps['onRemove'] = (file, uploadFiles) => {
-    console.log(file, uploadFiles)
-}
+        /*上传图片*/
+        UploadImage(param) {
+            let self = this;
+            const loading = ElLoading.service({
+                lock: true,
+                text: "上传中,请等待",
+                background: "rgba(0, 0, 0, 0.7)",
+            });
+            const formData = new FormData();
+            formData.append("iFile", param.file);
+            formData.append("file_type", param.file.file_type);
+            FileApi.uploadFile(formData)
+                .then((response) => {
+                    loading.close();
+                    ElMessage({
+                        message: $t("本次上传成功"),
+                        type: "success",
+                    });
+                    self.$emit('upLoad',response.data)
+                })
+                .catch((response) => {
+                    loading.close();
+                    ElMessage({
+                        message: $t("本次上传失败"),
+                        type: "warning",
+                    });
+                });
+        },
 
-const handlePreview: UploadProps['onPreview'] = (uploadFile) => {
-    console.log(uploadFile)
-}
-
-const handleExceed: UploadProps['onExceed'] = (files, uploadFiles) => {
-    ElMessage.warning(
-        `The limit is 3, you selected ${files.length} files this time, add up to ${files.length + uploadFiles.length
-        } totally`
-    )
-}
-
-const beforeRemove: UploadProps['beforeRemove'] = (uploadFile, uploadFiles) => {
-    return ElMessageBox.confirm(
-        `Cancel the transfer of ${uploadFile.name} ?`
-    ).then(
-        () => true,
-        () => false
-    )
+    },
 }
 </script>
-  <style scoped>
-  .el-upload__tip{
+<style scoped>
+.el-upload__tip {
     line-height: 1.7;
     color: var(--el-color-tips);
-  }
+}
 </style>

@@ -5,12 +5,12 @@
     	描述：图片上传
     -->
     <div class="upload-wrap">
-        <el-dialog title="文件管理" v-model="dialogVisible" :close-on-click-modal="false" class="upload-dialog"
+        <el-dialog :title="$t('文件管理')" v-model="dialogVisible" :close-on-click-modal="false" class="upload-dialog"
             :close-on-press-escape="false" @close="cancelFunc" :width="dialogWidth" :append-to-body="true">
 
             <div class="upload-wrap-inline mb16 clearfix">
                 <div class="leval-item">
-                    <el-button size="small" icon="Plus" @click="addCategory">添加分类</el-button>
+                    <el-button size="small" icon="Plus" @click="addCategory">{{ $t('添加分类') }}</el-button>
                     <el-popover placement="bottom" width="200" trigger="click" :value="true">
                         <ul class="move-type">
                             <li v-for="(item, index) in typeList" :key="index" @click="moveTypeFunc(item.group_id)">
@@ -18,16 +18,16 @@
                             </li>
                         </ul>
                         <template #reference>
-                            <el-button size="small" icon="CaretBottom">移动至</el-button>
+                            <el-button size="small" icon="CaretBottom">{{ $t('移动至') }}</el-button>
                         </template>
                     </el-popover>
-                    <el-button size="small" type="danger" icon="Delete" @click="deleteFileFunc(false)">批量删除</el-button>
+                    <el-button size="small" type="danger" icon="Delete" @click="deleteFileFunc(false)">{{ $t('批量删除') }}</el-button>
                 </div>
                 <div class="leval-item upload-btn">
                     <el-upload class="avatar-uploader" multiple ref="upload" action=""
                         accept="image/jpeg,image/png,image/jpg" :before-upload="onBeforeUploadImage" :auto-upload="false"
                         :show-file-list="false" :on-change="fileChange">
-                        <el-button size="small" icon="Upload" type="primary">点击上传</el-button>
+                        <el-button size="small" icon="Upload" type="primary">{{ $t('点击上传') }}</el-button>
                     </el-upload>
 
                 </div>
@@ -85,8 +85,8 @@
                 </el-dialog>
             </div>
             <template #footer>
-                <el-button size="small" @click="cancelFunc">取 消</el-button>
-                <el-button size="small" type="primary" @click="confirmFunc">确 定</el-button>
+                <el-button size="small" @click="cancelFunc">{{ $t('取消') }}</el-button>
+                <el-button size="small" type="primary" @click="confirmFunc">{{ $t('确定') }}</el-button>
             </template>
 
 
