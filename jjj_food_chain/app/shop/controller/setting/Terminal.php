@@ -21,7 +21,7 @@ class Terminal extends Controller
      * @Apidoc\Param("carousel", type="array", require=true, desc="上传后的轮播内容url（图片 + 视频）")
      * @Apidoc\Param("is_auto_send", type="int", require=true, default=0, desc="收银结账自动送厨房")
      * @Apidoc\Param("cashier_password", type="string", require=true, default="", desc="钱箱密码")
-     * @Apidoc\Param("auto_lock_screen", type="array", require=true, desc="自动锁屏")
+     * @Apidoc\Param("auto_lock_screen", type="int", require=true, default=0, desc="自动锁屏")
      * @Apidoc\Param("language", type="array", require=true, desc="常用语言")
      * @Apidoc\Param("default_language", type="string", require=true, default="", desc="默认语言")
      * @Apidoc\Returned()
@@ -51,7 +51,7 @@ class Terminal extends Controller
             'carousel' => $data['carousel'] ?? [], // 轮播内容url
             'is_auto_send' => $data['is_auto_send'] ?? 0, // 收银结账自动送厨房
             'cashier_password' => $data['cashier_password'] ?? '', // 钱箱密码
-            'auto_lock_screen' => $data['auto_lock_screen'] ?? ['unit' => 'minute', 'value' => 5], // 自动锁屏
+            'auto_lock_screen' => $data['auto_lock_screen'] ?? 300, // 自动锁屏 5分钟
             'language' => $data['language'] ?? ['th', 'en', 'zh', 'zh-tw'], // 常用语言
             'default_language' => $data['default_language'] ?? 'en', // 默认语言
         ];

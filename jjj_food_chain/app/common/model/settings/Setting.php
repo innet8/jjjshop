@@ -509,11 +509,8 @@ class Setting extends BaseModel
                     'carousel' => [],
                     'is_auto_send' => 0, // 收银结账自动送厨房
                     'cashier_password' => '', // 钱箱密码
-                    // 自动锁屏 默认5分钟
-                    'auto_lock_screen' => [
-                        'unit' => 'minute', // 单位，'second'、'minute' 或 'never'
-                        'value' => 5, // 时间值
-                    ],
+                    // 自动锁屏 默认5分钟存秒
+                    'auto_lock_screen' => 300,
                     // 常用语言 泰语、英语、中文、繁体
                     'language' => ['th', 'en', 'zh', 'zh-tw'],
                     // 默认语言
