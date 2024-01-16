@@ -6,6 +6,25 @@ use app\common\enum\settings\SettingEnum;
 use think\facade\Cache;
 use app\common\model\BaseModel;
 
+define('LANGUAGE_LIST', [
+    [
+        'key' => 'th',
+        'value' => 'ภาษาไทย'
+    ],
+    [
+        'key' => 'zh',
+        'value' => '简体中文'
+    ],
+    [
+        'key' => 'zh-tw',
+        'value' => '繁體中文'
+    ],
+    [
+        'key' => 'en',
+        'value' => 'English'
+    ],
+]);
+
 /**
  * 系统设置模型
  */
@@ -511,6 +530,8 @@ class Setting extends BaseModel
                     'cashier_password' => '', // 钱箱密码
                     // 自动锁屏 默认5分钟存秒
                     'auto_lock_screen' => 300,
+                    // 语言列表
+                    'language_list' => LANGUAGE_LIST,
                     // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
                     'language' => [],
                     // 默认语言
@@ -533,6 +554,8 @@ class Setting extends BaseModel
                     ],
                     // 高级设置密码
                     'advanced_password' => '',
+                    // 语言列表
+                    'language_list' => LANGUAGE_LIST,
                     // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
                     'language' => [],
                     'default_language' => '', // 默认语言
@@ -550,6 +573,8 @@ class Setting extends BaseModel
                     'is_wait_color' => 0, // 是否开启等待时长颜色
                     // 时长颜色 10分钟-黄色#ffff00 20分钟-红色#ff0000
                     'wait_color' => [],
+                    // 语言列表
+                    'language_list' => LANGUAGE_LIST,
                     // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
                     'language' => [],
                     'default_language' => 'en', // 默认语言

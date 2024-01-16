@@ -16,28 +16,6 @@ class UserShiftLog extends BaseModel
     protected $pk = 'id';
 
     /**
-     * 当班开始时间
-     *
-     * @param int $value
-     * @return string
-     */
-    public function getShiftStartTimeAttr($value)
-    {
-        return $value ? format_time_his($value) : '-';
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param int $value
-     * @return string
-     */
-    public function getShiftEndTimeAttr($value)
-    {
-        return $value ? format_time_his($value) : '-';
-    }
-
-    /**
      * 关联用户表
      */
     public function user()
@@ -75,6 +53,9 @@ class UserShiftLog extends BaseModel
         foreach ($list as &$item) {
             // 营业收入
             $item['total_money'] = $item['cash_income'] + $item['balance_income'] + $item['wechat_income'] + $item['alipay_income'] - $item['refund_amount'];
+            // 时间处理
+            $item['shift_start_time'] = $item['shift_start_time'] ? format_time_his($item['shift_start_time']) : '-';
+            $item['shift_end_time'] = $item['shift_end_time'] ? format_time_his($item['shift_end_time']) : '-';
         }
         return $list;
     }
