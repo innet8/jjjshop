@@ -8,18 +8,12 @@
             <el-form-item label="排序" prop="sort">
                 <el-input v-model.number="form.sort" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('规格名称') + '(ภาษาไทย)'" prop="spec_name.th">
-                <el-input v-model="form.spec_name.th" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('规格名称') + '(简体中文)'" prop="spec_name.zh">
-                <el-input v-model="form.spec_name.zh" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('规格名称') + '(繁體中文)'" prop="spec_name.zhtw">
-                <el-input v-model="form.spec_name.zhtw" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('规格名称') + '(English)'" prop="spec_name.en">
-                <el-input v-model="form.spec_name.en" autocomplete="off"></el-input>
-            </el-form-item>
+            <template v-for="(item, index) in languageList" :key="index">
+                <el-form-item :label="$t('规格名称') + `(${item.label})`" prop="spec_name.th">
+                    <el-input v-model="form.spec_name[item.key]" autocomplete="off"></el-input>
+                </el-form-item>
+            </template>
+
         </el-form>
         <template #footer>
             <div class="dialog-footer">
@@ -34,13 +28,15 @@
 import PorductApi from '@/api/product.js';
 import Upload from '@/components/file/Upload.vue';
 import { languageStore } from '@/store/model/language.js';
-const languageData = JSON.stringify(languageStore().languageData)
+const languageData = JSON.stringify(languageStore().languageData);
+const languageList = languageStore().languageList;
 export default {
     components: {
         Upload
     },
     data() {
         return {
+            languageList:languageList,
             form: {
                 spec_id: '',
                 spec_name: JSON.parse(languageData),

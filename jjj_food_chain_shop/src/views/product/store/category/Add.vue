@@ -10,18 +10,13 @@
                     </template>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$t('分类名称') + '(ภาษาไทย)'" prop="name.th" :rules="[{ required: true, message: $t('请输入分类名称') }]">
-                <el-input v-model="form.name.th" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('分类名称') + '(简体中文)'" prop="name.zh" :rules="[{ required: true, message: $t('请输入分类名称') }]">
-                <el-input v-model="form.name.zh" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('分类名称') + '(繁體中文)'" prop="name.zhtw" :rules="[{ required: true, message: $t('请输入分类名称') }]">
-                <el-input v-model="form.name.zhtw" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('分类名称') + '(English)'" prop="name.en" :rules="[{ required: true, message: $t('请输入分类名称') }]">
-                <el-input v-model="form.name.en" autocomplete="off"></el-input>
-            </el-form-item>
+            <template v-for="(item, index) in languageList" :key="index">
+                <el-form-item :label="$t('分类名称') + `(${item.label})`" prop="name.th"
+                    :rules="[{ required: true, message: $t('请输入分类名称') }]">
+                    <el-input v-model="form.name[item.key]" autocomplete="off"></el-input>
+                </el-form-item>
+            </template>
+
             <el-form-item label="分类图片" prop="image_id">
                 <el-row>
                     <el-button type="primary" @click="openUpload">{{ $t('选择图片') }}</el-button>
@@ -51,12 +46,14 @@ import PorductApi from '@/api/product.js';
 import Upload from '@/components/file/Upload.vue';
 import { languageStore } from '@/store/model/language.js';
 const languageData = JSON.stringify(languageStore().languageData)
+const languageList = languageStore().languageList;
 export default {
     components: {
         Upload
     },
     data() {
         return {
+            languageList: languageList,
             category: [],
             form: {
                 parent_id: 0,

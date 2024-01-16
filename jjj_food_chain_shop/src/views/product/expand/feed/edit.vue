@@ -5,18 +5,12 @@
     <el-dialog title="编辑加料" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
         :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
-            <el-form-item :label="$t('加料名称') + '(ภาษาไทย)'" prop="feed_name">
-                <el-input type="text" v-model="form.feed_name"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('加料名称') + '(简体中文)'" prop="feed_name">
-                <el-input type="text" v-model="form.feed_name"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('加料名称') + '(繁體中文)'" prop="feed_name">
-                <el-input type="text" v-model="form.feed_name"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('加料名称') + '(English)'" prop="feed_name">
-                <el-input type="text" v-model="form.feed_name"></el-input>
-            </el-form-item>
+            <template v-for="(item, index) in languageList" :key="index">
+                <el-form-item :label="$t('加料名称') + `(${item.label})`" :prop="`feed_name.${[item.key]}`"
+                    :rules="[{ required: true, message: $t('请输入加料名称') }]">
+                    <el-input type="text" v-model="form.feed_name[item.key]"></el-input>
+                </el-form-item>
+            </template>
             <el-form-item label="排序" prop="sort">
                 <el-input type="text" v-model.number="form.sort"></el-input>
             </el-form-item>
@@ -36,36 +30,36 @@
 <script>
 import PorductApi from '@/api/product.js';
 import Upload from '@/components/file/Upload.vue';
+import { languageStore } from '@/store/model/language.js';
+const languageData = JSON.stringify(languageStore().languageData);
+const languageList = languageStore().languageList;
 export default {
     components: {
         Upload
     },
     data() {
         return {
+            languageList: languageList,
             form: {
                 feed_id: '',
-                feed_name: '',
+                feed_name:  JSON.parse(languageData),
                 sort: 100,
                 price: '',
                 feed_value: []
             },
             formRules: {
-                feed_name: [{
-                    required: true,
-                    message: '请输入加料名称',
-                    trigger: 'blur'
-                }],
+
                 price: [{
                     required: true,
-                    message: '请输入价格',
+                    message: $t('请输入价格'),
                     trigger: 'blur'
                 }],
                 sort: [{
                     required: true,
-                    message: '排序不能为空'
+                    message: $t('排序不能为空')
                 }, {
                     type: 'number',
-                    message: '排序必须为数字'
+                    message: $t('排序必须为数字')
                 }]
             },
             /*左边长度*/
@@ -81,7 +75,7 @@ export default {
     created() {
         this.dialogVisible = this.open_edit;
         this.form.feed_id = this.editform.feed_id;
-        this.form.feed_name = this.editform.feed_name;
+        this.form.feed_name = JSON.parse(this.editform.feed_name);
         this.form.price = this.editform.price;
         this.form.sort = this.editform.sort;
     },
@@ -94,7 +88,8 @@ export default {
         },
         submit() {
             let self = this;
-            let params = self.form;
+            let params = JSON.parse(JSON.stringify(self.form));
+            params.feed_name = JSON.stringify(params.feed_name);
             self.$refs.form.validate((valid) => {
                 if (valid) {
                     self.loading = true;

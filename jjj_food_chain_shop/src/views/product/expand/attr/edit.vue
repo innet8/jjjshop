@@ -5,16 +5,16 @@
     <el-dialog title="编辑属性" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
         :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
-            <el-form-item label="排序" prop="sort" >
+            <el-form-item :label="$t('排序')" prop="sort" >
                 <el-input v-model.number="form.sort" autocomplete="off"></el-input>
             </el-form-item>
-            <template v-for="(item, index) in form.nameList" :key="index">
-                <el-form-item :label="$t('属性名称') + item.label" prop="attribute_name">
-                    <el-input v-model="item.attribute_name" autocomplete="off"></el-input>
+            <template v-for="(item, index) in languageList" :key="index">
+                <el-form-item :label="$t('属性名称') + `(${item.label})`"  :rules="[{ required: true, message: $t('请输入属性名称') }]">
+                    <el-input v-model="form.attribute_name[item.key]" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="属性值" prop="attribute_value" class="attribute-value">
-                    <div v-for="(items, indexs) in item.attribute_value" :key='indexs'>
-                        <el-input v-model="item.attribute_value[indexs]" autocomplete="off"></el-input>
+                <el-form-item :label="$t('属性值')" :rules="[{ required: true, message: $t('请输入属性值') }]" class="attribute-value">
+                    <div v-for="(items, indexs) in form.attribute_value" :key='indexs'>
+                        <el-input v-model="items[item.key]" autocomplete="off"></el-input>
                     </div>
                     <el-icon class="add-button" @click="addvalue">
                         <CirclePlusFilled />
@@ -27,8 +27,8 @@
         </el-form>
         <template #footer>
             <div class="dialog-footer">
-                <el-button @click="dialogFormVisible">取 消</el-button>
-                <el-button type="primary" @click="submit" :loading="loading">确 定</el-button>
+                <el-button @click="dialogFormVisible">{{ $t('取消') }}</el-button>
+                <el-button type="primary" @click="submit" :loading="loading">{{ $t('确定') }}</el-button>
             </div>
         </template>
     </el-dialog>
@@ -37,55 +37,29 @@
 <script>
 import PorductApi from '@/api/product.js';
 import Upload from '@/components/file/Upload.vue';
+import { languageStore } from '@/store/model/language.js';
+const languageData = JSON.stringify(languageStore().languageData);
+const languageList = languageStore().languageList;
 export default {
     components: {
         Upload
     },
     data() {
         return {
+            languageList: languageList,
             form: {
-                attribute_id: '',
                 sort: 100,
-                nameList: [
-                    {
-                        label: '(ภาษาไทย)',
-                        attribute_name: '',
-                        attribute_value: [],
-                    },
-                    {
-                        label: '(简体中文)',
-                        attribute_name: '',
-                        attribute_value: [],
-                    },
-                    {
-                        label: '(繁體中文)',
-                        attribute_name: '',
-                        attribute_value: [],
-                    },
-                    {
-                        label: '(English)',
-                        attribute_name: '',
-                        attribute_value: [],
-                    },
-                ]
+                attribute_name: JSON.parse(languageData),
+                attribute_value: [],
             },
             formRules: {
-                attribute_name: [{
-                    required: true,
-                    message: '请输入属性名称',
-                    trigger: 'blur'
-                }],
-                attribute_value: [{
-                    required: true,
-                    message: '请输入属性值',
-                    trigger: 'blur'
-                }],
+
                 sort: [{
                     required: true,
-                    message: '排序不能为空'
+                    message: $t('排序不能为空')
                 }, {
                     type: 'number',
-                    message: '排序必须为数字'
+                    message: $t('排序必须为数字')
                 }]
             },
             /*左边长度*/
@@ -101,9 +75,11 @@ export default {
     created() {
         this.dialogVisible = this.open_edit;
         this.form.attribute_value = this.editform.attribute_value;
+        console.log(this.form);
         this.form.attribute_id = this.editform.attribute_id;
-        this.form.attribute_name = this.editform.attribute_name;
+        this.form.attribute_name = JSON.parse(this.editform.attribute_name);
         this.form.sort = this.editform.sort;
+  
     },
     methods: {
         addvalue() {
@@ -126,7 +102,7 @@ export default {
                     PorductApi.editAttribute(params).then(data => {
                         self.loading = false;
                         ElMessage({
-                            message: '修改成功',
+                            message: $t('修改成功'),
                             type: 'success'
                         });
                         self.dialogFormVisible(true);

@@ -2,29 +2,24 @@
     <!--
     	描述：商品-单位库-添加单位
     -->
-    <el-dialog title="编辑标签" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
+    <el-dialog :title="$t('编辑标签')" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
         :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
-            <el-form-item label="排序" prop="sort">
+            <el-form-item :label="$t('排序')" prop="sort">
                 <el-input v-model.number="form.sort" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('标签名称') + '(ภาษาไทย)'" prop="label_name">
-                <el-input v-model="form.label_name" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('标签名称') + '(简体中文)'" prop="label_name">
-                <el-input v-model="form.label_name" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('标签名称') + '(繁體中文)'" prop="label_name">
-                <el-input v-model="form.label_name" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('标签名称') + '(English)'" prop="label_name">
-                <el-input v-model="form.label_name" autocomplete="off"></el-input>
-            </el-form-item>
+            <template v-for="(item, index) in languageList" :key="index">
+                <el-form-item :label="$t('标签名称') + `(${item.label})`" :prop="`label_name.${item.key}`"
+                    :rules="[{ required: true, message: $t('请输入标签名称') }]">
+                    <el-input v-model="form.label_name[item.key]" autocomplete="off"></el-input>
+                </el-form-item>
+            </template>
+
         </el-form>
         <template #footer>
             <div class="dialog-footer">
-                <el-button @click="dialogFormVisible">取 消</el-button>
-                <el-button type="primary" @click="submit" :loading="loading">确 定</el-button>
+                <el-button @click="dialogFormVisible">{{ $t('取消') }}</el-button>
+                <el-button type="primary" @click="submit" :loading="loading">{{ $t('确定') }}</el-button>
             </div>
         </template>
     </el-dialog>
@@ -33,29 +28,28 @@
 <script>
 import PorductApi from '@/api/product.js';
 import Upload from '@/components/file/Upload.vue';
+import { languageStore } from '@/store/model/language.js';
+const languageData = JSON.stringify(languageStore().languageData);
+const languageList = languageStore().languageList;
 export default {
     components: {
         Upload
     },
     data() {
         return {
+            languageList:languageList,
             form: {
                 unit_id: '',
-                unit_name: '',
+                unit_name: JSON.parse(languageData),
                 sort: 100,
             },
             formRules: {
-                label_name: [{
-                    required: true,
-                    message: '请输入标签名称',
-                    trigger: 'blur'
-                }],
                 sort: [{
                     required: true,
-                    message: '排序不能为空'
+                    message: $t('排序不能为空')
                 }, {
                     type: 'number',
-                    message: '排序必须为数字'
+                    message: $t('排序必须为数字')
                 }]
             },
             /*左边长度*/
@@ -71,13 +65,14 @@ export default {
     created() {
         this.dialogVisible = this.open_edit;
         this.form.label_id = this.editform.label_id;
-        this.form.label_name = this.editform.label_name;
+        this.form.label_name = JSON.parse(this.editform.label_name);
         this.form.sort = this.editform.sort;
     },
     methods: {
         submit() {
             let self = this;
-            let params = self.form;
+            let params = JSON.parse(JSON.stringify(self.form));
+            params.label_name = JSON.stringify(params.label_name)
             self.$refs.form.validate((valid) => {
                 if (valid) {
                     self.loading = true;

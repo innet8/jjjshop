@@ -1,124 +1,119 @@
 <template>
-  <!--
+    <!--
     	描述：商品-单位库-添加单位
     -->
-  <el-dialog title="添加单位" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
-    :close-on-press-escape="false">
-    <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
-      <el-form-item label="排序" prop="sort" >
-        <el-input v-model.number="form.sort" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item :label="$t('单位名称')+'(ภาษาไทย)'" prop="unit_name" >
-        <el-input v-model="form.unit_name" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item :label="$t('单位名称')+'(简体中文)'" prop="unit_name" >
-        <el-input v-model="form.unit_name" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item :label="$t('单位名称')+'(繁體中文)'" prop="unit_name" >
-        <el-input v-model="form.unit_name" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item :label="$t('单位名称')+'(English)'" prop="unit_name" >
-        <el-input v-model="form.unit_name" autocomplete="off"></el-input>
-      </el-form-item>
+    <el-dialog :title="$t('添加单位')" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
+        :close-on-press-escape="false">
+        <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
+            <el-form-item :label="$t('排序')" prop="sort">
+                <el-input v-model.number="form.sort" autocomplete="off"></el-input>
+            </el-form-item>
+            <template v-for="(item, index) in languageList" :key="index">
+                <el-form-item :label="$t('单位名称') + `(${item.label})`" :rules="[{ required: true, message: $t('请输入单位名称') }]"
+                    :prop="`unit_name.${[item.key]}`">
+                    <el-input v-model="form.unit_name[item.key]" autocomplete="off"></el-input>
+                </el-form-item>
+            </template>
 
-    </el-form>
-    <template #footer>
-    <div class="dialog-footer">
-      <el-button @click="dialogFormVisible">取 消</el-button>
-      <el-button type="primary" @click="submit" :loading="loading">确 定</el-button>
-    </div>
-    </template>
-  </el-dialog>
 
+        </el-form>
+        <template #footer>
+            <div class="dialog-footer">
+                <el-button @click="dialogFormVisible">{{ $t('取消') }}</el-button>
+                <el-button type="primary" @click="submit" :loading="loading">{{ $t('确定') }}</el-button>
+            </div>
+        </template>
+    </el-dialog>
 </template>
 
 <script>
-  import PorductApi from '@/api/product.js';
-  import Upload from '@/components/file/Upload.vue';
-  export default {
+import PorductApi from '@/api/product.js';
+import Upload from '@/components/file/Upload.vue';
+import { languageStore } from '@/store/model/language.js';
+const languageData = JSON.stringify(languageStore().languageData);
+const languageList = languageStore().languageList;
+export default {
     components: {
-      Upload
+        Upload
     },
     data() {
-      return {
-        form: {
-          unit_name: '',
-          sort: 100,
-        },
-        formRules: {
-          unit_name: [{
-            required: true,
-            message: '请输入单位名称',
-            trigger: 'blur'
-          }],
-          sort: [{
-            required: true,
-            message: '排序不能为空'
-          }, {
-            type: 'number',
-            message: '排序必须为数字'
-          }]
-        },
-        /*左边长度*/
-        formLabelWidth: '120px',
-        /*是否显示*/
-        dialogVisible: false,
-        loading: false,
-        /*是否上传图片*/
-        isupload: false,
-      };
+        return {
+            languageList: languageList,
+            form: {
+                unit_name: JSON.parse(languageData),
+                sort: 100,
+            },
+            formRules: {
+
+                sort: [{
+                    required: true,
+                    message: $t('排序不能为空')
+                }, {
+                    type: 'number',
+                    message: $t('排序必须为数字')
+                }]
+            },
+            /*左边长度*/
+            formLabelWidth: '120px',
+            /*是否显示*/
+            dialogVisible: false,
+            loading: false,
+            /*是否上传图片*/
+            isupload: false,
+        };
     },
     props: ['open_add', 'addform'],
     created() {
-      this.dialogVisible = this.open_add;
+        this.dialogVisible = this.open_add;
     },
     methods: {
-      addvalue() {
-        this.form.attribute_value.push('')
-      },
-      deleteattr(i) {
-        this.form.attribute_value.splice(i, 1)
-      },
-      submit() {
-        let self = this;
-        let params = self.form;
-        self.$refs.form.validate((valid) => {
-          if (valid) {
-            self.loading = true;
-            PorductApi.addUnit(params).then(data => {
-              self.loading = false;
-              ElMessage({
-                message: '添加成功',
-                type: 'success'
-              });
-              self.dialogFormVisible(true);
-            }).catch(error => {
-              self.loading = false;
+        addvalue() {
+            this.form.attribute_value.push('')
+        },
+        deleteattr(i) {
+            this.form.attribute_value.splice(i, 1)
+        },
+        submit() {
+            let self = this;
+            let params = JSON.parse(JSON.stringify(self.form));
+            params.unit_name = JSON.stringify(params.unit_name)
+            self.$refs.form.validate((valid) => {
+                if (valid) {
+                    self.loading = true;
+                    PorductApi.addUnit(params).then(data => {
+                        self.loading = false;
+                        ElMessage({
+                            message: $t('添加成功'),
+                            type: 'success'
+                        });
+                        self.dialogFormVisible(true);
+                    }).catch(error => {
+                        self.loading = false;
+                    });
+                }
             });
-          }
-        });
-      },
-      /*关闭弹窗*/
-      dialogFormVisible(e) {
-        if (e) {
-          this.$emit('closeDialog', {
-            type: 'success',
-            openDialog: false
-          })
-        } else {
-          this.$emit('closeDialog', {
-            type: 'error',
-            openDialog: false
-          })
-        }
-      },
+        },
+        /*关闭弹窗*/
+        dialogFormVisible(e) {
+            if (e) {
+                this.$emit('closeDialog', {
+                    type: 'success',
+                    openDialog: false
+                })
+            } else {
+                this.$emit('closeDialog', {
+                    type: 'error',
+                    openDialog: false
+                })
+            }
+        },
 
     }
-  };
+};
 </script>
 
 <style>
-  .img {
+.img {
     margin-top: 10px;
-  }
+}
 </style>

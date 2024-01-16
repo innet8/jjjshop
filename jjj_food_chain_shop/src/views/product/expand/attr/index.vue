@@ -16,7 +16,7 @@
           <el-table-column prop="attribute_name_text" :label="$t('属性名')" width="400px"></el-table-column>
           <el-table-column prop="attribute_value_text" :label="$t('属性值')">
             <template  #default="scope">
-             {{attrjoin(scope.row.attribute_value)}}
+             {{attrjoin(scope.row.attribute_value_text)}}
             </template>
           </el-table-column>
           <el-table-column prop="sort" :label="$t('排序')"></el-table-column>

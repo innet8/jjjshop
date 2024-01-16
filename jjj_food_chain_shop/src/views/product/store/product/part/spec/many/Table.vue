@@ -12,8 +12,9 @@
                     <el-table-column :label="$t('规格名称')" width="400">
                         <template #default="scope">
                             <div label="" class="spec-name" style="margin-bottom: 0;">
-                                <template v-for="(item,index) in languageList" :key="index">
-                                    <el-input size="small" prop="spec_name" v-model="scope.row.spec_name[key]" :placeholder="$t('请输入')+`(${item.label})`"></el-input>
+                                <template v-for="(item, index) in languageList" :key="index">
+                                    <el-input size="small" prop="spec_name" v-model="scope.row.spec_name[item.key]"
+                                        :placeholder="$t('请输入') + `(${item.label})`"></el-input>
                                 </template>
 
                             </div>
@@ -73,7 +74,7 @@ export default {
     },
     data() {
         return {
-            languageList:languageList,
+            languageList: languageList,
             restaurants: [],
             formData: {},
             /*批量设置sku属性*/
@@ -107,13 +108,14 @@ export default {
 </script>
 
 <style scoped>
-.spec-name{
+.spec-name {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
     padding: 12px;
 }
-.spec-name .el-input{
+
+.spec-name .el-input {
     max-width: calc(50% - 6px);
 }
 </style>

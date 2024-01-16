@@ -21,11 +21,11 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('商品库存')">
-                    <el-select size="small" v-model="activeName" :placeholder="$t('全部库存')">
-                        <el-option :label="$t('全部')" value="all"></el-option>
-                        <el-option :label="$t('库存低于10')" value="sell"></el-option>
-                        <el-option :label="$t('库存低于20')" value="lower"></el-option>
-                        <el-option :label="$t('库存低于50')" value="lower"></el-option>
+                    <el-select size="small" v-model="stock" :placeholder="$t('全部库存')">
+                        <el-option :label="$t('全部')" value=" "></el-option>
+                        <el-option :label="$t('库存低于10')" value="10"></el-option>
+                        <el-option :label="$t('库存低于20')" value="20"></el-option>
+                        <el-option :label="$t('库存低于50')" value="50"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('商品状态')">
@@ -63,7 +63,7 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="category.name" :label="$t('分类')"></el-table-column>
+                    <el-table-column prop="category.name_text" :label="$t('分类')"></el-table-column>
                     <el-table-column prop="sales_actual" :label="$t('实际销量')"></el-table-column>
                     <el-table-column prop="product_stock" :label="$t('库存')"></el-table-column>
                     <el-table-column prop="product_status.text" :label="$t('状态')" width="100">
@@ -103,6 +103,7 @@ export default {
         return {
             /*切换菜单*/
             activeName: '',
+            stock: '',
             /*切换选中值*/
             activeIndex: '0',
             /*是否正在加载*/
@@ -159,6 +160,7 @@ export default {
             Params.page = self.curPage;
             Params.list_rows = self.pageSize;
             Params.type = self.activeName;
+            Params.stock = self.stock;
             self.loading = true;
             PorductApi.storeProductList(Params, true)
                 .then(data => {

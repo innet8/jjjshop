@@ -21,24 +21,23 @@
                             <Delete />
                         </el-icon>
                     </template>
-                    <el-form size="small" class="product-attr" v-for="(items, indexs) in item.placeholder"
+                    <el-form size="small" class="product-attr" v-for="(items, indexs) in languageList"
                         :key="indexs">
                         <el-form-item>
                             <template #label>
-                                {{ $t('属性名称：') }}<span class="product-tips">{{ items }}</span>
+                                {{ $t('属性名称：') }}<span class="product-tips">{{ items.label }}</span>
                             </template>
-                            <el-input class="inline-input" v-model="item.attribute_name[attributeName(indexs)]"
+                            <el-input class="inline-input" v-model="item.attribute_name[items.key]"
                                 maxlength="128" :placeholder="$t('如：温度')"></el-input>
                         </el-form-item>
                         <el-form-item>
                             <template #label>
-                                {{ $t('属性：') }}<span class="product-tips">{{ items }}</span>
+                                {{ $t('属性：') }}<span class="product-tips">{{ items.label }}</span>
                             </template>
                             <template v-for="(aitem, aindex) in item.much" :key="aindex">
                                 <el-input style="width: 100px; margin-right: 16px;"
-                                    v-model="item.attribute_value[aindex][attributeName(indexs)]" :placeholder="$t('请输入')">
+                                    v-model="item.attribute_value[aindex][items.key]" :placeholder="$t('请输入')">
                                 </el-input>
-
                             </template>
                             <el-icon class="add-button" @click="handleAdd(index)">
                                 <CirclePlusFilled />
@@ -59,18 +58,19 @@
 import { handleError } from 'vue';
 import { languageStore } from '@/store/model/language.js';
 const languageData = JSON.stringify(languageStore().languageData)
+const languageList = languageStore().languageList;
 export default {
     data() {
         return {
             restaurants: [],
             formData: {},
+            languageList:languageList,
         }
     },
     inject: ['form'],
     methods: {
         addAttr() {
             this.form.model.product_attr.push({
-                placeholder: ['(ภาษาไทย)', '(简体中文)', '(繁體中文)', '(English)'],
                 attribute_name: JSON.parse(languageData),
                 attribute_value: [JSON.parse(languageData), JSON.parse(languageData)],
                 much: 2,
@@ -111,22 +111,7 @@ export default {
                 return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
             };
         },
-        attributeName(index) {
-            let results = ''
-            if (index == 0) {
-                results = 'th'
-            }
-            if (index == 1) {
-                results = 'zh'
-            }
-            if (index == 2) {
-                results = 'zhtw'
-            }
-            if (index == 3) {
-                results = 'en'
-            }
-            return results
-        },
+
     },
 
 };

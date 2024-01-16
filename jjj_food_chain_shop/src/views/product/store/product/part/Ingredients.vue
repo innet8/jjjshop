@@ -24,11 +24,11 @@
                         </el-icon>
                     </template>
                     <el-form class="product-attr">
-                        <el-form-item v-for="(items, indexs) in item.placeholder" :key="indexs">
+                        <el-form-item v-for="(items, indexs) in languageList" :key="indexs">
                             <template #label>
-                                {{ $t('加料名称：') }}<span class="product-tips">{{ items }}</span>
+                                {{ $t('加料名称：') }}<span class="product-tips">{{ items.label }}</span>
                             </template>
-                            <el-input class="inline-input" v-model="item.feed_name[keyName(indexs)]" maxlength="128"
+                            <el-input class="inline-input" v-model="item.feed_name[items.key]" maxlength="128"
                                 :placeholder="$t('如:杯型')"></el-input>
                         </el-form-item>
                         <el-form-item :label="$t('价格：')">
@@ -48,9 +48,11 @@
 <script>
 import { languageStore } from '@/store/model/language.js';
 const languageData = JSON.stringify(languageStore().languageData)
+const languageList = languageStore().languageList;
 export default {
     data() {
         return {
+            languageList:languageList,
             restaurants: [],
             formData: {
                 feed: []
@@ -66,7 +68,6 @@ export default {
         addIngredients() {
             this.form.model.product_feed.push(
                 {
-                    placeholder: ['(ภาษาไทย)', '(简体中文)', '(繁體中文)', '(English)'],
                     feed_name:JSON.parse(languageData),
                     price: ''
                 }
@@ -75,22 +76,7 @@ export default {
         handleDelete(index) {
             this.form.model.product_feed.splice(index, 1);
         },
-        keyName(index) {
-            let results = ''
-            if (index == 0) {
-                results = 'th'
-            }
-            if (index == 1) {
-                results = 'zh'
-            }
-            if (index == 2) {
-                results = 'zhtw'
-            }
-            if (index == 3) {
-                results = 'en'
-            }
-            return results
-        },
+
     }
 };
 </script>

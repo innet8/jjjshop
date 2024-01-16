@@ -6,8 +6,8 @@
         <!--添加加料-->
         <div class="common-level-rail">
             <el-button size="small" type="primary" icon="Plus" v-auth="'/product/expand/feed/add'" @click="addClick">
-                添加加料</el-button>
-            <el-button size="small" v-auth="'/product/expand/feed/delete'" @click="deleteBatch">批量删除</el-button>
+                {{ $t('添加加料') }}</el-button>
+            <el-button size="small" v-auth="'/product/expand/feed/delete'" @click="deleteBatch">{{ $t('批量删除') }}</el-button>
         </div>
         <!--内容-->
         <div class="product-content">
@@ -15,16 +15,16 @@
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading"
                     @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="45"></el-table-column>
-                    <el-table-column prop="feed_name" label="加料名" width="400px"></el-table-column>
-                    <el-table-column prop="price" label="价格" width="400px"></el-table-column>
-                    <el-table-column prop="sort" label="排序"></el-table-column>
-                    <el-table-column fixed="right" label="操作" width="120">
+                    <el-table-column prop="feed_name_text" :label="$t('加料名')" width="400px"></el-table-column>
+                    <el-table-column prop="price" :label="$t('价格')" width="400px"></el-table-column>
+                    <el-table-column prop="sort" :label="$t('排序')"></el-table-column>
+                    <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/product/expand/feed/edit'">编辑
+                                v-auth="'/product/expand/feed/edit'">{{ $t('编辑') }}
                             </el-button>
                             <el-button @click="deleteClick(scope.row.feed_id)" type="primary" link size="small"
-                                v-auth="'/product/expand/feed/delete'">删除</el-button>
+                                v-auth="'/product/expand/feed/delete'">{{ $t('删除') }}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -143,7 +143,7 @@ export default {
         },
         deleteClick(id) {
             let self = this;
-            ElMessageBox.confirm('删除后不可恢复，确认删除吗?', '提示', {
+            ElMessageBox.confirm($t('删除后不可恢复，确认删除吗?'), $t('提示'), {
                 type: 'warning'
             })
                 .then(() => {
@@ -151,7 +151,7 @@ export default {
                         feed_id: id
                     }).then(data => {
                         ElMessage({
-                            message: '删除成功',
+                            message: $t('删除成功'),
                             type: 'success'
                         });
                         self.getData();
@@ -166,7 +166,7 @@ export default {
                 arr.push(item.feed_id);
             })
             let feed_id = arr.join(',');
-            ElMessageBox.confirm('删除后不可恢复，确认删除吗?', '提示', {
+            ElMessageBox.confirm($t('删除后不可恢复，确认删除吗?'), $t('提示'), {
                 type: 'warning'
             })
                 .then(() => {
@@ -174,7 +174,7 @@ export default {
                         feed_id: feed_id
                     }).then(data => {
                         ElMessage({
-                            message: '删除成功',
+                            message: $t('删除成功'),
                             type: 'success'
                         });
                         self.getData();
