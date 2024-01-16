@@ -21,7 +21,7 @@ class Terminal extends Controller
      * @Apidoc\Param("carousel", type="array", require=true, desc="上传后的轮播内容url（图片 + 视频）")
      * @Apidoc\Param("is_auto_send", type="int", require=true, default=0, desc="收银结账自动送厨房")
      * @Apidoc\Param("cashier_password", type="string", require=true, default="", desc="钱箱密码")
-     * @Apidoc\Param("auto_lock_screen", type="array", require=true, desc="自动锁屏")
+     * @Apidoc\Param("auto_lock_screen", type="int", require=true, default=0, desc="自动锁屏")
      * @Apidoc\Param("language", type="array", require=true, desc="常用语言")
      * @Apidoc\Param("default_language", type="string", require=true, default="", desc="默认语言")
      * @Apidoc\Returned()
@@ -51,11 +51,47 @@ class Terminal extends Controller
             'carousel' => $data['carousel'] ?? [], // 轮播内容url
             'is_auto_send' => $data['is_auto_send'] ?? 0, // 收银结账自动送厨房
             'cashier_password' => $data['cashier_password'] ?? '', // 钱箱密码
-            'auto_lock_screen' => $data['auto_lock_screen'] ?? ['unit' => 'minute', 'value' => 5], // 自动锁屏
-            'language' => $data['language'] ?? ['th', 'en', 'zh', 'zh-tw'], // 常用语言
+            'auto_lock_screen' => $data['auto_lock_screen'] ?? 300, // 自动锁屏 5分钟
+            'language' => $data['language'] ?? [], // 常用语言
             'default_language' => $data['default_language'] ?? 'en', // 默认语言
         ];
         if ($model->edit(SettingEnum::CASHIER, $arr)) {
+            return $this->renderSuccess('操作成功');
+        }
+        return $this->renderError($model->getError() ?: '操作失败');
+    }
+
+    /**
+     * @Apidoc\Title("收银机-设置密码")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/setting.Terminal/editCashierPassword")
+     * @Apidoc\Param("cashier_password", type="string", require=true, default="", desc="钱箱密码")
+     * @Apidoc\Param("new_cashier_password", type="string", require=true, default="", desc="新密码")
+     * @Apidoc\Param("confirm_cashier_password", type="string", require=true, default="", desc="确认密码")
+     * @Apidoc\Returned()
+     */
+    public function editCashierPassword()
+    {
+        $model = new SettingModel;
+        $data = $this->request->param();
+        //
+        if (empty($data['cashier_password'])) {
+            return $this->renderError('请输入原密码');
+        }
+        //
+        $setting = SettingModel::getItem(SettingEnum::CASHIER);
+        if ($setting['cashier_password'] != $data['cashier_password']) {
+            return $this->renderError('原密码错误');
+        }
+        //
+        if (empty($data['new_cashier_password']) || empty($data['confirm_cashier_password'])) {
+            return $this->renderError('请输入新密码');
+        }
+        if ($data['new_cashier_password'] != $data['confirm_cashier_password']) {
+            return $this->renderError('两次密码不一致');
+        }
+        $setting['cashier_password'] = $data['new_cashier_password'];
+        if ($model->edit(SettingEnum::CASHIER, $setting)) {
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model->getError() ?: '操作失败');
@@ -69,7 +105,8 @@ class Terminal extends Controller
      * @Apidoc\Param("is_call_service", type="int", require=true, default=0, desc="呼叫服务员")
      * @Apidoc\Param("is_customer_order", type="int", require=true, default=0, desc="顾客可开桌")
      * @Apidoc\Param("is_show_sold_out", type="int", require=true, default=0, desc="显示售罄商品")
-     * @Apidoc\Param("server", type="array", require=true, desc="平板服务器连接")
+     * @Apidoc\Param("server", type="array", require=true, desc="平板服务器连接，【ip、port】")
+     * @Apidoc\Param("advanced_password", type="int", require=true, default=0, desc="高级设置密码")
      * @Apidoc\Param("language", type="array", require=true, desc="常用语言")
      * @Apidoc\Param("default_language", type="string", require=true, default="", desc="默认语言")
      * @Apidoc\Returned()
@@ -100,11 +137,47 @@ class Terminal extends Controller
             'is_call_service' => $data['is_call_service'] ?? 0, // 是否开启呼叫服务员
             'is_customer_order' => $data['is_customer_order'] ?? 0, // 是否开启顾客可开桌
             'is_show_sold_out' => $data['is_show_sold_out'] ?? 0, // 是否显示售罄商品
-            'server' => $data['server'] ??  ['ip' => '', 'port' => '', 'password' => '',], // 平板服务器连接
-            'language' => $data['language'] ?? ['th', 'en', 'zh', 'zh-tw'], // 常用语言
+            'server' => $data['server'] ??  ['ip' => '', 'port' => ''], // 平板服务器连接
+            'language' => $data['language'] ?? [], // 常用语言
             'default_language' => $data['default_language'] ?? 'en', // 默认语言
         ];
         if ($model->edit(SettingEnum::TABLET, $arr)) {
+            return $this->renderSuccess('操作成功');
+        }
+        return $this->renderError($model->getError() ?: '操作失败');
+    }
+
+    /**
+     * @Apidoc\Title("平板端-设置密码")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/setting.Terminal/editAdvancedPassword")
+     * @Apidoc\Param("advanced_password", type="string", require=true, default="", desc="高级设置密码")
+     * @Apidoc\Param("new_advanced_password", type="string", require=true, default="", desc="新密码")
+     * @Apidoc\Param("confirm_advanced_password", type="string", require=true, default="", desc="确认密码")
+     * @Apidoc\Returned()
+     */
+    public function editAdvancedPassword()
+    {
+        $model = new SettingModel;
+        $data = $this->request->param();
+        //
+        if (empty($data['advanced_password'])) {
+            return $this->renderError('请输入原密码');
+        }
+        //
+        $setting = SettingModel::getItem(SettingEnum::TABLET);
+        if ($setting['advanced_password'] != $data['advanced_password']) {
+            return $this->renderError('原密码错误');
+        }
+        //
+        if (empty($data['new_advanced_password']) || empty($data['confirm_advanced_password'])) {
+            return $this->renderError('请输入新密码');
+        }
+        if ($data['new_advanced_password'] != $data['confirm_advanced_password']) {
+            return $this->renderError('两次密码不一致');
+        }
+        $setting['advanced_password'] = $data['new_advanced_password'];
+        if ($model->edit(SettingEnum::TABLET, $setting)) {
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model->getError() ?: '操作失败');
@@ -143,8 +216,8 @@ class Terminal extends Controller
         $arr = [
             'server' => $data['server'] ??  ['ip' => '', 'port' => ''], // 厨显服务器连接
             'is_wait_color' => $data['is_wait_color'] ?? 0, // 是否开启等待颜色
-            'wait_color' => $data['wait_color'] ??  ['10' => '#ffff00', '20' => '#ff0000'], // 等待颜色
-            'language' => $data['language'] ?? ['th', 'en', 'zh', 'zh-tw'], // 常用语言
+            'wait_color' => $data['wait_color'] ??  [], // 等待颜色
+            'language' => $data['language'] ?? [], // 常用语言
             'default_language' => $data['default_language'] ?? 'en', // 默认语言
         ];
         if ($model->edit(SettingEnum::KITCHEN, $arr)) {

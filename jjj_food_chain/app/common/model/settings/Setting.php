@@ -509,15 +509,12 @@ class Setting extends BaseModel
                     'carousel' => [],
                     'is_auto_send' => 0, // 收银结账自动送厨房
                     'cashier_password' => '', // 钱箱密码
-                    // 自动锁屏 默认5分钟
-                    'auto_lock_screen' => [
-                        'unit' => 'minute', // 单位，'second'、'minute' 或 'never'
-                        'value' => 5, // 时间值
-                    ],
-                    // 常用语言 泰语、英语、中文、繁体
-                    'language' => ['th', 'en', 'zh', 'zh-tw'],
+                    // 自动锁屏 默认5分钟存秒
+                    'auto_lock_screen' => 300,
+                    // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
+                    'language' => [],
                     // 默认语言
-                    'default_language' => 'en',
+                    'default_language' => '',
                 ],
             ],
             SettingEnum::TABLET => [
@@ -528,16 +525,17 @@ class Setting extends BaseModel
                     'carousel' => [],
                     'is_call_service' => 1, // 是否开启呼叫服务员
                     'is_customer_order' => 1, // 是否开启顾客自助下单
-                    'is_show_sold_out' => 1, // 是否显示售罄商品
+                    'is_show_sold_out' => 0, // 是否显示售罄商品
                     // 平板服务器连接
                     'server' => [
                         'ip' => '',
                         'port' => '',
-                        'password' => '',
                     ],
-                    // 常用语言 泰语、英语、中文、繁体
-                    'language' => ['th', 'en', 'zh', 'zh-tw'],
-                    'default_language' => 'en', // 默认语言
+                    // 高级设置密码
+                    'advanced_password' => '',
+                    // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
+                    'language' => [],
+                    'default_language' => '', // 默认语言
                 ],
             ],
             SettingEnum::KITCHEN => [
@@ -549,14 +547,11 @@ class Setting extends BaseModel
                         'ip' => '',
                         'port' => '',
                     ],
-                    'is_wait_color' => 1, // 是否开启等待时长颜色
-                    // 时长颜色 10-黄色 20-红色
-                    'wait_color' => [
-                        '10' => '#ffff00',
-                        '20' => '#ff0000',
-                    ],
-                    // 常用语言 泰语、英语、中文、繁体
-                    'language' => ['th', 'en', 'zh', 'zh-tw'],
+                    'is_wait_color' => 0, // 是否开启等待时长颜色
+                    // 时长颜色 10分钟-黄色#ffff00 20分钟-红色#ff0000
+                    'wait_color' => [],
+                    // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
+                    'language' => [],
                     'default_language' => 'en', // 默认语言
                 ],
             ],

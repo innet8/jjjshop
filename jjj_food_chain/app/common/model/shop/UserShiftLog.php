@@ -16,6 +16,28 @@ class UserShiftLog extends BaseModel
     protected $pk = 'id';
 
     /**
+     * 当班开始时间
+     *
+     * @param int $value
+     * @return string
+     */
+    public function getShiftStartTimeAttr($value)
+    {
+        return $value ? format_time_his($value) : '-';
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param int $value
+     * @return string
+     */
+    public function getShiftEndTimeAttr($value)
+    {
+        return $value ? format_time_his($value) : '-';
+    }
+
+    /**
      * 关联用户表
      */
     public function user()
@@ -50,7 +72,41 @@ class UserShiftLog extends BaseModel
         $list = $model->with('user')
             ->order($orderSort)
             ->paginate($params);
+        foreach ($list as &$item) {
+            // 营业收入
+            $item['total_money'] = $item['cash_income'] + $item['balance_income'] + $item['wechat_income'] + $item['alipay_income'] - $item['refund_amount'];
+        }
         return $list;
+    }
+
+    /**
+     * 获取详情
+     */
+    public function detail($id)
+    {
+        $detail = $this->with('user')->find($id);
+        return $detail;
+    }
+
+    /**
+     * 获取销售信息
+     */
+    public function getSalesInfo($shift_user_id, $shop_user_id, $startTime, $endTime)
+    {
+        return OrderModel::alias('a')
+            ->leftJoin('order_product rp','a.order_id = rp.order_id')
+            ->leftJoin('product p','p.product_id = rp.product_id')
+            ->leftJoin('category c','c.category_id = p.category_id')
+            ->where('a.pay_status', '=', 20)
+            ->where('a.order_status', '=', 30)
+            ->where('a.eat_type', '<>', 0)
+            ->where('a.shop_supplier_id', '=', $shop_user_id)
+            ->where('a.cashier_id', '=', $shift_user_id)
+            ->where('a.create_time', 'between', [$startTime, $endTime])
+            ->group("c.category_id")
+            ->field("c.name, count(a.order_id) as sales, sum(a.pay_price - a.refund_money) as prices")
+            ->select()
+            ->append([])?->toArray();
     }
 
     /**
