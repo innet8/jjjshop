@@ -75,11 +75,10 @@ class Terminal extends Controller
         $model = new SettingModel;
         $data = $this->request->param();
         //
-        if (empty($data['cashier_password'])) {
+        $setting = SettingModel::getItem(SettingEnum::CASHIER);
+        if (empty($data['cashier_password']) && !empty($setting['cashier_password'])) {
             return $this->renderError('请输入原密码');
         }
-        //
-        $setting = SettingModel::getItem(SettingEnum::CASHIER);
         if ($setting['cashier_password'] != $data['cashier_password']) {
             return $this->renderError('原密码错误');
         }
@@ -161,11 +160,10 @@ class Terminal extends Controller
         $model = new SettingModel;
         $data = $this->request->param();
         //
-        if (empty($data['advanced_password'])) {
+        $setting = SettingModel::getItem(SettingEnum::TABLET);
+        if (empty($data['advanced_password']) && !empty($setting['advanced_password'])) {
             return $this->renderError('请输入原密码');
         }
-        //
-        $setting = SettingModel::getItem(SettingEnum::TABLET);
         if ($setting['advanced_password'] != $data['advanced_password']) {
             return $this->renderError('原密码错误');
         }

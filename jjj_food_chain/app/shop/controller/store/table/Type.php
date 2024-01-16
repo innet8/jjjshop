@@ -4,6 +4,7 @@ namespace app\shop\controller\store\table;
 
 use app\shop\controller\Controller;
 use app\shop\model\store\TableType as TableTypeModel;
+use hg\apidoc\annotation as Apidoc;
 
 /**
  * 桌位类型
