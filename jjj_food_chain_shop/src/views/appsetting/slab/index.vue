@@ -3,84 +3,178 @@
         <el-form size="small" ref="form" :model="form" label-position="top">
             <el-form-item :label="$t('轮播内容')" prop="image" :rules="[{ required: true, message: $t(' ') }]">
                 <div class="draggable-list">
-                    <flieUpload></flieUpload>
+                    <flieUpload  @upLoad="upLoad"></flieUpload>
+                    <el-table size="small" :data="form.carousel" border style="width: 100%" v-loading="loading">
+                        <el-table-column prop="real_name" :label="$t('图片名称')"></el-table-column>
+                        <el-table-column prop="sort" :label="$t('排序')">
+                            <template #default="scope">
+                                <el-input v-model="scope.row.sort" @blur="sortOne"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="file_path" :label="$t('链接地址')">
+                            <template #default="scope">
+                                <el-input v-model="scope.row.file_path" disabled></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="file_path" width="100" :label="$t('操作')">
+                            <template #default="scope">
+                                <div class="delete-box">
+                                    <el-icon size="24">
+                                        <Delete @click="deleteOne(scope)" />
+                                    </el-icon>
+                                </div>
+                            </template>
+                        </el-table-column>
+                    </el-table>
                 </div>
             </el-form-item>
 
             <el-form-item :label="$t('呼叫服务员：')" :rules="[{ required: true, message: $t(' ') }]">
-                <el-radio-group v-model="form.call">
-                    <el-radio :label="1">{{ $t('开') }}</el-radio>
-                    <el-radio :label="0">{{ $t('关') }}</el-radio>
+                <el-radio-group v-model="form.is_call_service">
+                    <el-radio label="1">{{ $t('开') }}</el-radio>
+                    <el-radio label="0">{{ $t('关') }}</el-radio>
                 </el-radio-group>
             </el-form-item>
 
             <el-form-item :label="$t('顾客可开桌：')" :rules="[{ required: true, message: $t(' ') }]">
-                <el-radio-group v-model="form.open">
-                    <el-radio :label="1">{{ $t('开') }}</el-radio>
-                    <el-radio :label="0">{{ $t('关') }}</el-radio>
+                <el-radio-group v-model="form.is_customer_order">
+                    <el-radio label="1">{{ $t('开') }}</el-radio>
+                    <el-radio label="0">{{ $t('关') }}</el-radio>
                 </el-radio-group>
             </el-form-item>
 
-            <el-form-item :label="$t('服务器连接地址')" prop="ip" :rules="[{ required: true, message: $t('请输入服务器连接地址') }]">
-                <el-input style="width: 200px;" v-model="form.ip"></el-input>
+            <el-form-item :label="$t('服务器连接地址')" prop="server" :rules="[{ required: true, message: $t('请输入服务器连接地址') }]">
+                <el-input style="width: 200px;" v-model="form.server.ip"></el-input>
                 <p>:</p>
-                <el-input style="width: 100px;" v-model="form.port"></el-input>
+                <el-input style="width: 100px;" v-model="form.server.port"></el-input>
             </el-form-item>
 
-            <el-form-item :label="$t('高级设置密码')" prop="name" :rules="[{ required: true, message: $t('') }]">
-                <el-input class="max-w460" v-model="form.name"></el-input>
+            <el-form-item :label="$t('高级设置密码')" prop="password" :rules="[{ required: true, message: $t('') }]">
+                <el-input class="max-w460" v-model="password" type="password" disabled></el-input>
                 <el-button @click="setPassword" type="primary" link size="small">{{ $t('设置密码') }}</el-button>
             </el-form-item>
 
-            <el-form-item :label="$t('常用语言')" prop="commonLanguage" :rules="[{ required: true, message: $t('请选择常用语言') }]">
-                <el-radio-group v-model="form.commonLanguage">
-                    <el-radio label="th">ภาษาไทย</el-radio>
-                    <el-radio label="zh">简体中文</el-radio>
-                    <el-radio label="tc">繁體中文</el-radio>
-                    <el-radio label="en">English</el-radio>
-                </el-radio-group>
+            <el-form-item :label="$t('常用语言')" prop="language" :rules="[{ required: true, message: $t('请选择常用语言') }]">
+                <el-checkbox-group v-model="form.language">
+                    <el-checkbox v-for="item in languageList" :key="item.key" :label="item.key"
+                        :disabled="form.language.length == 1 && form.language.includes(item.key)">
+                        {{ item.value }}
+                    </el-checkbox>
+                </el-checkbox-group>
             </el-form-item>
 
-            <el-form-item :label="$t('默认语言')" prop="defaultLanguage" :rules="[{ required: true, message: $t('请选择常用语言') }]">
-                <el-radio-group v-model="form.defaultLanguage">
-                    <el-radio label="th">ภาษาไทย</el-radio>
-                    <el-radio label="zh">简体中文</el-radio>
-                    <el-radio label="tc">繁體中文</el-radio>
-                    <el-radio label="en">English</el-radio>
-                </el-radio-group>
+            <el-form-item :label="$t('默认语言')" prop="default_language" :rules="[{ required: true, message: $t('请选择常用语言') }]">
+                <el-select v-model="form.default_language">
+                    <template v-for="(item, index) in defaultLanguageList" :key="index">
+                        <el-option :value="item.key" :label="item.value">{{ item.value }}</el-option>
+                    </template>
+                </el-select>
             </el-form-item>
         </el-form>
         <div class="common-button-wrapper">
-            <el-button size="small" type="info" @click="cancelFunc">{{ $t('重置') }}</el-button>
+            <el-button size="small" type="info" @click="getData()">{{ $t('重置') }}</el-button>
             <el-button size="small" type="primary" @click="onSubmit" :loading="loading">{{ $t('保存') }}</el-button>
         </div>
-        <setPassword v-if="open" :open="open"  @close="(e) => { open = false; if (e == 1) { this.getData(); } }">
+        <setPassword :advancedPassword="form.advanced_password" v-if="open" :open="open"  @close="(e) => { open = false; if (e == 1) { this.getData(); } }">
         </setPassword>
     </div>
 </template>
 <script>
 import flieUpload from '@/components/flieUpload/upLoad.vue'
 import setPassword from './setPassword.vue';
+import Terminal from '@/api/terminal.js';
 export default {
     components: { flieUpload ,setPassword },
     data() {
         return {
             form:{
-                image:"",
-                call:1,
-                open:1,
-                ip:'',
-                port:8080,
-                commonLanguage: 'th',
-                defaultLanguage: 'th',
+                carousel: [],
+                is_auto_send: 0,
+                auto_lock_screen: 300,
+                language: [],
+                default_language: 'th',
+                advanced_password: false,
+                server:{
+                    ip:'',
+                    port:'',
+                },
             },
+            languageList: [],
             open:false,
             loading:false,
+            password:'',
         }
+    },
+    created(){
+        this.getData();
+    },
+    computed: {
+        defaultLanguageList() {
+            let result = []
+            this.languageList.map((item) => {
+                if ((this.form.language || []).includes(item.key)) {
+                    result.push(item)
+                }
+                if (!(this.form.language || []).includes(this.form.default_language)) {
+                    this.form.default_language = this.form.language[0]
+                }
+            })
+            return result
+        },
     },
     methods:{
         setPassword() {
             this.open = true
+        },
+        onSubmit() {
+            let self = this;
+            let params = JSON.parse(JSON.stringify(self.form));
+            self.loading = true;
+            Terminal.saveTablet(params,true).then(data => {
+                self.loading = false;
+                ElMessage({
+                    message: $t('保存成功'),
+                    type: 'success'
+                });
+                self.dialogFormVisible(true);
+            }).catch(error => {
+                self.loading = false;
+            });
+        },
+        getData() {
+            let self = this;
+            self.loading = true;
+            Terminal.getTablet().then(data => {
+                self.loading = false;
+                self.form = data.data.vars.values
+                self.languageList = data.data.vars.values.language_list
+                if (self.form.advanced_password) {
+                    self.password = 666666
+                }
+            }).catch(error => {
+                self.loading = false;
+            });
+        },
+        upLoad(data) {
+            console.log(data);
+            this.form.carousel.push(
+                {
+                    real_name: data.real_name,
+                    file_path: data.file_path,
+                    sort: 0,
+                }
+            )
+        },
+        deleteOne(scope) {
+            this.form.carousel.splice(scope.$index, 1)
+            this.form.carousel.sort((a, b) => {
+                return a.sort - b.sort;
+            });
+        },
+        sortOne(){
+            this.form.carousel.sort((a, b) => {
+                return a.sort - b.sort;
+            });
         },
     },
 }

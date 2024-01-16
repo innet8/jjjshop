@@ -30,9 +30,9 @@
         <div class="table-wrap">
             <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
                 <el-table-column prop="id" label="ID" width="80"></el-table-column>
-                <el-table-column prop="shift_no" :label="$t('交班编号')"></el-table-column>
+                <el-table-column prop="shift_no" :label="$t('交班编号')" width="180"></el-table-column>
                 <el-table-column prop="user.real_name" :label="$t('收银员')"></el-table-column>
-                <el-table-column prop="" :label="$t('当班时间')">
+                <el-table-column prop="" :label="$t('当班时间')" width="170">
                     <template #default="scope">
                         <div>
                             {{ scope.row.shift_start_time }}
@@ -62,7 +62,7 @@
                 :total="totalDataNumber">
             </el-pagination>
         </div>
-        <detail v-if="open" :detailData="detailData" :open="open" @closeDialog="()=>{ open = false }"></detail>
+        <detail v-if="open" :detailId="detailId" :open="open" @closeDialog="()=>{ open = false }"></detail>
     </div>
 </template>
 
@@ -93,7 +93,7 @@ export default {
                 create_time: "",
             },
             token,
-            detailData: {},
+            detailId: {},
             open: false,
         }
     },
@@ -137,7 +137,7 @@ export default {
             this.getData();
         },
         detailClick(data) {
-            this.detailData = data;
+            this.detailId = data.id;
             this.open = true;
         },
         onExport: function () {
