@@ -235,12 +235,20 @@ class Terminal extends Controller
         }
         $ret = SettingModel::getItem($key);
         // 收银机密码
-        if (!empty($ret['cashier_password'])) {
-            $ret['cashier_password'] = true;
+        if ($key == SettingEnum::CASHIER) {
+            if (!empty($ret['cashier_password'])) {
+                $ret['cashier_password'] = true;
+            }else{
+                $ret['cashier_password'] = false;
+            }
         }
         // 平板端高级设置密码
-        if (!empty($ret['advanced_password'])) {
-            $ret['advanced_password'] = true;
+        if ($key == SettingEnum::TABLET) {
+            if (!empty($ret['advanced_password'])) {
+                $ret['advanced_password'] = true;
+            }else{
+                $ret['advanced_password'] = false;
+            }
         }
         $vars['values'] = $ret;
         return $this->renderSuccess('', compact('vars'));

@@ -5,6 +5,7 @@ namespace app\shop\model\user;
 use app\shop\model\user\GradeLog as GradeLogModel;
 use app\shop\model\user\BalanceLog as BalanceLogModel;
 use app\common\model\user\User as UserModel;
+use app\common\model\user\Grade as GradeModel;
 use app\common\enum\user\grade\ChangeTypeEnum;
 use app\common\enum\user\balanceLog\BalanceLogSceneEnum as SceneEnum;
 use app\shop\model\user\PointsLog as PointsLogModel;
@@ -66,7 +67,7 @@ class User extends UserModel
             $model = $model->where('gender', '=', (int)$data['gender']);
         }
         // 获取用户列表
-        return $model->with(['grade'])->where('is_delete', '=', '0')
+        return $model->with(['grade','card'])->where('is_delete', '=', '0')
             ->order(['create_time' => 'desc'])
             ->hidden(['open_id', 'union_id'])
             ->paginate($data);
@@ -95,7 +96,33 @@ class User extends UserModel
      */
     public function add($data)
     {
-        return $this->save($data);
+        if (empty($data['nick_name'])) {
+            $this->error = '昵称不能为空';
+            return false;
+        }
+        if (empty($data['mobile'])) {
+            $this->error = '手机号不能为空';
+            return false;
+        }
+        $user = $this->where('mobile', '=', $data['mobile'])
+            ->where('is_delete', '=', 0)
+            ->find();
+
+        if (!$user) {
+            return $this->save([
+                'nickName' => $data['nick_name'],
+                'mobile' => $data['mobile'],
+                'password' => md5($data['password']),
+                'reg_source' => 'home', //注册来源
+                'gender' => $data['gender'], //性别
+                'grade_id' => $data['grade_id'] ?: GradeModel::getDefaultGradeId(), //默认等级
+                'birthday' => $data['birthday'] ? strtotime($data['birthday']) : null, //生日
+                'app_id' => self::$app_id,
+            ]);
+        } else {
+            $this->error = '会员已存在';
+            return false;
+        }
     }
 
     /**
