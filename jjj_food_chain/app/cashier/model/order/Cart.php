@@ -2,13 +2,19 @@
 
 namespace app\cashier\model\order;
 
+
+use app\cashier\model\user\User as UserModel;
+use app\common\enum\order\OrderStatusEnum;
+use app\common\enum\settings\SettingEnum;
 use app\common\model\order\OrderProduct;
+use app\common\model\settings\Setting as SettingModel;
 use app\common\model\plus\cashier\Cart as CartModel;
 use app\common\model\plus\discount\DiscountProduct;
 use app\common\model\order\Order as CommonOrderModel;
 use app\common\model\supplier\Supplier as SupplierModel;
 use app\cashier\model\order\Order as OrderModel;
 use app\cashier\model\product\Product as ProductModel;
+use app\cashier\model\user\CardRecord as CardRecordModel;
 use app\cashier\model\product\ProductSku as ProductSkuModel;
 use app\cashier\service\order\settled\CashierOrderSettledService;
 use app\common\library\helper;
@@ -62,6 +68,175 @@ class Cart extends CartModel
             ->where('cashier_id', '=', $user['cashier_id'])
             ->where('table_id', '=', $table_id)
             ->select();
+    }
+
+    // 重新计算购物车价格信息
+    public function reloadPrice($cashier, $table_id, $order_id = 0)
+    {
+        trace('收银员');
+        trace($cashier);
+        if ($order_id > 0) {
+            // 购物车商品列表
+            $cartList = (new static())->with('product')
+                ->where('cashier_id', '=', $cashier['cashier_id'])
+                ->where('order_id', '=', $order_id)
+                ->select();
+            // 是否存在订单
+            $order = OrderModel::detail($order_id);
+        } else {
+            // 购物车商品列表
+            $cartList = (new static())->with('product')
+                ->where('cashier_id', '=', $cashier['cashier_id'])
+                ->where('table_id', '=', $table_id)
+                ->select();
+            // 是否存在订单
+            $order = OrderModel::detail([
+                ['table_id', '=', $table_id],
+                ['order_status', '=', OrderStatusEnum::NORMAL]
+            ]);
+        }
+        $user_id = $order ? $order['user_id'] : 0;
+        trace('会员ID');
+        trace($user_id);
+
+        $pay_money = 0;
+        $order_price = 0;
+        $user_discount_money = 0;
+        $user = UserModel::detail($user_id);
+
+        foreach ($cartList as $product) {
+            // 标记参与会员折扣
+            $is_user_grade = false;
+            // 会员等级抵扣的金额
+            $grade_ratio = 0;
+            // 会员折扣的商品单价
+            $grade_product_price = 0;
+            // 会员折扣的总额差
+            $grade_total_money = 0;
+            if ($product->product['is_enable_grade'] && $product['price'] > 0) {
+
+                if ($user) {
+                    $discount = (new CardRecordModel)->getDiscount($user['user_id']);
+                    trace('折扣信息');
+                    trace($discount);
+                } else {
+                    trace('aaaaa');
+                    $discount = 0;
+                }
+                $alone_grade_type = 10;
+                // 商品单独设置了会员折扣
+                if ($product['product']['is_alone_grade'] && isset($product['product']['alone_grade_equity'][$user['grade_id']])) {
+                    if ($product['product']['alone_grade_type'] == 10) {
+                        // 折扣比例
+                        $discountRatio = helper::bcdiv($product['product']['alone_grade_equity'][$user['grade_id']], 100);
+                    } else {
+                        $alone_grade_type = 20;
+                        $discountRatio = helper::bcdiv($product['product']['alone_grade_equity'][$user['grade_id']], $product['product_price'], 2);
+                    }
+                } else {
+                    // 折扣比例
+                    if ($user) {
+                        $discountRatio = helper::bcdiv($user['grade']['equity'], 100);
+                    } else {
+                        $discountRatio = 1;
+                    }
+
+                }
+                // 计算最终折扣
+                if ($discount && $discountRatio) {
+                    // 会员等级 * 会员卡
+                    $discountRatio = round($discountRatio * $discount, 2);
+                } elseif ($discount) {
+                    // 会员卡
+                    $discountRatio = $discount;
+                }
+                trace('bbbbb');
+                trace('折扣');
+                trace($discountRatio);
+                if ($discountRatio <= 1) {
+                    if ($alone_grade_type == 20) {
+                        // 固定金额
+                        $grade_product_price = $product['alone_grade_equity'][$user['grade_id']];
+                        $discount && $grade_product_price = round($grade_product_price * $discount, 2);
+                    } else {
+                        // 商品会员折扣后单价
+                        $grade_product_price = helper::number2(helper::bcmul($product['price'], $discountRatio), true);
+                        trace('商品会员折扣后单价');
+                        trace($grade_product_price);
+                    }
+                    $productDiscount = DiscountProduct::getDiscount($product['product_id']);
+                    trace('========');
+                    trace($product['product_num']);
+                    trace('========');
+                    if ($product['product_num'] > 1 && $productDiscount) {
+                        $gradeTotalPrice = $grade_product_price * ($product['product_num'] - 1) + round($grade_product_price * $productDiscount['discount'] / 10, 2);
+                    } else {
+                        $gradeTotalPrice = $grade_product_price * $product['product_num'];
+                        trace('商品会员折扣后单价 * 数量');
+                        trace($gradeTotalPrice);
+                    }
+
+                    trace('折扣');
+                    trace($grade_ratio);
+                    // 原商品总价 - 折扣后
+                    trace('原商品总价');
+                    trace($product['total_price']);
+                    trace($product['product_price']);
+                    $grade_total_money = helper::number2(helper::bcsub($product['price'] * $product['product_num'], $gradeTotalPrice));
+                    trace('优惠后与原商品差价');
+                    trace($grade_total_money);
+                    $product['total_price'] = $gradeTotalPrice;
+                }
+            }
+            $product_points_bonus = 0;
+
+            $updateArr = [
+                'user_id' => $user_id,
+                'product_price' => $grade_product_price,   // 购物车价格（可能是原价或折扣的）
+//                'price' => $product['total_price'],   // 商品总价(数量×单价)
+//                'grade_total_money' => $grade_total_money,  // 会员折扣的总额差 （商品总价 - 商品折扣后总价）
+            ];
+            $product->save($updateArr);
+
+            // 累加
+            $pay_money += $product['total_price'];  // 实付金额
+            $order_price += $product['price'] * $product['product_num'];  // 商品原价
+            $user_discount_money += $grade_total_money; // 商品优惠金额
+        }
+
+        $total_price = $pay_money; // 订单商品总价（不是商品原价总价、是商品折扣后(如果有)的总价）
+        // 消费税计算
+        $consumeFee = SettingModel::getSupplierItem(SettingEnum::TAX_RATE, $cashier['shop_supplier_id']);
+        $consume_fee = 0;
+        if ($consumeFee['is_open']) {
+            $consume_rate = $consumeFee['tax_rate'];
+            $consume_fee = floatval(helper::bcmul($total_price, $consume_rate));
+        }
+
+//        $updateOrderArr = [
+//            'order_no' => $re_order_no ? $this->orderNo() : $order['order_no'],
+//            'discount_money' => 0,  // 折扣优惠重置
+//            'total_price' => $total_price,
+//            'order_price' => $order_price + $service_money + $service_fee + $consume_fee, // 订单总额 = 商品原始总价 + 原服务费 + 新服务费用 + 消费税
+//            'pay_price' => $total_price + $service_money + $service_fee + $consume_fee, // 应付金额 = 商品折扣总价（会员折扣） + 原服务费 + 新服务费用 + 消费税
+//            'points_bonus' => $points_bonus,
+//            'service_money' => $service_money,
+//            'meal_num' => $meal_num,
+//            'settle_type' => $settle_type,
+//            'setting_service_money' => $service_fee,
+//            'consumption_tax_money' => $consume_fee,
+//            'user_discount_money' => $user_discount_money
+//        ];
+//        $order->save($updateOrderArr);
+
+        return [
+            'cart_product_price' => $order_price,                                   // 购物车商品原价
+            'cart_product_pay_price' => $pay_money,                                 // 购物车商品实付价钱
+            'cart_pay_price' => floatval(helper::bcadd($pay_money, $consume_fee)),  // 购物车实付价钱
+            'cart_consumption_tax_money' => $consume_fee,                           // 消费税
+            'cart_user_discount_money' => $user_discount_money,                     // 会员折扣
+        ];
+
     }
 
     /**
@@ -600,5 +775,92 @@ class Cart extends CartModel
         // 移出购物车中已下单的商品
         $CartModel->deleteAll($user);
         return $order_id;
+    }
+
+    public function getOrderCartDetail($cashier, $table_id, $order_id = 0)
+    {
+        if ($order_id > 0) {
+            // 购物车商品列表
+            $order = OrderModel::detail($order_id);
+            $cartList = (new static())->with('product')
+                ->where('cashier_id', '=', $cashier['cashier_id'])
+                ->where('order_id', '=', $order_id)
+                ->select();
+        } else {
+            // 购物车商品列表
+            $cartList = (new static())->with('product')
+                ->where('cashier_id', '=', $cashier['cashier_id'])
+                ->where('table_id', '=', $table_id)
+                ->select();
+            // 是否存在订单
+            $order = OrderModel::detail([
+                ['table_id', '=', $table_id],
+                ['order_status', '=', OrderStatusEnum::NORMAL]
+            ]);
+        }
+
+        // 购物车列表统计
+        $cart_product_price = 0;              // 购物车商品原价
+        $cart_product_pay_price = 0;          // 购物车商品实付价钱
+        $cart_user_discount_money = 0;        // 会员折扣
+        foreach ($cartList as $product) {
+            $cart_product_price += $product['price'] * $product['product_num'];
+            $cart_product_pay_price += $product['product_price'] * $product['product_num'];
+            $cart_user_discount_money += $product['price'] - $product['product_price'];
+        }
+        // 购物车消费税
+        $consumeFee = SettingModel::getSupplierItem(SettingEnum::TAX_RATE, $cashier['shop_supplier_id']);
+        $cart_consume_fee = 0;
+        if ($consumeFee['is_open']) {
+            $consume_rate = $consumeFee['tax_rate'];
+            $cart_consume_fee = floatval(helper::bcmul($cart_product_pay_price, $consume_rate));
+        }
+        // 购物车应付
+        $cart_pay_price = helper::bcadd($cart_product_pay_price, $cart_consume_fee);
+        // 订单信息
+        if ($order) {
+            $order_total_price = $order['total_price'];
+            $order_service_money = $order['service_money'];
+            $order_setting_service_money = $order['setting_service_money'];
+            $order_discount_money = $order['discount_money'];
+            $order_consumption_tax_money = $order['consumption_tax_money'];
+            $order_user_discount_money = $order['user_discount_money'];
+            $order_pay_price = $order['pay_price'];
+        } else {
+            $order_total_price = 0;
+            $order_service_money = 0;
+            $order_setting_service_money = 0;
+            $order_discount_money = 0;
+            $order_consumption_tax_money = 0;
+            $order_user_discount_money = 0;
+            $order_pay_price = 0;
+        }
+        // 订单 + 购物车 统计
+        $total_price = helper::bcadd($order_total_price, $cart_product_pay_price);                         // 小计
+        $service_money = helper::bcadd($order_service_money, $order_setting_service_money);                // 服务费
+        $special_discount = $order_discount_money;                                                         // 優惠折扣
+        $total_consumption_tax_money = helper::bcadd($order_consumption_tax_money, $cart_consume_fee);     // 消费税
+        $total_user_discount_money = helper::bcadd($order_user_discount_money, $cart_user_discount_money); // 會員折扣
+        $total_pay_price = helper::bcadd($order_pay_price, $cart_pay_price);                               // 应收
+
+        return [
+            'orderInfo' => $order ?? [],
+            'cartInfo' => [
+                'list' => $cartList,
+                'cart_product_price' => $cart_product_price,                                 // 购物车商品原价
+                'cart_product_pay_price' => $cart_product_pay_price,                         // 购物车商品实付价钱
+                'cart_pay_price' => $cart_pay_price,                                         // 购物车实付价钱
+                'cart_consumption_tax_money' => $cart_consume_fee,                           // 消费税
+                'cart_user_discount_money' => $cart_user_discount_money,                     // 会员折扣
+            ],
+            'sumInfo' => [
+                'subtotal' => $total_price,                                         // 小计
+                'service_money' => $service_money,                                  // 服务费
+                'special_discount' => $special_discount,                            // 優惠折扣
+                'total_consumption_tax_money' => $total_consumption_tax_money,      // 消费税
+                'total_user_discount_money' => $total_user_discount_money,          // 會員折扣
+                'total_pay_price' => $total_pay_price,                              // 应收
+            ],
+        ];
     }
 }
