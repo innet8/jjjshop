@@ -2,14 +2,14 @@
     <div>
         <div class="supplier">
         <el-form size="small" ref="form" :model="form" label-position="top" :rules="formRules">
-            <el-form-item :label="$t('消费税率')" prop="tax_open">
+            <el-form-item :label="$t('消费税率')" prop="is_open">
                 <div>
-                    <el-radio v-model="form.tax_open" :label="'1'">{{ $t('开启') }}</el-radio>
-                    <el-radio v-model="form.tax_open" :label="'0'">{{ $t('关闭') }}</el-radio>
+                    <el-radio v-model="form.is_open" :label="'1'">{{ $t('开启') }}</el-radio>
+                    <el-radio v-model="form.is_open" :label="'0'">{{ $t('关闭') }}</el-radio>
                 </div>
             </el-form-item>
-            <el-form-item v-if="form.tax_open == '1'" :label="$t('税率')" prop="tax">
-                <el-input class="max-w460" v-model="form.tax" placeholder="请输入" maxLength="50">
+            <el-form-item v-if="form.is_open == '1'" :label="$t('税率')" prop="tax_rate">
+                <el-input class="max-w460" v-model="form.tax_rate" :placeholder="$t('请输入')" maxLength="50">
                     <template #append>%</template>
 
                 </el-input>
@@ -25,28 +25,61 @@
     </div>
 </template>
 <script>
+import SettingApi from '@/api/setting.js';
 export default {
     data() {
         return {
             loading:false,
             form: {
-                tax_open: '1',
-                tax: '',
+                is_open: '1',
+                tax_rate: '',
             },
             formRules: {
 
-                tax_open: [{
+                is_open: [{
                     required: true,
                     message: $t('请输入主货币单位'),
                     trigger: 'blur'
                 }],
-                tax: [{
+                tax_rate: [{
                     required: true,
                     message: $t('请输入税率'),
                     trigger: 'blur'
                 }],
             },
         }
+    },
+    created(){
+        this.getData();
+    },
+    methods: {
+        /*获取列表*/
+        getData() {
+            let self = this;
+            SettingApi.getTaxRate({}, true)
+                .then(data => {
+                    self.loading = false;
+                    self.form = data.data.vars.values;
+                })
+                .catch(error => {
+
+                });
+        },
+        onSubmit() {
+            let self = this;
+            let params = JSON.parse(JSON.stringify(self.form));
+            self.loading = true;
+            SettingApi.setTaxRate(params, true).then(data => {
+                self.loading = false;
+                ElMessage({
+                    message: $t('保存成功'),
+                    type: 'success'
+                });
+                self.dialogFormVisible(true);
+            }).catch(error => {
+                self.loading = false;
+            });
+        },
     },
 }
 </script>

@@ -7,24 +7,24 @@
     <div class="user">
         <!--添加等级-->
         <div class="common-level-rail">
-            <el-button size="small" type="primary" @click="addClick" v-auth="'/setting/printer/add'">添加</el-button>
+            <el-button size="small" type="primary" @click="addClick" v-auth="'/setting/printer/add'">{{ $t('添加') }}</el-button>
         </div>
 
         <!--内容-->
         <div class="product-content">
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-                    <el-table-column prop="printer_id" label="打印机ID"></el-table-column>
-                    <el-table-column prop="printer_name" label="打印机名称"></el-table-column>
-                    <el-table-column prop="printer_type.text" label="打印机类型	"></el-table-column>
-                    <el-table-column prop="sort" label="排序"></el-table-column>
-                    <el-table-column prop="create_time" label="添加时间"></el-table-column>
-                    <el-table-column fixed="right" label="操作" width="120">
+                    <el-table-column prop="printer_id" :label="$t('打印机ID')"></el-table-column>
+                    <el-table-column prop="printer_name" :label="$t('打印机名称')"></el-table-column>
+                    <el-table-column prop="printer_type.text" :label="$t('打印机类型')	"></el-table-column>
+                    <el-table-column prop="sort" :label="$t('排序')"></el-table-column>
+                    <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
+                    <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/setting/printer/edit'">编辑</el-button>
+                                v-auth="'/setting/printer/edit'">{{ $t('编辑') }}</el-button>
                             <el-button @click="deleteClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/setting/printer/delete'">删除</el-button>
+                                v-auth="'/setting/printer/delete'">{{ $t('删除') }}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
