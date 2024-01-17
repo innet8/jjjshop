@@ -41,19 +41,19 @@ class CashierOrderSettledService extends CashierSettledService
                 ->where('eat_type', '=', 10)
                 ->find();
             if ($cashierOrder) {
-                $this->error = "桌号已被使用";
+                $this->error = "桌台存在进行中订单";
                 return false;
             }
-            $Order = OrderModel::where('table_id', '=', $this->params['table_id'])
-                ->where('order_status', '=', 10)
-                ->where('pay_status', '=', 20)
-                ->where('order_source', '=', 10)
-                ->where('eat_type', '=', 10)
-                ->find();
-            if ($Order) {
-                $this->error = "桌号已被使用";
-                return false;
-            }
+//            $Order = OrderModel::where('table_id', '=', $this->params['table_id'])
+//                ->where('order_status', '=', 10)
+//                ->where('pay_status', '=', 20)
+//                ->where('order_source', '=', 10)
+//                ->where('eat_type', '=', 10)
+//                ->find();
+//            if ($Order) {
+//                $this->error = "桌号已被使用";
+//                return false;
+//            }
         }
         foreach ($this->productList as $product) {
             // 判断商品是否下架

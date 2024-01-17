@@ -28,4 +28,16 @@ class Table extends TableModel
         }
         return $table->save(['is_bind' => 1]);
     }
+
+    // 开台
+    public static function open($table_id)
+    {
+        return self::where('table_id', '=', $table_id)->update(['status' => 30]);
+    }
+
+    // 关台
+    public static function close($table_id)
+    {
+        return self::where('table_id', '=', $table_id)->update(['status' => 10]);
+    }
 }

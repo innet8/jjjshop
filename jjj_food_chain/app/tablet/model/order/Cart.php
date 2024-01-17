@@ -71,14 +71,12 @@ class Cart extends CartModel
     }
 
     // 重新计算购物车价格信息
-    public function reloadPrice($cashier, $table_id, $order_id = 0)
+    public function reloadPrice($shop_supplier_id, $table_id, $order_id = 0)
     {
-        trace('收银员');
-        trace($cashier);
         if ($order_id > 0) {
             // 购物车商品列表
             $cartList = (new static())->with('product')
-                ->where('cashier_id', '=', $cashier['cashier_id'])
+                ->where('shop_supplier_id', '=', $shop_supplier_id)
                 ->where('order_id', '=', $order_id)
                 ->select();
             // 是否存在订单
@@ -86,7 +84,7 @@ class Cart extends CartModel
         } else {
             // 购物车商品列表
             $cartList = (new static())->with('product')
-                ->where('cashier_id', '=', $cashier['cashier_id'])
+                ->where('shop_supplier_id', '=', $shop_supplier_id)
                 ->where('table_id', '=', $table_id)
                 ->select();
             // 是否存在订单
@@ -206,7 +204,7 @@ class Cart extends CartModel
 
         $total_price = $pay_money; // 订单商品总价（不是商品原价总价、是商品折扣后(如果有)的总价）
         // 消费税计算
-        $consumeFee = SettingModel::getSupplierItem(SettingEnum::TAX_RATE, $cashier['shop_supplier_id']);
+        $consumeFee = SettingModel::getSupplierItem(SettingEnum::TAX_RATE, $shop_supplier_id);
         $consume_fee = 0;
         if ($consumeFee['is_open']) {
             $consume_rate = $consumeFee['tax_rate'];
@@ -303,24 +301,18 @@ class Cart extends CartModel
     /**
      * 购物车列表 (含商品信息)
      */
-    public function getCartList($user, $table_id = 0, $eat_type = 20)
+    public function getCartList($shop_supplier_id, $table_id = 0, $eat_type = 20)
     {
         // 获取购物车商品列表
         $model = $this;
         if ($table_id) {
             $model = $model->where('table_id', '=', $table_id);
         }
-        if ($eat_type == 10) {
-            $model = $model->where(function ($query) use ($user) {
-                $query->where('cashier_id', '=', 0)->whereOr('cashier_id', '=', $user['cashier_id']);
-            });
-        } else {
-            $model = $model->where('cashier_id', '=', $user['cashier_id']);
-        }
+
         $list = $model->with(['product', 'sku', 'image.file'])
             ->field("*,(bag_price*product_num) as total_bag_price,(product_price*product_num) as line_money")
             ->where('eat_type', '=', $eat_type)
-            ->where('shop_supplier_id', '=', $user['shop_supplier_id'])
+            ->where('shop_supplier_id', '=', $shop_supplier_id)
             ->where('is_stay', '=', 0)
             ->select();
         if ($list) {
@@ -341,7 +333,7 @@ class Cart extends CartModel
     /**
      * 加入购物车
      */
-    public function add($data, $user)
+    public function add($data, $shop_supplier_id)
     {
         //判断商品是否下架
         $product = $this->productState($data['product_id']);
@@ -355,14 +347,12 @@ class Cart extends CartModel
             return false;
         }
         //判断是否存在
-        $cart_id = $this->isExist($data, $user);
+        $cart_id = $this->isExist($data, $shop_supplier_id);
         if ($cart_id) {
             return $this->where('cart_id', '=', $cart_id)->inc('product_num', $data['product_num'])->update();
         } else {
             $data['describe'] = trim($data['describe'], ';');
-            $data['app_id'] = self::$app_id;
-            $data['shop_supplier_id'] = $user['shop_supplier_id'];
-            $data['cashier_id'] = $user['cashier_id'];
+            $data['shop_supplier_id'] = $shop_supplier_id;
             return $this->save($data);
         }
 
@@ -371,28 +361,21 @@ class Cart extends CartModel
     /**
      * 判断购物车商品是否存在
      */
-    public function isExist($data, $user)
+    public function isExist($data, $shop_supplier_id)
     {
         $model = $this;
         if (isset($data['table_id']) && $data['table_id']) {
             $model = $model->where('table_id', '=', $data['table_id']);
         }
-        if ($data['eat_type'] == 10) {
-            $model = $model->where(function ($query) use ($user) {
-                $query->where('cashier_id', '=', 0)->whereOr('cashier_id', '=', $user['cashier_id']);
-            });
-        } else {
-            $model = $model->where('cashier_id', '=', $user['cashier_id']);
-        }
-        $cart_id = $model->where('is_stay', '=', 0)
+
+        return $model->where('is_stay', '=', 0)
             ->where('product_id', '=', $data['product_id'])
-            ->where('shop_supplier_id', '=', $user['shop_supplier_id'])
+            ->where('shop_supplier_id', '=', $shop_supplier_id)
             ->where('product_sku_id', '=', $data['product_sku_id'])
             ->where('feed', '=', $data['feed'])
             ->where('attr', '=', $data['attr'])
             ->where('eat_type', '=', $data['eat_type'])
             ->value('cart_id');
-        return $cart_id;
     }
 
     /**
@@ -453,14 +436,10 @@ class Cart extends CartModel
     /**
      *清空桌号购物车
      */
-    public function deleteTableAll($user, $table_id)
+    public function deleteTableAll($shop_supplier_id, $table_id)
     {
         $model = $this;
-        $model = $model->where(function ($query) use ($user) {
-            $query->where('cashier_id', '=', 0)->whereOr('cashier_id', '=', $user['cashier_id']);
-        });
-        return $model->where('shop_supplier_id', '=', $user['shop_supplier_id'])
-            ->where('eat_type', '=', 10)
+        return $model->where('shop_supplier_id', '=', $shop_supplier_id)
             ->where('table_id', '=', $table_id)
             ->delete();
     }
@@ -570,53 +549,6 @@ class Cart extends CartModel
     public function updateRemark($cart_id, $remark)
     {
         return $this->where('cart_id', '=', $cart_id)->update(['remark' => $remark]);
-    }
-
-    /**
-     * 收银-送厨
-     *
-     * @param [type] $params
-     * @param [type] $user
-     * @return int
-     */
-    public function sendKitchen($params, $user)
-    {
-        $CartModel = new static();
-        // 购物车商品列表
-        $productList = $CartModel->getCartList($user);
-        if (count($productList) <= 0) {
-            $this->error = '购物车商品不能为空';
-            return false;
-        }
-        $params['eat_type'] = 20;
-        $order_id = isset($params['order_id']) ? $params['order_id'] : 0;
-        if ($order_id > 0) {
-            // 加餐订单提交
-            if (!(new OrderModel)->mealHallOrder($productList, $params)) {
-                $this->error = '订单创建失败';
-                return false;
-            }
-        }else{
-            // 实例化订单service
-            $orderService = new CashierOrderSettledService($user, $productList, $params);
-            // 获取订单信息
-            $orderInfo = $orderService->settlement();
-            // 订单结算提交
-            if ($orderService->hasError()) {
-                $this->error = $orderService->getError();
-                return false;
-            }
-            // 创建订单
-            $order_id = $orderService->createOrder($orderInfo);
-            if (!$order_id) {
-                $this->error = $orderService->getError() ?: '订单创建失败';
-                return false;
-            }
-        }
-
-        // 移出购物车中已下单的商品
-        $CartModel->deleteAll($user);
-        return $order_id;
     }
 
     // 获取购物车 + 订单统计数据
