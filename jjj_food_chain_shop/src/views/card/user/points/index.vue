@@ -6,26 +6,26 @@
   -->
   <div class="pb50">
     <el-form ref="form" size="small" :model="form" label-position="top" label-width="200px">
-      <div class="common-form">积分设置</div>
-      <el-form-item label="积分名称 " prop="points_name" :rules="[{required: true,message: ' '}]">
+      <div class="common-form">{{ $t('积分设置') }}</div>
+      <el-form-item :label="$t('积分名称') " prop="points_name" :rules="[{required: true,message: ' '}]">
         <el-input v-model="form.points_name" autocomplete="off" class="max-w460"></el-input>
-        <div class="lh18 mt10 gray9">
+        <!-- <div class="lh18 mt10 gray9">
           <p>注：修改积分名称后，在买家端的所有页面里，看到的都是自定义的名称</p>
           <p>例：商家使用自定义的积分名称来做品牌运营。如京东把积分称为“京豆”，淘宝把积分称为“淘金币”</p>
-        </div>
+        </div> -->
       </el-form-item>
-      <el-form-item label="积分说明" :rules="[{required: true,message: ' '}]">
+      <!-- <el-form-item :label="$t('积分说明')" :rules="[{required: true,message: ' '}]">
         <el-input type="textarea" rows="5" v-model="form.describe" autocomplete="off"></el-input>
-      </el-form-item>
-      <div class="common-form">积分赠送</div>
-      <el-form-item label="是否开启购物送积分">
+      </el-form-item> -->
+      <div class="common-form">{{ $t('积分赠送') }}</div>
+      <el-form-item :label="$t('购物送积分')">
         <el-radio-group v-model="form.is_shopping_gift">
-          <el-radio :label="1">开启</el-radio>
-          <el-radio :label="0">关闭</el-radio>
+          <el-radio :label="1">{{ $t('开启') }}</el-radio>
+          <el-radio :label="0">{{ $t('关闭') }}</el-radio>
         </el-radio-group>
         <div class="lh18 mt10 gray9">
-          <p>注：如开启则订单完成后赠送用户积分</p>
-          <p>积分赠送规则：1.订单确认收货已完成；2.已完成订单超出后台设置的申请售后期限</p>
+          <p>{{ $t('打开后订单完成后赠送用户积分') }}</p>
+          <p>{{$t('注：退款后已赠送的订单积分对应扣除')}}</p>
         </div>
       </el-form-item>
       <el-form-item label="积分赠送比例 " prop="gift_ratio" :rules="[{required: true,message: ' '}]">
@@ -33,8 +33,8 @@
           <template #append>%</template>
         </el-input>
         <div class="lh18 mt10 gray9">
-          <p> 注：赠送比例请填写数字0~100；订单的运费不参与积分赠送</p>
-          <p> 例：订单付款金额(100.00元) * 积分赠送比例(100%) = 实际赠送的积分(100积分)</p>
+          <p> {{ $t('注：请填写数字0~100；订单的运费不参与积分赠送') }}</p>
+          <p> {{ $t('例：订单付款金额(100.00元) * 积分赠送比例(100%) = 实际赠送的积分(100积分)') }}</p>
         </div>
       </el-form-item>
       <!-- <div class="common-form">积分抵扣</div>
@@ -73,7 +73,7 @@
       </el-form-item> -->
       <!--提交-->
       <div class="common-button-wrapper">
-        <el-button type="primary" size="small" @click="onSubmit" :loading="loading">提交</el-button>
+        <el-button type="primary" size="small" @click="onSubmit" :loading="loading">{{ $t('提交') }}</el-button>
       </div>
 
     </el-form>

@@ -18,7 +18,7 @@ class Category extends Controller
      * @Apidoc\Method ("POST")
      * @Apidoc\Url("/index.php/shop/product.store.category/index")
      * @Apidoc\Param("name", type="string", require=false, desc="分类名称")
-     * @Apidoc\Returned()
+     * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Category\getCacheAll", desc="列表")
      */
     public function index()
     {
@@ -32,7 +32,7 @@ class Category extends Controller
      * @Apidoc\Title("特殊商品分类列表")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url("/index.php/shop/product.store.category/list")
-     * @Apidoc\Returned()
+     * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Category\getCacheAll", desc="列表")
      */
     public function list()
     {
@@ -45,6 +45,7 @@ class Category extends Controller
      * @Apidoc\Title("删除商品分类")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url("/index.php/shop/product.store.category/Delete")
+     * @Apidoc\Param("category_id", type="int", require=true, desc="分类id")
      * @Apidoc\Returned()
      */
     public function Delete($category_id)
@@ -78,7 +79,8 @@ class Category extends Controller
     /**
      * @Apidoc\Title("编辑商品分类")
      * @Apidoc\Method ("POST")
-     * @Apidoc\Url("/index.php/shop/product.store.category/Add")
+     * @Apidoc\Url("/index.php/shop/product.store.category/Edit")
+     * @Apidoc\Param("category_id", type="int", require=true, desc="分类id")
      * @Apidoc\Returned()
      */
     public function Edit($category_id)
@@ -95,7 +97,8 @@ class Category extends Controller
     /**
      * @Apidoc\Title("设置状态")
      * @Apidoc\Method ("POST")
-     * @Apidoc\Url("/index.php/shop/product.store.category/Add")
+     * @Apidoc\Url("/index.php/shop/product.store.category/set")
+     * @Apidoc\Param("category_id", type="int", require=true, desc="分类id")
      * @Apidoc\Returned()
      */
     public function set($category_id)
@@ -112,8 +115,8 @@ class Category extends Controller
     /**
      * @Apidoc\Title("普通商品顶级分类列表")
      * @Apidoc\Method ("POST")
-     * @Apidoc\Url("/index.php/shop/product.store.category/Add")
-     * @Apidoc\Returned()
+     * @Apidoc\Url("/index.php/shop/product.store.category/parent")
+     * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Category\getALLParent", desc="列表")
      */
     public function parent()
     {

@@ -4,14 +4,21 @@ namespace app\shop\controller\product\expand;
 
 use app\shop\controller\Controller;
 use app\shop\model\product\Label as LabelModel;
+use hg\apidoc\annotation as Apidoc;
 
 /**
- * 打印标签控制器
+ * 打印标签
+ * @Apidoc\Group("product")
+ * @Apidoc\Sort(4)
  */
 class Label extends Controller
 {
     /**
-     * 列表
+     * @Apidoc\Title("列表")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.expand.label/index")
+     * @Apidoc\Param(ref="pageParam")
+     * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Label\getList", desc="列表")
      */
     public function index()
     {
@@ -21,7 +28,12 @@ class Label extends Controller
     }
 
     /**
-     * 添加
+     * @Apidoc\Title("添加")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.expand.label/add")
+     * @Apidoc\Param("label_name", type="string", require=true, desc="标签名称")
+     * @Apidoc\Param("sort", type="int", require=false, default="100", desc="排序")
+     * @Apidoc\Returned()
      */
     public function add()
     {
@@ -33,7 +45,13 @@ class Label extends Controller
     }
 
     /**
-     * 编辑
+     * @Apidoc\Title("编辑")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.expand.label/edit")
+     * @Apidoc\Param("label_id", type="int", require=true, desc="标签id")
+     * @Apidoc\Param("label_name", type="string", require=true, desc="标签名称")
+     * @Apidoc\Param("sort", type="int", require=false, default="100", desc="排序")
+     * @Apidoc\Returned()
      */
     public function edit($label_id)
     {
@@ -47,7 +65,11 @@ class Label extends Controller
     }
 
     /**
-     * 删除标签
+     * @Apidoc\Title("删除")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.expand.label/delete")
+     * @Apidoc\Param("label_id", type="string", require=true, desc="标签id，多个逗号隔开")
+     * @Apidoc\Returned()
      */
     public function delete($label_id)
     {

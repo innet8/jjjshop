@@ -91,8 +91,8 @@
         <Grade v-if="open_edit" :open_edit="open_edit" :form="userModel" :gradeList="gradeList"
             @closeDialog="closeDialogFunc($event, 'edit')"></Grade>
 
-        <addEdit v-if="open_addDdit" :title="title" :open="open_addDdit" :gradeList="gradeList" :editform="editform" @closeDialog="closeAddMenber">
-        </addEdit>
+        <AddEdit v-if="open_addDdit" :title="title" :editData="editData" :open="open_addDdit" :gradeList="gradeList" :editform="editform" @closeDialog="closeAddMenber">
+        </AddEdit>
     </div>
 </template>
 
@@ -100,13 +100,13 @@
 import UserApi from '@/api/user.js';
 import Grade from './dialog/Grade.vue';
 import Recharge from './dialog/Recharge.vue';
-import addEdit from './dialog/addEdit.vue';
+import AddEdit from './dialog/AddEdit.vue';
 export default {
-    components: {
+    components: {   
         /*编辑组件*/
         Grade,
         Recharge,
-        addEdit,
+        AddEdit,
     },
     data() {
         return {
@@ -140,6 +140,7 @@ export default {
 
             },
             title: "",
+            editData:'',
         };
     },
     created() {
@@ -187,6 +188,10 @@ export default {
         /*关闭弹窗*/
         closeAddMenber(e) {
             this.open_addDdit = false;
+            this.editData = ''
+            if(e == 1){
+                this.getTableList();
+            }
         },
 
         /*搜索查询*/
@@ -208,17 +213,14 @@ export default {
             this.userModel = item;
             this.open_edit = true;
         },
+
         /*打开编辑*/
         editClick(item) {
-            let self = this;
-            let params = item.user_id;
-            this.$router.push({
-                path: '/user/user/edit',
-                query: {
-                    user_id: params
-                }
-            });
+            this.title = $t('编辑会员')
+           this.editData = item
+           this.open_addDdit = true
         },
+
         /*关闭弹窗*/
         closeDialogFunc(e, f) {
 
@@ -239,9 +241,9 @@ export default {
         /*删除用户*/
         deleteClick(row) {
             let self = this;
-            ElMessageBox.confirm('此操作将永久删除该记录, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            ElMessageBox.confirm($t('此操作将永久删除该记录, 是否继续?'), $t('提示'), {
+                confirmButtonText: $t('确定'),
+                cancelButtonText: $t('取消'),
                 type: 'warning'
             })
                 .then(() => {
@@ -256,7 +258,7 @@ export default {
                             self.loading = false;
                             if (data.code == 1) {
                                 ElMessage({
-                                    message: '恭喜你，用户删除成功',
+                                    message: $t('恭喜你，用户删除成功'),
                                     type: 'success'
                                 });
                                 self.getTableList();

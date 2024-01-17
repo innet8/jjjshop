@@ -4,14 +4,21 @@ namespace app\shop\controller\product\expand;
 
 use app\shop\controller\Controller;
 use app\shop\model\product\Feed as FeedModel;
+use hg\apidoc\annotation as Apidoc;
 
 /**
- * 加料库控制器
+ * 加料库
+ * @Apidoc\Group("product")
+ * @Apidoc\Sort(4)
  */
 class Feed extends Controller
 {
     /**
-     * 列表
+     * @Apidoc\Title("列表")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.expand.feed/index")
+     * @Apidoc\Param(ref="pageParam")
+     * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Feed\getList", desc="列表")
      */
     public function index()
     {
@@ -21,7 +28,13 @@ class Feed extends Controller
     }
 
     /**
-     * 添加
+     * @Apidoc\Title("添加")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.expand.feed/add")
+     * @Apidoc\Param("feed_name", type="string", require=true, desc="加料名称")
+     * @Apidoc\Param("price", type="float", require=true, desc="加料价格")
+     * @Apidoc\Param("sort", type="int", require=false, default="100", desc="排序")
+     * @Apidoc\Returned()
      */
     public function add()
     {
@@ -33,7 +46,14 @@ class Feed extends Controller
     }
 
     /**
-     * 编辑
+     * @Apidoc\Title("编辑")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.expand.feed/edit")
+     * @Apidoc\Param("feed_id", type="int", require=true, desc="加料id")
+     * @Apidoc\Param("feed_name", type="string", require=true, desc="加料名称")
+     * @Apidoc\Param("price", type="float", require=true, desc="加料价格")
+     * @Apidoc\Param("sort", type="int", require=false, default="100", desc="排序")
+     * @Apidoc\Returned()
      */
     public function edit($feed_id)
     {
@@ -47,7 +67,11 @@ class Feed extends Controller
     }
 
     /**
-     * 删除商品
+     * @Apidoc\Title("删除")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.expand.feed/delete")
+     * @Apidoc\Param("feed_id", type="string", require=true, desc="加料id，多个逗号隔开")
+     * @Apidoc\Returned()
      */
     public function delete($feed_id)
     {

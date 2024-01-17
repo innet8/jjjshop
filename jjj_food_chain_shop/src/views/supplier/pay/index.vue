@@ -1,28 +1,26 @@
 <template >
     <div class="supplier">
-        <div class="common-level-rail">
+        <!-- <div class="common-level-rail">
             <el-button size="small" type="primary" @click="addClick" v-auth="'/setting/printer/add'">添加</el-button>
-        </div>
+        </div> -->
         <!--内容-->
         <div class="supplier-content">
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-                    <el-table-column prop="printer_id" label="图片"></el-table-column>
-                    <el-table-column prop="printer_name" label="名称"></el-table-column>
-                    <el-table-column prop="sort" label="排序"></el-table-column>
-                    <el-table-column prop="sort" label="状态">
+                    <el-table-column prop="img" :label="$t('图片')">
+                        <template #default="scope">
+                            <img :src="scope.row.img" style="width: 48px;" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="name" :label="$t('名称')"></el-table-column>
+                    <el-table-column prop="value" :label="$t('排序')"></el-table-column>
+                    <el-table-column prop="sort" :label="$t('状态')">
                         <template #default="scope">
                             <el-switch :model-value="scope.row.status" :active-value="1" :inactive-value="0"
-                                @click="changeStatus($event, scope.row)"></el-switch>
+                                @click="changeStatus(scope.row)"></el-switch>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="create_time" label="添加时间"></el-table-column>
-                    <el-table-column fixed="right" label="操作" width="120">
-                        <template #default="scope">
-                            <el-button @click="editClick(scope.row)" type="primary" link size="small">编辑</el-button>
-                            <el-button @click="deleteClick(scope.row)" type="primary" link size="small">删除</el-button>
-                        </template>
-                    </el-table-column>
+
                 </el-table>
             </div>
 
@@ -34,13 +32,12 @@
                 </el-pagination>
             </div>
         </div>
-        <addEdit v-if="open" :open="open" :title="title" @close="(e) => { open = false; if(e==1){ this.getData();} }"></addEdit>
+
     </div>
 </template>
 <script>
-import addEdit from './addEdit.vue';
+import SettingApi from '@/api/setting.js';
 export default {
-    components:{addEdit},
     data() {
         return {
             /*是否加载完成*/
@@ -57,8 +54,11 @@ export default {
             /*是否打开添加弹窗*/
             open: false,
             /*是否打开编辑弹窗*/
-            title:'',
+            title: '',
         }
+    },
+    created() {
+        this.getData();
     },
     methods: {
 
@@ -75,6 +75,46 @@ export default {
             this.curPage = 1;
             this.pageSize = val;
             this.getData();
+        },
+        /*获取列表*/
+        getData() {
+            let self = this;
+            SettingApi.getPaytype({}, true)
+                .then(data => {
+                    self.loading = false;
+                    self.tableData = data.data;
+                })
+                .catch(error => {
+
+                });
+        },
+
+        changeStatus(row) {
+            console.log(123123);
+            let self = this;
+            let params = {
+                key: row.value,
+                status: row.status == 1 ? 0 : 1,
+            }
+            let text = ''
+            text = row.status == 1 ? $t('禁用') : $t('启用');
+            ElMessageBox.confirm( $t("确定")+ text + $t("这个支付方式?"),  $t("提示"), {
+                confirmButtonText: $t("确定"),
+                cancelButtonText: $t("取消"),
+                type: "warning",
+            })
+                .then(() => {
+                    self.loading = true;
+                    SettingApi.setPaytype(params, true)
+                        .then(data => {
+                            self.loading = false;
+                            self.getData();
+                        })
+                        .catch(error => {
+                            self.loading = false;
+                        });
+                })
+                .catch(() => { });
         },
 
         /*打开添加*/
