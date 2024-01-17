@@ -48,7 +48,7 @@ export default {
                 nick_name: '',
                 gender: '',
                 mobile: '',
-                grade_id: '',
+                grade_id: 1,
                 password: '',
                 birthday: '',
             },

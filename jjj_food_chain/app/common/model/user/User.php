@@ -79,7 +79,12 @@ class User extends BaseModel
         } else {
             $filter['user_id'] = (int)$where;
         }
-        return $model->where($filter)->with(['address', 'addressDefault', 'grade', 'card'])->find();
+        //
+        $info = $model->where($filter)->with(['address', 'addressDefault', 'grade', 'card'])->find();
+        if ($info) {
+            $info->password = '';
+        }
+        return $info;
     }
 
     /**
@@ -90,7 +95,12 @@ class User extends BaseModel
         $model = new static;
         $filter = ['is_delete' => 0];
         $filter = array_merge($filter, ['union_id' => $unionid]);
-        return $model->where($filter)->with(['address', 'addressDefault', 'grade', 'card'])->find();
+        //
+        $info = $model->where($filter)->with(['address', 'addressDefault', 'grade', 'card'])->find();
+        if ($info) {
+            $info->password = '';
+        }
+        return $info;
     }
 
     /**

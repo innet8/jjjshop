@@ -41,7 +41,7 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="total_money" :label="$t('营业收入')"></el-table-column>
+                <el-table-column prop="total_income" :label="$t('营业收入')"></el-table-column>
                 <el-table-column prop="cash_income" :label="$t('现金收入')"></el-table-column>
                 <el-table-column prop="previous_shift_cash" :label="$t('上一班遗留备用金')"></el-table-column>
                 <el-table-column prop="cash_left" :label="$t('本班遗留备用金')"></el-table-column>

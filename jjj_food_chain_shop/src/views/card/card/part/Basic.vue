@@ -6,17 +6,17 @@
     -->
   <div class="basic-setting-content pl16 pr16">
     <!--基本信息-->
-    <div class="common-form">基本信息</div>
-    <el-form-item label="会员卡名称：" :rules="[{ required: true, message: '请填写会员卡名称' }]" prop="model.card_name">
+    <div class="common-form">{{ $t('基本信息') }}</div>
+    <el-form-item :label="$t('会员卡名称：')" :rules="[{ required: true, message: $t('请填写会员卡名称') }]" prop="model.card_name">
       <el-input v-model="form.model.card_name" class="max-w460"></el-input>
     </el-form-item>
-    <el-form-item label="卡片类型：" prop="model.is_default">
+    <el-form-item :label="$t('卡片类型：')" prop="model.is_default">
       <el-radio-group v-model="form.model.is_default">
-          <el-radio :label="0">默认</el-radio>
-          <el-radio :label="1">自定义</el-radio>
+          <el-radio :label="0">{{ $t('默认') }}</el-radio>
+          <el-radio :label="1">{{ $t('自定义') }}</el-radio>
         </el-radio-group>
     </el-form-item>
-    <el-form-item label="卡片样式：" prop="model.card_style" v-if="form.model.is_default==0">
+    <el-form-item :label="$t('卡片样式：')" prop="model.card_style" v-if="form.model.is_default==0">
       <div class="d-s-c f-w maxwidth-530">
         <div v-for="(item,index) in form.image" class="card-el-row">
           <div class="img" @click="chooseCardType(item.name)">
@@ -25,69 +25,69 @@
         </div>
       </div>
     </el-form-item>
-    <el-form-item label="卡片样式：" prop="card_style" v-if="form.model.is_default==1">
+    <el-form-item :label="$t('卡片样式：')" prop="card_style" v-if="form.model.is_default==1">
       <div class="d-s-c f-w maxwidth-530">
           <div class="img" @click="openUpload()">
             <img  v-img-url="form.model.default_style" width="111" height="61" />
           </div>
       </div>
     </el-form-item>
-    <el-form-item label="排序：" :rules="[{ required: true, message: '请填写排序' }]" prop="model.sort">
+    <el-form-item :label="$t('排序：')" :rules="[{ required: true, message: $t('请填写排序') }]" prop="model.sort">
       <el-input v-model="form.model.sort" class="max-w460"></el-input>
     </el-form-item>
-    <el-form-item label="会员权益：">
+    <el-form-item :label="$t('会员权益：')">
       <el-radio-group v-model="form.model.is_discount">
-        <el-radio :label="0">无折扣</el-radio>
-        <el-radio :label="1">有折扣</el-radio>
+        <el-radio :label="0">{{ $t('无折扣') }}</el-radio>
+        <el-radio :label="1">{{ $t('有折扣') }}</el-radio>
       </el-radio-group>
     </el-form-item>
-    <el-form-item label="折扣：" :rules="[{ required: true, message: '请填写折扣' }]" prop="model.discount"
+    <el-form-item :label="$t('折扣：')" :rules="[{ required: true, message: $t('请填写折扣') }]" prop="model.discount"
       v-if="form.model.is_discount==1">
       <el-input v-model="form.model.discount" class="max-w460"></el-input>
     </el-form-item>
-    <el-form-item label="开卡赠送：">
-      <el-checkbox v-model="form.model.open_points" :true-label="1" :false-label='0'> 积分</el-checkbox>
-      <el-checkbox v-model="form.model.open_coupon" :true-label="1" :false-label='0'> 优惠券</el-checkbox>
-      <el-checkbox v-model="form.model.open_money" :true-label="1" :false-label='0'> 余额</el-checkbox>
+    <el-form-item :label="$t('开卡赠送：')">
+      <el-checkbox v-model="form.model.open_points" :true-label="1" :false-label='0'> {{ $t('积分') }}</el-checkbox>
+      <!-- <el-checkbox v-model="form.model.open_coupon" :true-label="1" :false-label='0'> {{ $t('优惠券') }}</el-checkbox> -->
+      <el-checkbox v-model="form.model.open_money" :true-label="1" :false-label='0'> {{ $t('余额') }}</el-checkbox>
     </el-form-item>
 
 
-    <el-form-item label="积分：" :rules="[{ required: true, message: '请填写积分数量' }]" prop="model.open_points_num"
+    <el-form-item :label="$t('积分：')" :rules="[{ required: true, message: $t('请填写积分数量') }]" prop="model.open_points_num"
       v-if="form.model.open_points">
       <el-input v-model="form.model.open_points_num" class="max-w460"></el-input>
     </el-form-item>
-    <el-form-item label="余额：" :rules="[{ required: true, message: '请填写余额数量' }]" prop="model.open_money_num"
+    <el-form-item :label="$t('余额：')" :rules="[{ required: true, message: $t('请填写余额数量') }]" prop="model.open_money_num"
       v-if="form.model.open_money">
       <el-input v-model="form.model.open_money_num" class="max-w460"></el-input>
     </el-form-item>
-    <el-form-item label="优惠券：" :rules="[{ required: true, message: '请填写优惠券' }]" prop="model.open_coupons"
+    <el-form-item :label="$t('优惠券：')" :rules="[{ required: true, message: $t('请填写优惠券') }]" prop="model.open_coupons"
       v-if="form.model.open_coupon">
       <div class="d-s-c">
         <div style="width: 460px;border: 1px solid #dedede;min-height: 32px;"><span
             v-for="(item,index) in form.model.open_coupons" :key="index">{{item.name+';'}}</span></div>
             <span></span>
-        <el-button type="primary" @click="addCoupon()">添加优惠券</el-button>
+        <el-button type="primary" @click="addCoupon()">{{ $t('添加优惠券') }}</el-button>
       </div>
     </el-form-item>
     <el-form-item label="" v-if="form.model.open_coupon">
       <el-table :data="form.model.open_coupons" style="width: 60%">
-        <el-table-column prop="name" label="券名称">
+        <el-table-column prop="name" :label="$t('券名称')">
         </el-table-column>
-        <el-table-column prop="number" label="每人领取数量" :rules="[{required: true,message: ' '}]">
+        <el-table-column prop="number" :label="$t('每人领取数量')" :rules="[{required: true,message: ' '}]">
           <template #default="scope">
             <el-input type="number" v-model="scope.row.number" placeholder="">
             </el-input>
           </template>
         </el-table-column>
-        <el-table-column label="操作" prop="address">
+        <el-table-column :label="$t('操作')" prop="address">
           <template #default="scope">
-            <el-button type="primary" link size="small" @click='delcoupon(scope.row)'> 删除 </el-button>
+            <el-button type="primary" link size="small" @click='delcoupon(scope.row)'> {{ $t('删除') }} </el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-form-item>
     <!--上传图片组件-->
-    <Upload v-if="isupload" :isupload="isupload" :type="type" @returnImgs="returnImgsFunc">上传图片</Upload>
+    <Upload v-if="isupload" :isupload="isupload" :type="type" @returnImgs="returnImgsFunc">{{ $t('上传图片') }}</Upload>
     <!--选择优惠券-->
     <GetCoupon v-if="open_add" :open_add="open_add" @closeDialog="closeProductDialogFunc($event)">选择优惠券弹出层</GetCoupon>
   </div>

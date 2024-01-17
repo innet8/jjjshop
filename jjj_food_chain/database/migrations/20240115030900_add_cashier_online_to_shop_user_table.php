@@ -30,6 +30,7 @@ class AddCashierOnlineToShopUserTable extends Migrator
     {
         $table = $this->table('shop_user');
         $table->addColumn(Column::tinyInteger('cashier_online')->setNull(false)->setDefault(0)->setComment('收银员当班 0-不在线 1-在线')->setAfter('app_id'));
+        $table->addColumn(Column::integer('cashier_login_time')->setNull(false)->setDefault(0)->setComment('收银员当班登录时间')->setAfter('cashier_online'));
         $table->update();
     }
 }

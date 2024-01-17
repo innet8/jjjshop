@@ -2,7 +2,9 @@
 
 namespace app\cashier\model\order;
 
+use think\facade\Log;
 use app\common\library\helper;
+use app\common\model\store\PayType;
 use app\api\model\order\OrderProduct;
 use app\common\model\supplier\Supplier;
 use app\common\enum\order\OrderTypeEnum;
@@ -16,7 +18,7 @@ use app\common\service\order\OrderRefundService;
 use app\common\service\order\OrderCompleteService;
 use app\common\service\product\factory\ProductFactory;
 use app\cashier\service\order\paysuccess\type\MasterPaySuccessService;
-use think\facade\Log;
+use app\shop\model\product\Category;
 
 /**
  * 普通订单模型
@@ -234,9 +236,6 @@ class Order extends OrderModel
                         $this->error = "修改价应小于原价";
                         return false;
                     }
-//                    if ($detail['pay_price'] > 0) {
-//                        $discount_money = round($detail['order_price'] - $data['money'] + $detail['discount_money'], 2);
-//                    }
                     $discount_money = round($detail['order_price'] - $data['money'], 2);
                     break;
                 case '2'://折扣
@@ -262,18 +261,6 @@ class Order extends OrderModel
                     break;
             }
             if ($discount_money >= 0) {
-//                foreach ($detail['product'] as &$product) {
-//                    //计算优惠金额
-//                    $dicount_money = round($product['total_price'] / $detail['total_price'] * $discount_money, 2);
-//                    $value = $product['total_price'];
-//                    // 减去优惠金额
-//                    $value = helper::bcsub($value, $dicount_money);
-//                    $total_pay_price = helper::number2($value);
-//                    if ($total_pay_price <= 0) {
-//                        $total_pay_price = 0;
-//                    }
-//                    $product->save(['total_pay_price' => $total_pay_price, 'discount_money' => $dicount_money]);
-//                }
                 $pay_price = round($detail['order_price'] - $discount_money, 2);
                 if ($pay_price <= 0) {
                     $pay_price = 0;
@@ -344,25 +331,7 @@ class Order extends OrderModel
         }
         $this->startTrans();
         try {
-//            $setting = SettingModel::getItem('points');
-//            $total_pay_price = $orderProduct['product_price'] * $num;
-//            $discount_money = round($num / $orderProduct['total_num'] * $orderProduct['discount_money'], 2);
-//            $money = $total_pay_price - $discount_money;
-//            $points = 0;
-//            if ($orderProduct['points_bonus'] > 0) {
-//                // 积分赠送比例
-//                $ratio = $setting['gift_ratio'] / 100;
-//                $points = helper::bcmul($money, $ratio, 2);
-//            }
-//            $this->save([
-//                'points_bonus' => $this['points_bonus'] - $points,
-//                'pay_price' => $this['pay_price'] - $money,
-//                'discount_money' => $this['discount_money'] - $discount_money,
-//                'order_price' => $this['order_price'] - $total_pay_price,
-//                'total_price' => $this['total_price'] - $total_pay_price
-//            ]);
             $isPay = $this['pay_status']['value'] == 20 ? 1 : 0;
-//          $orderProduct['total_num'] = $num;
             // 退回商品库存
             ProductFactory::getFactory($this['order_source'])->backProductStock([$orderProduct], $isPay);
             if ($orderProduct['total_num'] == $num) {
@@ -371,10 +340,6 @@ class Order extends OrderModel
                 $total_num = $orderProduct['total_num'] - $num;
                 $orderProduct->save([
                     'total_num' => $total_num,
-//                    'total_price' => round($total_num * $orderProduct['product_price'], 2),
-//                    'total_pay_price' => $money,
-//                    'discount_money' => round($orderProduct['discount_money'] - $discount_money, 2),
-//                    'points_bonus' => round($orderProduct['points_bonus'] - $points, 2),
                 ]);
             }
             //
@@ -493,21 +458,32 @@ class Order extends OrderModel
             ->where('a.pay_status', '=', OrderPayStatusEnum::SUCCESS)
             ->where('a.order_status', '=', OrderStatusEnum::COMPLETED)
             ->where('a.eat_type', '<>', 0);
-
+        // 
+        $incomes = [];
+        $payTypes = PayType::getEnableListAll($params['shop_supplier_id'], self::$app_id);
+        foreach ($payTypes as $payType){
+            $value = (clone $model)->where('pay_type', $payType['value'])->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00";
+            if ($value > 0) {
+                $incomes[] = [
+                    'pay_type' => $payType['value'],
+                    'pay_type_name' => OrderPayTypeEnum::data($payType['value'])['name'],
+                    'price' => $value,
+                ];
+            }
+        }
+        // 
+        $categorys = (clone $model)->group("c.category_id")->field("c.name, count(a.order_id) as sales, sum(a.pay_price - a.refund_money) as prices")->select()->append([])?->toArray();
+        foreach ($categorys as $key => $data){
+            $categorys[$key]['name_text'] = Category::getNameTextAttr($data['name'] ?: '');
+        }
+        // 
         return [
             'supplier' => Supplier::field('shop_supplier_id,business_id,name,address,description,link_name,link_phone,logo,app_id')
                 ->where('shop_supplier_id', $params['shop_supplier_id'] ?? 0 )
                 ->find()?->toArray(),
-            'categorys' => (clone $model)->group("c.category_id")
-                ->field("c.name, count(a.order_id) as sales, sum(a.pay_price - a.refund_money) as prices")
-                ->select()
-                ->append([])?->toArray(),
+            'categorys' => $categorys,
             'sales_num' => (clone $model)->count(),
-            'balance_pay' => (clone $model)->where('pay_type', OrderPayTypeEnum::BALANCE)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
-            'cash_pay' => (clone $model)->where('pay_type', OrderPayTypeEnum::CASH)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
-            'wx_pay' => (clone $model)->where('pay_type', OrderPayTypeEnum::OWECHAT)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
-            'zfb_pay' => (clone $model)->where('pay_type', OrderPayTypeEnum::OALIPAY)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
-            'pos_pay' => (clone $model)->where('pay_type', OrderPayTypeEnum::POS)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
+            'incomes' => $incomes,
             'refund_amount' => number_format((clone $model)->sum("refund_money"), 2, '.', ''), 
             'total_amount' => number_format((clone $model)->sum("pay_price"), 2, '.', ''), 
             'times' => [$startTime, $endTime], 

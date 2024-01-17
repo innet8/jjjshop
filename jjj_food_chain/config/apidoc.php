@@ -36,6 +36,7 @@ return [
             // （必须）唯一的key
             'key'=>'shop',
             'groups'  => [
+                ['title'=>'首页','name'=>'home'],
                 ['title'=>'商品管理','name'=>'product'],
                 ['title'=>'订单管理','name'=>'order'],
                 ['title'=>'会员管理','name'=>'user'],

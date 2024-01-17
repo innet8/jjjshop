@@ -31,13 +31,13 @@ class JobScheduler
         event('UserCoupon');
         // 用户生日信息
         event('User');
-        //分销商订单结算
+        // 分销商订单结算
         event('AgentOrder');
-        //团购订单
+        // 团购订单
         event('GroupOrder');
         // 交班打印
-        trace("ssdsdsadsa");
-        // 
+        event('UserShiftLogPrint');
+        //
         return true;
     }
 

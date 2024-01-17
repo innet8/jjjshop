@@ -86,29 +86,19 @@ class OrderBusinessPrinterService
             // 
             $printer->lineFeed();
             $printer->setupColumns(
-                [100, SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [360, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
             );
             if ($data['sales_num'] > 0) { 
                 $printer->printInColumns(__("销售笔数"),"{$data['sales_num']}");
                 $printer->lineFeed();
             }
-            if ($data['balance_pay'] > 0) { 
-                $printer->printInColumns(__("余额收入"),"￥{$data['balance_pay']}");
+            // 
+            foreach ($data['incomes'] as $key => $income) {
+                $printer->printInColumns($income['pay_type_name'], "￥{$income['price']}");
                 $printer->lineFeed();
             }
-            if ($data['cash_pay'] > 0) { 
-                $printer->printInColumns(__("现金收入"), "￥{$data['cash_pay']}");
-                $printer->lineFeed();
-            }
-            if ($data['wx_pay'] > 0) { 
-                $printer->printInColumns(__("微信收入"), "￥{$data['wx_pay']}");
-                $printer->lineFeed();
-            }
-            if ($data['zfb_pay'] > 0) { 
-                $printer->printInColumns(__("支付宝收入"), "￥{$data['zfb_pay']}");
-                $printer->lineFeed();
-            }
+            // 
             if ($data['refund_amount'] > 0) { 
                 $printer->printInColumns(__("退款金额"), "￥{$data['refund_amount']}");
                 $printer->lineFeed();
@@ -169,26 +159,13 @@ class OrderBusinessPrinterService
                 $printer->lineFeed();
                 $printer->lineFeed();
             }
-            if ($data['balance_pay'] > 0) { 
-                $printer->appendText(printText(__("余额收入"),'',"￥{$data['balance_pay']}",$width));
+            // 
+            foreach ($data['incomes'] as $key => $income) {
+                $printer->appendText(printText($income['pay_type_name'],'',"￥{$income['price']}",$width));
                 $printer->lineFeed();
                 $printer->lineFeed();
             }
-            if ($data['cash_pay'] > 0) { 
-                $printer->appendText(printText(__("现金收入"),'',"￥{$data['cash_pay']}",$width));
-                $printer->lineFeed();
-                $printer->lineFeed();
-            }
-            if ($data['wx_pay'] > 0) { 
-                $printer->appendText(printText(__("微信收入"),'',"￥{$data['wx_pay']}",$width));
-                $printer->lineFeed();
-                $printer->lineFeed();
-            }
-            if ($data['zfb_pay'] > 0) { 
-                $printer->appendText(printText(__("支付宝收入"),'',"￥{$data['zfb_pay']}",$width));
-                $printer->lineFeed();
-                $printer->lineFeed();
-            }
+            // 
             if ($data['refund_amount'] > 0) { 
                 $printer->appendText(printText(__("退款金额"),'',"￥{$data['zfrefund_amountb_pay']}",$width));
                 $printer->lineFeed();
@@ -225,22 +202,15 @@ class OrderBusinessPrinterService
         }
         $content .= "--------------------------------<BR><BR>";
         $content .= printText(__('销售笔数'), ' ', $data['sales_num'], $width) . "<BR><BR>";
-        if ($data['balance_pay'] > 0) { 
-            $content .= printText(__('余额收入'), '', "￥" . strval($data['balance_pay']), $width) . "<BR><BR>";
+        // 
+        foreach ($data['incomes'] as $key => $income) {
+            $content .= printText($income['pay_type_name'],'',"￥{$income['price']}",$width, $leftWidth + 4) . "<BR><BR>";
         }
-        if ($data['cash_pay'] > 0) { 
-            $content .= printText(__('现金收入'), '', "￥" . strval($data['cash_pay']), $width) . "<BR><BR>";
-        }
-        if ($data['wx_pay'] > 0) { 
-            $content .= printText(__('微信收入'), '', "￥" . strval($data['wx_pay']), $width) . "<BR><BR>";
-        }
-        if ($data['zfb_pay'] > 0) { 
-            $content .= printText(__('支付宝收入'), '', "￥" . strval($data['zfb_pay']), $width) . "<BR><BR>";
-        }
+        // 
         if ($data['refund_amount'] > 0) { 
-            $content .= printText(__('退款金额'), '', "￥" . strval($data['refund_amount']), $width) . "<BR><BR>";
+            $content .= printText(__('退款金额'), '', "￥" . strval($data['refund_amount']), $leftWidth + 4) . "<BR><BR>";
         }
-        $content .= printText(__('营业总额'), '', "￥" . strval($data['total_amount']), $width) . "<BR>";
+        $content .= printText(__('营业总额'), '', "￥" . strval($data['total_amount']), $leftWidth + 4) . "<BR>";
         $content .= "<BR>";
         // 
         return $content;

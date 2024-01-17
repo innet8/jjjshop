@@ -57,6 +57,10 @@ return [
         'LiveProduct' => [
             \app\job\event\LiveProduct::class
         ],
+        /*交班打印*/
+        'UserShiftLogPrint' => [
+            \app\job\event\UserShiftLogPrint::class
+        ],
     ],
 
     'subscribe' => [

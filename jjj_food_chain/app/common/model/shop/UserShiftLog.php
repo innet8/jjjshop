@@ -38,7 +38,7 @@ class UserShiftLog extends BaseModel
         $value= $value ? json_decode($value,true) : [];
         if ($value) {
             foreach ($value as $key => $v) {
-                $value[$key]['pay_type_name'] =  OrderPayTypeEnum::data($v['pay_type'])['name'];
+                $value[$key]['pay_type_name'] = OrderPayTypeEnum::data($v['pay_type'])['name'];
             }
         }
         return $value;
@@ -160,7 +160,7 @@ class UserShiftLog extends BaseModel
         $cash_income = (clone $orderModel)->where('pay_type', 10)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0;
         // 
         $incomes = [];
-        $payTypes = PayType::list($shop_user_id, self::$app_id);
+        $payTypes = PayType::getEnableListAll($shop_user_id, self::$app_id);
         $totalIncome = 0;
         foreach ($payTypes as $payType){
             $value = (clone $orderModel)
@@ -172,7 +172,7 @@ class UserShiftLog extends BaseModel
                 $totalIncome = helper::bcadd($totalIncome, $value);
                 $incomes[] = [
                     'pay_type' => $payType['value'],
-                    'pay_type_name' => $payType['value'],
+                    'pay_type_name' => OrderPayTypeEnum::data($payType['value'])['name'],
                     'price' => $value,
                 ];
             }
@@ -245,7 +245,7 @@ class UserShiftLog extends BaseModel
         try {
             // 
             $incomes = [];
-            $payTypes = PayType::list($shop_user_id, self::$app_id);
+            $payTypes = PayType::getEnableListAll($shop_user_id, self::$app_id);
             $totalIncome = 0;
             foreach ($payTypes as $payType){
                 $value = (clone $orderModel)
@@ -283,7 +283,7 @@ class UserShiftLog extends BaseModel
             ];
             $this->save($data);
             // 更新收银员在线状态
-            // $shopUser->update(['cashier_online' => 0, 'cashier_login_time' => 0]);
+            $shopUser->update(['cashier_online' => 0, 'cashier_login_time' => 0]);
             $this->commit();
             // 打印
             $printerConfig = SettingModel::getSupplierItem('printer', $this->shop_supplier_id, $this->app_id);

@@ -19,9 +19,28 @@ class Survey extends Controller
      * @Apidoc\Url ("/index.php/shop/store.survey/index")
      * @Apidoc\Param("username", type="string", require=true, default="", desc="用户名")
      * @Apidoc\Param(ref="pageParam")
-     * @Apidoc\Returned("detail", type="array", ref="app\common\model\order\Order\getOrderTotalMoney", desc="订单详情")
-     * @Apidoc\Returned("salesNumRank", type="array", ref="app\common\model\order\Order\getProductRank", desc="销量排行")
-     * @Apidoc\Returned("salesMoneyRank", type="array", ref="app\common\model\order\Order\getProductRank", desc="销售额排行")
+     * @Apidoc\Returned("detail", type="array", desc="订单详情", children={
+     *    @Apidoc\Returned("total_price", type="float", desc="营业总额"),
+     *    @Apidoc\Returned("total_discount_money", type="float", desc="折扣总额"),
+     *    @Apidoc\Returned("user_count", type="int", desc="会员数"),
+     *    @Apidoc\Returned("order_count", type="int", desc="订单数"),
+     *    @Apidoc\Returned("refund_money", type="float", desc="退款金额"),
+     *    @Apidoc\Returned("express_price", type="float", desc="配送费总额"),
+     *    @Apidoc\Returned("bag_price", type="float", desc="包装费总额"),
+     *    @Apidoc\Returned("product_price", type="float", desc="商品总额"),
+     * })
+     * @Apidoc\Returned("salesNumRank", type="array", desc="销量排行", children={
+     *    @Apidoc\Returned("product_name", type="string", desc="商品名称（多语言）"),
+     *    @Apidoc\Returned("product_name_text", type="string", desc="商品名称"),
+     *    @Apidoc\Returned("total_num", type="int", desc="销量"),
+     *    @Apidoc\Returned("total_price", type="float", desc="销售额"),
+     * })
+     * @Apidoc\Returned("salesMoneyRank", type="array", desc="销售额排行", children={
+     *    @Apidoc\Returned("product_name_text", type="string", desc="商品名称"),
+     *    @Apidoc\Returned("product_name", type="string", desc="商品名称（多语言）"),
+     *    @Apidoc\Returned("total_num", type="int", desc="销量"),
+     *    @Apidoc\Returned("total_price", type="float", desc="销售额"),
+     * })
      */
     public function index()
     {
