@@ -31,8 +31,8 @@ class Product extends Controller
         // 获取全部商品列表
         $model = new ProductModel;
         $list = $model->getList(array_merge([
-            'status' => -1, 
-            'product_type' => 1, 
+            'status' => -1,
+            'product_type' => 1,
             'shop_supplier_id' => $this->store['user']['shop_supplier_id']
         ], $this->postData()));
         // 商品分类
@@ -53,7 +53,7 @@ class Product extends Controller
      * @Apidoc\Param("type", type="string", require=false, desc="是否上架 sell-上架 lower-下架")
      * @Apidoc\Param("stock", type="int", default=0, require=false, desc="库存 0-全部 10-低于10 20-低于20 ....")
      * @Apidoc\Param(ref="pageParam")
-     * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Product\getList")
+     * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Product\getLists")
      */
     public function lists()
     {
@@ -73,8 +73,7 @@ class Product extends Controller
      * @Apidoc\Param("category_id", type="int", default=0, require=false, desc="分类id")
      * @Apidoc\Param("type", type="string", require=false, desc="是否上架 sell-上架 lower-下架")
      * @Apidoc\Param("stock", type="int", default=0, require=false, desc="库存 0-全部 10-低于10 20-低于20 ....")
-     * @Apidoc\Param(ref="pageParam")
-     * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Product\getList")
+     * @Apidoc\Returned()
      */
     public function add($scene = 'add')
     {
@@ -102,7 +101,15 @@ class Product extends Controller
     }
 
     /**
-     * 商品编辑
+     * @Apidoc\Title("编辑商品")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/product.store.product/edit")
+     * @Apidoc\Param("product_id", type="int", require=true, desc="商品id")
+     * @Apidoc\Param("product_name", type="string", require=false, desc="商品名称")
+     * @Apidoc\Param("category_id", type="int", default=0, require=false, desc="分类id")
+     * @Apidoc\Param("type", type="string", require=false, desc="是否上架 sell-上架 lower-下架")
+     * @Apidoc\Param("stock", type="int", default=0, require=false, desc="库存 0-全部 10-低于10 20-低于20 ....")
+     * @Apidoc\Returned()
      */
     public function edit($product_id, $scene = 'edit')
     {
@@ -120,7 +127,12 @@ class Product extends Controller
     }
 
     /**
-     * 修改商品状态
+     * @Apidoc\Title("修改商品状态")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/product.store.product/state")
+     * @Apidoc\Param("product_id", type="int", require=true, desc="商品id")
+     * @Apidoc\Param("state", type="int", require=true, desc="状态 0-下架 1-上架")
+     * @Apidoc\Returned()
      */
     public function state($product_id, $state)
     {
@@ -133,7 +145,11 @@ class Product extends Controller
     }
 
     /**
-     * 删除商品
+     * @Apidoc\Title("删除商品")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/product.store.product/delete")
+     * @Apidoc\Param("product_id", type="int", require=true, desc="商品id")
+     * @Apidoc\Returned()
      */
     public function delete($product_id)
     {
@@ -146,7 +162,12 @@ class Product extends Controller
     }
 
     /**
-     * 同步商品到门店
+     * @Apidoc\Title("同步商品到门店")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/product.store.product/transmit")
+     * @Apidoc\Param("product_id", type="int", require=true, desc="商品id")
+     * @Apidoc\Param("sku", type="array", require=true, desc="商品sku")
+     * @Apidoc\Returned()
      */
     public function transmit()
     {

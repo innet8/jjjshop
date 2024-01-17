@@ -4,14 +4,21 @@ namespace app\shop\controller\product\expand;
 
 use app\shop\controller\Controller;
 use app\shop\model\product\Spec as SpecModel;
+use hg\apidoc\annotation as Apidoc;
 
 /**
- * 商品规格控制器
+ * 商品规格
+ * @Apidoc\Group("product")
+ * @Apidoc\Sort(4)
  */
 class Spec extends Controller
 {
     /**
-     * 列表
+     * @Apidoc\Title("列表")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.expand.spec/index")
+     * @Apidoc\Param(ref="pageParam")
+     * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Spec\getList", desc="列表")
      */
     public function index()
     {
@@ -21,7 +28,12 @@ class Spec extends Controller
     }
 
     /**
-     * 添加规则组
+     * @Apidoc\Title("添加规格")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.expand.spec/add")
+     * @Apidoc\Param("spec_name", type="string", require=true, desc="规格名称")
+     * @Apidoc\Param("sort", type="int", require=false, default="100", desc="排序")
+     * @Apidoc\Returned()
      */
     public function add()
     {
@@ -34,7 +46,13 @@ class Spec extends Controller
     }
 
     /**
-     * 编辑
+     * @Apidoc\Title("编辑规格")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.expand.spec/edit")
+     * @Apidoc\Param("spec_id", type="int", require=true, desc="规格id")
+     * @Apidoc\Param("spec_name", type="string", require=true, desc="规格名称")
+     * @Apidoc\Param("sort", type="int", require=false, default="100", desc="排序")
+     * @Apidoc\Returned()
      */
     public function edit($spec_id)
     {
@@ -48,7 +66,11 @@ class Spec extends Controller
     }
 
     /**
-     * 删除商品
+     * @Apidoc\Title("删除规格")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.expand.spec/delete")
+     * @Apidoc\Param("spec_id", type="string", require=true, desc="规格id，多个逗号隔开")
+     * @Apidoc\Returned()
      */
     public function delete($spec_id)
     {

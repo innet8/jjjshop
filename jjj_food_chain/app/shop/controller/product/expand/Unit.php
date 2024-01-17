@@ -4,14 +4,21 @@ namespace app\shop\controller\product\expand;
 
 use app\shop\controller\Controller;
 use app\shop\model\product\Unit as UnitModel;
+use hg\apidoc\annotation as Apidoc;
 
 /**
- * 单位控制器
+ * 单位库
+ * @Apidoc\Group("product")
+ * @Apidoc\Sort(4)
  */
 class Unit extends Controller
 {
     /**
-     * 列表
+     * @Apidoc\Title("列表")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.expand.unit/index")
+     * @Apidoc\Param(ref="pageParam")
+     * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Unit\getList", desc="列表")
      */
     public function index()
     {
@@ -21,7 +28,12 @@ class Unit extends Controller
     }
 
     /**
-     * 添加单位
+     * @Apidoc\Title("添加")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.expand.unit/add")
+     * @Apidoc\Param("unit_name", type="string", require=true, desc="单位名称")
+     * @Apidoc\Param("sort", type="int", require=false, default="100", desc="排序")
+     * @Apidoc\Returned()
      */
     public function add()
     {
@@ -33,7 +45,13 @@ class Unit extends Controller
     }
 
     /**
-     * 编辑
+     * @Apidoc\Title("编辑")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.expand.unit/edit")
+     * @Apidoc\Param("unit_id", type="int", require=true, desc="单位id")
+     * @Apidoc\Param("unit_name", type="string", require=true, desc="单位名称")
+     * @Apidoc\Param("sort", type="int", require=false, default="100", desc="排序")
+     * @Apidoc\Returned()
      */
     public function edit($unit_id)
     {
@@ -47,7 +65,11 @@ class Unit extends Controller
     }
 
     /**
-     * 删除商品
+     * @Apidoc\Title("删除")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url("/index.php/shop/product.expand.unit/delete")
+     * @Apidoc\Param("unit_id", type="string", require=true, desc="单位id，多个逗号隔开")
+     * @Apidoc\Returned()
      */
     public function delete($unit_id)
     {
@@ -57,5 +79,4 @@ class Unit extends Controller
         }
         return $this->renderSuccess('删除成功');
     }
-
 }
