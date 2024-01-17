@@ -17,9 +17,9 @@ class PayType extends BaseModel
     /**
      * 获取数据
      */
-    public static function list($shopSupplierId = 0, $app_id=0)
+    public static function list($shopSupplierId = 0, $appId=0)
     {
-        $data = self::where('shop_supplier_id',$shopSupplierId)->where('app_id',$app_id)->select();
+        $data = self::where('shop_supplier_id',$shopSupplierId)->where('app_id',$appId)->select();
         $enumData = array_values(OrderPayTypeEnum::data());
         foreach ($enumData as $key => $item) {
             foreach ($data as $k => $v) {
@@ -36,5 +36,16 @@ class PayType extends BaseModel
         }
         return $enumData;
     }
+
+    /**
+     * 获取数据
+     */
+    public static function getEnablelist($shopSupplierId = 0, $appId=0)
+    {
+        return array_values(array_filter(self::list($shopSupplierId,$appId), function($item){
+            return $item['status'] == 1;
+        }));
+    }
+    
 
 }
