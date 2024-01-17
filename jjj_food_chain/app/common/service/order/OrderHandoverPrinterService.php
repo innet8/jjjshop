@@ -225,16 +225,16 @@ class OrderHandoverPrinterService
             $content .= printText(__('销售笔数'), ' ', $data['sales_num'], $width) . "<BR>";
         }
         foreach ($data['incomes'] as $key => $income) {
-            $content .= printText($income['pay_type_name'], ' ', '￥'. strval($income['price']), $width, $leftWidth + 6) . "<BR>";
+            $content .= printText($income['pay_type_name'], ' ', '￥'. strval($income['price']), $width, $leftWidth + 5) . "<BR>";
         }
         if ($data['refund_amount'] > 0) {
             $content .= printText(__('退款金额'), ' ', '￥'. strval($data['refund_amount']), $width) . "<BR>";
         }
         $content .= "<BR>--------------------------------<BR>";
-        $content .= printText(__('本班营业总额'), '', "￥" . strval($totalIncome), $width) . "<BR>";
-        $content .= printText(__('上一班遗留备用金'), '', "￥" . strval($previousShiftCash), $width) . "<BR>";
-        $content .= printText(__('本班取出现金'), '', "￥" . strval($cashTakenOut), $width) . "<BR>";
-        $content .= printText(__('本班遗留备用金'), '', "￥" . strval($cashLeft), $width) . "<BR>";
+        $content .= printText(__('本班营业总额'), '', "￥" . strval($totalIncome), $width, $leftWidth + 5) . "<BR>";
+        $content .= printText(__('上一班遗留备用金'), '', "￥" . strval($previousShiftCash), $width, $leftWidth + 5) . "<BR>";
+        $content .= printText(__('本班取出现金'), '', "￥" . strval($cashTakenOut), $width, $leftWidth + 5) . "<BR>";
+        $content .= printText(__('本班遗留备用金'), '', "￥" . strval($cashLeft), $width, $leftWidth + 5) . "<BR>";
         $content .= "<BR>";
         //
         return $content;

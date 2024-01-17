@@ -24,8 +24,7 @@ class PayType extends Controller
     {
         $app_id = $this->cashier['app']['app_id'];
         $shop_supplier_id = $this->cashier['user']['shop_supplier_id'];
-        $data = PayTypeModel::getEnablelist($shop_supplier_id, $app_id);
+        $data = PayTypeModel::getEnableList($shop_supplier_id, $app_id);
         return $this->renderSuccess('', $data);
     }
-
 }
