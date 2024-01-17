@@ -61,7 +61,7 @@ class BaseModel extends Model
      */
     protected static function setApiAppId()
     {
-        self::$app_id = request()->param('app_id');
+        self::$app_id = request()->header('appId') ?: request()->param('app_id');
     }
 
     /**
@@ -190,5 +190,13 @@ class BaseModel extends Model
     public function getError()
     {
         return $this->error;
+    }
+
+    /**
+     * 返回模型的错误信息
+     */
+    public function lists()
+    {
+        return $this->select();
     }
 }

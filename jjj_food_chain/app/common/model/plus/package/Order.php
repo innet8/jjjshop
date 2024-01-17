@@ -62,7 +62,7 @@ class Order extends BaseModel
      */
     public function getPayTypeAttr($value)
     {
-        return ['text' => OrderPayTypeEnum::pay()[$value]['name'], 'value' => $value];
+        return ['text' => OrderPayTypeEnum::data()[$value]['name'], 'value' => $value];
     }
 
     /**
