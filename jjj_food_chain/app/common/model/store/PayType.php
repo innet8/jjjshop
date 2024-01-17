@@ -34,7 +34,18 @@ class PayType extends BaseModel
                 }
             }
         }
-        return $enumData;
+        return array_values(array_filter($enumData, function($item){
+            switch ($item['value']) {
+                case OrderPayTypeEnum::BALANCE:
+                case OrderPayTypeEnum::WECHAT:
+                case OrderPayTypeEnum::ALIPAY:
+                case OrderPayTypeEnum::CASH:
+                case OrderPayTypeEnum::POS:
+                    return false;
+                    break;
+            }
+            return true;
+        }));
     }
 
     /**
