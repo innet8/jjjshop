@@ -69,7 +69,7 @@ class User extends UserModel
         // 获取用户列表
         return $model->with(['grade','card'])->where('is_delete', '=', '0')
             ->order(['create_time' => 'desc'])
-            ->hidden(['open_id', 'union_id'])
+            ->hidden(['open_id', 'union_id', 'password'])
             ->paginate($data);
     }
 
@@ -149,6 +149,7 @@ class User extends UserModel
         if ($data['birthday']) {
             $data['birthday'] = strtotime($data['birthday']);
         }
+        $data['nickName'] = isset($data['nick_name']) ? $data['nick_name'] : $this['nickName'];
         return $this->save($data);
     }
 

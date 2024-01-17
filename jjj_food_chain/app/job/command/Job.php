@@ -39,12 +39,12 @@ class Job extends Command
         } else if ($mode == 'g') {
             $argv[] = '-g';
         }
-        
+
         // 创建定时任务
         $worker = new Worker();
         $worker->onWorkerStart = [$this, 'start'];
 
-        // 
+        //
         Worker::runAll();
     }
 

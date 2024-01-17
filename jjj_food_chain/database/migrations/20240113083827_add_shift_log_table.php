@@ -31,6 +31,7 @@ class AddShiftLogTable extends Migrator
     {
         $table = $this->table('shop_user_shift_log', ['engine' => 'InnoDB', 'collation' => 'utf8mb4_general_ci', 'comment' => '商家用户交班记录表']);
         $table->addColumn('shift_user_id', 'integer', ['comment' => '收银员id'])
+        ->addColumn('shift_no', 'string', ['limit' => 64, 'null' => false, 'default' => '', 'comment' => '交班编号'])
         ->addColumn('previous_shift_cash', 'decimal', ['precision' => 10, 'scale' => 2, 'default' => 0, 'comment' => '上一班遗留备用金'])
         ->addColumn('current_cash_total', 'decimal', ['precision' => 10, 'scale' => 2, 'default' => 0, 'comment' => '当前钱箱现金总计'])
         ->addColumn('incomes', 'text', ['null' => true, 'comment' => '收入详情'])
@@ -41,7 +42,8 @@ class AddShiftLogTable extends Migrator
         ->addColumn('remark', 'text', ['null' => true, 'comment' => '备注'])
         ->addColumn('app_id', 'integer', ['default' => 0, 'comment' => '应用id'])
         ->addColumn('shop_supplier_id', 'integer', ['default' => 0, 'comment' => '门店id'])
-        ->addColumn('shift_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR,'null' => false,'default' => 0,'signed' => true, 'comment' => '当班结束时间'])
+        ->addColumn('shift_start_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR,'null' => false,'default' => 0,'signed' => true, 'comment' => '当班开始时间'])
+        ->addColumn('shift_end_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR,'null' => false,'default' => 0,'signed' => true, 'comment' => '当班结束时间'])
         ->addColumn('create_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR,'null' => false,'default' => 0,'signed' => true,'comment' => '创建时间',])
         ->addColumn('update_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR,'null' => false,'default' => 0,'signed' => true,'comment' => '更新时间',])
         ->addIndex(['shift_user_id'], ['name' => 'idx_shift_user_id'])
