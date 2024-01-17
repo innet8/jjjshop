@@ -777,6 +777,7 @@ class Cart extends CartModel
         return $order_id;
     }
 
+    // 获取购物车 + 订单统计数据
     public function getOrderCartDetail($cashier, $table_id, $order_id = 0)
     {
         if ($order_id > 0) {
@@ -786,7 +787,7 @@ class Cart extends CartModel
                 ->where('cashier_id', '=', $cashier['cashier_id'])
                 ->where('order_id', '=', $order_id)
                 ->select();
-        } else {
+        } else if($table_id > 0){
             // 购物车商品列表
             $cartList = (new static())->with('product')
                 ->where('cashier_id', '=', $cashier['cashier_id'])
@@ -797,6 +798,14 @@ class Cart extends CartModel
                 ['table_id', '=', $table_id],
                 ['order_status', '=', OrderStatusEnum::NORMAL]
             ]);
+        } else {
+            // 购物车商品列表
+            $cartList = (new static())->with('product')
+                ->where('cashier_id', '=', $cashier['cashier_id'])
+                ->where('table_id', '=', 0)
+                ->select();
+            // 是否存在订单
+            $order = null;
         }
 
         // 购物车列表统计
