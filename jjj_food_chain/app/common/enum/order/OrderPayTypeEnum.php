@@ -33,38 +33,53 @@ class OrderPayTypeEnum extends Enum
     /**
      * 获取枚举数据
      */
-    public static function data()
+    public static function data($key=0)
     {
-        return [
+        $arr = [
             self::BALANCE => [
                 'name' => __('余额支付'),
                 'value' => self::BALANCE,
+                'status' => 1,
+                'img' => '/image/diy/logo.png'
             ],
             self::WECHAT => [
                 'name' => __('微信支付'),
                 'value' => self::WECHAT,
+                'status' => 1,
+                'img' => '/image/diy/logo.png'
             ],
             self::ALIPAY => [
                 'name' => __('支付宝支付'),
                 'value' => self::ALIPAY,
+                'status' => 1,
+                'img' => '/image/diy/logo.png'
             ],
             self::CASH => [
                 'name' => __('线下支付(现金支付)'),
                 'value' => self::CASH,
+                'status' => 1,
+                'img' => '/image/diy/logo.png'
             ],
             self::OWECHAT => [
                 'name' => __('线下支付(自有微信支付)'),
                 'value' => self::OWECHAT,
+                'status' => 1,
+                'img' => '/image/diy/logo.png'
             ],
             self::OALIPAY => [
                 'name' => __('线下支付(自有支付宝支付)'),
                 'value' => self::OALIPAY,
+                'status' => 1,
+                'img' => '/image/diy/logo.png'
             ],
             self::POS => [
                 'name' => __('线下支付(POS刷卡支付)'),
                 'value' => self::POS,
+                'status' => 1,
+                'img' => '/image/diy/logo.png'
             ],
         ];
+        return $key > 0 ? $arr[$key] ?? '' : $arr;
     }
 
     /**
@@ -72,20 +87,16 @@ class OrderPayTypeEnum extends Enum
      */
     public static function pay()
     {
-        return [
-            self::BALANCE => [
-                'name' => __('余额支付'),
-                'value' => self::BALANCE,
-            ],
-            self::WECHAT => [
-                'name' => __('微信支付'),
-                'value' => self::WECHAT,
-            ],
-            self::ALIPAY => [
-                'name' => __('支付宝支付'),
-                'value' => self::ALIPAY,
-            ]
-        ];
+        return  array_filter(self::data(), function($item){
+            switch ($item['value']) {
+                case self::BALANCE:
+                case self::WECHAT:
+                case self::ALIPAY:
+                    return true;
+                    break;
+            }
+            return false;
+        });
     }
 
 }

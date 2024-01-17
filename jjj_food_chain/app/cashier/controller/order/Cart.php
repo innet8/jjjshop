@@ -8,7 +8,7 @@ use app\cashier\model\order\Order as OrderModel;
 use hg\apidoc\annotation as Apidoc;
 
 /**
- * 购物车
+ * 收银购物车
  * @Apidoc\Group("order")
  * @Apidoc\Sort(2)
  */
@@ -47,9 +47,7 @@ class Cart extends Controller
      * @Apidoc\Url ("/index.php/cashier/order.cart/list")
      * @Apidoc\Param("delivery", type="int", require=true, default="40", desc="消费方式：10-外卖配送 20-上门取 30-打包带走 40-店内就餐")
      * @Apidoc\Param("order_id", type="int", require=false, desc="订单id")
-     * @Apidoc\Param(ref="pageParam")
-     * @Apidoc\Returned("productList",type="array",ref="app\cashier\model\order\Cart\getList")
-     * @Apidoc\Returned("cartInfo",type="array",ref="app\cashier\model\order\Cart\getCartPrice")
+     * @Apidoc\Returned("allProductInfo",type="array",ref="app\cashier\model\order\Cart\getOrderCartDetail")
      * @Apidoc\Returned("delivery",type="int", desc="消费方式：10-外卖配送 20-上门取 30-打包带走 40-店内就餐")
      * @Apidoc\Returned("stayNum",type="int", desc="挂单数量")
      */
@@ -59,24 +57,9 @@ class Cart extends Controller
         $model = new CartModel();
         // 挂单数量
         $stayNum = $model->stayNum($this->cashier['user']);
-
-        // 购物车商品列表
-        $productList = $model->getList($this->cashier['user']);
-        if (!empty($productList) && isset($productList[0])) {
-            $order_id = $order_id ? $order_id : $productList[0]['order_id'];
-        }
-
-        // 送厨商品列表
-        $orderProductList = [];
-        if ($order_id) {
-            $orderProductList = OrderModel::detail($order_id)['product'];
-        }
-
-        // 购物车金额
-        $cartInfo = $model->getCartPrice($this->cashier['user'], $delivery);
-
-
-        return $this->renderSuccess('', compact('orderProductList','productList', 'cartInfo', 'delivery', 'stayNum', 'order_id'));
+        // 购物车 + 送厨商品列表 + 购物车计算
+        $allProductInfo = $model->getOrderCartDetail($this->cashier['user'], 0, $order_id);
+        return $this->renderSuccess('', compact('allProductInfo', 'delivery', 'stayNum', 'order_id'));
     }
 
     /**

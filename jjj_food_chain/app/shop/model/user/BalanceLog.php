@@ -29,8 +29,8 @@ class BalanceLog extends BalanceLogModel
         $data['search'] = trim($data['search']);
         !empty($data['search']) && $model = $model->where('user.nickName', 'like', "%{$data['search']}%");
         //搜索时间段
-        if (isset($data['value1']) && $data['value1'] != '') {
-            $model = $model->where('log.create_time', 'between', [strtotime($data['value1'][0]), strtotime($data['value1'][1]) + 86399]);
+        if (isset($data['date']) && $data['date'] != '') {
+            $model = $model->where('log.create_time', 'between', [strtotime($data['date'][0]), strtotime($data['date'][1]) + 86399]);
         }
         // 余额变动场景
         if (!empty($data['scene']) && $data['scene'] > -1) {
@@ -54,10 +54,9 @@ class BalanceLog extends BalanceLogModel
      */
     private function setQueryWhere($query)
     {
-
-        if (!empty($query['value1'])) {
-            $query['start_time'] = $query['value1'][0];
-            $query['end_time'] = $query['value1'][1];
+        if (!empty($query['date'])) {
+            $query['start_time'] = $query['date'][0];
+            $query['end_time'] = $query['date'][1];
         }
         // 设置默认的检索数据
         $params = $this->setQueryDefaultValue($query, [
@@ -79,5 +78,4 @@ class BalanceLog extends BalanceLogModel
         // 截止时间
         !empty($params['end_time']) && $this->where('log.create_time', '<', strtotime($params['end_time']) + 86400);
     }
-
 }

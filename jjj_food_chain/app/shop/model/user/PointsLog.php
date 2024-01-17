@@ -20,8 +20,8 @@ class PointsLog extends PointsLogModel
             $model = $model->where('user.nickName', 'like', '%' . trim($query['search']) . '%');
         }
         //搜索时间段
-        if (isset($query['value1']) && $query['value1'] != '') {
-            $model = $model->where('log.create_time', 'between', [strtotime($query['value1'][0]), strtotime($query['value1'][1]) + 86399]);
+        if (isset($query['date']) && $query['date'] != '') {
+            $model = $model->where('log.create_time', 'between', [strtotime($query['date'][0]), strtotime($query['date'][1]) + 86399]);
         }
         // 获取列表数据
         return $model->with(['user'])

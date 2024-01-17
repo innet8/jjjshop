@@ -101,8 +101,8 @@ class Order extends OrderModel
             $model = $model->where('shop_supplier_id', '=', $data['shop_supplier_id']);
         }
         //搜索时间段
-        if (isset($data['create_time']) && $data['create_time'] != '') {
-            $model = $model->where('create_time', 'between', [strtotime($data['create_time'][0]), strtotime($data['create_time'][1]) + 86399]);
+        if (isset($data['date']) && is_array($data['date']) && isset($data['date'][0]) && isset($data['date'][1])) {
+            $model = $model->where('create_time', 'between', [strtotime($data['date'][0]), strtotime($data['date'][1]) + 86399]);
         }
         return $model;
     }
