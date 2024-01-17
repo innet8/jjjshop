@@ -219,7 +219,6 @@ class Card extends Controller
      */
     public function delete($card_id)
     {
-        // 会员卡详情
         $model = CardModel::detail($card_id);
         if (!$model->setDelete()) {
             return $this->renderError($model->getError() ?: '已存在用户，删除失败');
@@ -227,4 +226,22 @@ class Card extends Controller
         return $this->renderSuccess('删除成功');
     }
 
+    /**
+     * @Apidoc\Title("修改会员卡状态")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/card.card/setStatus")
+     * @Apidoc\Param("card_id", type="int", require=true, default="", desc="会员卡id")
+     * @Apidoc\Returned()
+     */
+    public function setStatus($card_id)
+    {
+        $info = CardModel::detail($card_id);
+        if (!$info) {
+            return $this->renderError('会员卡不存在');
+        }
+        if ($info->setStatus(!$info->status)) {
+            return $this->renderSuccess('修改成功');
+        }
+        return $this->renderError($info->getError() ?: '修改失败');
+    }
 }

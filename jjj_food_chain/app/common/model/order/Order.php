@@ -25,6 +25,7 @@ use app\common\service\deliveryapi\UuApi;
 use app\common\service\product\factory\ProductFactory;
 use think\facade\Log;
 use think\model\concern\SoftDelete;
+use app\common\model\user\User as UserModel;
 
 /**
  * 订单模型模型
@@ -199,7 +200,7 @@ class Order extends BaseModel
     public function getPayStatusAttr($value)
     {
         return [
-            'text' => OrderPayStatusEnum::data($value)['name'], 
+            'text' => OrderPayStatusEnum::data($value)['name'],
             'value' => $value
         ];
     }
@@ -260,7 +261,7 @@ class Order extends BaseModel
     public function getDeliveryTypeAttr($value)
     {
         return [
-            'text' => DeliveryTypeEnum::data($value)['name'], 
+            'text' => DeliveryTypeEnum::data($value)['name'],
             'value' => $value
         ];
     }
@@ -649,13 +650,19 @@ class Order extends BaseModel
             ->where('order_status', '<>', 20)
             ->where('order_type', '=', $order_type)
             ->where('is_delete', '=', 0);
-        $detail['express_price'] = $model->sum('express_price') ? $model->sum('express_price') : 0;
-        $detail['bag_price'] = $model->sum('bag_price') ? $model->sum('bag_price') : 0;
-        $detail['product_price'] = $model->sum('total_price') ? $model->sum('total_price') : 0;
-        $detail['refund_money'] = $model->sum('refund_money') ? $model->sum('refund_money') : 0;
-        $detail['total_price'] = $model->sum('pay_price') ? $model->sum('pay_price') : 0;
-        $detail['income_money'] = round($detail['total_price'] - $detail['refund_money'], 2);
-        $detail['order_count'] = $model->count();
+        $detail['express_price'] = helper::number2($model->sum('express_price') ? $model->sum('express_price') : 0); //配送费
+        $detail['bag_price'] = helper::number2($model->sum('bag_price') ? $model->sum('bag_price') : 0); //包装费
+        $detail['product_price'] = helper::number2($model->sum('total_price') ? $model->sum('total_price') : 0); //商品总金额
+        $detail['refund_money'] = helper::number2($model->sum('refund_money') ? $model->sum('refund_money') : 0); //退款金额
+        $detail['total_price'] = helper::number2($model->sum('pay_price') ? $model->sum('pay_price') : 0); //订单总金额（营业总额）
+        $detail['income_money'] = helper::number2(round($detail['total_price'] - $detail['refund_money'], 2)); //预计收入
+        $detail['order_count'] = $model->count(); //有效订单数量
+        // 有效用户数量
+        $detail['user_count'] = UserModel::where('is_delete', '=', 0)->count();
+        // 折扣总额(优惠折扣 + 会员折扣)
+        $discount_money = $model->sum('discount_money') ? $model->sum('discount_money') : 0;
+        $user_discount_money = $model->sum('user_discount_money') ? $model->sum('user_discount_money') : 0;
+        $detail['total_discount_money'] = helper::bcadd($discount_money, $user_discount_money, 2);
         return $detail;
     }
 

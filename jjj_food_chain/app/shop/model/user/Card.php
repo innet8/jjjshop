@@ -199,4 +199,11 @@ class Card extends CardModel
         return $this->save(['is_delete' => 1]);
     }
 
+    /**
+     * 设置状态
+     */
+    public function setStatus($status)
+    {
+        return $this->save(['status' => $status]);
+    }
 }
