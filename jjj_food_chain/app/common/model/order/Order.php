@@ -2,31 +2,29 @@
 
 namespace app\common\model\order;
 
-use think\facade\Log;
-use app\common\library\helper;
-use app\common\model\BaseModel;
-use think\model\concern\SoftDelete;
-use app\common\exception\BaseException;
-use app\common\enum\order\OrderTypeEnum;
-use app\common\model\order\OrderDeliver;
-use app\common\enum\settings\SettingEnum;
-use app\common\service\deliveryapi\UuApi;
+use app\api\model\user\CardRecord as CardRecordModel;
 use app\common\enum\order\OrderSourceEnum;
 use app\common\enum\order\OrderStatusEnum;
-use app\common\service\order\OrderService;
-use app\common\enum\order\OrderPayTypeEnum;
-use app\common\service\deliveryapi\DadaApi;
-use app\common\enum\order\OrderPayStatusEnum;
-use app\common\model\plus\group\OrderProduct;
-use app\common\service\deliveryapi\MeTuanApi;
+use app\common\enum\settings\SettingEnum;
+use app\common\model\BaseModel;
 use app\common\enum\settings\DeliveryTypeEnum;
-use app\common\service\order\OrderPrinterService;
-use app\common\service\order\OrderCompleteService;
-use app\common\model\plus\discount\DiscountProduct;
-use app\api\model\user\CardRecord as CardRecordModel;
-use app\common\model\settings\Setting as SettingModel;
-use app\common\service\product\factory\ProductFactory;
+use app\common\enum\order\OrderPayStatusEnum;
+use app\common\enum\order\OrderTypeEnum;
+use app\common\enum\order\OrderPayTypeEnum;
+use app\common\library\helper;
 use app\common\model\order\OrderProduct as OrderProductModel;
+use app\common\model\plus\discount\DiscountProduct;
+use app\common\model\settings\Setting as SettingModel;
+use app\common\service\order\OrderPrinterService;
+use app\common\service\order\OrderService;
+use app\common\service\order\OrderCompleteService;
+use app\common\service\deliveryapi\DadaApi;
+use app\common\exception\BaseException;
+use app\common\service\deliveryapi\MeTuanApi;
+use app\common\service\deliveryapi\UuApi;
+use app\common\service\product\factory\ProductFactory;
+use think\facade\Log;
+use think\model\concern\SoftDelete;
 
 /**
  * 订单模型模型
