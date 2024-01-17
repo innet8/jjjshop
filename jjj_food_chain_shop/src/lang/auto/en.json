@@ -290,7 +290,6 @@
     "支付方式": "payment method",
     "微信支付": "WeChat Pay",
     "实付金额": "The amount actually paid",
-    "桌位: A01": "Table: A01",
     "新增小票打印机": "Added receipt printer",
     "编辑小票打印机": "Edit receipt printer",
     "桌位管理": "Table management",
@@ -302,5 +301,7 @@
     "请输入税率": "Please enter tax rate",
     "元": "Yuan",
     "请输入金额": "Please enter the amount",
-    "请输入Token": "Please enter Token"
+    "请输入Token": "Please enter Token",
+    "桌位:": "Table location:",
+    "桌位: ": "Table location:"
 }

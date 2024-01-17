@@ -364,16 +364,16 @@ export default {
         }
         if (this.title == $t('结账单')) {
             this.details = this.two;
-            this.titleName = $t('桌位: A01');
+            this.titleName = $t('桌位: ') + 'A01';
         }
         if (this.title == $t('预结账单')) {
             this.details = this.three;
-            this.titleName = $t('桌位: A01');
+            this.titleName = $t('桌位: ') + 'A01';
         }
         if (this.title == $t('一菜一单')) {
             this.details = this.four;
             this.storeShow = false;
-            this.titleName = $t('桌位: A01');
+            this.titleName = $t('桌位: ') + 'A01';
         }
         if (this.title == $t('营业数据')) {
             this.details = this.five;
