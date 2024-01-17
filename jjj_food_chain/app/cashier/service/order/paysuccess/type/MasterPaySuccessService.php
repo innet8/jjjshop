@@ -2,15 +2,17 @@
 
 namespace app\cashier\service\order\paysuccess\type;
 
-use app\cashier\model\user\User as UserModel;
-use app\cashier\model\order\Order as OrderModel;
-use app\common\model\user\BalanceLog as BalanceLogModel;
-use app\common\enum\order\OrderPayTypeEnum;
-use app\common\enum\user\balanceLog\BalanceLogSceneEnum;
+use app\common\model\store\PayType;
 use app\common\service\BaseService;
-use app\common\service\product\factory\ProductFactory;
-use app\common\service\order\OrderCompleteService;
 use app\common\enum\order\OrderTypeEnum;
+use app\common\enum\order\OrderPayTypeEnum;
+use app\cashier\model\user\User as UserModel;
+use app\common\enum\order\OrderPayStatusEnum;
+use app\cashier\model\order\Order as OrderModel;
+use app\common\service\order\OrderCompleteService;
+use app\common\service\product\factory\ProductFactory;
+use app\common\enum\user\balanceLog\BalanceLogSceneEnum;
+use app\common\model\user\BalanceLog as BalanceLogModel;
 
 /**
  * 订单支付成功服务类
@@ -83,6 +85,10 @@ class MasterPaySuccessService extends BaseService
      */
     private function updatePayStatus($payType)
     {
+        if (!in_array($payType,array_column(PayType::getEnableListAll(),'value'))) {
+            $this->error = "不允许的支付方式";
+            return false;
+        }
         // 验证余额支付时用户余额是否满足
         if ($payType == OrderPayTypeEnum::BALANCE) {
             if ($this->model['user_id'] == 0) {
@@ -117,7 +123,7 @@ class MasterPaySuccessService extends BaseService
         // 整理订单信息
         $order = [
             'pay_type' => $payType,
-            'pay_status' => 20,
+            'pay_status' => OrderPayStatusEnum::SUCCESS,
             'pay_time' => time(),
             'settle_type' => $this->model['supplier']['settle_type'],
             'auto_close' => $this->model['supplier']['auto_close'],

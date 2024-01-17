@@ -236,9 +236,6 @@ class Order extends OrderModel
                         $this->error = "修改价应小于原价";
                         return false;
                     }
-//                    if ($detail['pay_price'] > 0) {
-//                        $discount_money = round($detail['order_price'] - $data['money'] + $detail['discount_money'], 2);
-//                    }
                     $discount_money = round($detail['order_price'] - $data['money'], 2);
                     break;
                 case '2'://折扣
@@ -264,18 +261,6 @@ class Order extends OrderModel
                     break;
             }
             if ($discount_money >= 0) {
-//                foreach ($detail['product'] as &$product) {
-//                    //计算优惠金额
-//                    $dicount_money = round($product['total_price'] / $detail['total_price'] * $discount_money, 2);
-//                    $value = $product['total_price'];
-//                    // 减去优惠金额
-//                    $value = helper::bcsub($value, $dicount_money);
-//                    $total_pay_price = helper::number2($value);
-//                    if ($total_pay_price <= 0) {
-//                        $total_pay_price = 0;
-//                    }
-//                    $product->save(['total_pay_price' => $total_pay_price, 'discount_money' => $dicount_money]);
-//                }
                 $pay_price = round($detail['order_price'] - $discount_money, 2);
                 if ($pay_price <= 0) {
                     $pay_price = 0;
@@ -346,25 +331,7 @@ class Order extends OrderModel
         }
         $this->startTrans();
         try {
-//            $setting = SettingModel::getItem('points');
-//            $total_pay_price = $orderProduct['product_price'] * $num;
-//            $discount_money = round($num / $orderProduct['total_num'] * $orderProduct['discount_money'], 2);
-//            $money = $total_pay_price - $discount_money;
-//            $points = 0;
-//            if ($orderProduct['points_bonus'] > 0) {
-//                // 积分赠送比例
-//                $ratio = $setting['gift_ratio'] / 100;
-//                $points = helper::bcmul($money, $ratio, 2);
-//            }
-//            $this->save([
-//                'points_bonus' => $this['points_bonus'] - $points,
-//                'pay_price' => $this['pay_price'] - $money,
-//                'discount_money' => $this['discount_money'] - $discount_money,
-//                'order_price' => $this['order_price'] - $total_pay_price,
-//                'total_price' => $this['total_price'] - $total_pay_price
-//            ]);
             $isPay = $this['pay_status']['value'] == 20 ? 1 : 0;
-//          $orderProduct['total_num'] = $num;
             // 退回商品库存
             ProductFactory::getFactory($this['order_source'])->backProductStock([$orderProduct], $isPay);
             if ($orderProduct['total_num'] == $num) {
@@ -373,10 +340,6 @@ class Order extends OrderModel
                 $total_num = $orderProduct['total_num'] - $num;
                 $orderProduct->save([
                     'total_num' => $total_num,
-//                    'total_price' => round($total_num * $orderProduct['product_price'], 2),
-//                    'total_pay_price' => $money,
-//                    'discount_money' => round($orderProduct['discount_money'] - $discount_money, 2),
-//                    'points_bonus' => round($orderProduct['points_bonus'] - $points, 2),
                 ]);
             }
             //
@@ -497,7 +460,7 @@ class Order extends OrderModel
             ->where('a.eat_type', '<>', 0);
         // 
         $incomes = [];
-        $payTypes = PayType::list($params['shop_supplier_id'], self::$app_id);
+        $payTypes = PayType::getEnableListAll($params['shop_supplier_id'], self::$app_id);
         foreach ($payTypes as $payType){
             $value = (clone $model)->where('pay_type', $payType['value'])->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00";
             if ($value > 0) {

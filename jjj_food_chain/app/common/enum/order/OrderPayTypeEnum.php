@@ -138,31 +138,31 @@ class OrderPayTypeEnum extends Enum
                 'sort' => 0,
                 'img' => ''
             ],
+            self::CASH => [
+                'name' => __('现金支付'),
+                'value' => self::CASH,
+                'status' => 1,
+                'sort' => 12,
+                'img' => ''
+            ],
             self::WECHAT => [
                 'name' => __('微信支付'),
                 'value' => self::WECHAT,
-                'status' => 1,
+                'status' => 0,
                 'sort' => 10,
                 'img' => '/image/pay/wechat_pay.png'
             ],
             self::ALIPAY => [
                 'name' => __('支付宝支付'),
                 'value' => self::ALIPAY,
-                'status' => 1,
+                'status' => 0,
                 'sort' => 11,
                 'img' => '/image/pay/alipay.png'
             ],
-            self::CASH => [
-                'name' => __('线下支付(现金支付)'),
-                'value' => self::CASH,
-                'status' => 1,
-                'sort' => 12,
-                'img' => ''
-            ],
             self::POS => [
-                'name' => __('线下支付(POS刷卡支付)'),
+                'name' => __('POS刷卡支付'),
                 'value' => self::POS,
-                'status' => 1,
+                'status' => 0,
                 'sort' => 13,
                 'img' => ''
             ],
