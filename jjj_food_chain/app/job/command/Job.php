@@ -3,8 +3,7 @@ declare (strict_types = 1);
 
 namespace app\job\command;
 
-use Workerman\Worker;
-use Workerman\WebServer;
+use workermans\Worker;
 use think\console\Input;
 use Workerman\Lib\Timer;
 use think\console\Output;
