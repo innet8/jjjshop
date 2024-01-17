@@ -69,7 +69,7 @@ class BaseModel extends Model
      */
     protected static function setTabletAppId()
     {
-        self::$app_id = request()->param('app_id') ?: 0;
+        self::$app_id = request()->header('appId') ?: request()->param('app_id') ?: 0;
     }
 
     /**
