@@ -22,17 +22,17 @@
                     </el-dropdown>
 
                 </div>
-                <div class="header-navbar-icon">
+                <!-- <div class="header-navbar-icon">
                     <span class="gray">当前版本：{{ userInfo.version }}</span>
-                </div>
+                </div> -->
                 <div class="header-navbar-icon">
                     <span class="ml4 icon iconfont icon-geren9"></span>
                     <span class="text ml4 blue">{{ userInfo.userName }}，欢迎您！</span>
                 </div>
                 <div class="header-navbar-icon"><span class="gray">|</span></div>
-                <div class="header-navbar-icon" @click="passwordFunc()">
+                <!-- <div class="header-navbar-icon" @click="passwordFunc()">
                     <span class="text">修改密码</span>
-                </div>
+                </div> -->
                 <div class="header-navbar-icon login-out" @click="exit()">
                     <span class="icon iconfont icon-tuichu"></span>
                     <span class="text ml4">{{$t('退出')}}</span>

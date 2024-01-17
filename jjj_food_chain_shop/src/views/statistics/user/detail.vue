@@ -13,24 +13,16 @@
                 <p class="text">
                     {{ $t('当班时间') }}:<span>{{ detail.shift_start_time }}</span>
                     {{ $t('至') }}<span>{{ detail.shift_end_time }}</span>
-                    
+
                 </p>
             </el-col>
-            <el-col :span="12">
-                <p class="text">{{ $t('营业收入') }}:<span>{{ detail.total_money }}</span></p>
-            </el-col>
-            <el-col :span="12">
-                <p class="text">{{ $t('现金收入') }}:<span>{{ detail.cash_income }}</span></p>
-            </el-col>
-            <el-col :span="12">
-                <p class="text">{{ $t('余额收入') }}:<span>{{ detail.balance_income }}</span></p>
-            </el-col>
-            <el-col :span="12">
-                <p class="text">{{ $t('支付宝收入') }}:<span>{{ detail.alipay_income }}</span></p>
-            </el-col>
-            <el-col :span="12">
-                <p class="text">{{ $t('微信收入') }}:<span>{{ detail.wechat_income }}</span></p>
-            </el-col>
+            <template v-for="item in detail.incomes">
+                <el-col :span="12">
+                    <p class="text">{{ item.pay_type_name }}:<span>{{ item.price }}</span></p>
+                </el-col>
+            </template>
+
+
             <el-col :span="12">
                 <p class="text">{{ $t('上一班遗留备用金') }}:<span>{{ detail.previous_shift_cash }}</span></p>
             </el-col>
@@ -69,8 +61,8 @@ export default {
         return {
             dialogVisible: false,
             id: {},
-            detail:{},
-            tableData:[],
+            detail: {},
+            tableData: [],
         }
     },
 
@@ -95,8 +87,13 @@ export default {
 </script>
 <style scoped>
 .text {
-    color: var(--el-color-black);
+    color: var(--el-color-tips);
     font-size: 14px;
     margin-bottom: 16px;
+}
+.text span{
+    color: var(--el-color-black);
+    font-weight: 500;
+    margin-left: 8px;
 }
 </style>

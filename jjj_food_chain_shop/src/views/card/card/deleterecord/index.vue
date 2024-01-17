@@ -8,11 +8,11 @@
     <!--搜索表单-->
     <div class="common-seach-wrap">
       <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="关键词">
-          <el-input v-model="formInline.card_name" placeholder="请输入关键词"></el-input>
+        <el-form-item :label="$t('关键词')">
+          <el-input v-model="formInline.card_name" :placeholder="$t('请输入关键词')"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="Search" @click="onSubmit">查询</el-button>
+          <el-button type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -20,12 +20,12 @@
     <div class="product-content">
       <div class="table-wrap">
         <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-          <el-table-column prop="card_name" label="会员卡名称">
+          <el-table-column prop="card_name" :label="$t('会员卡名称')">
           </el-table-column>
-          <el-table-column prop="money" label="价格"></el-table-column>
-          <el-table-column prop="receive_num" label="领取人数"></el-table-column>
-          <el-table-column prop="create_time" label="创建时间"></el-table-column>
-          <el-table-column prop="update_time" label="删除时间"></el-table-column>
+          <el-table-column prop="money" :label="$t('价格')"></el-table-column>
+          <el-table-column prop="receive_num" :label="$t('领取人数')"></el-table-column>
+          <el-table-column prop="create_time" :label="$t('创建时间')"></el-table-column>
+          <el-table-column prop="update_time" :label="$t('删除时间')"></el-table-column>
           <!-- <el-table-column fixed="right" label="操作" width="120">
             <template slot-scope="scope">
             </template>

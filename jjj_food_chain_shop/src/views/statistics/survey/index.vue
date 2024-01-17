@@ -4,21 +4,21 @@
         <div class="" v-loading="loading">
             <!--订单进度-->
             <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
-                <el-form-item label="起始时间">
+                <el-form-item :label="$t('起始时间')">
                     <div class="block">
                         <span class="demonstration"></span>
-                        <el-date-picker size="small" v-model="searchForm.create_time" type="daterange"
-                            value-format="YYYY-MM-DD" range-separator="至" start-placeholder="开始日期"
-                            end-placeholder="结束日期"></el-date-picker>
+                        <el-date-picker size="small" v-model="searchForm.date" type="daterange"
+                            value-format="YYYY-MM-DD" :range-separator="$t('至')" :start-placeholder="$t('开始日期')"
+                            :end-placeholder="$t('结束日期')"></el-date-picker>
                     </div>
                 </el-form-item>
 
                 <el-form-item>
-                    <el-button size="small" type="primary" icon="Search" @click="onSubmit">查询</el-button>
+                    <el-button size="small" type="primary" icon="Search" @click="getParams">{{ $t('查询') }}</el-button>
                 </el-form-item>
             </el-form>
         </div>
-        <div class="common-form">实时概况</div>
+        <div class="common-form">{{ $t('实时概况') }}</div>
 
         <div class="operation-data">
             <div class="data-box">
@@ -33,14 +33,14 @@
                     <h3>{{ $t('折扣总额（元）') }}</h3>
                     <SvgIcon class="data-box-icon" name="icon2"></SvgIcon>
                 </div>
-                <h4>12,584.00</h4>
+                <h4>{{ detail.total_discount_money }}</h4>
             </div>
             <div class="data-box">
                 <div class="data-box-title">
                     <h3>{{ $t('会员数（元）') }}</h3>
                     <SvgIcon class="data-box-icon" name="icon3"></SvgIcon>
                 </div>
-                <h4>12,584.00</h4>
+                <h4>{{ detail.user_count }}</h4>
             </div>
             <div class="data-box">
                 <div class="data-box-title">
@@ -67,12 +67,12 @@
                     <div class="list ww100">
 
                         <el-table v-if="salesNumRank.length > 0" :data="salesNumRank" style="width: 100%" size="small">
-                            <el-table-column prop="product_name" :label="$t('商品名称')">
+                            <el-table-column prop="product_name_text" :label="$t('商品名称')">
                                 <template #default="scope">
                                     <div class="product-name">
                                         <span :class="scope.$index <= 3 ? 'key-box' : 'key-box2'">{{ scope.$index + 1
                                         }}</span>
-                                        <span class="">{{ scope.row.product_name }}</span>
+                                        <span class="">{{ scope.row.product_name_text }}</span>
                                     </div>
                                 </template>
                             </el-table-column>
@@ -81,7 +81,7 @@
                             <el-table-column prop="total_price" :label="$t('销售额')">
                             </el-table-column>
                         </el-table>
-                        <div v-else class="tc pt30">暂无上榜记录</div>
+                        <div v-else class="tc pt30">{{ $t('暂无上榜记录') }}</div>
                     </div>
                 </div>
             </div>
@@ -91,12 +91,12 @@
                     <div class="list ww100">
 
                         <el-table v-if="salesMoneyRank.length > 0" :data="salesMoneyRank" style="width: 100%" size="small">
-                            <el-table-column prop="product_name" :label="$t('商品名称')">
+                            <el-table-column prop="product_name_text" :label="$t('商品名称')">
                                 <template #default="scope">
                                     <div class="product-name">
                                         <span :class="scope.$index <= 3 ? 'key-box' : 'key-box2'">{{ scope.$index + 1
                                         }}</span>
-                                        <span class="">{{ scope.row.product_name }}</span>
+                                        <span class="">{{ scope.row.product_name_text }}</span>
                                     </div>
                                 </template>
                             </el-table-column>
@@ -105,7 +105,7 @@
                             <el-table-column prop="total_price" :label="$t('销售额')">
                             </el-table-column>
                         </el-table>
-                        <div v-else class="tc pt30">暂无上榜记录</div>
+                        <div v-else class="tc pt30">{{ $t('暂无上榜记录') }}</div>
                     </div>
                 </div>
             </div>
@@ -130,7 +130,7 @@ export default {
                 refund_money: ''
             },
             searchForm:{
-                create_time:'',
+                date:[],
             },
             activeName: 'sale',
             salesNumRank: [],
@@ -142,13 +142,13 @@ export default {
         this.getParams();
     },
     methods: {
+
         /*获取参数*/
         getParams() {
             let self = this;
             self.loading = true;
-            StoreApi.storeSurvey({},
-                true
-            )
+            let params = self.searchForm;
+            StoreApi.storeSurvey(params,true)
                 .then(data => {
                     self.detail = data.data.detail;
                     self.salesNumRank = data.data.salesNumRank;
