@@ -2,7 +2,9 @@
 
 namespace app\cashier\model\order;
 
+use think\facade\Log;
 use app\common\library\helper;
+use app\common\model\store\PayType;
 use app\api\model\order\OrderProduct;
 use app\common\model\supplier\Supplier;
 use app\common\enum\order\OrderTypeEnum;
@@ -16,7 +18,7 @@ use app\common\service\order\OrderRefundService;
 use app\common\service\order\OrderCompleteService;
 use app\common\service\product\factory\ProductFactory;
 use app\cashier\service\order\paysuccess\type\MasterPaySuccessService;
-use think\facade\Log;
+use app\shop\model\product\Category;
 
 /**
  * 普通订单模型
@@ -493,21 +495,32 @@ class Order extends OrderModel
             ->where('a.pay_status', '=', OrderPayStatusEnum::SUCCESS)
             ->where('a.order_status', '=', OrderStatusEnum::COMPLETED)
             ->where('a.eat_type', '<>', 0);
-
+        // 
+        $incomes = [];
+        $payTypes = PayType::list($params['shop_supplier_id'], self::$app_id);
+        foreach ($payTypes as $payType){
+            $value = (clone $model)->where('pay_type', $payType['value'])->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00";
+            if ($value > 0) {
+                $incomes[] = [
+                    'pay_type' => $payType['value'],
+                    'pay_type_name' => OrderPayTypeEnum::data($payType['value'])['name'],
+                    'price' => $value,
+                ];
+            }
+        }
+        // 
+        $categorys = (clone $model)->group("c.category_id")->field("c.name, count(a.order_id) as sales, sum(a.pay_price - a.refund_money) as prices")->select()->append([])?->toArray();
+        foreach ($categorys as $key => $data){
+            $categorys[$key]['name_text'] = Category::getNameTextAttr($data['name'] ?: '');
+        }
+        // 
         return [
             'supplier' => Supplier::field('shop_supplier_id,business_id,name,address,description,link_name,link_phone,logo,app_id')
                 ->where('shop_supplier_id', $params['shop_supplier_id'] ?? 0 )
                 ->find()?->toArray(),
-            'categorys' => (clone $model)->group("c.category_id")
-                ->field("c.name, count(a.order_id) as sales, sum(a.pay_price - a.refund_money) as prices")
-                ->select()
-                ->append([])?->toArray(),
+            'categorys' => $categorys,
             'sales_num' => (clone $model)->count(),
-            'balance_pay' => (clone $model)->where('pay_type', OrderPayTypeEnum::BALANCE)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
-            'cash_pay' => (clone $model)->where('pay_type', OrderPayTypeEnum::CASH)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
-            'wx_pay' => (clone $model)->where('pay_type', OrderPayTypeEnum::OWECHAT)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
-            'zfb_pay' => (clone $model)->where('pay_type', OrderPayTypeEnum::OALIPAY)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
-            'pos_pay' => (clone $model)->where('pay_type', OrderPayTypeEnum::POS)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00",
+            'incomes' => $incomes,
             'refund_amount' => number_format((clone $model)->sum("refund_money"), 2, '.', ''), 
             'total_amount' => number_format((clone $model)->sum("pay_price"), 2, '.', ''), 
             'times' => [$startTime, $endTime], 
