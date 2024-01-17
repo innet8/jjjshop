@@ -16,12 +16,9 @@ use hg\apidoc\annotation as Apidoc;
 class Balance extends Controller
 {
     /**
-     * 余额明细
-     */
-    /**
      * @Apidoc\Title("余额明细")
      * @Apidoc\Method ("POST")
-     * @Apidoc\Url ("/index.php/shop/user.Balance/log")
+     * @Apidoc\Url ("/index.php/shop/user.balance/log")
      * @Apidoc\Param("nick_name", type="string", require=false, default="", desc="用户昵称")
      * @Apidoc\Param("scene", type="int", require=false, default="", desc="变动场景")
      * @Apidoc\Param("date", type="array", require=false, default="", desc="起始日期")
@@ -40,7 +37,14 @@ class Balance extends Controller
     }
 
     /**
-     * 充值设置
+     * @Apidoc\Title("余额充值设置")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/user.balance/setting")
+     * @Apidoc\Param("is_open", type="int", require=true, default="", desc="是否开启余额充值 0-关闭 1-开启")
+     * @Apidoc\Param("is_plan", type="int", require=true, default="", desc="是否开启自定义金额 0-关闭 1-开启")
+     * @Apidoc\Param("min_money", type="float", require=true, default="", desc="最低充值金额")
+     * @Apidoc\Param("describe", type="string", require=true, default="", desc="充值说明")
+     * @Apidoc\Returned()
      */
     public function setting()
     {

@@ -4,15 +4,24 @@ namespace app\shop\controller\store;
 
 use app\shop\controller\Controller;
 use app\shop\model\order\Order as OrderModel;
+use hg\apidoc\annotation as Apidoc;
 
 /**
  * 订单操作
- * @package app\shop\controller\order
+ * @Apidoc\Group("order")
+ * @Apidoc\Sort(4)
  */
 class Operate extends Controller
 {
     /**
-     * 订单导出
+     * @Apidoc\Title("订单导出")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/store.operate/export")
+     * @Apidoc\Param("order_no", type="string", require=false, default="", desc="订单号")
+     * @Apidoc\Param("style_id", type="int", require=false, default="", desc="配送方式")
+     * @Apidoc\Param("date", type="array", require=false, default="", desc="起始日期")
+     * @Apidoc\Param("dataType", type="string", require=false, default="all", desc="订单类型 all-全部 payment-待付款 process-进行中 complete-已完成 cancel-已取消")
+     * @Apidoc\Returned()
      */
     public function export($dataType)
     {
@@ -24,7 +33,12 @@ class Operate extends Controller
     }
 
     /**
-     * 取消订单
+     * @Apidoc\Title("取消订单")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/store.operate/orderCancel")
+     * @Apidoc\Param("order_id", type="int", require=true, default="", desc="订单id")
+     * @Apidoc\Param("cancel_remark", type="string", require=false, default="", desc="取消原因")
+     * @Apidoc\Returned()
      */
     public function orderCancel($order_id)
     {
@@ -37,7 +51,11 @@ class Operate extends Controller
     }
 
     /**
-     * 门店核销
+     * @Apidoc\Title("门店核销")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/store.operate/extract")
+     * @Apidoc\Param("order_id", type="int", require=true, default="", desc="订单id")
+     * @Apidoc\Returned()
      */
     public function extract($order_id)
     {
@@ -49,7 +67,12 @@ class Operate extends Controller
     }
 
     /**
-     * 退款
+     * @Apidoc\Title("退款")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/store.operate/refund")
+     * @Apidoc\Param("order_id", type="int", require=true, default="", desc="订单id")
+     * @Apidoc\Param("refund_money", type="float", require=true, default="", desc="退款金额")
+     * @Apidoc\Returned()
      */
     public function refund($order_id)
     {
@@ -59,5 +82,4 @@ class Operate extends Controller
         }
         return $this->renderError($model->getError() ?: '操作失败');
     }
-
 }
