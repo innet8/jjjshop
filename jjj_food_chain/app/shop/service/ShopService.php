@@ -59,18 +59,22 @@ class ShopService
                 'total_money' => $this->getOrderTotalPrice(null, $shop_supplier_id),
                 // 预计收入
                 'income_money' => $this->getOrderIncome(null, $shop_supplier_id),
+                // 折扣总额
+                'total_discount_money' => $this->OrderModel->getOrderData(null, null, 'order_discount_money', $shop_supplier_id),
+                // 退款金额
+                'refund_money' => $this->OrderModel->getOrderData(null, null, 'order_refund_money', $shop_supplier_id),
             ],
             'wait_data' => [
-                //订单
+                // 订单
                 'order' => [
                     'disposal' => $this->getReviewOrderTotal($shop_supplier_id),
                 ],
-                //供应商
+                // 供应商
                 'supplier' => [
-                    'cash_apply' => SupplierCashModel::getApplyCount(10),
-                    'cash_money' => SupplierCashModel::getApplyCount(20),
+                    'cash_apply' => SupplierCashModel::getApplyCount(10), // 待审核
+                    'cash_money' => SupplierCashModel::getApplyCount(20), // 审核通过
                 ],
-                //库存
+                // 库存
                 'stock' => [
                     'product' => $this->getProductStockTotal($shop_supplier_id),
                 ],
@@ -105,6 +109,16 @@ class ShopService
                 'income_money' => [
                     'tday' => $this->getOrderIncome($today, $shop_supplier_id),
                     'ytd' => $this->getOrderIncome($yesterday, $shop_supplier_id)
+                ],
+                // 折扣总额(元)
+                'order_discount_money' => [
+                    'tday' => $this->OrderModel->getOrderData($today, null, 'order_discount_money', $shop_supplier_id),
+                    'ytd' => $this->OrderModel->getOrderData($yesterday, null, 'order_discount_money', $shop_supplier_id)
+                ],
+                // 退款金额(元)
+                'order_refund_money' => [
+                    'tday' => $this->OrderModel->getOrderData($today, null, 'order_refund_money', $shop_supplier_id),
+                    'ytd' => $this->OrderModel->getOrderData($yesterday, null, 'order_refund_money', $shop_supplier_id)
                 ],
             ],
             'product_data' => [

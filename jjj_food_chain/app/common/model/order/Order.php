@@ -513,17 +513,16 @@ class Order extends BaseModel
     {
         $model = $this;
 
-        !is_null($startDate) && $model = $model->where('pay_time', '>=', strtotime($startDate));
-
-        if (is_null($endDate)) {
-            !is_null($startDate) && $model = $model->where('pay_time', '<', strtotime($startDate) + 86400);
-        } else {
+        if (!is_null($startDate)) {
+            $model = $model->where('pay_time', '>=', strtotime($startDate));
+            $endDate = $endDate ?? $startDate;
             $model = $model->where('pay_time', '<', strtotime($endDate) + 86400);
         }
 
         if ($shop_supplier_id > 0) {
             $model = $model->where('shop_supplier_id', '=', $shop_supplier_id);
         }
+
         if ($order_type >= 0) {
             $model = $model->where('order_type', '=', $order_type);
         }
@@ -531,26 +530,25 @@ class Order extends BaseModel
         $model = $model->where('is_delete', '=', 0)
             ->where('pay_status', '=', 20)
             ->where('order_status', '<>', 20);
-        if ($type == 'order_total') {
-            // 订单数量
-            return $model->count();
-        } else if ($type == 'order_total_price') {
-            // 订单总金额
-            return $model->sum('pay_price');
-        } else if ($type == 'order_user_total') {
-            // 支付用户数
-            return count($model->distinct(true)->column('user_id'));
-        } else if ($type == 'order_refund_money') {
-            // 退款金额
-            return $model->sum('refund_money');
-        } else if ($type == 'order_refund_total') {
-            // 退款订单数
-            return $model->where('refund_money', '>', 0)->count();
-        } else if ($type == 'income_price') {
-            // 预计收入
-            return $model->sum('pay_price') - $model->sum('refund_money');
+
+        switch ($type) {
+            case 'order_total': // 订单数量
+                return $model->count();
+            case 'order_total_price': // 订单数量
+                return $model->sum('pay_price');
+            case 'order_user_total': // 支付用户数
+                return count($model->distinct(true)->column('user_id'));
+            case 'order_refund_money': // 退款金额
+                return $model->sum('refund_money');
+            case 'order_refund_total': // 退款订单数
+                return $model->where('refund_money', '>', 0)->count();
+            case 'order_discount_money': // 折扣总金额
+                return $model->sum('discount_money') + $model->sum('user_discount_money');;
+            case 'income_price': // 预计收入
+                return $model->sum('pay_price') - $model->sum('refund_money');
+            default:
+                return 0;
         }
-        return 0;
     }
 
     /**
@@ -625,6 +623,7 @@ class Order extends BaseModel
     public function getOrderTotalMoney($order_type, $shop_supplier_id, $data = [])
     {
         $model = $this;
+        $userModel = UserModel::where('is_delete', '=', 0);
         if (isset($data['type']) && $data['type']) {
             switch ($data['type']) {
                 case '1'://今天
@@ -640,6 +639,7 @@ class Order extends BaseModel
                     $start = strtotime($data['time'][0]);
                     $end = strtotime($data['time'][1]) + 86399;
                     $model = $model->where('create_time', 'between', "$start,$end");
+                    $userModel = $userModel->where('create_time', 'between', "$start,$end");
                     break;
             }
         }
@@ -658,7 +658,7 @@ class Order extends BaseModel
         $detail['income_money'] = helper::number2(round($detail['total_price'] - $detail['refund_money'], 2)); //预计收入
         $detail['order_count'] = $model->count(); //有效订单数量
         // 有效用户数量
-        $detail['user_count'] = UserModel::where('is_delete', '=', 0)->count();
+        $detail['user_count'] = $userModel->count();
         // 折扣总额(优惠折扣 + 会员折扣)
         $discount_money = $model->sum('discount_money') ? $model->sum('discount_money') : 0;
         $user_discount_money = $model->sum('user_discount_money') ? $model->sum('user_discount_money') : 0;
@@ -669,8 +669,10 @@ class Order extends BaseModel
     /**
      * 获取商品销量Top10
      */
-    public function getProductRank($type, $product_type, $shop_supplier_id = 0)
+    public function getProductRank($type, $product_type, $shop_supplier_id = 0, $data = [])
     {
+        $start_time = isset($data['date'][0]) ? $data['date'][0] : 0;
+        $end_time = isset($data['date'][1]) ? $data['date'][1] : 0;
         $model = new OrderProduct;
         if ($type == 0) {
             $order = 'total_num desc';
@@ -682,6 +684,9 @@ class Order extends BaseModel
         }
         if ($shop_supplier_id) {
             $model = $model->where('p.shop_supplier_id', '=', $shop_supplier_id);
+        }
+        if ($start_time && $end_time) {
+            $model = $model->where('o.create_time', 'between', [strtotime($start_time), strtotime($end_time)]);
         }
         $list = $model->alias('op')
             ->where('o.pay_status', '=', 20)

@@ -17,7 +17,8 @@ class Survey extends Controller
      * @Apidoc\Title("店内概况")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/shop/store.survey/index")
-     * @Apidoc\Param("username", type="string", require=true, default="", desc="用户名")
+     * @Apidoc\Param("username", type="string", require=false, default="", desc="用户名")
+     * @Apidoc\Param("date", type="array", require=false, default="", desc="起始日期")
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("detail", type="array", desc="订单详情", children={
      *    @Apidoc\Returned("total_price", type="float", desc="营业总额"),
@@ -44,13 +45,19 @@ class Survey extends Controller
      */
     public function index()
     {
+        $data = $this->postData() ?: [];
+        //
+        if (isset($data['date']) && isset($data['date'][0])) {
+            $data['time'] = $data['date'];
+            $data['type'] = 4;
+        }
         // 订单列表
         $model = new OrderModel();
-        $detail = $model->getOrderTotalMoney(1,$this->store['user']['shop_supplier_id']);
+        $detail = $model->getOrderTotalMoney(1, $this->store['user']['shop_supplier_id'], $data);
         // 销量排行
-        $salesNumRank = $model->getProductRank(0,1,$this->store['user']['shop_supplier_id']);
+        $salesNumRank = $model->getProductRank(0, 1, $this->store['user']['shop_supplier_id'], $data);
         // 销售额排行
-        $salesMoneyRank = $model->getProductRank(1,1,$this->store['user']['shop_supplier_id']);
+        $salesMoneyRank = $model->getProductRank(1, 1, $this->store['user']['shop_supplier_id'], $data);
         return $this->renderSuccess('', compact('detail','salesNumRank','salesMoneyRank'));
     }
 }
