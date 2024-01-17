@@ -9,18 +9,18 @@
     <div class="common-seach-wrap">
       <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item :label="$t('昵称')">
-          <el-input v-model="formInline.search" placeholder="请输入昵称"></el-input>
+          <el-input v-model="formInline.search" :placeholder="$t('请输入昵称')"></el-input>
         </el-form-item>
-        <el-form-item label="注册时间">
+        <el-form-item :label="$t('注册时间')">
           <div class="block">
             <span class="demonstration"></span>
-            <el-date-picker v-model="formInline.value1" type="daterange"  value-format="YYYY-MM-DD" range-separator="至" start-placeholder="开始日期"
-              end-placeholder="结束日期">
+            <el-date-picker v-model="formInline.value1" type="daterange"  value-format="YYYY-MM-DD" :range-separator="$t('至')" :start-placeholder="$t('开始日期')"
+            :end-placeholder="$t('结束日期')">
             </el-date-picker>
           </div>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="Search" @click="onSubmit">查询</el-button>
+          <el-button type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -29,17 +29,17 @@
       <div class="table-wrap">
         <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
           <el-table-column prop="log_id" label="ID" width="60"></el-table-column>
-          <el-table-column prop="" label="昵称">
+          <el-table-column prop="" :label="$t('昵称')">
             <template #default="scope">
               <span>{{scope.row.user.nickName}}</span>
-              <span class="gray9">(用户ID：{{scope.row.user.user_id}})</span>
+              <span class="gray9">({{ $t('用户ID') }}：{{scope.row.user.user_id}})</span>
             </template>
           </el-table-column>
-          <el-table-column prop="tel" label="手机号" width="160">
+          <el-table-column prop="user.mobile" :label="$t('手机号')" width="160">
           </el-table-column>
-          <el-table-column prop="id" :label="$t('用户ID')" width="80">
+          <el-table-column prop="user_id" :label="$t('用户ID')" width="80">
           </el-table-column>
-          <el-table-column prop="value" label="变动数量"></el-table-column>
+          <el-table-column prop="value" :label="$t('变动数量')"></el-table-column>
           <el-table-column prop="describe" :label="$t('变动场景')"></el-table-column>
 
           <el-table-column prop="create_time" :label="$t('变动时间')"></el-table-column>
