@@ -8,7 +8,7 @@ use hg\apidoc\annotation as Apidoc;
 use app\common\enum\order\OrderPayTypeEnum;
 
 /**
- * 付款方式
+ * 支付方式
  * @Apidoc\Group("supplier")
  * @Apidoc\Sort(10)
  */
