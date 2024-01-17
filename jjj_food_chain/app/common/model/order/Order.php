@@ -165,7 +165,10 @@ class Order extends BaseModel
      */
     public function getPayTypeAttr($value)
     {
-        return ['text' => OrderPayTypeEnum::data()[$value]['name'], 'value' => $value];
+        return [
+            'text' => OrderPayTypeEnum::data($value)['name'],
+            'value' => $value
+        ];
     }
 
     /**
@@ -185,7 +188,7 @@ class Order extends BaseModel
      */
     public function getOrderSourceTextAttr($value, $data)
     {
-        return OrderSourceEnum::data()[$data['order_source']]['name'];
+        return OrderSourceEnum::data($data['order_source'])['name'];
     }
 
     /**
@@ -195,7 +198,10 @@ class Order extends BaseModel
      */
     public function getPayStatusAttr($value)
     {
-        return ['text' => OrderPayStatusEnum::data()[$value]['name'], 'value' => $value];
+        return [
+            'text' => OrderPayStatusEnum::data($value)['name'], 
+            'value' => $value
+        ];
     }
 
     /**
@@ -254,7 +260,7 @@ class Order extends BaseModel
     public function getDeliveryTypeAttr($value)
     {
         return [
-            'text' => DeliveryTypeEnum::data()[$value]['name'], 
+            'text' => DeliveryTypeEnum::data($value)['name'], 
             'value' => $value
         ];
     }

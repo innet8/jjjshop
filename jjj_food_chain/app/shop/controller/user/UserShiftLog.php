@@ -55,6 +55,9 @@ class UserShiftLog extends Controller
         $data = $this->postData();
         $model = new UserShiftLogModel;
         $detail = $model->detail($data['id']);
+        if (!$detail) {
+            return $this->renderError('找不到数据');
+        }
         // 销售信息
         $salesInfo = $model->getSalesInfo($detail['shift_user_id'], $detail['shop_supplier_id'], $detail['shift_start_time'], $detail['shift_end_time']);
         return $this->renderSuccess('', compact('detail' , 'salesInfo'));

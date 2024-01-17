@@ -19,9 +19,9 @@ class Category extends BaseModel
      * 处理多语言
      */
     protected $append = ['name_text'];
-    public function getNameTextAttr($value, $data=[])
+    public static function getNameTextAttr($value, $data=[])
     {
-        return extractLanguage($value ?: $data['name']);
+        return extractLanguage($value ?: $data['name'] ?? '');
     }
 
     /**

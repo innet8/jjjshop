@@ -2,13 +2,14 @@
 
 namespace app\common\service\order;
 
+use app\common\library\helper;
+use app\common\model\shop\User;
+use app\cashier\model\order\Order;
 use app\common\enum\settings\PrinterTypeEnum;
 use app\common\model\settings\Printer as PrinterModel;
 use app\common\library\printer\Driver as PrinterDriver;
 use app\common\library\printer\party\SunmiCloudPrinter;
 use app\common\model\product\Category as CategoryModel;
-use app\common\model\shop\User;
-use app\cashier\model\order\Order;
 
 /**
  * 交班数据打印服务类
@@ -40,6 +41,7 @@ class OrderHandoverPrinterService
     {
         $startTime = $data['shift_start_time'];
         $endTime = $data['shift_end_time'];
+        $totalIncome = number_format(helper::bcadd($data['total_income'], $data['refund_amount']), 2);
         $previousShiftCash = number_format($data['previous_shift_cash'], 2);
         $cashTakenOut = number_format($data['cash_taken_out'], 2);
         $cashLeft = number_format($data['cash_left'], 2);
@@ -76,7 +78,7 @@ class OrderHandoverPrinterService
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->setupColumns(
-                [120, SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [160, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
             );
             $printer->printInColumns(__("交班编号"), $data['shift_no']);
@@ -108,36 +110,19 @@ class OrderHandoverPrinterService
                 [400, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
             );
-            $totalAmount = 0;
             if ($sales > 0) {
-                $totalAmount += $data['sales_num'];
                 $printer->printInColumns(__("销售笔数"), "{$sales}");
             }
-            if ($data['balance_income'] > 0) {
-                $totalAmount += $data['balance_income'];
-                $printer->printInColumns(__("余额收入"), "￥{$data['balance_income']}");
-            }
-            if ($data['cash_income'] > 0) {
-                $totalAmount += $data['cash_income'];
-                $printer->printInColumns(__("现金收入"), "￥{$data['cash_income']}");
-            }
-            if ($data['wechat_income'] > 0) {
-                $totalAmount += $data['wechat_income'];
-                $printer->printInColumns(__("微信收入"), "￥{$data['wechat_income']}");
-            }
-            if ($data['alipay_income'] > 0) {
-                $totalAmount += $data['alipay_income'];
-                $printer->printInColumns(__("支付宝收入"), "￥{$data['alipay_income']}");
+            foreach ($data['incomes'] as $key => $income) {
+                $printer->printInColumns($income['pay_type_name'], "￥{$income['price']}");
             }
             if ($data['refund_amount'] > 0) {
-                $totalAmount -= $data['refund_amount'];
                 $printer->printInColumns(__("退款金额"), "￥{$data['refund_amount']}");
             }
-            $totalAmount = number_format($totalAmount, 2);
             // 
             $printer->lineFeed();
             $printer->appendText("------------------------------------------------\n");
-            $printer->printInColumns(__("本班营业总额"), "￥{$totalAmount}");
+            $printer->printInColumns(__("本班营业总额"), "￥{$totalIncome}");
             $printer->printInColumns(__("上一班遗留备用金"), "￥{$previousShiftCash}");
             $printer->printInColumns(__("本班取出现金"), "￥{$cashTakenOut}");
             $printer->printInColumns(__("本班遗留备用金"), "￥{$cashLeft}");
@@ -192,42 +177,25 @@ class OrderHandoverPrinterService
             }
             $printer->appendText("------------------------------------------------\n");
             // 
-            $totalAmount = 0;
             if ($sales > 0) {
-                $totalAmount += $data['sales_num'];
                 $printer->appendText(printText(__("销售笔数"), '', "{$sales}", $width));
             }
-            if ($data['balance_income'] > 0) {
-                $totalAmount += $data['balance_income'];
-                $printer->appendText(printText(__("余额收入"), '', "￥{$data['balance_income']}", $width));
-            }
-            if ($data['cash_income'] > 0) {
-                $totalAmount += $data['cash_income'];
-                $printer->appendText(printText(__("现金收入"), '', "￥{$data['cash_income']}", $width));
-            }
-            if ($data['wechat_income'] > 0) {
-                $totalAmount += $data['wechat_income'];
-                $printer->appendText(printText(__("微信收入"), '', "￥{$data['wechat_income']}", $width));
-            }
-            if ($data['alipay_income'] > 0) {
-                $totalAmount += $data['alipay_income'];
-                $printer->appendText(printText(__("支付宝收入"), '', "￥{$data['alipay_income']}", $width));
+            foreach ($data['incomes'] as $key => $income) {
+                $printer->appendText(printText($income['pay_type_name'], '', "￥{$income['price']}", $width));
             }
             if ($data['refund_amount'] > 0) {
-                $totalAmount -= $data['refund_amount'];
                 $printer->appendText(printText(__("退款金额"), '', "￥{$data['refund_amount']}", $width));
             }
-            $totalAmount = number_format($totalAmount, 2);
             // 
             $printer->lineFeed();
             $printer->lineFeed();
             $printer->appendText("------------------------------------------------\n");
-            $printer->appendText(printText(__("本班营业总额"), '', "￥{$totalAmount}", $width, $leftWidth));
+            $printer->appendText(printText(__("本班营业总额"), '', "￥{$totalIncome}", $width, $leftWidth));
             $printer->appendText(printText(__("上一班遗留备用金"), '', "￥{$previousShiftCash}", $width, $leftWidth));
             $printer->appendText(printText(__("本班取出现金"), '', "￥{$cashTakenOut}", $width, $leftWidth));
             $printer->appendText(printText(__("本班遗留备用金"), '', "￥{$cashLeft}", $width, $leftWidth));
             // 
-            $printer->lineFeed();
+            $printer->lineFeed(4);
             $printer->printAndExitPageMode();
             $printer->lineFeed(4);
             $printer->cutPaper(false);
@@ -253,34 +221,17 @@ class OrderHandoverPrinterService
             $content .= printText((new CategoryModel)->getNameTextAttr($category['name']), $category['sales'], "￥" . strval($category['prices']), $width, $leftWidth)  . '<BR>';
         }
         $content .= "--------------------------------<BR>";
-        $totalAmount = 0;
         if ($data['sales_num'] > 0) { 
-            $totalAmount += $data['sales_num'];
             $content .= printText(__('销售笔数'), ' ', $data['sales_num'], $width) . "<BR>";
         }
-        if ($data['balance_income'] > 0) { 
-            $totalAmount += $data['balance_income'];
-            $content .= printText(__('余额收入'), ' ', '￥'. strval($data['balance_income']), $width) . "<BR>";
-        }
-        if ($data['cash_income'] > 0) { 
-            $totalAmount += $data['cash_income'];
-            $content .= printText(__('现金收入'), ' ', '￥'. strval($data['cash_income']), $width) . "<BR>";
-        }
-        if ($data['wechat_income'] > 0) { 
-            $totalAmount += $data['wechat_income'];
-            $content .= printText(__('现金收入'), ' ', '￥'. strval($data['wechat_income']), $width) . "<BR>";
-        }
-        if ($data['alipay_income'] > 0) { 
-            $totalAmount += $data['alipay_income'];
-            $content .= printText(__('支付宝收入'), ' ', '￥'. strval($data['alipay_income']), $width) . "<BR>";
+        foreach ($data['incomes'] as $key => $income) {
+            $content .= printText($income['pay_type_name'], ' ', '￥'. strval($income['price']), $width, $leftWidth + 6) . "<BR>";
         }
         if ($data['refund_amount'] > 0) { 
-            $totalAmount -= $data['refund_amount'];
             $content .= printText(__('退款金额'), ' ', '￥'. strval($data['refund_amount']), $width) . "<BR>";
         }
-        $totalAmount = number_format($totalAmount, 2);
         $content .= "<BR>--------------------------------<BR>";
-        $content .= printText(__('本班营业总额'), '', "￥" . strval($totalAmount), $width) . "<BR>";
+        $content .= printText(__('本班营业总额'), '', "￥" . strval($totalIncome), $width) . "<BR>";
         $content .= printText(__('上一班遗留备用金'), '', "￥" . strval($previousShiftCash), $width) . "<BR>";
         $content .= printText(__('本班取出现金'), '', "￥" . strval($cashTakenOut), $width) . "<BR>";
         $content .= printText(__('本班遗留备用金'), '', "￥" . strval($cashLeft), $width) . "<BR>";

@@ -24,9 +24,9 @@ class DeliveryTypeEnum extends Enum
     /**
      * 获取枚举数据
      */
-    public static function data()
+    public static function data($key=0)
     {
-        return [
+        $arr = [
             self::EXPRESS => [
                 'name' => __('外卖配送'),
                 'value' => self::EXPRESS,
@@ -44,6 +44,7 @@ class DeliveryTypeEnum extends Enum
                 'value' => self::DINNER,
             ],
         ];
+        return $key > 0 ? $arr[$key] : $arr;
     }
 
     /**
