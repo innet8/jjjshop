@@ -25,7 +25,7 @@ class Call extends Controller
     {
         $tableNo = Table::where('table_id', $table_id)->value('table_no');
         if (!$tableNo) {
-            return $this->renderError('卓位不存在');
+            return $this->renderError('桌位不存在');
         }
         //
         (new CallModel)->makeCall($table_id, $tableNo, $call_type, 0, $shop_supplier_id);

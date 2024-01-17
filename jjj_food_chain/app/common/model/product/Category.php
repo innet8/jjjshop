@@ -167,7 +167,7 @@ class Category extends BaseModel
     {
         $model = new static;
         $supplier = SupplierModel::detail($shop_supplier_id);
-        if ($supplier['is_main'] == 0 && $supplier['category_set'] == 10) {
+        if ($supplier && $supplier['is_main'] == 0 && $supplier['category_set'] == 10) {
             $detail = SupplierModel::where('is_main', '=', 1)->find();
             $shop_supplier_id = $detail['shop_supplier_id'];
         }
