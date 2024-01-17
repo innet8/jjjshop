@@ -1,1 +1,3 @@
 !.gitignore
+_var_www_html_think.pid
+workerman.log
