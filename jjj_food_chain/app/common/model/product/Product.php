@@ -28,7 +28,7 @@ class Product extends BaseModel
      */
     public function getProductUnitTextAttr($value, $data)
     {
-        return extractLanguage($data['product_unit']);
+        return extractLanguage($data['product_unit'] ?? '');
     }
 
     /**
