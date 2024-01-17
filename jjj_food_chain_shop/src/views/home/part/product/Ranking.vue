@@ -12,11 +12,11 @@
         <div class="list ww100">
 
             <el-table v-if="listData.length > 0" :data="listData" style="width: 100%" size="small">
-                <el-table-column prop="product_name" :label="$t('商品名称')">
+                <el-table-column prop="product_name_text" :label="$t('商品名称')">
                     <template #default="scope">
                         <div class="product-name">
                             <span :class="scope.$index <=3 ? 'key-box':'key-box2'">{{ scope.$index  + 1 }}</span>
-                            <span class="">{{ scope.row.product_name }}</span>
+                            <span class="">{{ scope.row.product_name_text }}</span>
                         </div>
                     </template>
                 </el-table-column>
@@ -25,7 +25,7 @@
                 <el-table-column prop="total_price" :label="$t('销售额')">
                 </el-table-column>
             </el-table>
-            <div v-else class="tc pt30">暂无上榜记录</div>
+            <div v-else class="tc pt30">{{ $t('暂无上榜记录') }}</div>
         </div>
     </div>
 </template>

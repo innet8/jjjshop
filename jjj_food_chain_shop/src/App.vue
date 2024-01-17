@@ -5,6 +5,7 @@
 </template>
 <script setup>
 import {
+    ref,
     reactive,
     computed,
     onMounted,
@@ -13,17 +14,35 @@ import {
 import {
     ElConfigProvider
 } from 'element-plus';
-import zhCn from 'element-plus/es/locale/lang/zh-cn';
 import { useRoute ,useRouter } from 'vue-router';
 import { useLockscreenStore } from "../src/store/model/lockscreen"
+import { languageStore } from './store/model/language';
+
+import zhCn from "element-plus/es/locale/lang/zh-cn";
+import zhTw from "element-plus/es/locale/lang/zh-tw";
+import en from "element-plus/es/locale/lang/en";
+import th from "element-plus/es/locale/lang/th";
 
 const useLockscreen = useLockscreenStore();
 const isLock = computed(() => useLockscreen.isLock);
 const lockTime = computed(() => useLockscreen.lockTime);
+const language = languageStore().language
 
 const route = useRoute();
 const router = useRouter();
-let locale = zhCn;
+const locale = ref(zhCn) ;
+if(language == 'zh'){
+    locale.value = zhCn;
+}
+if(language == 'zhtw'){
+    locale.value = zhTw;
+}
+if(language == 'en'){
+    locale.value = en;
+}
+if(language == 'th'){
+    locale.value = th;
+}
 const state = reactive({});
 let timer;
 const timekeeping = () => {

@@ -13,8 +13,8 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="name" :label="$t('名称')"></el-table-column>
-                    <el-table-column prop="value" :label="$t('排序')"></el-table-column>
-                    <el-table-column prop="sort" :label="$t('状态')">
+                    <el-table-column prop="sort" :label="$t('排序')"></el-table-column>
+                    <el-table-column prop="" :label="$t('状态')">
                         <template #default="scope">
                             <el-switch :model-value="scope.row.status" :active-value="1" :inactive-value="0"
                                 @click="changeStatus(scope.row)"></el-switch>

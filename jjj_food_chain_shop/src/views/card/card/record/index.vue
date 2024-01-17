@@ -8,15 +8,15 @@
     <!--搜索表单-->
     <div class="common-seach-wrap">
       <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="关键词"><el-input v-model="formInline.search" placeholder="请输入关键词"></el-input></el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="formInline.status" placeholder="请选择">
-            <el-option label="全部" :value="-1"></el-option>
-            <el-option label="过期" :value="0"></el-option>
-            <el-option label="有效" :value="1"></el-option>
+        <el-form-item :label="$t('关键词')"><el-input v-model="formInline.search" :placeholder="$t('请输入关键词')"></el-input></el-form-item>
+        <el-form-item :label="$t('状态')">
+          <el-select v-model="formInline.status" :placeholder="$t('请选择')">
+            <el-option :label="$t('全部')" :value="-1"></el-option>
+            <el-option :label="$t('过期')" :value="0"></el-option>
+            <el-option :label="$t('有效')" :value="1"></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item><el-button type="primary" icon="Search" @click="onSubmit">查询</el-button></el-form-item>
+        <el-form-item><el-button type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button></el-form-item>
       </el-form>
     </div>
     <!--内容-->
@@ -30,27 +30,27 @@
               <span>{{scope.row.user.nickName}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="card.card_tel" :label="$t('手机号')">
+          <el-table-column prop="user.mobile" :label="$t('手机号')">
           </el-table-column>
-          <el-table-column prop="card.user_id" :label="$t('用户ID')">
+          <el-table-column prop="user.user_id" :label="$t('用户ID')">
           </el-table-column>
-          <el-table-column prop="card.card_name" label="会员卡名称">
+          <el-table-column prop="card.card_name" :label="$t('会员卡名称')">
           </el-table-column>
-          <el-table-column prop="expire_time_text" label="有效期" >
+          <el-table-column prop="expire_time_text" :label="$t('有效期')" >
           </el-table-column>
-          <el-table-column prop="discount" label="折扣">
+          <el-table-column prop="discount" :label="$t('折扣')">
             <template #default="scope">
               <span v-if="scope.row.discount">{{scope.row.discount}}折</span>
-              <span v-else>无</span>
+              <span v-else>{{ $t('无') }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="pay_price" label="价格"></el-table-column>
+          <el-table-column prop="pay_price" :label="$t('价格')"></el-table-column>
 
-          <el-table-column prop="pay_time_text" label="领取时间"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="120">
+          <el-table-column prop="pay_time_text" :label="$t('领取时间')"></el-table-column>
+          <el-table-column fixed="right" :label="$t('操作')" width="120">
             <template #default="scope">
-              <el-button @click="putClick(scope.row)" type="primary" link size="small" v-auth="'/card/card/delay'" v-if="scope.row.expire_time>0">延期</el-button>
-              <el-button @click="cancel(scope.row)" type="primary" link size="small" v-auth="'/card/card/cancel'" v-if="scope.row.pay_type==30">撤销</el-button>
+              <el-button @click="putClick(scope.row)" type="primary" link size="small" v-if="scope.row.expire_time > 0 ">{{ $t('延期') }}</el-button>
+              <el-button @click="cancel(scope.row)" type="primary" link size="small" v-if="scope.row.pay_type==30">{{ $t('撤销') }}</el-button>
             </template>
           </el-table-column>
         </el-table>

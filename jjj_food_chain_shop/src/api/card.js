@@ -21,6 +21,10 @@ let CardApi = {
   editcard(data, errorback) {
     return request._post('/shop/card.card/edit', data, errorback);
   },
+  /*修改会员卡状态*/
+  setStatus(data, errorback) {
+    return request._post('/shop/card.card/setStatus', data, errorback);
+  },
   /*删除会员卡*/
   deletecard(data, errorback) {
     return request._post('/shop/card.card/delete', data, errorback);
