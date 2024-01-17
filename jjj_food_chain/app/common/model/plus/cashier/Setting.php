@@ -2,11 +2,12 @@
 
 namespace app\common\model\plus\cashier;
 
-use app\common\enum\settings\SettingEnum;
+use think\Model;
 use think\facade\Cache;
-use app\common\enum\settings\DeliveryTypeEnum;
 use app\common\model\BaseModel;
+use app\common\enum\settings\SettingEnum;
 use app\common\enum\settings\OperateTypeEnum;
+use app\common\enum\settings\DeliveryTypeEnum;
 
 /**
  * 系统设置模型
@@ -131,7 +132,7 @@ class Setting extends BaseModel
         return [
             'basic' => [
                 'key' => 'basic',
-                'describe' => '基础设置',
+                'describe' => __('基础设置'),
                 'values' => [
                     // 余额支付
                     'checkedPay' => [10, 20, 30],
@@ -152,15 +153,15 @@ class Setting extends BaseModel
     {
         return [
             10 => [
-                'name' => '余额支付',
+                'name' => __('余额支付'),
                 'value' => 10,
             ],
             20 => [
-                'name' => '现金支付',
+                'name' => __('现金支付'),
                 'value' => 20,
             ],
             30 => [
-                'name' => '其他支付',
+                'name' => __('其他支付'),
                 'value' => 30,
             ],
         ];
@@ -173,11 +174,11 @@ class Setting extends BaseModel
     {
         return [
             10 => [
-                'name' => '收银功能',
+                'name' => __('收银功能'),
                 'value' => 10,
             ],
             20 => [
-                'name' => '堂食功能',
+                'name' => __('堂食功能'),
                 'value' => 20,
             ],
         ];

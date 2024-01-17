@@ -2,6 +2,7 @@
 
 namespace app\shop\service\statistics;
 
+use app\common\library\helper;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -27,23 +28,23 @@ class UserShiftLogService
         //设置工作表标题名称
         $sheet->setTitle('用户交班记录');
 
-        $sheet->setCellValue('A1', langTrans('交班编号'));
-        $sheet->setCellValue('B1', langTrans('收银员'));
-        $sheet->setCellValue('C1', langTrans('当班时间'));
-        $sheet->setCellValue('D1', langTrans('营业收入'));
-        $sheet->setCellValue('E1', langTrans('现金收入'));
-        $sheet->setCellValue('F1', langTrans('上一班遗留备用金'));
-        $sheet->setCellValue('G1', langTrans('本班遗留备用金'));
-        $sheet->setCellValue('H1', langTrans('添加时间'));
+        $sheet->setCellValue('A1', __('交班编号'));
+        $sheet->setCellValue('B1', __('收银员'));
+        $sheet->setCellValue('C1', __('当班时间'));
+        $sheet->setCellValue('D1', __('营业收入'));
+        $sheet->setCellValue('E1', __('现金收入'));
+        $sheet->setCellValue('F1', __('上一班遗留备用金'));
+        $sheet->setCellValue('G1', __('本班遗留备用金'));
+        $sheet->setCellValue('H1', __('添加时间'));
 
         //填充数据
         $index = 0;
         foreach ($list as $item) {
-            $total_money = $item['cash_income'] ?? 0 + $item['balance_income'] ?? 0 + $item['wechat_income'] ?? 0 + $item['alipay_income'] ?? 0 - $item['refund_amount'] ?? 0;
+            $totalMoney = helper::bcsub( $item['total_money'], $item['refund_amount']);
             $sheet->setCellValue('A' . ($index + 2), "\t" . $item['shift_no'] . "\t");
             $sheet->setCellValue('B' . ($index + 2), $item['user']['real_name'] ?? '');
-            $sheet->setCellValue('C' . ($index + 2), $item['shift_start_time'] . '至' . $item['shift_end_time']);
-            $sheet->setCellValue('D' . ($index + 2), $total_money);
+            $sheet->setCellValue('C' . ($index + 2), $item['shift_start_time'] . __('至') . $item['shift_end_time']);
+            $sheet->setCellValue('D' . ($index + 2), $totalMoney);
             $sheet->setCellValue('E' . ($index + 2), $item['cash_money'] ?? 0);
             $sheet->setCellValue('F' . ($index + 2), $item['previous_shift_cash'] ?? 0);
             $sheet->setCellValue('G' . ($index + 2), $item['cash_left'] ?? 0);
@@ -53,7 +54,7 @@ class UserShiftLogService
 
         //保存文件
         $writer = new Xlsx($spreadsheet);
-        $filename = iconv("UTF-8", "GB2312//IGNORE", '用户交班记录') . '-' . date('YmdHis') . '.xlsx';
+        $filename = iconv("UTF-8", "GB2312//IGNORE", __('用户交班记录')) . '-' . date('YmdHis') . '.xlsx';
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');

@@ -21,9 +21,9 @@ class OrderSourceEnum extends Enum
     /**
      * 获取枚举数据
      */
-    public static function data()
+    public static function data($key=0)
     {
-        return [
+        $arr = [
             self::MASTER => [
                 'name' => __('用户下单'),
                 'value' => self::MASTER,
@@ -41,6 +41,7 @@ class OrderSourceEnum extends Enum
                 'value' => self::GROUP,
             ],
         ];
+        return $key > 0 ? $arr[$key] : $arr;
     }
 
 }

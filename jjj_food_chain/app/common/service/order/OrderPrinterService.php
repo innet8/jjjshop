@@ -196,7 +196,7 @@ class OrderPrinterService
             // 
             if ($order->pay_status['value'] == OrderPayStatusEnum::SUCCESS){
                 $printer->appendText("------------------------------------------------\n");
-                $printer->printInColumns(__("支付方式"),  __($order['pay_type']['text']));
+                $printer->printInColumns(__("支付方式"),  $order['pay_type']['text']);
                 $printer->printInColumns(__("实付金额"), "￥" . strval($order['pay_price']));
             }
             // 
@@ -310,7 +310,7 @@ class OrderPrinterService
             if ($order->pay_status['value'] == OrderPayStatusEnum::SUCCESS){
                 $printer->lineFeed();
                 $printer->appendText("------------------------------------------------\n");
-                $printer->appendText(printText(__("支付方式"),'', __($order['pay_type']['text']) ,$width, $leftWidth));
+                $printer->appendText(printText(__("支付方式"),'', $order['pay_type']['text'] ,$width, $leftWidth));
                 $printer->appendText(printText(__("实付金额"),'', "￥" . strval($order['pay_price']) ,$width, $leftWidth));
                 $printer->lineFeed();
             }
@@ -390,7 +390,7 @@ class OrderPrinterService
         $content .= '<BOLD>' . printText(__('应收'), '', "￥" . strval($order['total_price'])) . "</BOLD><BR>";
         // 
         $content .= '--------------------------------<BR>';
-        $content .= printText(__('支付方式'), '', __($order['pay_type']['text'])) . "<BR>";
+        $content .= printText(__('支付方式'), '', $order['pay_type']['text']) . "<BR>";
         $content .= printText(__('实付金额'), '', "￥" . strval($order['pay_price'])) . "<BR>";
         // 
         if ($order->user) {

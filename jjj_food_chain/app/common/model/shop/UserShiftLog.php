@@ -2,10 +2,16 @@
 
 namespace app\common\model\shop;
 
+use app\common\library\helper;
 use app\common\model\BaseModel;
+use app\common\model\store\PayType;
+use app\shop\model\product\Category;
+use app\common\enum\order\OrderStatusEnum;
+use app\common\enum\order\OrderPayTypeEnum;
+use app\common\enum\order\OrderPayStatusEnum;
 use app\common\model\order\Order as OrderModel;
-use app\common\service\order\OrderHandoverPrinterService;
 use app\common\model\settings\Setting as SettingModel;
+use app\common\service\order\OrderHandoverPrinterService;
 /**
  * 用户交班记录模型
  */
@@ -14,6 +20,29 @@ class UserShiftLog extends BaseModel
 
     protected $name = 'shop_user_shift_log';
     protected $pk = 'id';
+
+
+    /**
+    *  设置incomes配置
+    */
+    public function setIncomesAttr($value)
+    {
+        return $value ? json_encode($value) : '';
+    }
+
+    /**
+    *  获取incomes 配置
+    */
+    public function getIncomesAttr($value, $data)
+    {
+        $value= $value ? json_decode($value,true) : [];
+        if ($value) {
+            foreach ($value as $key => $v) {
+                $value[$key]['pay_type_name'] =  OrderPayTypeEnum::data($v['pay_type'])['name'];
+            }
+        }
+        return $value;
+    }
 
     /**
      * 关联用户表
@@ -32,13 +61,12 @@ class UserShiftLog extends BaseModel
         $startTime = $params['start_time'] ?? 0;
         $endTime = $params['end_time'] ?? 0;
         $model = $this;
-        $model = $model->alias('a')
-        ->leftJoin('shop_user su','a.shift_user_id = su.shop_user_id');
+        $model = $model->alias('a')->leftJoin('shop_user su','a.shift_user_id = su.shop_user_id');
 
         if ($username) {
             $model = $model->where(function ($q) use ($username) {
-                $q->where('su.user_name', 'like', '%' . $username . '%')
-                      ->whereOr('su.real_name', 'like', '%' . $username . '%');
+                $q->where('su.user_name', 'like', '%' . $username . '%');
+                $q->whereOr('su.real_name', 'like', '%' . $username . '%');
             });
         }
 
@@ -51,8 +79,6 @@ class UserShiftLog extends BaseModel
             ->order($orderSort)
             ->paginate($params);
         foreach ($list as &$item) {
-            // 营业收入
-            $item['total_money'] = $item['cash_income'] + $item['balance_income'] + $item['wechat_income'] + $item['alipay_income'] - $item['refund_amount'];
             // 时间处理
             $item['shift_start_time'] = $item['shift_start_time'] ? format_time_his($item['shift_start_time']) : '-';
             $item['shift_end_time'] = $item['shift_end_time'] ? format_time_his($item['shift_end_time']) : '-';
@@ -74,12 +100,12 @@ class UserShiftLog extends BaseModel
      */
     public function getSalesInfo($shift_user_id, $shop_user_id, $startTime, $endTime)
     {
-        return OrderModel::alias('a')
+        $datas = OrderModel::alias('a')
             ->leftJoin('order_product rp','a.order_id = rp.order_id')
             ->leftJoin('product p','p.product_id = rp.product_id')
             ->leftJoin('category c','c.category_id = p.category_id')
-            ->where('a.pay_status', '=', 20)
-            ->where('a.order_status', '=', 30)
+            ->where('a.pay_status', '=',  OrderPayStatusEnum::SUCCESS)
+            ->where('a.order_status', '=', OrderStatusEnum::COMPLETED)
             ->where('a.eat_type', '<>', 0)
             ->where('a.shop_supplier_id', '=', $shop_user_id)
             ->where('a.cashier_id', '=', $shift_user_id)
@@ -88,6 +114,84 @@ class UserShiftLog extends BaseModel
             ->field("c.name, count(a.order_id) as sales, sum(a.pay_price - a.refund_money) as prices")
             ->select()
             ->append([])?->toArray();
+        // 
+        foreach ($datas as $key => $data){
+            $datas[$key]['name_text'] = Category::getNameTextAttr($data['name'] ?: '');
+        }
+        // 
+        return $datas;
+    }
+
+    /**
+     * 获取交班信息
+     *
+     * @param array $params
+     * @return bool
+     */
+    public function getShiftInfo($params): array
+    {
+        $shop_user_id = $params['shop_user_id'] ?? 0;
+        //
+        $shopUserModel = new User;
+        $shopUser = $shopUserModel->where('shop_user_id', '=', $shop_user_id)->where('cashier_online', '=', 1)->find();
+        if (!$shopUser) {
+            $this->error = '收银员不存在或未交班';
+            return false;
+        }
+        //
+        $orderModel = new OrderModel;
+        if (isset($params['shop_supplier_id']) && $params['shop_supplier_id']) {
+            $orderModel = $orderModel->where('a.shop_supplier_id', '=', $params['shop_supplier_id']);
+        }
+        $startTime = $shopUser->cashier_login_time;
+        $endTime = time();
+        if ($startTime && $endTime) {
+            $orderModel = $orderModel->where('a.create_time', 'between', [$startTime, $endTime]);
+        }
+        $orderModel = $orderModel->alias('a')
+            ->where('a.pay_status', '=', OrderPayStatusEnum::SUCCESS)
+            ->where('a.order_status', '=', OrderStatusEnum::COMPLETED)
+            ->where('a.eat_type', '<>', 0)
+            ->where('a.cashier_id', '=', $shop_user_id);
+        // 上一班遗留备用金
+        $lastRecord = $this->order('id', 'desc')->find();
+        $previous_shift_cash = $lastRecord ? $lastRecord->cash_left : 0;
+        // 当前钱箱现金总计(现金收入+上一班遗留备用金)
+        $cash_income = (clone $orderModel)->where('pay_type', 10)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0;
+        // 
+        $incomes = [];
+        $payTypes = PayType::list($shop_user_id, self::$app_id);
+        $totalIncome = 0;
+        foreach ($payTypes as $payType){
+            $value = (clone $orderModel)
+                ->where('pay_type', $payType['value'])
+                ->field("sum(pay_price - refund_money) as price")
+                ->find()
+                ->append([])['price'] ?? 0;
+            if ($value > 0) {
+                $totalIncome = helper::bcadd($totalIncome, $value);
+                $incomes[] = [
+                    'pay_type' => $payType['value'],
+                    'pay_type_name' => $payType['value'],
+                    'price' => $value,
+                ];
+            }
+        }
+        // 
+        $totalIncome = number_format($totalIncome, 2);
+        return [
+            'shift_user_id' => $params['shop_user_id'] ?? 0, // 交班人id
+            'shift_no' => generateNumber(), // 交班编号
+            'previous_shift_cash' => $previous_shift_cash, // 上一班遗留备用金
+            'current_cash_total' => number_format($previous_shift_cash + $cash_income, 2), // 当前钱箱现金总计(现金收入+上一班遗留备用金)
+            'incomes' => $incomes,
+            'total_income' => $totalIncome,
+            'refund_amount' => number_format((clone $orderModel)->sum("refund_money"), 2, '.', '') ?? 0, // 退款金额
+            'cash_taken_out' => '0.00', // 本班取出现金
+            'cash_left' => '0.00', // 本班遗留备用金
+            'remark' => $params['remark'] ?? '', // 备注
+            'shop_supplier_id' => $params['shop_supplier_id'] ?? 0,
+        ];
     }
 
     /**
@@ -119,10 +223,11 @@ class UserShiftLog extends BaseModel
             $orderModel = $orderModel->where('a.create_time', 'between', [$startTime, $endTime]);
         }
         $orderModel = $orderModel->alias('a')
-            ->where('a.pay_status', '=', 20)
-            ->where('a.order_status', '=', 30)
+            ->where('a.pay_status', '=', OrderPayStatusEnum::SUCCESS)
+            ->where('a.order_status', '=', OrderStatusEnum::COMPLETED)
             ->where('a.eat_type', '<>', 0)
             ->where('a.cashier_id', '=', $shop_user_id);
+
         // 上一班遗留备用金
         $lastRecord = $this->order('id', 'desc')->find();
         $previous_shift_cash = $lastRecord ? $lastRecord->cash_left : 0;
@@ -138,15 +243,32 @@ class UserShiftLog extends BaseModel
         }
         $this->startTrans();
         try {
-           $this->save([
+            // 
+            $incomes = [];
+            $payTypes = PayType::list($shop_user_id, self::$app_id);
+            $totalIncome = 0;
+            foreach ($payTypes as $payType){
+                $value = (clone $orderModel)
+                    ->where('pay_type', $payType['value'])
+                    ->field("sum(pay_price - refund_money) as price")
+                    ->find()
+                    ->append([])['price'] ?? 0;
+                if ($value > 0) {
+                    $totalIncome = helper::bcadd($totalIncome, $value);
+                    $incomes[] = [
+                        'pay_type' => $payType['value'],
+                        'price' => $value,
+                    ];
+                }
+            }
+            // 
+            $data = [
                 'shift_user_id' => $params['shop_user_id'] ?? 0, // 交班人id
                 'shift_no' => generateNumber(), // 交班编号
                 'previous_shift_cash' => $previous_shift_cash, // 上一班遗留备用金
                 'current_cash_total' => $previous_shift_cash + $cash_income, // 当前钱箱现金总计(现金收入+上一班遗留备用金)
-                'cash_income' => $cash_income, // 现金收入
-                'balance_income' => (clone $orderModel)->where('pay_type', 40)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0, // 余额收入
-                'wechat_income' => (clone $orderModel)->where('pay_type', 50)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0, // 微信收入
-                'alipay_income' => (clone $orderModel)->where('pay_type', 60)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0, // 支付宝收入
+                'incomes' => $incomes,
+                'total_income' => $totalIncome,
                 'refund_amount' => number_format((clone $orderModel)->sum("refund_money"), 2, '.', '') ?? 0, // 退款金额
                 'cash_taken_out' => $cash_taken_out, // 本班取出现金
                 'cash_left' => $cash_left, // 本班遗留备用金
@@ -158,9 +280,10 @@ class UserShiftLog extends BaseModel
                 'shift_end_time' => time(),
                 'create_time' => time(),
                 'update_time' => time()
-            ]);
+            ];
+            $this->save($data);
             // 更新收银员在线状态
-            $shopUser->update(['cashier_online' => 0, 'cashier_login_time' => 0]);
+            // $shopUser->update(['cashier_online' => 0, 'cashier_login_time' => 0]);
             $this->commit();
             // 打印
             $printerConfig = SettingModel::getSupplierItem('printer', $this->shop_supplier_id, $this->app_id);
