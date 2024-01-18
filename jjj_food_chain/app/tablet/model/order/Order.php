@@ -2,17 +2,18 @@
 
 namespace app\tablet\model\order;
 
+use think\facade\Log;
 use app\api\model\order\OrderProduct;
 use app\common\model\supplier\Supplier;
 use app\common\enum\order\OrderTypeEnum;
 use app\common\enum\order\OrderSourceEnum;
+use app\common\model\order\OrderProductReturn;
 use app\common\model\order\Order as OrderModel;
 use app\tablet\model\store\Table as TableModel;
 use app\common\service\order\OrderRefundService;
 use app\common\service\order\OrderCompleteService;
 use app\common\service\product\factory\ProductFactory;
 use app\cashier\service\order\paysuccess\type\MasterPaySuccessService;
-use think\facade\Log;
 
 /**
  * 普通订单模型
@@ -45,7 +46,7 @@ class Order extends OrderModel
         if (isset($params['order_type']) && $params['order_type']) {
             $model = $model->where('order_type', '=', $params['eat_type']);
         }
-        
+
 
         $startTime = 0;
         $endTime = 0;
@@ -227,7 +228,7 @@ class Order extends OrderModel
     }
 
     //退菜
-    public function moveProduct($order_product_id, $num)
+    public function moveProduct($order_product_id, $num, $return_reason = '')
     {
         if ($this['order_status']['value'] != 10) {
             $this->error = "订单已完成,不允许退菜";
@@ -275,6 +276,16 @@ class Order extends OrderModel
 //                    'total_pay_price' => $money,
 //                    'discount_money' => round($orderProduct['discount_money'] - $discount_money, 2),
 //                    'points_bonus' => round($orderProduct['points_bonus'] - $points, 2),
+                ]);
+            }
+            // 退菜记录
+            if ($num > 0) {
+                OrderProductReturn::add([
+                    'order_id' => $this['order_id'],
+                    'order_product_id' => $order_product_id,
+                    'product_id' => $orderProduct['product_id'],
+                    'num' => $num,
+                    'reason' => $return_reason,
                 ]);
             }
             //

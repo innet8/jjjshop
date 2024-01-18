@@ -223,11 +223,12 @@ class Order extends Controller
      * @Apidoc\Param("order_id", type="int", require=true, desc="订单ID")
      * @Apidoc\Param("order_product_id", type="int", require=true, desc="订单产品表ID")
      * @Apidoc\Param("num", type="int", require=true, desc="商品数量")
+     * @Apidoc\Param("return_reason", type="string", require=true, desc="退菜原因")
      */
-    public function moveProduct($order_id, $order_product_id, $num)
+    public function moveProduct($order_id, $order_product_id, $num, $return_reason = '')
     {
         $detail = OrderModel::detail($order_id);
-        if ($detail->moveProduct($order_product_id, $num)) {
+        if ($detail->moveProduct($order_product_id, $num, $return_reason)) {
             return $this->renderSuccess('退菜成功');
         }
         return $this->renderError($detail->getError() ?: '退菜失败');
@@ -296,7 +297,7 @@ class Order extends Controller
         $printerConfig = SettingModel::getSupplierItem('printer', $order['shop_supplier_id'], $order['app_id']);
         //发送打印
         $res = (new OrderPrinterService)->sellerPrint($printerConfig, $order, true);
-        // 
+        //
         return  $res ? $this->renderSuccess('打印成功') : $this->renderError('打印失败，未连接打印机');
     }
 

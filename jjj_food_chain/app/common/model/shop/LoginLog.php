@@ -13,6 +13,14 @@ class LoginLog extends BaseModel
     protected $pk = 'login_log_id';
 
     /**
+     * 结果兼容多语言
+     */
+    public function getResultAttr($value)
+    {
+        return __($value);
+    }
+
+    /**
      * 新增登录日志
      */
     public static function add($username, $ip, $result, $app_id)
