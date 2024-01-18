@@ -11,18 +11,21 @@ class Setting extends SettingModel
     /**
      * 更新系统设置
      */
-    public function edit($key, $values,$shop_supplier_id=0)
+    public function edit($key, $values, $shop_supplier_id = 0)
     {
-        $model = self::detail($key,$shop_supplier_id) ?: $this;
+        $model = self::detail($key, $shop_supplier_id) ?: $this;
         // 删除系统设置缓存
-        Cache::delete('setting_' . self::$app_id. '_'.$shop_supplier_id);
-        return $model->save([
-                'key' => $key,
-                'describe' => SettingEnum::data()[$key]['describe'],
-                'values' => $values,
-                'app_id' => self::$app_id,
-                'shop_supplier_id' => $shop_supplier_id
-            ]) !== false;
+        Cache::delete('setting_' . self::$app_id . '_' . $shop_supplier_id);
+
+        $data = [
+            'key' => $key,
+            'describe' => SettingEnum::data()[$key]['describe'],
+            'values' => $values,
+            'app_id' => self::$app_id,
+            'shop_supplier_id' => $shop_supplier_id
+        ];
+
+        return $model->save($data) !== false;
     }
 
     /**

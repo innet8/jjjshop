@@ -55,7 +55,8 @@ class Terminal extends Controller
             'language' => $data['language'] ?? [], // 常用语言
             'default_language' => $data['default_language'] ?? 'en', // 默认语言
         ];
-        if ($model->edit(SettingEnum::CASHIER, $arr)) {
+        $shop_supplier_id = $this->store['user']['shop_supplier_id'];
+        if ($model->edit(SettingEnum::CASHIER, $arr, $shop_supplier_id)) {
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model->getError() ?: '操作失败');
@@ -90,7 +91,8 @@ class Terminal extends Controller
             return $this->renderError('两次密码不一致');
         }
         $setting['cashier_password'] = $data['new_cashier_password'];
-        if ($model->edit(SettingEnum::CASHIER, $setting)) {
+        $shop_supplier_id = $this->store['user']['shop_supplier_id'];
+        if ($model->edit(SettingEnum::CASHIER, $setting, $shop_supplier_id)) {
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model->getError() ?: '操作失败');
@@ -140,7 +142,8 @@ class Terminal extends Controller
             'language' => $data['language'] ?? [], // 常用语言
             'default_language' => $data['default_language'] ?? 'en', // 默认语言
         ];
-        if ($model->edit(SettingEnum::TABLET, $arr)) {
+        $shop_supplier_id = $this->store['user']['shop_supplier_id'];
+        if ($model->edit(SettingEnum::TABLET, $arr, $shop_supplier_id)) {
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model->getError() ?: '操作失败');
@@ -175,7 +178,8 @@ class Terminal extends Controller
             return $this->renderError('两次密码不一致');
         }
         $setting['advanced_password'] = $data['new_advanced_password'];
-        if ($model->edit(SettingEnum::TABLET, $setting)) {
+        $shop_supplier_id = $this->store['user']['shop_supplier_id'];
+        if ($model->edit(SettingEnum::TABLET, $setting, $shop_supplier_id)) {
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model->getError() ?: '操作失败');
@@ -217,7 +221,8 @@ class Terminal extends Controller
             'language' => $data['language'] ?? [], // 常用语言
             'default_language' => $data['default_language'] ?? 'en', // 默认语言
         ];
-        if ($model->edit(SettingEnum::KITCHEN, $arr)) {
+        $shop_supplier_id = $this->store['user']['shop_supplier_id'];
+        if ($model->edit(SettingEnum::KITCHEN, $arr, $shop_supplier_id)) {
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model->getError() ?: '操作失败');
@@ -233,7 +238,7 @@ class Terminal extends Controller
         if ($key == '') {
             return $this->renderError('缺少参数');
         }
-        $ret = SettingModel::getItem($key);
+        $ret = SettingModel::getSupplierItem($key, $this->store['user']['shop_supplier_id']);
         // 收银机密码
         if ($key == SettingEnum::CASHIER) {
             if (!empty($ret['cashier_password'])) {

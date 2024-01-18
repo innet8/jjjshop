@@ -45,7 +45,8 @@ class Supplier extends Controller
             'vice_unit' => $data['vice_unit'], // 副货币单位
             'unit_rate' => $data['unit_rate'], // 主副货币转换比例
         ];
-        if ($model->edit(SettingEnum::CURRENCY, $arr)) {
+        $shop_supplier_id = $this->store['user']['shop_supplier_id'];
+        if ($model->edit(SettingEnum::CURRENCY, $arr, $shop_supplier_id)) {
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model->getError() ?: '操作失败');
@@ -74,7 +75,8 @@ class Supplier extends Controller
             'is_open' => $data['is_open'], // 是否开启税率
             'tax_rate' => $data['tax_rate'], // 税率
         ];
-        if ($model->edit(SettingEnum::TAX_RATE, $arr)) {
+        $shop_supplier_id = $this->store['user']['shop_supplier_id'];
+        if ($model->edit(SettingEnum::TAX_RATE, $arr, $shop_supplier_id)) {
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model->getError() ?: '操作失败');
@@ -103,7 +105,8 @@ class Supplier extends Controller
             'is_open' => $data['is_open'], // 是否开启服务费
             'service_charge' => $data['service_charge'], // 服务费
         ];
-        if ($model->edit(SettingEnum::SERVICE_CHARGE, $arr)) {
+        $shop_supplier_id = $this->store['user']['shop_supplier_id'];
+        if ($model->edit(SettingEnum::SERVICE_CHARGE, $arr, $shop_supplier_id)) {
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model->getError() ?: '操作失败');
@@ -117,7 +120,7 @@ class Supplier extends Controller
         if ($key == '') {
             return $this->renderError('缺少参数');
         }
-        $vars['values'] = SettingModel::getItem($key);
+        $vars['values'] = SettingModel::getSupplierItem($key, $this->store['user']['shop_supplier_id']);
         return $this->renderSuccess('', compact('vars'));
     }
 }
