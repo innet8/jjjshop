@@ -35,9 +35,9 @@ DB_HOST=127.0.0.1
 DB_PREFIX=jjjfood_
 DB_DATABASE=jjj
 DB_USERNAME=jjj
-DB_PASSWORD=x!asda12d34254!dd
+DB_PASSWORD=asda12d34254dd
 DB_PORT=3306
-DB_ROOT_PASSWORD=x!asda12d34254!dd
+DB_ROOT_PASSWORD=asda12d34254dd
 
 DB-OUTPUT(){
     echo "DB_TYPE=$DB_TYPE" >> ./.env
@@ -91,7 +91,7 @@ mysql-install(){
     sed -i 's#127.0.0.1#0.0.0.0#g' /etc/mysql/mysql.conf.d/mysqld.cnf
     service mysql restart
     # 修改数据库 root 密码
-    echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASSWORD}';" | sudo mysql -uroot
+    echo "ALTER USER 'root'@'localhost' IDENTIFIED BY 'asda12d34254dd';" | sudo mysql -uroot
     echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '${DB_ROOT_PASSWORD}' WITH GRANT OPTION;" | sudo mysql -uroot
     echo "FLUSH PRIVILEGES;" | sudo mysql -uroot
     # 创建数据库
@@ -111,13 +111,14 @@ php-install(){
     sudo apt update
     sudo apt install -y php8.2 php8.2-fpm php8.2-mysql php8.2-curl php8.2-gd php8.2-mbstring php8.2-xml php8.2-zip  php8.2-bcmath php8.2-redis
     sudo apt install -y php8.2-mysql php8.2-mysqli
-
     # 解除禁用的函数
     sudo sed -i "s/disable_functions =.*/disable_functions =/g" /etc/php/8.2/fpm/php.ini
     systemctl start  php8.2-fpm.service
     systemctl enable php8.2-fpm.service
+    # 安装composer
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
-    
     echo "安装完成"
 }
 

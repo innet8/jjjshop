@@ -26,7 +26,7 @@ return [
             // 数据库名
             'database' => Env::get('DB_DATABASE', 'jjj'),
             // 用户名
-            'username' => Env::get('DB_USER', 'jjj'),
+            'username' => Env::get('DB_USERNAME', 'jjj'),
             // 密码
             'password' => Env::get('DB_PASSWORD', '123456'),
             // 端口
