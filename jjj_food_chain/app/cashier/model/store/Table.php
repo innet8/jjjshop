@@ -19,7 +19,25 @@ class Table extends TableModel
     {
         $model = $this;
         // 查询列表数据
-        return $model->with(['underwayOrder'])
+        $total_num =  $model->with(['underwayOrder'])
+            ->when($area_id, function ($query) use ($area_id) {
+                return $query->where('area_id', '=', $area_id);
+            })
+            ->when($type_id, function ($query) use ($type_id) {
+                return $query->where('type_id', '=', $type_id);
+            })->count();
+
+        $available_num =  $model->with(['underwayOrder'])
+            ->when($area_id, function ($query) use ($area_id) {
+                return $query->where('area_id', '=', $area_id);
+            })
+            ->when($type_id, function ($query) use ($type_id) {
+                return $query->where('type_id', '=', $type_id);
+            })
+            ->where('status', '=', 10)
+            ->count();
+
+        $list = $model->with(['underwayOrder'])
             ->when($area_id, function ($query) use ($area_id) {
                 return $query->where('area_id', '=', $area_id);
             })
@@ -31,6 +49,8 @@ class Table extends TableModel
             })
             ->order(['sort' => 'asc', 'create_time' => 'desc'])
             ->select();
+
+        return compact('total_num', 'available_num', 'list');
     }
 
     private function formatPayEndTime($leftTime)

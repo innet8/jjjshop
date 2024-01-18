@@ -51,13 +51,12 @@ class Table extends Controller
      * @Apidoc\Param("table_status", type="int", require=false, desc="桌台状态 10-未开台 30-已开台")
      * @Apidoc\Returned("list",type="array",ref="app\cashier\model\store\Table\getList")
      */
-    public function table($area_id = '', $type_id = '', $status = 0)
+    public function table($area_id = '', $type_id = '', $table_status = 0)
     {
         // 桌位列表
         $model = new TableModel;
-        $list = $model->getList($area_id, $type_id, $this->cashier['user'], $status);
-        $basic = SupplierModel::detail($this->cashier['user']['shop_supplier_id']);
-        return $this->renderSuccess('', compact('list'));
+        $info = $model->getList($area_id, $type_id, $this->cashier['user'], $table_status);
+        return $this->renderSuccess('', $info);
     }
 
     /**
