@@ -2,10 +2,10 @@
     <!--
     	描述：商品-规格库-添加规格
     -->
-    <el-dialog title="添加规格" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
+    <el-dialog :title="$t('添加规格')" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
         :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
-            <el-form-item label="排序" prop="sort">
+            <el-form-item :label="$t('排序')" prop="sort">
                 <el-input v-model.number="form.sort" autocomplete="off"></el-input>
             </el-form-item>
             <template v-for="(item, index) in languageList" :key="index">

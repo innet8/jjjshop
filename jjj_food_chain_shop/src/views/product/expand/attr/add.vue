@@ -10,12 +10,12 @@
             </el-form-item>
 
             <template v-for="(item, index) in languageList" :key="index">
-                <el-form-item :label="$t('属性名称') + `(${item.label})`" :prop="`attribute_name.${[item.key]}`"  :rules="[{ required: true, message: $t('请输入属性名称') }]" >
+                <el-form-item :label="$t('属性名称') + `(${item.label})`" :prop="`attribute_name.${[item.key]}`"
+                    :rules="[{ required: true, message: $t('请输入属性名称') }]">
                     <el-input v-model="form.attribute_name[item.key]" autocomplete="off"></el-input>
 
                 </el-form-item>
-                <el-form-item :label="$t('属性值')" :prop="`attribute_value.${item.key}`" :rules="[{ required: true, message: $t('请输入属性值') }]"
-                    class="attribute-value">
+                <el-form-item :label="$t('属性值')" class="attribute-value">
                     <div v-for="(items, indexs) in form.attribute_value" :key='indexs'>
                         <el-input v-model="items[item.key]" autocomplete="off"></el-input>
                     </div>

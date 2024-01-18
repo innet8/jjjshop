@@ -78,6 +78,7 @@
 .el-table .cell{
     line-height: 32px !important;
     font-size: 14px !important;
+    text-transform: capitalize;
 }
 .el-table thead{
     color: var(--el-color-tips) !important;
@@ -87,6 +88,9 @@
     font-weight: 400;
 }
 /* 按钮 */
+.el-button{
+    text-transform: capitalize;
+}
 .el-button.el-button--small.el-button--text{
     padding-left: 0;
     padding-right: 0;
@@ -147,6 +151,7 @@
     }
 }
 .el-form-item__label{
+    text-transform: capitalize;
     font-weight: 400;
 }
 .el-radio__input.is-checked+.el-radio__label{
@@ -175,4 +180,8 @@
 .el-image-viewer__canvas{
     padding: 20px;
     box-sizing: border-box;
+}
+
+.el-tabs__item ,.el-message-box__title,.el-dialog__title{
+    text-transform: capitalize;
 }

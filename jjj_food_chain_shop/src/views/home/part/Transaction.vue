@@ -124,7 +124,7 @@ let myChart = null;
             series2.push(item.total_num);
           });
           if (this.activeName == 'order') {
-            names = ['成交额', '成交量'];
+            names = [$t('成交额'), $t('成交量')];
           } else if (this.activeName == 'refund') {
             names = ['退单额', '退单量'];
           }

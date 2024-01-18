@@ -25,8 +25,8 @@
         </el-form-item>
 
         <el-form-item :label="$t('特色分类：')" >
-            <el-select v-model="form.model.category_id">
-                <template v-for="cat in form.category" :key="cat.category_id">
+            <el-select v-model="form.model.special_id">
+                <template v-for="cat in form.special" :key="cat.category_id">
                     <el-option :value="cat.category_id" :label="cat.name_text"></el-option>
                     <template v-for="cat_c in cat.child" :key="cat_c.category_id">
                         <el-option :value="cat_c.category_id" :label="cat_c.name_text">|—{{ cat_c.name_text }}</el-option>
@@ -85,7 +85,6 @@ export default {
     created() {
         this.formData = this.form;
         // this['formData'] = this.form;
-        console.log(this.form.category)
     },
     methods: {
 

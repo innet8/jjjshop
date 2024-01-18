@@ -198,6 +198,7 @@ body,
   display: flex;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
+  text-transform: capitalize;
 }
 .child-menu ul {
     width: 100%;

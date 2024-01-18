@@ -193,7 +193,7 @@ export default {
                     let type = [
                         {
                             group_id: null,
-                            group_name: "全部",
+                            group_name: $t("全部"),
                         },
                     ];
                     self.typeList = type
@@ -312,14 +312,14 @@ export default {
             });
             if (fileIds.length == 0) {
                 ElMessage({
-                    message: "请选择文件",
+                    message: $t("请选择文件"),
                     type: "warning",
                 });
                 return;
             }
-            ElMessageBox.confirm("确定移动选中的文件吗, 是否继续?", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            ElMessageBox.confirm($t("确定移动选中的文件吗, 是否继续?"), $t("提示"), {
+                confirmButtonText: $t("确定"),
+                cancelButtonText: $t("取消"),
                 type: "warning",
             })
                 .then(() => {
@@ -332,7 +332,7 @@ export default {
                     )
                         .then((data) => {
                             ElMessage({
-                                message: "移动成功",
+                                message: $t("移动成功"),
                                 type: "success",
                             });
                             self.getFileCategory();
@@ -364,7 +364,7 @@ export default {
             let self = this;
             const loading = ElLoading.service({
                 lock: true,
-                text: "图片上传中,请等待",
+                text: $t("图片上传中,请等待"),
                 background: "rgba(0, 0, 0, 0.7)",
             });
             const formData = new FormData();
@@ -377,7 +377,7 @@ export default {
                     loading.close();
                     self.getData();
                     ElMessage({
-                        message: "本次上传图成功",
+                        message: $t("本次上传图成功"),
                         type: "success",
                     });
                     self.cropperShow = false
@@ -385,7 +385,7 @@ export default {
                 .catch((response) => {
                     loading.close();
                     ElMessage({
-                        message: "本次上传图片失败",
+                        message: $t("本次上传图片失败"),
                         type: "warning",
                     });
 
@@ -402,7 +402,7 @@ export default {
                 this.record++;
                 if (this.record >= this.this_config.total) {
                     ElMessage({
-                        message: "本次最多只能上传 " + this.this_config.total + " 个文件",
+                        message: $t("本次最多只能上传 ") + this.this_config.total +$t(" 个文件"),
                         type: "warning",
                     });
                     return;
@@ -416,15 +416,15 @@ export default {
         /*删除图片*/
         deleteFileFunc(e) {
             let self = this;
-            ElMessageBox.confirm("此操作将永久删除该记录, 是否继续?", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            ElMessageBox.confirm($t("此操作将永久删除该记录, 是否继续?"), $t("提示"), {
+                confirmButtonText: $t("确定"),
+                cancelButtonText: $t("取消"),
                 type: "warning",
             })
                 .then(() => {
                     const loading = ElLoading.service({
                         lock: true,
-                        text: "图片上传中,请等待",
+                        text: $t("图片上传中,请等待"),
                         background: "rgba(0, 0, 0, 0.7)",
                     });
                     let temp_list = [];
@@ -447,7 +447,7 @@ export default {
                         .then((data) => {
                             loading.close();
                             ElMessage({
-                                message: "删除成功",
+                                message: $t("删除成功"),
                                 type: "success",
                             });
                             self.getData();
@@ -459,7 +459,7 @@ export default {
                 .catch(() => {
                     loading.close();
                     ElMessage({
-                        message: "删除失败",
+                        message: $t("删除失败"),
                         type: "warning",
                     });
                 });

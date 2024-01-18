@@ -73,6 +73,7 @@ export default {
                 .then(data => {
                     self.loading = false;
                     self.form = data.data.vars.values;
+                    self.form.is_open =  data.data.vars.values.is_open.toString()
                 })
                 .catch(error => {
 

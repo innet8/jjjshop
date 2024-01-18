@@ -118,6 +118,7 @@ export default {
     font-style: normal;
     font-weight: 400;
     cursor: pointer;
+    text-transform: capitalize;
 }
 
 .right-box-t>div.active {

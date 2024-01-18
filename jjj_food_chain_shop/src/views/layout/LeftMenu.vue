@@ -20,7 +20,7 @@
                                 @click="choseMenu(2, item, index)" v-if="item.is_menu == 1">
                                 <div class="item-box">
                                     <span :class="'icon iconfont menu-item-icon ' + item.icon"></span>
-                                    <span>{{ item.name }}</span>
+                                    <span>{{ $t(item.name) }}</span>
                                 </div>
                             </li>
                         </template>
@@ -35,7 +35,7 @@
                     <template v-for="(item, index) in menuList[active_menu]['children']" :key="index">
                         <li :class="active_child == index ? 'routre-link router-link-active' : 'router-link'"
                             @click="choseMenu(3, item, index)" v-if="item.is_menu == 1">
-                            <span class="name">{{ item.name }}</span>
+                            <span class="name">{{ $t(item.name) }}</span>
                         </li>
                     </template>
                 </ul>

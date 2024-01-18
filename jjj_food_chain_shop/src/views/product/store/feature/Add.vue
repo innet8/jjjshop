@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="添加分类" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
+    <el-dialog :title="$t('添加分类')" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
         :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
 
@@ -9,7 +9,7 @@
                     <el-input v-model="form.name[item.key]" autocomplete="off"></el-input>
                 </el-form-item>
             </template>
-            <el-form-item label="分类图片" prop="image_id">
+            <el-form-item :label="$t('分类图片')" prop="image_id">
                 <el-row>
                     <el-button type="primary" @click="openUpload">{{ $t('选择图片') }}</el-button>
                     <div v-if="form.image_id != ''" class="img">

@@ -129,7 +129,6 @@ export default {
     },
     attrjoin(e){
       if(e){
-        console.log(e)
         return e.join('|')
       }else{
         return ''

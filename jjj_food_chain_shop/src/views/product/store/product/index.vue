@@ -74,7 +74,7 @@
                     </el-table-column>
                     <el-table-column prop="create_time" :label="$t('发布时间')"></el-table-column>
                     <el-table-column prop="product_sort" :label="$t('排序')"></el-table-column>
-                    <el-table-column fixed="right" :label="$t('操作')" width="160">
+                    <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
                                 v-auth="'/product/store/product/edit'">{{ $t('编辑') }}</el-button>

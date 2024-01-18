@@ -13,55 +13,55 @@
       </el-radio-group>
     </el-form-item> -->
     <!--其他设置-->
-    <div class="common-form mt50">其他设置</div>
-    <el-form-item v-if="form.model.product_status!=40" label="商品状态：" :rules="[{ required: true, message: '选择商品状态' }]" prop="model.product_status">
+    <div class="common-form mt50">{{ $t('其他设置') }}</div>
+    <el-form-item v-if="form.model.product_status!=40" :label="$t('商品状态：')" :rules="[{ required: true, message: $t('选择商品状态') }]" prop="model.product_status">
       <el-radio-group  v-model="form.model.product_status">
-        <el-radio :label="10">上架</el-radio>
-        <el-radio :label="20">下架</el-radio>
+        <el-radio :label="10">{{ $t('上架') }}</el-radio>
+        <el-radio :label="20">{{ $t('下架') }}</el-radio>
       </el-radio-group>
     </el-form-item>
-    <el-form-item label="初始销量：">
+    <el-form-item :label="$t('初始销量：')">
       <el-input type="number" min="0" v-model="form.model.sales_initial" class="max-w460"></el-input>
     </el-form-item>
-    <el-form-item label="商品排序：" :rules="[{ required: true, message: ' ' }]" prop="model.product_sort">
+    <el-form-item :label="$t('商品排序：')" :rules="[{ required: true, message: ' ' }]" prop="model.product_sort">
       <el-input type="number" min="0" v-model="form.model.product_sort" class="max-w460"></el-input>
     </el-form-item>
-    <el-form-item label="限购数量：" :rules="[{ required: true, message: ' ' }]" prop="model.limit_num">
+    <el-form-item :label="$t('限购数量：')" :rules="[{ required: true, message: ' ' }]" prop="model.limit_num">
       <el-input type="number" min="0" v-model="form.model.limit_num" class="max-w460"></el-input>
-      <div class="gray9">每个会员购买的最大数量，0为不限购</div>
+      <div class="gray9">{{ $t('每个会员购买的最大数量，0为不限购') }}</div>
     </el-form-item>
-	<el-form-item label="打印标签：" prop="model.label_id">
+	<el-form-item :label="$t('打印标签：')" prop="model.label_id">
 	  <el-select v-model="form.model.label_id">
-		  <el-option label="无" :value="0"></el-option>
+		  <el-option label="$t('无')" :value="0"></el-option>
 	     <template v-for="cat in form.labelList" :key="cat.label_id">
 	      <el-option :value="cat.label_id" :label="cat.label_name"></el-option>
 	    </template>
 	  </el-select>
 	</el-form-item>
     <!--会员折扣设置-->
-    <div class="common-form mt50">会员折扣设置</div>
-    <el-form-item label="是否开启会员折扣：">
+    <div class="common-form mt50">{{ $t('会员折扣设置') }}</div>
+    <el-form-item :label="$t('是否开启会员折扣：')">
       <el-radio-group v-model="form.model.is_enable_grade">
-        <el-radio :label="1">开启</el-radio>
-        <el-radio :label="0">关闭</el-radio>
+        <el-radio :label="1">{{ $t('开启') }}</el-radio>
+        <el-radio :label="0">{{ $t('关闭') }}</el-radio>
       </el-radio-group>
     </el-form-item>
-    <el-form-item label="会员折扣设置：" v-if="form.model.is_enable_grade==1">
+    <el-form-item :label="$t('会员折扣设置：')" v-if="form.model.is_enable_grade==1">
       <el-radio-group v-model="form.model.is_alone_grade">
-        <el-radio :label="0">默认折扣</el-radio>
-        <el-radio :label="1">单独设置折扣</el-radio>
+        <el-radio :label="0">{{ $t('默认折扣') }}</el-radio>
+        <el-radio :label="1">{{ $t('单独设置折扣') }}</el-radio>
       </el-radio-group>
-      <div class="gray9" v-if="form.model.is_alone_grade==0">默认折扣：默认为用户所属会员等级的折扣率</div>
+      <div class="gray9" v-if="form.model.is_alone_grade==0">{{ $t('默认折扣：默认为用户所属会员等级的折扣率') }}</div>
     </el-form-item>
-    <el-form-item label="折扣佣金类型：" v-if="form.model.is_alone_grade==1&&form.model.is_enable_grade==1">
+    <el-form-item :label="$t('折扣佣金类型：')" v-if="form.model.is_alone_grade==1&&form.model.is_enable_grade==1">
       <el-radio-group v-model="form.model.alone_grade_type" @change="changeGradeType">
-        <el-radio :label="10">百分比</el-radio>
-        <el-radio :label="20">固定金额</el-radio>
+        <el-radio :label="10">{{ $t('百分比') }}</el-radio>
+        <el-radio :label="20">{{ $t('固定金额') }}</el-radio>
       </el-radio-group>
     </el-form-item>
 
     <el-form-item label="" v-if="form.model.is_alone_grade==1&&form.model.is_enable_grade==1">
-      <div class="max-w460">
+      <div class="percent-w100">
         <el-table :data="form.gradeList" border size="" style="width: 100%">
           <el-table-column prop="name" label="会员等级">
           </el-table-column>

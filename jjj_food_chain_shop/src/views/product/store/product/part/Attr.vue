@@ -4,7 +4,7 @@
     -->
     <div>
         <!--规格设置-->
-        <div class="common-form mt50">商品属性</div>
+        <div class="common-form mt50">{{ $t('商品属性') }}</div>
         <!--多规格-->
         <div>
             <div class="mt16">

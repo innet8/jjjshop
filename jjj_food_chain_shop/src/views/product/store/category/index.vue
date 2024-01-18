@@ -25,7 +25,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
-                    <el-table-column fixed="right" :label="$t('操作')" width="100">
+                    <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
                                 v-auth="'/product/store/category/Edit'">{{$t('编辑')}}</el-button>
@@ -152,14 +152,14 @@ export default {
         /*删除分类*/
         deleteClick(row) {
             let self = this;
-            ElMessageBox.confirm('删除后不可恢复，确认删除该记录吗?', '提示', {
+            ElMessageBox.confirm($t('删除后不可恢复，确认删除该记录吗?'), $t('提示'), {
                 type: 'warning'
             }).then(() => {
                 PorductApi.storeCatDel({
                     category_id: row.category_id
                 }).then(data => {
                     ElMessage({
-                        message: '删除成功',
+                        message: $t('删除成功'),
                         type: 'success'
                     });
                     self.getData();
