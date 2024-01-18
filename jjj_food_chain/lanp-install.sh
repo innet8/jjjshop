@@ -35,7 +35,7 @@ DB_HOST=127.0.0.1
 DB_PREFIX=jjjfood_
 DB_DATABASE=jjj
 DB_USERNAME=jjj
-DB_PASSWORD=asda12d34254dd
+DB_PASSWORD=x!asda12d34254!dd
 DB_PORT=3306
 DB_ROOT_PASSWORD=asda12d34254dd
 
@@ -91,7 +91,7 @@ mysql-install(){
     sed -i 's#127.0.0.1#0.0.0.0#g' /etc/mysql/mysql.conf.d/mysqld.cnf
     service mysql restart
     # 修改数据库 root 密码
-    echo "ALTER USER 'root'@'localhost' IDENTIFIED BY 'asda12d34254dd';" | sudo mysql -uroot
+    echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASSWORD}';" | sudo mysql -uroot
     echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '${DB_ROOT_PASSWORD}' WITH GRANT OPTION;" | sudo mysql -uroot
     echo "FLUSH PRIVILEGES;" | sudo mysql -uroot
     # 创建数据库
