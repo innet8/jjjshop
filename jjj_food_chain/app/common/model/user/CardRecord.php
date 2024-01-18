@@ -32,7 +32,7 @@ class CardRecord extends BaseModel
      */
     public function getExpireTimeTextAttr($value, $data)
     {
-        return $data['expire_time'] ? '有效期至' . date('Y-m-d', $data['expire_time']) : '永久有效';
+        return $data['expire_time'] ? __('有效期至') . date('Y-m-d', $data['expire_time']) : __('永久有效');
     }
 
     /**
@@ -54,7 +54,7 @@ class CardRecord extends BaseModel
      */
     public function getPayTypeTextAttr($value, $data)
     {
-        $pay_type = [10 => '余额支付', 20 => '微信支付', 30 => '支付宝支付', 40 => '后台发卡'];
+        $pay_type = [10 => __('余额支付'), 20 => __('微信支付'), 30 => __('支付宝支付'), 40 => __('后台发卡')];
         return $pay_type[$data['pay_type']];
     }
 

@@ -46,7 +46,7 @@ class OrderDeliver extends BaseModel
      */
     public function getDeliverStatusTextAttr($value, $data)
     {
-        $status = [1 => '待接单', 2 => '待取货', 3 => '配送中', 4 => '已完成', 5 => '已取消'];
+        $status = [1 => __('待接单'), 2 => __('待取货'), 3 => __('配送中'), 4 => __('已完成'), 5 => __('已取消')];
         return $status[$data['deliver_status']];
     }
 
@@ -57,7 +57,7 @@ class OrderDeliver extends BaseModel
      */
     public function getStatusTextAttr($value, $data)
     {
-        $status = [10 => '进行中', 20 => '已取消', 30 => '已完成'];
+        $status = [10 => __('进行中'), 20 => __('已取消'), 30 => __('已完成')];
         return $status[$data['status']];
     }
 

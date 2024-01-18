@@ -141,7 +141,7 @@ class Product extends BaseModel
      */
     public function getProductStatusAttr($value, $data)
     {
-        $status = [10 => '上架', 20 => '下架'];
+        $status = [10 => __('上架'), 20 => __('下架')];
         return ['text' => $status[$value], 'value' => $value];
     }
 

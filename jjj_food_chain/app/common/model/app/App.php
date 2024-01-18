@@ -28,7 +28,7 @@ class App extends BaseModel
     {
         // 发货状态
         if ($data['expire_time'] == 0) {
-            return '永不过期';
+            return __('永不过期');
         }
         return date('Y-m-d', $data['expire_time']);
     }
