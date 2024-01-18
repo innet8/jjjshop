@@ -18,7 +18,6 @@ services:
     image: "mariadb:latest"
     volumes:
       - ./docker/mysql:/var/lib/mysql
-      - ./init.sql:/home/init.sql
       - ./docker/mysql/conf.d:/etc/mysql/conf.d
     ports:
       - 33111:3306
