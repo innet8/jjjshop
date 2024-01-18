@@ -498,8 +498,8 @@ class Setting extends BaseModel
                 'key' => 'currency',
                 'describe' => '货币单位',
                 'values' => [
-                    'unit' => '', // 货币单位
-                    'is_open' => 0, // 副货币单位开关
+                    'unit' => '฿', // 货币单位，默认泰铢
+                    'is_open' => '0', // 副货币单位开关
                     'vice_unit' => '', // 副货币单位
                     'unit_rate' => '', // 单位汇率
                 ],
@@ -508,7 +508,7 @@ class Setting extends BaseModel
                 'key' => 'tax_rate',
                 'describe' => '税率管理',
                 'values' => [
-                    'is_open' => 0, // 是否开启
+                    'is_open' => '0', // 是否开启 0关闭 1开启
                     'tax_rate' => '', // 税率
                 ],
             ],
@@ -516,7 +516,7 @@ class Setting extends BaseModel
                 'key' => 'service_charge',
                 'describe' => '服务费',
                 'values' => [
-                    'is_open' => 0, // 是否开启
+                    'is_open' => '0', // 是否开启 0关闭 1开启
                     'service_charge' => '', // 服务费
                 ],
             ],
@@ -526,7 +526,7 @@ class Setting extends BaseModel
                 'values' => [
                     // 上传后的轮播内容url（图片 + 视频）
                     'carousel' => [],
-                    'is_auto_send' => 0, // 收银结账自动送厨房
+                    'is_auto_send' => '0', // 收银结账自动送厨房
                     'cashier_password' => '', // 钱箱密码
                     // 自动锁屏 默认5分钟存秒
                     'auto_lock_screen' => 300,
@@ -544,9 +544,9 @@ class Setting extends BaseModel
                 'values' => [
                     // 上传后的轮播内容url（图片 + 视频）
                     'carousel' => [],
-                    'is_call_service' => 1, // 是否开启呼叫服务员
-                    'is_customer_order' => 1, // 是否开启顾客自助下单
-                    'is_show_sold_out' => 0, // 是否显示售罄商品
+                    'is_call_service' => '1', // 是否开启呼叫服务员
+                    'is_customer_order' => '1', // 是否开启顾客自助下单
+                    'is_show_sold_out' => '0', // 是否显示售罄商品
                     // 平板服务器连接
                     'server' => [
                         'ip' => '',
@@ -570,7 +570,7 @@ class Setting extends BaseModel
                         'ip' => '',
                         'port' => '',
                     ],
-                    'is_wait_color' => 0, // 是否开启等待时长颜色
+                    'is_wait_color' => '0', // 是否开启等待时长颜色
                     // 时长颜色 10分钟-黄色#ffff00 20分钟-红色#ff0000
                     'wait_color' => [],
                     // 语言列表
