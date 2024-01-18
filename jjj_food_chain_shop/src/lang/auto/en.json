@@ -417,5 +417,15 @@
     "领取人数": "Number of recipients",
     "删除时间": "Delete time",
     "暂无上榜记录": "No list record yet",
-    "实时概况": "real time overview"
+    "实时概况": "real time overview",
+    "欢迎您！": "Welcome!",
+    "菜单": "menu",
+    "此操作将退出登录, 是否继续?": "This operation will log you out. Do you want to continue?",
+    "已取消退出": "Exit cancelled",
+    "切换语言需要刷新后生效，是否确定刷新?": "Language switching needs to be refreshed to take effect. Are you sure you want to refresh?",
+    "已取消": "Cancelled",
+    "账号": "account",
+    "请输入验证码": "please enter verification code",
+    "验证码不正确!": "Incorrect verification code!",
+    "请输入用户名": "please enter user name"
 }

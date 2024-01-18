@@ -236,8 +236,8 @@ body,
 
 .common-header {
   height: 64px;
-  border-bottom: 1px solid #eee;
-  background: #fff;
+  border-bottom: 1px solid #100A05;
+  background: #100A05;
   line-height: 64px;
 }
 
@@ -259,6 +259,7 @@ body,
   justify-content: space-between;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  height: 100%;
 }
 
 .common-header .header-navbar {
@@ -278,6 +279,12 @@ body,
   align-items: center;
   cursor: pointer;
   font-size: 12px;
+  color: #fff;
+}
+.data-box-icon{
+    width: 16px;
+    height: 16px;
+    color: #fff;
 }
 .header-lang{
     margin-right: 16px;
@@ -291,11 +298,11 @@ body,
 .header-navbar-icon .svg-icon {
   width: 20px;
   height: 20px;
-  color: rgb(70, 79, 101);
+  color: #fff;
 }
 
 .header-navbar-icon .text {
-  color: rgb(70, 79, 101);
+  color: #fff;
 }
 
 .header-navbar-icon.login-out .svg-icon {

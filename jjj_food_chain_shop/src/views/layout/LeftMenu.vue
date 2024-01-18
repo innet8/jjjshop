@@ -133,6 +133,19 @@ export default defineComponent({
             this.$emit('selectMenu', null);
         }
     },
+    watch:{
+        'route.path':{
+            handler(val) {
+                this.menuList.map((item,index)=>{
+                    if(item.redirect_name == val && this.active_menu != index ){
+                        this.active_menu = index
+                    }
+                })
+            },
+            deep: true,
+            immediate:true,
+        },
+    },
     methods: {
         /*点击菜单跳转*/
         choseMenu(type, item, index) {

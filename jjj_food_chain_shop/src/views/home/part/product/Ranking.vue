@@ -117,6 +117,7 @@ export default {
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
+    cursor: pointer;
 }
 
 .right-box-t>div.active {

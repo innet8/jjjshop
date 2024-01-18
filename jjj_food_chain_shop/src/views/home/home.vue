@@ -8,35 +8,35 @@
                         <h3>{{ $t('营业总额（元）') }}</h3>
                         <SvgIcon class="data-box-icon" name="icon1"></SvgIcon>
                     </div>
-                    <h4>12,584.00</h4>
+                    <h4>{{ top_data.total_money }}</h4>
                 </div>
                 <div class="data-box">
                     <div class="data-box-title">
                         <h3>{{ $t('折扣总额（元）') }}</h3>
                         <SvgIcon class="data-box-icon" name="icon2"></SvgIcon>
                     </div>
-                    <h4>12,584.00</h4>
+                    <h4>{{ top_data.total_discount_money }}</h4>
                 </div>
                 <div class="data-box">
                     <div class="data-box-title">
                         <h3>{{ $t('会员数（元）') }}</h3>
                         <SvgIcon class="data-box-icon" name="icon3"></SvgIcon>
                     </div>
-                    <h4>12,584.00</h4>
+                    <h4>{{ top_data.user_total }}</h4>
                 </div>
                 <div class="data-box">
                     <div class="data-box-title">
                         <h3>{{ $t('订单数') }}</h3>
                         <SvgIcon class="data-box-icon" name="icon4"></SvgIcon>
                     </div>
-                    <h4>12,584.00</h4>
+                    <h4>{{ top_data.order_total }}</h4>
                 </div>
                 <div class="data-box">
                     <div class="data-box-title">
                         <h3>{{ $t('退款金额（元）') }}</h3>
                         <SvgIcon class="data-box-icon" name="icon5"></SvgIcon>
                     </div>
-                    <h4>12,584.00</h4>
+                    <h4>{{ top_data.refund_money }}</h4>
                 </div>
 
             </div>
@@ -47,28 +47,28 @@
                 <div class="operation-today">
                     <div class="grid-content">
                         <p class="des">{{ $t('营业总额（元）') }}</p>
-                        <h3>{{ today_data.order_total_price.tday }}</h3>
-                        <p class="yesterday">{{ $t('昨日：') }}{{ today_data.order_total_price.ytd }}</p>
+                        <h3>{{ today_data.order_total_price?.tday }}</h3>
+                        <p class="yesterday">{{ $t('昨日：') }}{{ today_data.order_total_price?.ytd }}</p>
                     </div>
                     <div class="grid-content">
                         <p class="des">{{ $t('折扣总额（元）') }}</p>
-                        <h3>11</h3>
-                        <p class="yesterday">{{ $t('昨日：') }}11</p>
+                        <h3>{{ today_data.order_discount_money?.tday }}</h3>
+                        <p class="yesterday">{{ $t('昨日：') }}{{ today_data.order_discount_money?.ytd }}</p>
                     </div>
                     <div class="grid-content">
                         <p class="des">{{ $t('会员数（人）') }}</p>
-                        <h3>{{ today_data.new_user_total.tday }}</h3>
-                        <p class="yesterday">{{ $t('昨日：') }}{{ today_data.new_user_total.ytd }}</p>
+                        <h3>{{ today_data.new_user_total?.tday }}</h3>
+                        <p class="yesterday">{{ $t('昨日：') }}{{ today_data.new_user_total?.ytd }}</p>
                     </div>
                     <div class="grid-content">
                         <p class="des">{{ $t('订单数') }}</p>
-                        <h3>{{ today_data.order_total.tday }}</h3>
-                        <p class="yesterday">{{ $t('昨日：') }}{{ today_data.order_total.ytd }}</p>
+                        <h3>{{ today_data.order_total?.tday }}</h3>
+                        <p class="yesterday">{{ $t('昨日：') }}{{ today_data.order_total?.ytd }}</p>
                     </div>
                     <div class="grid-content">
                         <p class="des">{{ $t('退款金额（元）') }}</p>
-                        <h3>11</h3>
-                        <p class="yesterday">{{ $t('昨日：') }}11</p>
+                        <h3>{{ today_data.order_refund_money?.tday }}</h3>
+                        <p class="yesterday">{{ $t('昨日：') }}{{ today_data.order_refund_money?.ytd }}</p>
                     </div>
 
                 </div>
@@ -78,7 +78,7 @@
                 <div class="center-r-box">
                     <div class="center-r-box-t">
                         <h4>{{ $t('库存告急') }}</h4>
-                        <p>{{ $t('查看') }}</p>
+                        <p @click="lockStock">{{ $t('查看') }}</p>
                     </div>
                     <p class="fb">{{ wait_data.stock.product }}</p>
                 </div>
@@ -177,6 +177,10 @@ export default {
             }).catch(error => {
 
             });
+        },
+
+        lockStock(){
+            this.$router.push({ path:'product/store/index' })
         },
     }
 };

@@ -4,12 +4,12 @@
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="left" label-width="0px"
                 class="demo-ruleForm login-container d-b-c">
                 <div class="flex-1 login-box">
-                    <h3 class="title" style="margin-bottom: 40px;">{{ shop_name }}</h3>
+                    <h3 class="title" style="margin-bottom: 40px;"><img src="/src/assets/logo.svg"/>{{ shop_name }}</h3>
                     <!--用户名-->
                     <el-form-item prop="account">
                         <div class="left-img-input"><img class="l-img" src="/src/assets/img/user.png">
                             <el-input class="l-input" type="text" v-model="ruleForm.account" auto-complete="off"
-                                placeholder="账号">
+                            :placeholder="$t('账号')">
                             </el-input>
                         </div>
                         <!-- <el-input type="text" v-model="ruleForm.account" auto-complete="off" placeholder="账号"></el-input> -->
@@ -18,7 +18,7 @@
                     <el-form-item prop="checkPass">
                         <div class="left-img-input"><img class="l-img" src="/src/assets/img/password.png">
                             <el-input type="password" class="l-input" v-model="ruleForm.checkPass" auto-complete="off"
-                                placeholder="密码">
+                                :placeholder="$t('密码')">
                             </el-input>
                         </div>
                         <!-- <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off" placeholder="密码"></el-input> -->
@@ -85,10 +85,10 @@ export default {
         const validateVerifycode = (rule, value, callback) => {
             if (value === "") {
                 this.refreshCode();
-                callback(new Error('请输入验证码'))
+                callback(new Error($t('请输入验证码')))
             } else if (value !== this.identifyCode) {
                 this.refreshCode();
-                callback(new Error('验证码不正确!'))
+                callback(new Error($t('验证码不正确!')))
             } else {
                 callback()
             }
@@ -121,13 +121,13 @@ export default {
                 /*用户名*/
                 account: [{
                     required: true,
-                    message: '请输入用户名',
+                    message: $t('请输入用户名'),
                     trigger: 'blur'
                 }],
                 /*密码*/
                 checkPass: [{
                     required: true,
-                    message: '请输入密码',
+                    message: $t('请输入密码'),
                     trigger: 'blur'
                 }],
                 verifycode: [{
@@ -222,10 +222,10 @@ export default {
         },
         setLanguage(e) {
             ElMessageBox.confirm(
-                '切换语言需要刷新后生效，是否确定刷新?',
-                '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+                $t('切换语言需要刷新后生效，是否确定刷新?'),
+                $t('提示'), {
+                confirmButtonText: $t('确定'),
+                cancelButtonText: $t('取消'),
                 type: 'warning',
             }
             )
@@ -236,7 +236,7 @@ export default {
                 .catch(() => {
                     ElMessage({
                         type: 'info',
-                        message: '已取消',
+                        message: $t('已取消'),
                     });
                 });
 
@@ -287,6 +287,10 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: bold;
         color: #333333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
     }
 
     .remember {
