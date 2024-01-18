@@ -45,4 +45,12 @@ class Call extends BaseModel
             $call->save();
         }
     }
+
+    /**
+     * 未处理数量
+     */
+    public function getUnprocessedCount(int $shopSupplierId = 0)
+    {
+        return $this->withoutGlobalScope()->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->count();
+    }
 }

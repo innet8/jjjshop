@@ -29,8 +29,7 @@ class Controller extends JjjController
 
     /** @var array $allowAllAction 登录验证白名单 */
     protected array $allowAllAction = [
-        '/table/table/index',
-        '/table/table/bind'
+        '/base/base/getInfo'
     ];
 
     /**
@@ -63,9 +62,9 @@ class Controller extends JjjController
      */
     private function checkBind()
     {
-//        if (in_array($this->routeUri, $this->allowAllAction)) {
-//            return true;
-//        }
+        if (in_array($this->routeUri, $this->allowAllAction)) {
+            return true;
+        }
         $sid = Request()->header('sid');
         if (!$sid) {
             throw new BaseException(['msg' => '缺少必要的参数：sid', 'code' => -1]);

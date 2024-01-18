@@ -29,6 +29,13 @@ class Table extends TableModel
         return $table->save(['is_bind' => 1]);
     }
 
+    // 解绑桌位
+    public function unbindTable($shop_supplier_id, $table_id)
+    {
+        $table = $this->where('shop_supplier_id', $shop_supplier_id)->where('table_id', $table_id)->find();
+        return $table->save(['is_bind' => 0]);
+    }
+
     // 开台
     public static function open($table_id)
     {

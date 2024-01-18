@@ -11,18 +11,21 @@ class Setting extends SettingModel
     /**
      * 更新系统设置
      */
-    public function edit($key, $values,$shop_supplier_id=0)
+    public function edit($key, $values, $shop_supplier_id = 0)
     {
-        $model = self::detail($key,$shop_supplier_id) ?: $this;
+        $model = self::detail($key, $shop_supplier_id) ?: $this;
         // 删除系统设置缓存
-        Cache::delete('setting_' . self::$app_id. '_'.$shop_supplier_id);
-        return $model->save([
-                'key' => $key,
-                'describe' => SettingEnum::data()[$key]['describe'],
-                'values' => $values,
-                'app_id' => self::$app_id,
-                'shop_supplier_id' => $shop_supplier_id
-            ]) !== false;
+        Cache::delete('setting_' . self::$app_id . '_' . $shop_supplier_id);
+
+        $data = [
+            'key' => $key,
+            'describe' => SettingEnum::data()[$key]['describe'],
+            'values' => $values,
+            'app_id' => self::$app_id,
+            'shop_supplier_id' => $shop_supplier_id
+        ];
+
+        return $model->save($data) !== false;
     }
 
     /**
@@ -73,4 +76,19 @@ class Setting extends SettingModel
         return true;
     }
 
+    /**
+     * 获取货币信息
+     */
+    public static function getCurrency($shop_supplier_id = 0, $app_id = null)
+    {
+        $currency = static::getSupplierItem('currency', $shop_supplier_id, $app_id);
+        return [
+            'unit' => $currency['unit'],
+            'is_open' => $currency['is_open'],
+            'vices' => [
+                'vice_unit' => $currency['vice_unit'],
+                'unit_rate' => $currency['unit_rate'],
+            ],
+        ];
+    }
 }

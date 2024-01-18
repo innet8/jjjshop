@@ -50,7 +50,7 @@ class InitCategoryTable extends Migrator
                 "zhtw" => "套餐",
             ],
         ];
-
+        $this->table('category')->changeColumn('name', 'string', array_merge(['limit' => 2000,'null' => false,'default' => '','signed' => true],['comment' => '分类名称']))->update();
         foreach ($categories as $oldName => $newName) {
             $newNameJson = json_encode($newName, JSON_UNESCAPED_UNICODE);
             $this->execute("UPDATE {$prefix}category SET name ='{$newNameJson}'  WHERE name = '{$oldName}'");

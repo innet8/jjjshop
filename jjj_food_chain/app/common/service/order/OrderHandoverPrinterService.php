@@ -5,8 +5,10 @@ namespace app\common\service\order;
 use app\common\library\helper;
 use app\common\model\shop\User;
 use app\cashier\model\order\Order;
+use app\common\enum\settings\SettingEnum;
 use app\common\enum\settings\PrinterTypeEnum;
 use app\common\model\settings\Printer as PrinterModel;
+use app\common\model\settings\Setting as SettingModel;
 use app\common\library\printer\Driver as PrinterDriver;
 use app\common\library\printer\party\SunmiCloudPrinter;
 use app\common\model\product\Category as CategoryModel;
@@ -16,11 +18,18 @@ use app\common\model\product\Category as CategoryModel;
  */
 class OrderHandoverPrinterService
 {
+    // 货币单位
+    private $currencyUnit = "฿";
+
     /**
      * 收银打印
      */
     public function cashierPrint($printerConfig, $data)
-    {
+    { 
+        $currency = SettingModel::getSupplierItem(SettingEnum::CURRENCY, $data['shop_supplier_id'], $data['app_id']);
+        if ($currency['unit'] ?? '') {
+            $this->currencyUnit = $currency['unit'];
+        }
         // 获取当前的打印机
         $printer = PrinterModel::detail($printerConfig['seller_printer_id']);
         if (empty($printer) || $printer['is_delete']) {
@@ -101,7 +110,8 @@ class OrderHandoverPrinterService
             $sales = 0;
             foreach ($categorys as $key => $category) {
                 $sales += $category['sales'];
-                $printer->printInColumns((new CategoryModel)->getNameTextAttr($category['name']) . '', $category['sales'] . '', "￥" . $category['prices']);
+                $name = (new CategoryModel)->getNameTextAttr($category['name']);
+                $printer->printInColumns($name, "{$category['sales']}",  $this->currencyUnit . strval($category['prices']));
                 $printer->lineFeed();
             }
             $printer->appendText("------------------------------------------------\n");
@@ -114,18 +124,18 @@ class OrderHandoverPrinterService
                 $printer->printInColumns(__("销售笔数"), "{$sales}");
             }
             foreach ($data['incomes'] as $key => $income) {
-                $printer->printInColumns($income['pay_type_name'], "￥{$income['price']}");
+                $printer->printInColumns($income['pay_type_name'], $this->currencyUnit . "{$income['price']}");
             }
             if ($data['refund_amount'] > 0) {
-                $printer->printInColumns(__("退款金额"), "￥{$data['refund_amount']}");
+                $printer->printInColumns(__("退款金额"), $this->currencyUnit . "{$data['refund_amount']}");
             }
             //
             $printer->lineFeed();
             $printer->appendText("------------------------------------------------\n");
-            $printer->printInColumns(__("本班营业总额"), "￥{$totalIncome}");
-            $printer->printInColumns(__("上一班遗留备用金"), "￥{$previousShiftCash}");
-            $printer->printInColumns(__("本班取出现金"), "￥{$cashTakenOut}");
-            $printer->printInColumns(__("本班遗留备用金"), "￥{$cashLeft}");
+            $printer->printInColumns(__("本班营业总额"), $this->currencyUnit . "{$totalIncome}");
+            $printer->printInColumns(__("上一班遗留备用金"), $this->currencyUnit . "{$previousShiftCash}");
+            $printer->printInColumns(__("本班取出现金"), $this->currencyUnit . "{$cashTakenOut}");
+            $printer->printInColumns(__("本班遗留备用金"), $this->currencyUnit . "{$cashLeft}");
             //
             $printer->lineFeed();
             $printer->printAndExitPageMode();
@@ -171,7 +181,8 @@ class OrderHandoverPrinterService
             $sales = 0;
             foreach ($categorys as $key => $category) {
                 $sales += $category['sales'];
-                $printer->appendText(printText((new CategoryModel)->getNameTextAttr($category['name']), $category['sales'], "￥" . $category['prices'], $width, $leftWidth));
+                $name = (new CategoryModel)->getNameTextAttr($category['name']);
+                $printer->appendText(printText($name, $category['sales'], $this->currencyUnit . strval($category['prices']), $width, $leftWidth));
                 $printer->lineFeed();
                 $printer->lineFeed();
             }
@@ -181,19 +192,19 @@ class OrderHandoverPrinterService
                 $printer->appendText(printText(__("销售笔数"), '', "{$sales}", $width));
             }
             foreach ($data['incomes'] as $key => $income) {
-                $printer->appendText(printText($income['pay_type_name'], '', "￥{$income['price']}", $width));
+                $printer->appendText(printText($income['pay_type_name'], '', $this->currencyUnit . "{$income['price']}", $width));
             }
             if ($data['refund_amount'] > 0) {
-                $printer->appendText(printText(__("退款金额"), '', "￥{$data['refund_amount']}", $width));
+                $printer->appendText(printText(__("退款金额"), '', $this->currencyUnit . "{$data['refund_amount']}", $width));
             }
             //
             $printer->lineFeed();
             $printer->lineFeed();
             $printer->appendText("------------------------------------------------\n");
-            $printer->appendText(printText(__("本班营业总额"), '', "￥{$totalIncome}", $width, $leftWidth));
-            $printer->appendText(printText(__("上一班遗留备用金"), '', "￥{$previousShiftCash}", $width, $leftWidth));
-            $printer->appendText(printText(__("本班取出现金"), '', "￥{$cashTakenOut}", $width, $leftWidth));
-            $printer->appendText(printText(__("本班遗留备用金"), '', "￥{$cashLeft}", $width, $leftWidth));
+            $printer->appendText(printText(__("本班营业总额"), '',  $this->currencyUnit . "{$totalIncome}", $width, $leftWidth));
+            $printer->appendText(printText(__("上一班遗留备用金"), '', $this->currencyUnit . "{$previousShiftCash}", $width, $leftWidth));
+            $printer->appendText(printText(__("本班取出现金"), '', $this->currencyUnit . "{$cashTakenOut}", $width, $leftWidth));
+            $printer->appendText(printText(__("本班遗留备用金"), '', $this->currencyUnit . "{$cashLeft}", $width, $leftWidth));
             //
             $printer->lineFeed(4);
             $printer->printAndExitPageMode();
@@ -218,23 +229,23 @@ class OrderHandoverPrinterService
         $content .= printText(__('分类'), __('数量'),  __('金额'), $width, $leftWidth);
         $content .= "--------------------------------<BR>";
         foreach ($categorys as $key => $category) {
-            $content .= printText((new CategoryModel)->getNameTextAttr($category['name']), $category['sales'], "￥" . strval($category['prices']), $width, $leftWidth)  . '<BR>';
+            $content .= printText((new CategoryModel)->getNameTextAttr($category['name']), $category['sales'], $this->currencyUnit . strval($category['prices']), $width, $leftWidth)  . '<BR>';
         }
         $content .= "--------------------------------<BR>";
         if ($data['sales_num'] > 0) {
             $content .= printText(__('销售笔数'), ' ', $data['sales_num'], $width) . "<BR>";
         }
         foreach ($data['incomes'] as $key => $income) {
-            $content .= printText($income['pay_type_name'], ' ', '￥'. strval($income['price']), $width, $leftWidth + 5) . "<BR>";
+            $content .= printText($income['pay_type_name'], ' ', $this->currencyUnit . strval($income['price']), $width, $leftWidth + 5) . "<BR>";
         }
         if ($data['refund_amount'] > 0) {
-            $content .= printText(__('退款金额'), ' ', '￥'. strval($data['refund_amount']), $width) . "<BR>";
+            $content .= printText(__('退款金额'), ' ', $this->currencyUnit . strval($data['refund_amount']), $width) . "<BR>";
         }
         $content .= "<BR>--------------------------------<BR>";
-        $content .= printText(__('本班营业总额'), '', "￥" . strval($totalIncome), $width, $leftWidth + 5) . "<BR>";
-        $content .= printText(__('上一班遗留备用金'), '', "￥" . strval($previousShiftCash), $width, $leftWidth + 5) . "<BR>";
-        $content .= printText(__('本班取出现金'), '', "￥" . strval($cashTakenOut), $width, $leftWidth + 5) . "<BR>";
-        $content .= printText(__('本班遗留备用金'), '', "￥" . strval($cashLeft), $width, $leftWidth + 5) . "<BR>";
+        $content .= printText(__('本班营业总额'), '', $this->currencyUnit  . strval($totalIncome), $width, $leftWidth + 5) . "<BR>";
+        $content .= printText(__('上一班遗留备用金'), '', $this->currencyUnit . strval($previousShiftCash), $width, $leftWidth + 5) . "<BR>";
+        $content .= printText(__('本班取出现金'), '', $this->currencyUnit  . strval($cashTakenOut), $width, $leftWidth + 5) . "<BR>";
+        $content .= printText(__('本班遗留备用金'), '', $this->currencyUnit  . strval($cashLeft), $width, $leftWidth + 5) . "<BR>";
         $content .= "<BR>";
         //
         return $content;

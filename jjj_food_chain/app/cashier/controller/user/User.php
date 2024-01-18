@@ -4,6 +4,7 @@ namespace app\cashier\controller\user;
 
 use app\cashier\controller\Controller;
 use app\cashier\model\user\User as UserModel;
+use app\cashier\model\order\Cart as CartModel;
 use app\common\model\user\User as MemberModel;
 use hg\apidoc\annotation as Apidoc;
 
@@ -87,5 +88,24 @@ class User extends Controller
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model->getError() ?: '操作失败');
+    }
+
+    /**
+     * @Apidoc\Title("查找会员及折扣信息")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/user.User/OrderUseCard")
+     * @Apidoc\Param("mobile", type="string", require=true, default="", desc="用户手机号")
+     * @Apidoc\Param("table_id", type="string", require=false, default="", desc="桌台ID")
+     * @Apidoc\Param("order_id", type="string", require=false, default="", desc="订单ID")
+     * @Apidoc\Returned()
+     */
+    public function OrderUseCard($mobile, $table_id = 0, $order_id = 0)
+    {
+        $model = new CartModel;
+        $list = $model->preOrderCartPrice($this->cashier['user']['shop_supplier_id'], $mobile, $table_id, $order_id);
+        if (!$list) {
+            return $this->renderError($model->getError() ?: '操作失败');
+        }
+        return $this->renderSuccess('合计信息', $list);
     }
 }

@@ -29,10 +29,11 @@ class InitTable extends Migrator
      */
     public function change()
     {
-        $filePath = realpath(root_path() . 'init.sql');
+        $filePath = realpath(root_path() . '/database/seeds/init.sql');
         if (!file_exists($filePath)) {
             throw new \Exception('init sql file not exists');
         }
+
         $host = Env::get('DB_HOST');
         $port = Env::get('DB_PORT');
         $rootPassword = Env::get('DB_ROOT_PASSWORD');
@@ -41,7 +42,6 @@ class InitTable extends Migrator
         $databaseName = Env::get('DB_DATABASE');
         $dsn = "mysql:host={$host};port={$port}";
         $pdo = new PDO($dsn, 'root', $rootPassword);
-
         // 检测数据库
         $dbExists = $pdo->query("SELECT COUNT(*) FROM information_schema.schemata WHERE schema_name = '{$databaseName}'")->fetchColumn();
         if (!$dbExists) {
@@ -49,6 +49,10 @@ class InitTable extends Migrator
             $pdo->exec("CREATE USER '{$username}'@'{$host}' IDENTIFIED BY '{$password}'");
             $pdo->exec("GRANT ALL PRIVILEGES ON {$databaseName}.* TO '{$username}'@'{$host}'");
             $pdo->exec("FLUSH PRIVILEGES");
+            $pdo->exec("use {$databaseName}");
+            $sql = file_get_contents($filePath);
+            $pdo->exec($sql);
+        } else {
             $pdo->exec("use {$databaseName}");
             $sql = file_get_contents($filePath);
             $pdo->exec($sql);

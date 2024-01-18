@@ -47,6 +47,8 @@ class Order extends BaseModel
         'order_source_text',
         'order_type_text',
         'deliver_text',
+        'elapsed_time',
+        'pay_time_text'
     ];
 
     /**
@@ -102,6 +104,23 @@ class Order extends BaseModel
     public function deliver()
     {
         return $this->belongsTo('app\\common\\model\\order\\OrderDeliver', 'order_id', 'order_id')->order('deliver_id desc');
+    }
+
+    // 访问器：获取订单生成时间长度
+    public function getElapsedTimeAttr($value, $data)
+    {
+        // 获取当前时间
+        $currentTime = time();
+        // 获取订单生成时间
+        $generateTime = $data['create_time'];
+        // 返回时间长度
+        return $currentTime - $generateTime;
+    }
+
+    // 支付时间格式化
+    public function getPayTimeTextAttr($value, $data){
+
+        return isset($data['pay_time']) ? format_time_his(strtotime($data['pay_time'])) : '';
     }
 
     /**
@@ -946,7 +965,7 @@ class Order extends BaseModel
     }
 
     /**
-     * 重新计算订单价格信息（服务费+消费税+会员折扣）（折扣抹零计算重置
+     * 重新计算订单价格信息（服务费+消费税+会员折扣）（折扣抹零计算重置)
      * @param $order_id     // 订单ID
      * @param $re_order_no  // 是否重新生成订单号（用于加菜打印后）
      * @return void

@@ -4,6 +4,7 @@ namespace app\shop\model\shop;
 
 use app\common\model\shop\LoginLog as LoginLogModel;
 use app\common\model\shop\User as UserModel;
+use app\shop\model\settings\Setting as SettingModel;
 
 /**
  * 后台管理员登录模型
@@ -44,6 +45,8 @@ class User extends UserModel
         }
         // 保存登录状态
         $user['token'] = signToken($user['shop_user_id'], 'shop');
+        // 货币信息
+        $user['currency'] = SettingModel::getCurrency($user['shop_supplier_id'], $user['app_id']);
         // 写入登录日志
         LoginLogModel::add($where['user_name'], \request()->ip(), '登录成功', $user['app']['app_id']);
         return $user;
