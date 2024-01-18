@@ -854,17 +854,16 @@ class Cart extends CartModel
     {
         // 用户信息
         $user = (new UserModel)->where('mobile', $mobile)->with(['grade', 'card'])->find();
-        if (!$user) {
-            $this->error = "用户不存在";
-            return false;
-        }
+//        if (!$user) {
+//            $this->error = "用户不存在";
+//            return false;
+//        }
 
         // 桌台
         $table_service_money = 0;
         if ($table_id > 0) {
             // 计算订单会员优惠后价格
             $order = (new OrderModel())->getOrderInfo($table_id);
-//            [$order_total_product_price, $order_total_pay_price, $order_total_user_discount_money] = self::preReloadPriceByOrder($user, $order);
             $order_arr = self::preReloadPriceByOrder($order, $user);
             // 桌台服务费
             $serviceType = $order['supplier']['serviceType'];
@@ -879,11 +878,9 @@ class Cart extends CartModel
                 ->where('table_id', '=', $table_id)
                 ->where('is_stay', '=', 0)
                 ->select();
-//            [$cart_total_product_price, $cart_total_pay_price, $cart_total_user_discount_money] = self::preReloadPriceByCart($cartList, $user);
             $cart_arr = self::preReloadPriceByCart($cartList, $user);
         } else if ($order_id > 0) {
             $order = OrderModel::detail($order_id);
-//            [$order_total_product_price, $order_total_pay_price, $order_total_user_discount_money] = self::preReloadPriceByOrder($order, $user);
             $order_arr = self::preReloadPriceByOrder($order, $user);
             // 计算购物车会员优惠后价格
             $cartList = (new static())->with('product')
@@ -891,10 +888,8 @@ class Cart extends CartModel
                 ->where('order_id', '=', $order_id)
                 ->where('is_stay', '=', 0)
                 ->select();
-//            [$cart_total_product_price, $cart_total_pay_price, $cart_total_user_discount_money] = self::preReloadPriceByCart($cartList, $user);
             $cart_arr = self::preReloadPriceByCart($cartList, $user);
         } else {
-//            [$order_total_product_price, $order_total_pay_price, $order_total_user_discount_money] = [0, 0, 0];
             $order_arr = [
                 'order_total_product_price' => 0,
                 'order_total_pay_price' => 0,
@@ -906,7 +901,6 @@ class Cart extends CartModel
                 ->where('table_id', '=', 0)
                 ->where('is_stay', '=', 0)
                 ->select();
-//            [$cart_total_product_price, $cart_total_pay_price, $cart_total_user_discount_money] = self::preReloadPriceByCart($cartList, $user);
             $cart_arr = self::preReloadPriceByCart($cartList, $user);
         }
 
