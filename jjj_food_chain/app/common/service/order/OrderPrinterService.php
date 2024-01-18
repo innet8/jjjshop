@@ -198,7 +198,7 @@ class OrderPrinterService
                 $printer->printInColumns(__("满减优惠"), $this->currencyUnit . strval($order['fullreduce_money']));
             }
             $printer->setPrintModes(true, false, false);
-            $printer->printInColumns(__("应收"), $this->currencyUnit . strval($order['total_price']));
+            $printer->printInColumns(__("应收"), $this->currencyUnit . strval($order['pay_price']));
             $printer->lineFeed();
             $printer->setPrintModes(false, false, false);
             // 
@@ -311,7 +311,7 @@ class OrderPrinterService
                 $printer->lineFeed();
             }
             $printer->setPrintModes(true, false, false);
-            $printer->appendText(printText(__("应收"),'', $this->currencyUnit . strval($order['total_price']) ,$width, $leftWidth));
+            $printer->appendText(printText(__("应收"),'', $this->currencyUnit . strval($order['pay_price']) ,$width, $leftWidth));
             $printer->lineFeed();
             $printer->setPrintModes(false, false, false);
             // 
