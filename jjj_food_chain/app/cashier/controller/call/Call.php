@@ -37,10 +37,22 @@ class Call extends Controller
      */
     public function processed($call_id)
     {
-        // 
+        //
         (new CallModel)->markAsProcessed($call_id, $this->cashier['user']['shop_supplier_id'] ?? 0);
-        // 
+        //
         return $this->renderSuccess();
     }
 
+    /**
+     * @Apidoc\Title("未处理数量")
+     * @Apidoc\Desc("已处理")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/index.php/cashier/call.call/unprocessed")
+     * @Apidoc\Returned("count", type="int", desc="未处理数量")
+     */
+    public function unprocessed()
+    {
+        $count = (new CallModel)->getUnprocessedCount($this->cashier['user']['shop_supplier_id'] ?? 0);
+        return $this->renderSuccess('', compact('count'));
+    }
 }
