@@ -47,6 +47,7 @@ class Order extends BaseModel
         'order_source_text',
         'order_type_text',
         'deliver_text',
+        'elapsed_time'
     ];
 
     /**
@@ -102,6 +103,17 @@ class Order extends BaseModel
     public function deliver()
     {
         return $this->belongsTo('app\\common\\model\\order\\OrderDeliver', 'order_id', 'order_id')->order('deliver_id desc');
+    }
+
+    // 访问器：获取订单生成时间长度
+    public function getElapsedTimeAttr($value, $data)
+    {
+        // 获取当前时间
+        $currentTime = time();
+        // 获取订单生成时间
+        $generateTime = $data['create_time'];
+        // 返回时间长度
+        return $currentTime - $generateTime;
     }
 
     /**
