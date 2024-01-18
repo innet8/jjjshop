@@ -40,7 +40,7 @@
           </el-table-column>
           <el-table-column prop="discount" :label="$t('折扣')">
             <template #default="scope">
-              <span v-if="scope.row.discount">{{scope.row.discount}}折</span>
+              <span v-if="scope.row.discount">{{scope.row.discount}}{{ $t('折') }}</span>
               <span v-else>{{ $t('无') }}</span>
             </template>
           </el-table-column>
@@ -179,9 +179,9 @@
       /*删除用户*/
       cancel(row) {
         let self = this;
-        ElMessageBox.confirm('此操作将永久删除该记录, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+        ElMessageBox.confirm($t('此操作将永久删除该记录, 是否继续?'), $t('提示'), {
+          confirmButtonText: $t('确定'),
+          cancelButtonText: $t('取消'),
           type: 'warning'
         }).then(() => {
           self.loading = true;

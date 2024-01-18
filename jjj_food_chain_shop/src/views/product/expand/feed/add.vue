@@ -2,7 +2,7 @@
     <!--
     	描述：商品-加料库-添加加料
     -->
-    <el-dialog title="添加加料" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
+    <el-dialog :title="$t('添加加料')" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
         :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
             <template v-for="(item, index) in languageList" :key="index">

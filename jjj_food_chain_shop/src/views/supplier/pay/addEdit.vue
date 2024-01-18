@@ -5,7 +5,7 @@
             <el-form-item :label="$t('名称')" prop="name" :rules="[{ required: true, message: $t('请输入名称') }]">
                 <el-input v-model="form.name"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('图片')" prop="image" :rules="[{ required: true, message: $t(' ') }]">
+            <el-form-item :label="$t('图片')" prop="image" :rules="[{ required: true, message: '' }]">
                 <div class="draggable-list">
                     <draggable class="wrapper" v-model="form.image">
                         <transition-group>

@@ -6,22 +6,22 @@
     -->
   <el-dialog title="详情" v-model="dialogVisible" @close="dialogFormVisible" :close-on-press-escape="false">
     <el-form size="" :model="form" label-position="top">
-      <el-form-item label="标题：" :label-width="formLabelWidth">
+      <el-form-item :label="$t('标题：')" :label-width="formLabelWidth">
         <div class="item-content-box">{{ form.title }}</div>
       </el-form-item>
       <el-form-item label="id：" :label-width="formLabelWidth">
         <div class="item-content-box">{{ form.opt_log_id }}</div>
       </el-form-item>
-      <el-form-item label="用户名：" :label-width="formLabelWidth">
+      <el-form-item :label="$t('用户名：')" :label-width="formLabelWidth">
         <div class="item-content-box">{{ form.user_name }}</div>
       </el-form-item>
-      <el-form-item label="真实姓名：" :label-width="formLabelWidth">
+      <el-form-item :label="$t('真实姓名：')" :label-width="formLabelWidth">
         <div class="item-content-box">{{ form.real_name }}</div>
       </el-form-item>
       <el-form-item label="url：" :label-width="formLabelWidth">
         <div class="item-content-box">{{ form.url }}</div>
       </el-form-item>
-      <el-form-item label="内容：" :label-width="formLabelWidth">
+      <el-form-item :label="$t('内容：')" :label-width="formLabelWidth">
         <div class="item-content-box">{{ form.content }}</div>
       </el-form-item>
       <el-form-item label="ip：" :label-width="formLabelWidth">
@@ -30,12 +30,12 @@
       <el-form-item label="agent：" :label-width="formLabelWidth">
         <div class="item-content-box">{{ form.agent }}</div>
       </el-form-item>
-      <el-form-item label="添加时间：" :label-width="formLabelWidth">
+      <el-form-item :label="$t('添加时间：')" :label-width="formLabelWidth">
         <div class="item-content-box">{{ form.create_time }}</div>
       </el-form-item>
     </el-form>
     <template #footer>
-    <div class="dialog-footer"><el-button size="small" @click="dialogVisible = false">关闭</el-button></div>
+    <div class="dialog-footer"><el-button size="small" @click="dialogVisible = false">{{$t('关闭')}}</el-button></div>
     </template>
   </el-dialog>
 </template>

@@ -1,7 +1,7 @@
 <template >
     <div class="cash">
         <el-form size="small" ref="form" :model="form" label-position="top">
-            <el-form-item :label="$t('轮播内容')" prop="carousel" :rules="[{ required: true, message: $t(' ') }]">
+            <el-form-item :label="$t('轮播内容')" prop="carousel" :rules="[{ required: true, message: '' }]">
                 <div class="draggable-list">
                     <flieUpload @upLoad="upLoad"></flieUpload>
                     <el-table size="small" :data="form.carousel" border style="width: 100%" v-loading="loading">
@@ -35,7 +35,7 @@
                 </el-radio-group>
             </el-form-item>
 
-            <el-form-item :label="$t('钱箱密码')" prop="password" :rules="[{ required: true, message: $t('') }]">
+            <el-form-item :label="$t('钱箱密码')" prop="password" :rules="[{ required: true, message: '' }]">
                 <el-input class="max-w460" type="password" v-model="password" disabled></el-input>
                 <el-button @click="setPassword" type="primary" link size="small">{{ $t('设置密码') }}</el-button>
             </el-form-item>

@@ -45,8 +45,8 @@
                 <el-table-column prop="cash_income" :label="$t('现金收入')"></el-table-column>
                 <el-table-column prop="previous_shift_cash" :label="$t('上一班遗留备用金')"></el-table-column>
                 <el-table-column prop="cash_left" :label="$t('本班遗留备用金')"></el-table-column>
-                <el-table-column prop="create_time" label="添加时间"></el-table-column>
-                <el-table-column fixed="right" label="操作" width="120">
+                <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
+                <el-table-column fixed="right" :label="$t('操作')" width="120">
                     <template #default="scope">
                         <el-button @click="detailClick(scope.row)" type="primary" link size="small">{{ $t('详情')
                         }}</el-button>

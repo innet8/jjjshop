@@ -8,19 +8,19 @@
     <!--form表单-->
     <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
       <!--清理缓存-->
-      <div class="common-form">清理缓存</div>
+      <div class="common-form">{{$t('清理缓存')}}</div>
 
 
-      <el-form-item label="数据缓存:">
+      <el-form-item :label="$t('数据缓存:')">
         <el-checkbox-group v-model="form.keys" @change="handleCheckedCitiesChange">
-          <el-checkbox v-for="(item,index) in list" :label="index" :key="index" :checked="true">{{item.name}}</el-checkbox>
+          <el-checkbox v-for="(item,index) in list" :label="index" :key="index" :checked="true">{{$t(item.name)}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
 
 
       <!--提交-->
       <div class="common-button-wrapper">
-        <el-button type="primary" @click="onSubmit">提交</el-button>
+        <el-button type="primary" @click="onSubmit">{{$t('提交')}}</el-button>
       </div>
 
 
@@ -64,7 +64,7 @@
         SettingApi.editCache(params, true)
           .then(data => {
             ElMessage({
-              message: '恭喜你，清理成功',
+              message: $t('恭喜你，清理成功'),
               type: 'success'
             });
             self.$router.push('/setting/clear/index');

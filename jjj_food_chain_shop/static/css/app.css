@@ -373,6 +373,7 @@ body,
   font-size: 14px;
   font-weight: 700;
   margin-bottom: 12px;
+  text-transform: capitalize;
 }
 .common-form span{
 	font-size: inherit;

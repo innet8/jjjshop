@@ -23,21 +23,21 @@
         <div class="operation-data">
             <div class="data-box">
                 <div class="data-box-title">
-                    <h3>{{ $t('营业总额（元）') }}</h3>
+                    <h3>{{ $t('营业总额') }}</h3>
                     <SvgIcon class="data-box-icon" name="icon1"></SvgIcon>
                 </div>
                 <h4>{{ detail.total_price }}</h4>
             </div>
             <div class="data-box">
                 <div class="data-box-title">
-                    <h3>{{ $t('折扣总额（元）') }}</h3>
+                    <h3>{{ $t('折扣总额') }}</h3>
                     <SvgIcon class="data-box-icon" name="icon2"></SvgIcon>
                 </div>
                 <h4>{{ detail.total_discount_money }}</h4>
             </div>
             <div class="data-box">
                 <div class="data-box-title">
-                    <h3>{{ $t('会员数（元）') }}</h3>
+                    <h3>{{ $t('会员数') }}</h3>
                     <SvgIcon class="data-box-icon" name="icon3"></SvgIcon>
                 </div>
                 <h4>{{ detail.user_count }}</h4>
@@ -51,7 +51,7 @@
             </div>
             <div class="data-box">
                 <div class="data-box-title">
-                    <h3>{{ $t('退款金额（元）') }}</h3>
+                    <h3>{{ $t('退款金额') }}</h3>
                     <SvgIcon class="data-box-icon" name="icon5"></SvgIcon>
                 </div>
                 <h4>{{ detail.refund_money }}</h4>

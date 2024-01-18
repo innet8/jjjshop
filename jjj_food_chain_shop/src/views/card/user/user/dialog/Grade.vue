@@ -4,25 +4,25 @@
       时间：2019-10-25
       描述：会员-用户列表-会员等级
   -->
-  <el-dialog title="会员等级" v-model="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
+  <el-dialog :title="$t('会员等级')" v-model="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
     :close-on-press-escape="false">
     <el-form size="small" :model="form" label-position="top">
-      <el-form-item label="昵称" :label-width="formLabelWidth">
+      <el-form-item :label="$t('昵称')" :label-width="formLabelWidth">
         <el-input v-model="form.nickName" autocomplete="off" disabled></el-input>
       </el-form-item>
-      <el-form-item label="等级" :label-width="formLabelWidth">
-        <el-select v-model="form.grade_id" placeholder="-请选择等级-">
+      <el-form-item :label="$t('等级')" :label-width="formLabelWidth">
+        <el-select v-model="form.grade_id" :placeholder="$t('请选择等级')">
           <el-option v-for="(item,index) in gradeList" :key="index" :label="item.name" :value="item.grade_id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="管理员备注" :label-width="formLabelWidth">
-        <el-input type="textarea" v-model="form.remark" placeholder="请输入管理员备注"></el-input>
+      <el-form-item :label="$t('管理员备注')" :label-width="formLabelWidth">
+        <el-input type="textarea" v-model="form.remark" :placeholder="$t('请输入管理员备注')"></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
     <div class="dialog-footer">
-      <el-button @click="dialogFormVisible">取 消</el-button>
-      <el-button type="primary" @click="editUser" :loading="loading">确 定</el-button>
+      <el-button @click="dialogFormVisible">{{ $t('取消') }}</el-button>
+      <el-button type="primary" @click="editUser" :loading="loading">{{ $t('确定') }}</el-button>
     </div>
     </template>
   </el-dialog>

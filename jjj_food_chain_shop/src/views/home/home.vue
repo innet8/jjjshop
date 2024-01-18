@@ -5,21 +5,21 @@
             <div class="operation-data">
                 <div class="data-box">
                     <div class="data-box-title">
-                        <h3>{{ $t('营业总额（元）') }}</h3>
+                        <h3>{{ $t('营业总额') }}</h3>
                         <SvgIcon class="data-box-icon" name="icon1"></SvgIcon>
                     </div>
                     <h4>{{ top_data.total_money }}</h4>
                 </div>
                 <div class="data-box">
                     <div class="data-box-title">
-                        <h3>{{ $t('折扣总额（元）') }}</h3>
+                        <h3>{{ $t('折扣总额') }}</h3>
                         <SvgIcon class="data-box-icon" name="icon2"></SvgIcon>
                     </div>
                     <h4>{{ top_data.total_discount_money }}</h4>
                 </div>
                 <div class="data-box">
                     <div class="data-box-title">
-                        <h3>{{ $t('会员数（元）') }}</h3>
+                        <h3>{{ $t('会员数') }}</h3>
                         <SvgIcon class="data-box-icon" name="icon3"></SvgIcon>
                     </div>
                     <h4>{{ top_data.user_total }}</h4>
@@ -33,7 +33,7 @@
                 </div>
                 <div class="data-box">
                     <div class="data-box-title">
-                        <h3>{{ $t('退款金额（元）') }}</h3>
+                        <h3>{{ $t('退款金额') }}</h3>
                         <SvgIcon class="data-box-icon" name="icon5"></SvgIcon>
                     </div>
                     <h4>{{ top_data.refund_money }}</h4>
@@ -46,12 +46,12 @@
                 <h3 class="operation-title mb16">{{ $t('今日概况') }}</h3>
                 <div class="operation-today">
                     <div class="grid-content">
-                        <p class="des">{{ $t('营业总额（元）') }}</p>
+                        <p class="des">{{ $t('营业总额') }}</p>
                         <h3>{{ today_data.order_total_price?.tday }}</h3>
                         <p class="yesterday">{{ $t('昨日：') }}{{ today_data.order_total_price?.ytd }}</p>
                     </div>
                     <div class="grid-content">
-                        <p class="des">{{ $t('折扣总额（元）') }}</p>
+                        <p class="des">{{ $t('折扣总额') }}</p>
                         <h3>{{ today_data.order_discount_money?.tday }}</h3>
                         <p class="yesterday">{{ $t('昨日：') }}{{ today_data.order_discount_money?.ytd }}</p>
                     </div>
@@ -66,7 +66,7 @@
                         <p class="yesterday">{{ $t('昨日：') }}{{ today_data.order_total?.ytd }}</p>
                     </div>
                     <div class="grid-content">
-                        <p class="des">{{ $t('退款金额（元）') }}</p>
+                        <p class="des">{{ $t('退款金额') }}</p>
                         <h3>{{ today_data.order_refund_money?.tday }}</h3>
                         <p class="yesterday">{{ $t('昨日：') }}{{ today_data.order_refund_money?.ytd }}</p>
                     </div>
@@ -118,6 +118,7 @@ export default {
     },
     data() {
         return {
+          
             /*是否加载完成*/
             loading: true,
             /*统计信息*/

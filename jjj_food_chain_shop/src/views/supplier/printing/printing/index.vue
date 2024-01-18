@@ -9,45 +9,45 @@
     <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
       <!--小票打印设置-->
 
-      <el-form-item label="是否开启商户小票打印">
+      <el-form-item :label="$t('是否开启商户小票打印')">
         <div>
-          <el-radio v-model="form.seller_open" :label="'1'">开启</el-radio>
-          <el-radio v-model="form.seller_open" :label="'0'">关闭</el-radio>
+          <el-radio v-model="form.seller_open" :label="'1'">{{ $t('开启') }}</el-radio>
+          <el-radio v-model="form.seller_open" :label="'0'">{{ $t('关闭') }}</el-radio>
         </div>
       </el-form-item>
-      <el-form-item label="选择打印机" v-if="form.seller_open==1">
-        <el-select v-model="form.seller_printer_id" placeholder="请选择">
+      <el-form-item :label="$t('选择打印机')" v-if="form.seller_open==1">
+        <el-select v-model="form.seller_printer_id" :placeholder="$t('请选择')">
           <el-option v-for="(item,index) in printerList" :key="index" :label="item.printer_name"
             :value="item.printer_id+''"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="是否开启顾客小票打印">
+      <el-form-item :label="$t('是否开启顾客小票打印')">
         <div>
-          <el-radio v-model="form.buyer_open" :label="'1'">开启</el-radio>
-          <el-radio v-model="form.buyer_open" :label="'0'">关闭</el-radio>
+          <el-radio v-model="form.buyer_open" :label="'1'">{{ $t('开启') }}</el-radio>
+          <el-radio v-model="form.buyer_open" :label="'0'">{{ $t('关闭') }}</el-radio>
         </div>
       </el-form-item>
-      <el-form-item label="选择打印机二" v-if="form.buyer_open==1">
-        <el-select v-model="form.buyer_printer_id" placeholder="请选择">
+      <el-form-item :label="$t('选择打印机二')" v-if="form.buyer_open==1">
+        <el-select v-model="form.buyer_printer_id" :placeholder="$t('请选择')">
           <el-option v-for="(item,index) in printerList" :key="index" :label="item.printer_name"
             :value="item.printer_id+''"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="是否开启厨房小票打印">
+      <el-form-item :label="$t('是否开启厨房小票打印')">
         <div>
-          <el-radio v-model="form.room_open" :label="'1'">开启</el-radio>
-          <el-radio v-model="form.room_open" :label="'0'">关闭</el-radio>
+          <el-radio v-model="form.room_open" :label="'1'">{{ $t('开启') }}</el-radio>
+          <el-radio v-model="form.room_open" :label="'0'">{{ $t('关闭') }}</el-radio>
         </div>
       </el-form-item>
-      <el-form-item label="选择打印机三" v-if="form.room_open==1">
-        <el-select v-model="form.room_printer_id" placeholder="请选择">
+      <el-form-item :label="$t('选择打印机三')" v-if="form.room_open==1">
+        <el-select v-model="form.room_printer_id" :placeholder="$t('请选择')">
           <el-option v-for="(item,index) in printerList" :key="index" :label="item.printer_name"
             :value="item.printer_id+''"></el-option>
         </el-select>
       </el-form-item>
       <!--提交-->
       <div class="common-button-wrapper">
-        <el-button type="primary" @click="onSubmit" :loading="loading">提交</el-button>
+        <el-button type="primary" @click="onSubmit" :loading="loading">{{ $t('提交') }}</el-button>
       </div>
 
 
@@ -116,7 +116,7 @@
           .then(data => {
             self.loading = false;
             ElMessage({
-              message: '恭喜你，打印设置成功',
+              message: $t('恭喜你，打印设置成功'),
               type: 'success'
             });
             // self.$router.push('/setting/Printing');

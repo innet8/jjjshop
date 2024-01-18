@@ -4,7 +4,7 @@
       时间：2019-10-25
       描述：会员-用户列表-会员等级
   -->
-  <el-dialog title="会员等级" v-model="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
+  <el-dialog :title="$t('会员等级')" v-model="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
     :close-on-press-escape="false" :modal-append-to-body="false" width='600px'>
     <el-form size="small" :model="form" label-position="top">
       <el-form-item>
@@ -12,14 +12,14 @@
             <div class="d-b-s">
               <div class="fb mr10"></div>
               <div class="text item">
-                <div>卡名称: {{form.card_name}}</div>
-                <div>卡ID: {{form.card_id}}</div>
-                <div>有效期:
-                  <span v-if="form.expire>0">{{form.expire}}月</span>
-                  <span v-else>永久有效</span>
+                <div>{{ $t('卡名称: ') }}{{form.card_name}}</div>
+                <div>{{ $t('卡ID:') }} {{form.card_id}}</div>
+                <div>{{ $t('有效期:') }}
+                  <span v-if="form.expire>0">{{form.expire}}{{ $t('月') }}</span>
+                  <span v-else>{{ $t('永久有效') }}</span>
                 </div>
-                <div>折扣: <span v-if="form.is_discount>0">{{form.discount}}折</span>
-                  <span v-else>无</span>
+                <div>{{ $t('折扣: ') }} <span v-if="form.is_discount>0">{{form.discount}}{{ $t('折') }}</span>
+                  <span v-else>{{ $t('无') }}</span>
                 </div>
               </div>
             </div>
@@ -28,7 +28,7 @@
       </el-form-item>
       <el-form-item label="" :label-width="formLabelWidth">
         <div class="d-s-s d-c">
-          <el-button @click="openGetuser" icon="Plus">选择会员</el-button>
+          <el-button @click="openGetuser" icon="Plus">{{ $t('选择会员') }}</el-button>
           <ul class="d-s-s select-user" v-if="select_list.length>0">
             <li class="mr10 d-c-c d-c p-10-0">
               <img :src="select_list[0].avatarUrl" class="radius" width="100" height="100" />
@@ -88,7 +88,7 @@
             self.loading = false;
             if (data.code == 1) {
               ElMessage({
-                message: '恭喜你，发卡成功',
+                message:  $t('恭喜你，发卡成功'),
                 type: 'success'
               });
               self.dialogFormVisible(true);

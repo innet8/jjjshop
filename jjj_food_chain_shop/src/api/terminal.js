@@ -35,5 +35,10 @@ let Terminal = {
     saveKitchen(data, errorback) {
         return request._post('/shop/setting.Terminal/kitchen', data, errorback);
     },
+    /*厨显设置密码*/
+    editKitchenAdvancedPassword(data, errorback) {
+        return request._post('/shop/setting.Terminal/editKitchenAdvancedPassword', data, errorback);
+    },
+    
 }
 export default Terminal;
