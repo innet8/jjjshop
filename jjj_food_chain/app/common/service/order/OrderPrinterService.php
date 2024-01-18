@@ -3,6 +3,7 @@
 namespace app\common\service\order;
 
 use app\common\model\order\OrderProduct;
+use app\common\enum\settings\SettingEnum;
 use app\common\enum\order\OrderPayStatusEnum;
 use app\common\enum\settings\PrinterTypeEnum;
 use app\common\enum\settings\DeliveryTypeEnum;
@@ -19,6 +20,9 @@ use app\common\model\supplier\Printing as PrintingModel;
  */
 class OrderPrinterService
 {
+    // 货币单位
+    private $currencyUnit = "฿";
+
     /**
      * 执行订单打印
      */
@@ -107,6 +111,10 @@ class OrderPrinterService
      */
     private function getPrintContent($order, $printer = null)
     {
+        $currency = SettingModel::getSupplierItem(SettingEnum::CURRENCY, $order['shop_supplier_id'], $order['app_id']);
+        if ($currency['unit'] ?? '') {
+            $this->currencyUnit = $currency['unit'];
+        }
         /* *
         *
         *商米打印机 
@@ -151,7 +159,7 @@ class OrderPrinterService
             $printer->appendText("------------------------------------------------\n");
             foreach ($order['product'] as $key => $product) {
                 $productName = $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : '');
-                $printer->printInColumns($productName, $product['total_num'] . '', "￥" . $product['total_price']);
+                $printer->printInColumns($productName, $product['total_num'] . '', $this->currencyUnit . strval($product['total_price']));
                 $printer->lineFeed();
                 if ($product['remark']) {
                     $printer->printInColumns($product['remark']);
@@ -164,46 +172,46 @@ class OrderPrinterService
                 [200, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
             );
-            $printer->printInColumns(__("合计金额"), "￥" . strval($order['total_price']));
+            $printer->printInColumns(__("合计金额"), $this->currencyUnit . strval($order['total_price']));
             if ($order['setting_service_money'] > 0) { 
-                $printer->printInColumns(__("服务费"),  "￥" . strval($order['setting_service_money']));
+                $printer->printInColumns(__("服务费"), $this->currencyUnit . strval($order['setting_service_money']));
             }
             if ($order['consumption_tax_money'] > 0) { 
-                $printer->printInColumns(__("消费税"),  "￥" . strval($order['consumption_tax_money']));
+                $printer->printInColumns(__("消费税"), $this->currencyUnit . strval($order['consumption_tax_money']));
             }
             if ($order['discount_money'] > 0) { 
-                $printer->printInColumns(__("优惠折扣"),  "￥" . strval($order['discount_money']));
+                $printer->printInColumns(__("优惠折扣"), $this->currencyUnit . strval($order['discount_money']));
             }
             if ($order['user_discount_money'] > 0) { 
-                $printer->printInColumns(__("会员折扣"),  "￥" . strval($order['user_discount_money']));
+                $printer->printInColumns(__("会员折扣"), $this->currencyUnit . strval($order['user_discount_money']));
             }
             if ($order['delivery_type']['value'] == DeliveryTypeEnum::EXPRESS) {
-                $printer->printInColumns(__("配送费"),  "￥" . strval($order['express_price']));
+                $printer->printInColumns(__("配送费"), $this->currencyUnit . strval($order['express_price']));
             }
             if ($order['bag_price'] > 0) {
-                $printer->printInColumns(__("包装费"),  "￥" . strval($order['bag_price']));
+                $printer->printInColumns(__("包装费"), $this->currencyUnit . strval($order['bag_price']));
             }
             if ($order['coupon_money'] > 0) {
-                $printer->printInColumns(__("优惠券优惠"),  "￥" . strval($order['coupon_money']));
+                $printer->printInColumns(__("优惠券优惠"), $this->currencyUnit . strval($order['coupon_money']));
             }
             if ($order['fullreduce_money'] > 0) {
-                $printer->printInColumns(__("满减优惠"),  "￥" . strval($order['fullreduce_money']));
+                $printer->printInColumns(__("满减优惠"), $this->currencyUnit . strval($order['fullreduce_money']));
             }
             $printer->setPrintModes(true, false, false);
-            $printer->printInColumns(__("应收"),  "￥" . strval($order['total_price']));
+            $printer->printInColumns(__("应收"), $this->currencyUnit . strval($order['total_price']));
             $printer->lineFeed();
             $printer->setPrintModes(false, false, false);
             // 
             if ($order->pay_status['value'] == OrderPayStatusEnum::SUCCESS){
                 $printer->appendText("------------------------------------------------\n");
                 $printer->printInColumns(__("支付方式"),  $order['pay_type']['text']);
-                $printer->printInColumns(__("实付金额"), "￥" . strval($order['pay_price']));
+                $printer->printInColumns(__("实付金额"), $this->currencyUnit . strval($order['pay_price']));
             }
             // 
             if ($order->user) {
                 $printer->lineFeed();
                 $printer->appendText("------------------------------------------------\n");
-                $printer->printInColumns(__("会员剩余余额"), "￥" . strval($order->user->balance));
+                $printer->printInColumns(__("会员剩余余额"), $this->currencyUnit . strval($order->user->balance));
                 $pointnum = PointsLogModel::where('user_id', $order->user_id)->where('order_id',$order->order_id)->value("value") ?: 0;
                 $printer->printInColumns(__("本次积分"), strval($pointnum));
             }
@@ -258,7 +266,7 @@ class OrderPrinterService
             $printer->appendText("------------------------------------------------\n");
             foreach ($order['product'] as $key => $product) {
                 $productName = $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : '');
-                $printer->appendText(printText($productName, $product['total_num'] . '',"￥" . $product['total_price'] ,$width, $leftWidth + 2));
+                $printer->appendText(printText($productName, $product['total_num'] . '', $this->currencyUnit . $product['total_price'] ,$width, $leftWidth + 2));
                 if ($product['remark']) {
                     $printer->appendText(printText($product['remark'],'','' ,$width, $leftWidth + 2));
                 }else {
@@ -268,42 +276,42 @@ class OrderPrinterService
             }
             // 
             $printer->appendText("------------------------------------------------\n");
-            $printer->appendText(printText(__("合计金额"),'', "￥" . strval($order['total_price']) ,$width, $leftWidth));
+            $printer->appendText(printText(__("合计金额"),'', $this->currencyUnit . strval($order['total_price']) ,$width, $leftWidth));
             $printer->lineFeed();
             if ($order['setting_service_money'] > 0) { 
-                $printer->appendText(printText(__("服务费"),'', "￥" . strval($order['setting_service_money']) ,$width, $leftWidth));
+                $printer->appendText(printText(__("服务费"),'', $this->currencyUnit . strval($order['setting_service_money']) ,$width, $leftWidth));
                 $printer->lineFeed();
             }
             if ($order['consumption_tax_money'] > 0) { 
-                $printer->appendText(printText(__("消费税"),'', "￥" . strval($order['consumption_tax_money']) ,$width, $leftWidth));
+                $printer->appendText(printText(__("消费税"),'', $this->currencyUnit . strval($order['consumption_tax_money']) ,$width, $leftWidth));
                 $printer->lineFeed();
             }
             if ($order['discount_money'] > 0) { 
-                $printer->appendText(printText(__("优惠折扣"),'', "￥" . strval($order['discount_money']) ,$width, $leftWidth));
+                $printer->appendText(printText(__("优惠折扣"),'', $this->currencyUnit . strval($order['discount_money']) ,$width, $leftWidth));
                 $printer->lineFeed();
             }
             if ($order['user_discount_money'] > 0) { 
-                $printer->appendText(printText(__("会员折扣"),'', "￥" . strval($order['user_discount_money']) ,$width, $leftWidth));
+                $printer->appendText(printText(__("会员折扣"),'', $this->currencyUnit . strval($order['user_discount_money']) ,$width, $leftWidth));
                 $printer->lineFeed();
             }
             if ($order['delivery_type']['value'] == DeliveryTypeEnum::EXPRESS) {
-                $printer->appendText(printText(__("配送费"),'', "￥" . strval($order['express_price']) ,$width, $leftWidth));
+                $printer->appendText(printText(__("配送费"),'', $this->currencyUnit . strval($order['express_price']) ,$width, $leftWidth));
                 $printer->lineFeed();
             }
             if ($order['bag_price'] > 0) {
-                $printer->appendText(printText(__("包装费"),'', "￥" . strval($order['bag_price']) ,$width, $leftWidth));
+                $printer->appendText(printText(__("包装费"),'', $this->currencyUnit . strval($order['bag_price']) ,$width, $leftWidth));
                 $printer->lineFeed();
             }
             if ($order['coupon_money'] > 0) {
-                $printer->appendText(printText(__("优惠券优惠"),'', "￥" . strval($order['coupon_money']) ,$width, $leftWidth));
+                $printer->appendText(printText(__("优惠券优惠"),'', $this->currencyUnit . strval($order['coupon_money']) ,$width, $leftWidth));
                 $printer->lineFeed();
             }
             if ($order['fullreduce_money'] > 0) {
-                $printer->appendText(printText(__("满减优惠"),'', "￥" . strval($order['fullreduce_money']) ,$width, $leftWidth));
+                $printer->appendText(printText(__("满减优惠"),'', $this->currencyUnit . strval($order['fullreduce_money']) ,$width, $leftWidth));
                 $printer->lineFeed();
             }
             $printer->setPrintModes(true, false, false);
-            $printer->appendText(printText(__("应收"),'', "￥" . strval($order['total_price']) ,$width, $leftWidth));
+            $printer->appendText(printText(__("应收"),'', $this->currencyUnit . strval($order['total_price']) ,$width, $leftWidth));
             $printer->lineFeed();
             $printer->setPrintModes(false, false, false);
             // 
@@ -311,14 +319,14 @@ class OrderPrinterService
                 $printer->lineFeed();
                 $printer->appendText("------------------------------------------------\n");
                 $printer->appendText(printText(__("支付方式"),'', $order['pay_type']['text'] ,$width, $leftWidth));
-                $printer->appendText(printText(__("实付金额"),'', "￥" . strval($order['pay_price']) ,$width, $leftWidth));
+                $printer->appendText(printText(__("实付金额"),'', $this->currencyUnit . strval($order['pay_price']) ,$width, $leftWidth));
                 $printer->lineFeed();
             }
             // 
             if ($order->user) {
                 $printer->lineFeed();
                 $printer->appendText("------------------------------------------------\n");
-                $printer->appendText(printText(__("会员剩余余额"), '',  "￥" . strval($order->user?->balance) ,$width, $leftWidth));
+                $printer->appendText(printText(__("会员剩余余额"), '',  $this->currencyUnit . strval($order->user?->balance) ,$width, $leftWidth));
                 $pointnum = PointsLogModel::where('user_id', $order->user_id)->where('order_id',$order->order_id)->value("value") ?: 0;
                 $printer->appendText(printText(__("本次积分"), '',  strval($pointnum) ,$width, $leftWidth));
                 $printer->lineFeed();
@@ -355,47 +363,47 @@ class OrderPrinterService
         foreach ($order['product'] as $key => $product) {
             $productName = $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : '');
             
-            $content .= printText($productName, $product['total_num'], "￥".$product['total_price'], $width, $leftWidth);
+            $content .= printText($productName, $product['total_num'], $this->currencyUnit . strval($product['total_price']), $width, $leftWidth);
             if ($product['remark']) {
                 $content .= '<TEXT x="10" y="180" font="10" w="-1" h="-1" r="0">' . $product['remark'] . '</TEXT><BR><BR>';
             }
         }
         // 
         $content .= "--------------------------------<BR>";
-        $content .= printText(__('合计金额'), '', "￥" . strval($order['total_price'])) . "<BR>";
+        $content .= printText(__('合计金额'), '', $this->currencyUnit . strval($order['total_price'])) . "<BR>";
         if ($order['setting_service_money'] > 0) {
-            $content .= printText(__('服务费'), '', "￥" . strval($order['setting_service_money'])) . "<BR>";
+            $content .= printText(__('服务费'), '', $this->currencyUnit . strval($order['setting_service_money'])) . "<BR>";
         }
         if ($order['consumption_tax_money'] > 0) {
-            $content .= printText(__('消费税'), '', "￥" . strval($order['consumption_tax_money'])) . "<BR>";
+            $content .= printText(__('消费税'), '', $this->currencyUnit . strval($order['consumption_tax_money'])) . "<BR>";
         }
         if ($order['discount_money'] > 0) {
-            $content .= printText(__('优惠折扣'), '', "-￥" . strval($order['discount_money'])) . "<BR>";
+            $content .= printText(__('优惠折扣'), '', $this->currencyUnit . strval($order['discount_money'])) . "<BR>";
         }
         if ($order['user_discount_money'] > 0) {
-            $content .= printText(__('会员折扣'), '', "-￥" . strval($order['user_discount_money'])) . "<BR>";
+            $content .= printText(__('会员折扣'), '', $this->currencyUnit . strval($order['user_discount_money'])) . "<BR>";
         }
         if ($order['delivery_type']['value'] == DeliveryTypeEnum::EXPRESS) {
-            $content .= printText(__('配送费'), '', "-￥" . strval($order['express_price'])) . "<BR>";
+            $content .= printText(__('配送费'), '', $this->currencyUnit . strval($order['express_price'])) . "<BR>";
         }
         if ($order['bag_price'] > 0) {
-            $content .= printText(__('包装费'), '', "-￥" . strval($order['bag_price'])) . "<BR>";
+            $content .= printText(__('包装费'), '', $this->currencyUnit . strval($order['bag_price'])) . "<BR>";
         }
         if ($order['coupon_money'] > 0) {
-            $content .= printText(__('优惠券优惠'), '', "-￥" . strval($order['coupon_money'])) . "<BR>";
+            $content .= printText(__('优惠券优惠'), '', $this->currencyUnit . strval($order['coupon_money'])) . "<BR>";
         }
         if ($order['fullreduce_money'] > 0) {
-            $content .= printText(__('满减优惠'), '', "-￥" . strval($order['fullreduce_money'])) . "<BR>";
+            $content .= printText(__('满减优惠'), '', $this->currencyUnit . strval($order['fullreduce_money'])) . "<BR>";
         }
-        $content .= '<BOLD>' . printText(__('应收'), '', "￥" . strval($order['total_price'])) . "</BOLD><BR>";
+        $content .= '<BOLD>' . printText(__('应收'), '', $this->currencyUnit . strval($order['total_price'])) . "</BOLD><BR>";
         // 
         $content .= '--------------------------------<BR>';
         $content .= printText(__('支付方式'), '', $order['pay_type']['text']) . "<BR>";
-        $content .= printText(__('实付金额'), '', "￥" . strval($order['pay_price'])) . "<BR>";
+        $content .= printText(__('实付金额'), '', $this->currencyUnit . strval($order['pay_price'])) . "<BR>";
         // 
         if ($order->user) {
             $content .= '--------------------------------<BR>';
-            $content .= printText(__('会员剩余余额'), '', "￥" . $order->user->balance) . "<BR>";
+            $content .= printText(__('会员剩余余额'), '', $this->currencyUnit . $order->user->balance) . "<BR>";
             $pointnum = PointsLogModel::where('user_id', $order->user_id)->where('order_id',$order->order_id)->value("value") ?: 0;
             $content .= printText(__('本次积分'), '', $pointnum ) . "<BR>";
         }

@@ -133,11 +133,7 @@ class UserShiftLog extends BaseModel
         $shop_user_id = $params['shop_user_id'] ?? 0;
         //
         $shopUserModel = new User;
-        $shopUser = $shopUserModel->where('shop_user_id', '=', $shop_user_id)->where('cashier_online', '=', 1)->find();
-        if (!$shopUser) {
-            $this->error = '收银员不存在或未交班';
-            return false;
-        }
+        $shopUser = $shopUserModel->where('shop_user_id', '=', $shop_user_id)->find();
         //
         $orderModel = new OrderModel;
         if (isset($params['shop_supplier_id']) && $params['shop_supplier_id']) {
@@ -283,7 +279,7 @@ class UserShiftLog extends BaseModel
             ];
             $this->save($data);
             // 更新收银员在线状态
-            $shopUser->update(['cashier_online' => 0, 'cashier_login_time' => 0]);
+            // $shopUser->update(['cashier_online' => 0, 'cashier_login_time' => 0]);
             $this->commit();
             // 打印
             $printerConfig = SettingModel::getSupplierItem('printer', $this->shop_supplier_id, $this->app_id);
