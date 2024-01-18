@@ -864,7 +864,7 @@ class Cart extends CartModel
         if ($table_id > 0) {
             // 计算订单会员优惠后价格
             $order = (new OrderModel())->getOrderInfo($table_id);
-            $order_arr = self::preReloadPriceByOrder($order, $user);
+            $order_arr = self::prePriceByOrder($order, $user);
             // 桌台服务费
             $serviceType = $order['supplier']['serviceType'];
             $service_money = $order['supplier']['service_money'];
@@ -878,17 +878,17 @@ class Cart extends CartModel
                 ->where('table_id', '=', $table_id)
                 ->where('is_stay', '=', 0)
                 ->select();
-            $cart_arr = self::preReloadPriceByCart($cartList, $user);
+            $cart_arr = self::prePriceByCart($cartList, $user);
         } else if ($order_id > 0) {
             $order = OrderModel::detail($order_id);
-            $order_arr = self::preReloadPriceByOrder($order, $user);
+            $order_arr = self::prePriceByOrder($order, $user);
             // 计算购物车会员优惠后价格
             $cartList = (new static())->with('product')
                 ->where('shop_supplier_id', '=', $shop_supplier_id)
                 ->where('order_id', '=', $order_id)
                 ->where('is_stay', '=', 0)
                 ->select();
-            $cart_arr = self::preReloadPriceByCart($cartList, $user);
+            $cart_arr = self::prePriceByCart($cartList, $user);
         } else {
             $order_arr = [
                 'order_total_product_price' => 0,
@@ -901,7 +901,7 @@ class Cart extends CartModel
                 ->where('table_id', '=', 0)
                 ->where('is_stay', '=', 0)
                 ->select();
-            $cart_arr = self::preReloadPriceByCart($cartList, $user);
+            $cart_arr = self::prePriceByCart($cartList, $user);
         }
 
         // 订单 + 购物车 总计
@@ -931,7 +931,7 @@ class Cart extends CartModel
     }
 
     // 预算订单会员优惠后价格
-    public static function preReloadPriceByOrder($order, $user)
+    public static function prePriceByOrder($order, $user)
     {
         $pay_money = 0;
         $order_price = 0;
@@ -939,12 +939,6 @@ class Cart extends CartModel
 
         if ($order) {
             foreach ($order['product'] as $product) {
-                // 标记参与会员折扣
-                $is_user_grade = false;
-                // 会员等级抵扣的金额
-                $grade_ratio = 0;
-                // 会员折扣的商品单价
-                $grade_product_price = 0;
                 // 会员折扣的总额差
                 $grade_total_money = 0;
                 if ($product->product['is_enable_grade'] && $product['total_price'] > 0) {
@@ -1037,7 +1031,7 @@ class Cart extends CartModel
     }
 
     // 预算购物车会员优惠后价格
-    public static function preReloadPriceByCart($cartList, $user = null)
+    public static function prePriceByCart($cartList, $user = null)
     {
         $pay_money = 0;
         $order_price = 0;
@@ -1047,12 +1041,8 @@ class Cart extends CartModel
         trace($cartList);
         trace('======');
         foreach ($cartList as $product) {
-            // 标记参与会员折扣
-            $is_user_grade = false;
             // 会员等级抵扣的金额
             $grade_ratio = 0;
-            // 会员折扣的商品单价
-            $grade_product_price = 0;
             // 会员折扣的总额差
             $grade_total_money = 0;
             if ($product->product['is_enable_grade'] && $product['price'] > 0) {
