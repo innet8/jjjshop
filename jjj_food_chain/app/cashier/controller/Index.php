@@ -29,7 +29,7 @@ class Index extends Controller
     {
         $user = $this->cashier;
         // 货币信息
-        $currency = SettingModel::getItem('currency');
+        $currency = SettingModel::getSupplierItem('currency', $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
         $user['currency'] = [
             'unit' => $currency['unit'],
             'is_open' => $currency['is_open'],

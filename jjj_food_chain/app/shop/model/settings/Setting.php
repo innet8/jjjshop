@@ -76,4 +76,19 @@ class Setting extends SettingModel
         return true;
     }
 
+    /**
+     * 获取货币信息
+     */
+    public static function getCurrency($shop_supplier_id = 0, $app_id = null)
+    {
+        $currency = static::getSupplierItem('currency', $shop_supplier_id, $app_id);
+        return [
+            'unit' => $currency['unit'],
+            'is_open' => $currency['is_open'],
+            'vices' => [
+                'vice_unit' => $currency['vice_unit'],
+                'unit_rate' => $currency['unit_rate'],
+            ],
+        ];
+    }
 }
