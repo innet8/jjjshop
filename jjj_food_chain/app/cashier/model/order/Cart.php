@@ -758,12 +758,14 @@ class Cart extends CartModel
             $cartList = (new static())->with('product')
                 ->where('cashier_id', '=', $cashier['cashier_id'])
                 ->where('order_id', '=', $order_id)
+                ->where('is_stay', '=', 0)
                 ->select();
         } else if($table_id > 0){
             // 购物车商品列表
             $cartList = (new static())->with('product')
                 ->where('cashier_id', '=', $cashier['cashier_id'])
                 ->where('table_id', '=', $table_id)
+                ->where('is_stay', '=', 0)
                 ->select();
             // 是否存在订单
             $order = OrderModel::detail([
@@ -775,6 +777,8 @@ class Cart extends CartModel
             $cartList = (new static())->with('product')
                 ->where('cashier_id', '=', $cashier['cashier_id'])
                 ->where('table_id', '=', 0)
+                ->where('order_id', '=', 0)
+                ->where('is_stay', '=', 0)
                 ->select();
             // 是否存在订单
             $order = null;
