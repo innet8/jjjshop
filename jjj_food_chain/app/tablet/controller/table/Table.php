@@ -39,4 +39,20 @@ class Table extends Controller
         }
         return $this->renderSuccess('绑定桌台成功');
     }
+
+    /**
+     * @Apidoc\Title("解绑桌台")
+     * @Apidoc\Desc("解绑桌台")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌号ID")
+     * @Apidoc\Url("/index.php/tablet/table.table/unbind")
+     */
+    public function unbind($table_id)
+    {
+        $model = new TableModel;
+        if (!$model->unbindTable($this->table['shop_supplier_id'], $table_id)) {
+            return $this->renderError($model->getError() ?: '解绑失败');
+        }
+        return $this->renderSuccess('解绑成功');
+    }
 }

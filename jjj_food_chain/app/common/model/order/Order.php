@@ -965,7 +965,7 @@ class Order extends BaseModel
     }
 
     /**
-     * 重新计算订单价格信息（服务费+消费税+会员折扣）（折扣抹零计算重置
+     * 重新计算订单价格信息（服务费+消费税+会员折扣）（折扣抹零计算重置)
      * @param $order_id     // 订单ID
      * @param $re_order_no  // 是否重新生成订单号（用于加菜打印后）
      * @return void
