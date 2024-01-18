@@ -455,6 +455,11 @@ function checkDetect(): string
         return parse_accept_language($langSet);
     }
 
+    // 定时检测交班打印语言获取
+    if (isset($GLOBALS["EVENT_SHIFT_LANGUAGE"]) && $GLOBALS["EVENT_SHIFT_LANGUAGE"]) {
+        return isset($GLOBALS["SHIFT_LANGUAGE"]) ? $GLOBALS["SHIFT_LANGUAGE"] : 'en';
+    }
+
     return '';
 }
 

@@ -47,7 +47,8 @@ class Order extends BaseModel
         'order_source_text',
         'order_type_text',
         'deliver_text',
-        'elapsed_time'
+        'elapsed_time',
+        'pay_time_text'
     ];
 
     /**
@@ -114,6 +115,12 @@ class Order extends BaseModel
         $generateTime = $data['create_time'];
         // 返回时间长度
         return $currentTime - $generateTime;
+    }
+
+    // 支付时间格式化
+    public function getPayTimeTextAttr($value, $data){
+
+        return isset($data['pay_time']) ? format_time_his(strtotime($data['pay_time'])) : '';
     }
 
     /**

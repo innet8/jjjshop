@@ -2,6 +2,7 @@
 
 namespace app\common\model\shop;
 
+use think\facade\Cache;
 use app\common\library\helper;
 use app\common\model\BaseModel;
 use app\common\model\store\PayType;
@@ -114,11 +115,11 @@ class UserShiftLog extends BaseModel
             ->field("c.name, count(a.order_id) as sales, sum(a.pay_price - a.refund_money) as prices")
             ->select()
             ->append([])?->toArray();
-        // 
+        //
         foreach ($datas as $key => $data){
             $datas[$key]['name_text'] = Category::getNameTextAttr($data['name'] ?: '');
         }
-        // 
+        //
         return $datas;
     }
 
@@ -154,7 +155,7 @@ class UserShiftLog extends BaseModel
         $previous_shift_cash = $lastRecord ? $lastRecord->cash_left : 0;
         // 当前钱箱现金总计(现金收入+上一班遗留备用金)
         $cash_income = (clone $orderModel)->where('pay_type', 10)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0;
-        // 
+        //
         $incomes = [];
         $payTypes = PayType::getEnableListAll($shop_user_id, self::$app_id);
         $totalIncome = 0;
@@ -173,7 +174,7 @@ class UserShiftLog extends BaseModel
                 ];
             }
         }
-        // 
+        //
         $totalIncome = number_format($totalIncome, 2);
         return [
             'shift_user_id' => $params['shop_user_id'] ?? 0, // 交班人id
@@ -239,7 +240,7 @@ class UserShiftLog extends BaseModel
         }
         $this->startTrans();
         try {
-            // 
+            //
             $incomes = [];
             $payTypes = PayType::getEnableListAll($shop_user_id, self::$app_id);
             $totalIncome = 0;
@@ -257,7 +258,7 @@ class UserShiftLog extends BaseModel
                     ];
                 }
             }
-            // 
+            //
             $data = [
                 'shift_user_id' => $params['shop_user_id'] ?? 0, // 交班人id
                 'shift_no' => generateNumber(), // 交班编号
@@ -279,11 +280,13 @@ class UserShiftLog extends BaseModel
             ];
             $this->save($data);
             // 更新收银员在线状态
-            // $shopUser->update(['cashier_online' => 0, 'cashier_login_time' => 0]);
+            $shopUser->update(['cashier_online' => 0, 'cashier_login_time' => 0]);
             $this->commit();
             // 打印
             $printerConfig = SettingModel::getSupplierItem('printer', $this->shop_supplier_id, $this->app_id);
             $res = (new OrderHandoverPrinterService)->cashierPrint($printerConfig, $this);
+            // 语言缓存，用于打印
+            Cache::set('language_' . $this->shop_supplier_id . '_' . $this->app_id, checkDetect(), 86400);
             if ($res) {
                 $this->is_printed = 1;
                 $this->save();
