@@ -9,7 +9,7 @@
                     <el-table-column prop="printer_id" label="ID"></el-table-column>
                     <el-table-column prop="printer_name" :label="$t('打印名称')"></el-table-column>
                     <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
-                    <el-table-column fixed="right" label="操作" width="120">
+                    <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">
                             <el-button @click="previewClick(scope.row)" type="primary" link size="small"
                                 v-auth="'/setting/printer/edit'">{{ $t('预览') }}</el-button>

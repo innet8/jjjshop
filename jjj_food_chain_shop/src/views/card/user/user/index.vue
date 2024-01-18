@@ -60,7 +60,7 @@
                     <el-table-column prop="mobile" :label="$t('手机号')"></el-table-column>
                     <el-table-column prop="birthday" :label="$t('生日')"></el-table-column>
                     <el-table-column prop="create_time" :label="$t('添加时间')" width="140"></el-table-column>
-                    <el-table-column fixed="right" :label="$t('操作')" width="160">
+                    <el-table-column fixed="right" :label="$t('操作')" width="180">
                         <template #default="scope">
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
                                 v-auth="'/user/user/edit'">{{ $t('编辑') }}</el-button>

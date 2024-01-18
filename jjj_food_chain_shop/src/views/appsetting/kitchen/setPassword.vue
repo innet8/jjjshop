@@ -1,6 +1,6 @@
 <template>
     <el-dialog class="" @close="handleClose" v-model="dialogVisible" :close-on-click-modal="false"
-        :close-on-press-escape="false" :title="$t('设置平板密码')">
+        :close-on-press-escape="false" :title="$t('设置厨显密码')">
         <el-form size="small" ref="form" :model="form" label-position="top" :rules="rules">
             <el-form-item v-if="have" :label="$t('原密碼')" prop="advanced_password"
                 :rules="[{ required: true, message: $t('请输入原密碼') }]">
@@ -62,7 +62,7 @@ export default {
             self.$refs.form.validate((valid) => {
                 if (valid) {
                     self.loading = true;
-                    Terminal.editAdvancedPassword(form, true)
+                    Terminal.editKitchenAdvancedPassword(form, true)
                         .then(data => {
                             self.loading = false;
                             ElMessage({

@@ -1,7 +1,7 @@
 <template >
     <div class="salb">
         <el-form size="small" ref="form" :model="form" label-position="top">
-            <el-form-item :label="$t('轮播内容')" prop="image" :rules="[{ required: true, message: $t(' ') }]">
+            <el-form-item :label="$t('轮播内容')" prop="image" :rules="[{ required: true, message: '' }]">
                 <div class="draggable-list">
                     <flieUpload  @upLoad="upLoad"></flieUpload>
                     <el-table size="small" :data="form.carousel" border style="width: 100%" v-loading="loading">
@@ -29,14 +29,14 @@
                 </div>
             </el-form-item>
 
-            <el-form-item :label="$t('呼叫服务员：')" :rules="[{ required: true, message: $t(' ') }]">
+            <el-form-item :label="$t('呼叫服务员：')" :rules="[{ required: true, message: '' }]">
                 <el-radio-group v-model="form.is_call_service">
                     <el-radio label="1">{{ $t('开') }}</el-radio>
                     <el-radio label="0">{{ $t('关') }}</el-radio>
                 </el-radio-group>
             </el-form-item>
 
-            <el-form-item :label="$t('顾客可开桌：')" :rules="[{ required: true, message: $t(' ') }]">
+            <el-form-item :label="$t('顾客可开桌：')" :rules="[{ required: true, message: '' }]">
                 <el-radio-group v-model="form.is_customer_order">
                     <el-radio label="1">{{ $t('开') }}</el-radio>
                     <el-radio label="0">{{ $t('关') }}</el-radio>
@@ -49,7 +49,7 @@
                 <el-input style="width: 100px;" v-model="form.server.port"></el-input>
             </el-form-item>
 
-            <el-form-item :label="$t('高级设置密码')" prop="password" :rules="[{ required: true, message: $t('') }]">
+            <el-form-item :label="$t('高级设置密码')" prop="password" :rules="[{ required: true, message: '' }]">
                 <el-input class="max-w460" v-model="password" type="password" disabled></el-input>
                 <el-button @click="setPassword" type="primary" link size="small">{{ $t('设置密码') }}</el-button>
             </el-form-item>

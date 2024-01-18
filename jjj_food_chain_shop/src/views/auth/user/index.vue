@@ -7,7 +7,7 @@
     <div class="user">
         <!--添加管理员-->
         <div class="common-level-rail"><el-button size="small" type="primary" icon="Plus" @click="addClick"
-                v-auth="'/auth/user/add'">添加管理员</el-button></div>
+                v-auth="'/auth/user/add'">{{$t('添加管理员')}}</el-button></div>
 
         <!--内容-->
         <div class="product-content">
@@ -38,11 +38,11 @@
                     <el-table-column fixed="right" label="操作" width="120">
                         <template #default="scope">
                             <el-button v-if="scope.row.is_super < 1" @click="editClick(scope.row)" type="primary" link
-                                size="small" v-auth="'/auth/user/edit'">编辑</el-button>
+                                size="small" v-auth="'/auth/user/edit'">{{$t('编辑')}}</el-button>
                             <el-button
                                 v-if="scope.row.is_super < 1 || (scope.row.is_super == 1 && scope.row.user_type == 1)"
                                 @click="deleteClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/auth/user/delete'">删除</el-button>
+                                v-auth="'/auth/user/delete'">{{$t('删除')}}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -183,9 +183,9 @@ export default {
         /*删除*/
         deleteClick(row) {
             let self = this;
-            ElMessageBox.confirm('此操作将永久删除该记录, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            ElMessageBox.confirm($t('此操作将永久删除该记录, 是否继续?'), $t('提示'), {
+                confirmButtonText: $t('确定'),
+                cancelButtonText: $t('取消'),
                 type: 'warning'
             })
                 .then(() => {
@@ -199,7 +199,7 @@ export default {
                             self.loading = false;
                             if (data.code == 1) {
                                 ElMessage({
-                                    message: '恭喜你，该管理员删除成功',
+                                    message: $t('恭喜你，该管理员删除成功'),
                                     type: 'success'
                                 });
                                 //刷新页面
