@@ -279,7 +279,7 @@ class Order extends OrderModel
                 ]);
             }
             // 退菜记录
-            if ($num > 0 && $return_reason) {
+            if ($num > 0) {
                 OrderProductReturn::add([
                     'order_id' => $this['order_id'],
                     'order_product_id' => $order_product_id,
