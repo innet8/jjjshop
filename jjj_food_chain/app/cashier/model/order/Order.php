@@ -5,6 +5,7 @@ namespace app\cashier\model\order;
 use think\facade\Log;
 use app\common\library\helper;
 use app\common\model\store\PayType;
+use app\shop\model\product\Category;
 use app\api\model\order\OrderProduct;
 use app\common\model\supplier\Supplier;
 use app\common\enum\order\OrderTypeEnum;
@@ -12,13 +13,13 @@ use app\common\enum\order\OrderSourceEnum;
 use app\common\enum\order\OrderStatusEnum;
 use app\common\enum\order\OrderPayTypeEnum;
 use app\common\enum\order\OrderPayStatusEnum;
+use app\common\model\order\OrderProductReturn;
 use app\common\model\order\Order as OrderModel;
 use app\cashier\model\store\Table as TableModel;
 use app\common\service\order\OrderRefundService;
 use app\common\service\order\OrderCompleteService;
 use app\common\service\product\factory\ProductFactory;
 use app\cashier\service\order\paysuccess\type\MasterPaySuccessService;
-use app\shop\model\product\Category;
 
 /**
  * 普通订单模型
@@ -51,7 +52,7 @@ class Order extends OrderModel
         if (isset($params['order_type']) && $params['order_type']) {
             $model = $model->where('order_type', '=', $params['eat_type']);
         }
-        
+
 
         $startTime = 0;
         $endTime = 0;
@@ -314,7 +315,7 @@ class Order extends OrderModel
     }
 
     //退菜
-    public function moveProduct($order_product_id, $num)
+    public function moveProduct($order_product_id, $num, $return_reason = '')
     {
         if ($this['order_status']['value'] != 10) {
             $this->error = "订单已完成,不允许退菜";
@@ -340,6 +341,16 @@ class Order extends OrderModel
                 $total_num = $orderProduct['total_num'] - $num;
                 $orderProduct->save([
                     'total_num' => $total_num,
+                ]);
+            }
+            // 退菜记录
+            if ($num > 0 && $return_reason) {
+                OrderProductReturn::add([
+                    'order_id' => $this['order_id'],
+                    'order_product_id' => $order_product_id,
+                    'product_id' => $orderProduct['product_id'],
+                    'num' => $num,
+                    'reason' => $return_reason,
                 ]);
             }
             //
@@ -458,7 +469,7 @@ class Order extends OrderModel
             ->where('a.pay_status', '=', OrderPayStatusEnum::SUCCESS)
             ->where('a.order_status', '=', OrderStatusEnum::COMPLETED)
             ->where('a.eat_type', '<>', 0);
-        // 
+        //
         $incomes = [];
         $payTypes = PayType::getEnableListAll($params['shop_supplier_id'], self::$app_id);
         foreach ($payTypes as $payType){
@@ -471,12 +482,12 @@ class Order extends OrderModel
                 ];
             }
         }
-        // 
+        //
         $categorys = (clone $model)->group("c.category_id")->field("c.name, count(a.order_id) as sales, sum(a.pay_price - a.refund_money) as prices")->select()->append([])?->toArray();
         foreach ($categorys as $key => $data){
             $categorys[$key]['name_text'] = Category::getNameTextAttr($data['name'] ?: '');
         }
-        // 
+        //
         return [
             'supplier' => Supplier::field('shop_supplier_id,business_id,name,address,description,link_name,link_phone,logo,app_id')
                 ->where('shop_supplier_id', $params['shop_supplier_id'] ?? 0 )
@@ -484,9 +495,9 @@ class Order extends OrderModel
             'categorys' => $categorys,
             'sales_num' => (clone $model)->count(),
             'incomes' => $incomes,
-            'refund_amount' => number_format((clone $model)->sum("refund_money"), 2, '.', ''), 
-            'total_amount' => number_format((clone $model)->sum("pay_price"), 2, '.', ''), 
-            'times' => [$startTime, $endTime], 
+            'refund_amount' => number_format((clone $model)->sum("refund_money"), 2, '.', ''),
+            'total_amount' => number_format((clone $model)->sum("pay_price"), 2, '.', ''),
+            'times' => [$startTime, $endTime],
         ];
     }
 
