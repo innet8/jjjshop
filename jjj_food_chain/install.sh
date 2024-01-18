@@ -24,7 +24,9 @@ install() {
         echo "Clone jjjshop fail"
     else
         cd jjj_food_chain
-        chmod +x ./lanp-install.sh install
+        chmod +x ./lanp-install.sh
+        ./lanp-install.sh install
     fi
 }
 install
+
