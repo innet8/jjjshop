@@ -4,72 +4,74 @@
         <!--form表单-->
         <el-form size="small" ref="form" :model="form" label-position="top">
             <!--添加门店-->
-            <el-form-item label="名称" prop="name" :rules="[{ required: true, message: ' ' }]"><el-input v-model="form.name"
-                    ></el-input></el-form-item>
-            <el-form-item label="是否开启">
+            <el-form-item :label="$t('名称')" prop="name" :rules="[{ required: true, message: ' ' }]"><el-input
+                    v-model="form.name"></el-input></el-form-item>
+            <el-form-item :label="$t('是否开启')">
                 <div>
-                    <el-radio v-model="form.is_open" :label="1">开启</el-radio>
-                    <el-radio v-model="form.is_open" :label="0">关闭</el-radio>
+                    <el-radio v-model="form.is_open" :label="1">{{ $t('开启') }}</el-radio>
+                    <el-radio v-model="form.is_open" :label="0">{{ $t('关闭') }}</el-radio>
                 </div>
             </el-form-item>
-            <el-form-item label="打印类型">
+            <el-form-item :label="$t('打印类型')">
                 <div>
-                    <el-radio @change="form.printer_id = ''" v-model="form.type" :label="10">小票打印</el-radio>
-                    <el-radio @change="form.printer_id = ''" v-model="form.type" :label="20">标签打印</el-radio>
+                    <el-radio @change="form.printer_id = ''" v-model="form.type" :label="10">{{ $t('小票打印') }}</el-radio>
+                    <el-radio @change="form.printer_id = ''" v-model="form.type" :label="20">{{ $t('标签打印') }}</el-radio>
                 </div>
             </el-form-item>
-            <el-form-item label="用餐类型">
+            <el-form-item :label="$t('用餐类型')">
                 <div>
-                    <el-radio @change="form.category_id = []" v-model="form.product_type" :label="0">配送打印</el-radio>
-                    <el-radio @change="form.category_id = []" v-model="form.product_type" :label="1">店内打印</el-radio>
+                    <el-radio @change="form.category_id = []" v-model="form.product_type"
+                        :label="0">{{ $t('配送打印') }}</el-radio>
+                    <el-radio @change="form.category_id = []" v-model="form.product_type"
+                        :label="1">{{ $t('店内打印') }}</el-radio>
                 </div>
             </el-form-item>
-            <el-form-item label="打印模式">
+            <el-form-item :label="$t('打印模式')">
                 <div>
-                    <el-radio v-model="form.print_type" :label="10">付款打印</el-radio>
-                    <el-radio v-model="form.print_type" :label="20">下单打印</el-radio>
+                    <el-radio v-model="form.print_type" :label="10">{{ $t('付款打印') }}</el-radio>
+                    <el-radio v-model="form.print_type" :label="20">{{ $t('下单打印') }}</el-radio>
                 </div>
             </el-form-item>
-            <el-form-item label="打印方式">
+            <el-form-item :label="$t('打印方式')">
                 <div>
-                    <el-radio v-model="form.print_method" :label="10">整单打印</el-radio>
-                    <el-radio v-model="form.print_method" :label="20">按商品分组打印</el-radio>
-                    <el-radio v-model="form.print_method" :label="30">按标签打印</el-radio>
+                    <el-radio v-model="form.print_method" :label="10">{{ $t('整单打印') }}</el-radio>
+                    <el-radio v-model="form.print_method" :label="20">{{ $t('按商品分组打印') }}</el-radio>
+                    <el-radio v-model="form.print_method" :label="30">{{ $t('按标签打印') }}</el-radio>
                 </div>
             </el-form-item>
-            <el-form-item v-if="form.type == 10" label="打印机 " prop="printer_id" :rules="[{ required: true, message: ' ' }]">
-                <el-select v-model="form.printer_id" placeholder="请选择">
+            <el-form-item v-if="form.type == 10" :label="$t('打印机') " prop="printer_id" :rules="[{ required: true, message: ' ' }]">
+                <el-select v-model="form.printer_id" :placeholder="$t('请选择')">
                     <el-option v-for="(item, index) in type" :key="index" :label="item.printer_name"
                         :value="item.printer_id"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item v-if="form.type == 20" label="打印机 " prop="printer_id" :rules="[{ required: true, message: ' ' }]">
-                <el-select v-model="form.printer_id" placeholder="请选择">
+            <el-form-item v-if="form.type == 20" :label="$t('打印机') " prop="printer_id" :rules="[{ required: true, message: ' ' }]">
+                <el-select v-model="form.printer_id" :placeholder="$t('请选择')">
                     <el-option v-for="(item, index) in typeTag" :key="index" :label="item.printer_name"
                         :value="item.printer_id"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item v-if="form.product_type == 0 && form.print_method == 20" label="商品分组" prop="category_id"
+            <el-form-item v-if="form.product_type == 0 && form.print_method == 20" :label="$t('商品分组')" prop="category_id"
                 :rules="[{ required: true, message: ' ' }]">
-                <el-select v-model="form.category_id" multiple placeholder="请选择">
+                <el-select v-model="form.category_id" multiple :placeholder="$t('请选择')">
                     <el-option v-for="item in takeList" :key="item.category_id" :label="item.name"
                         :value="item.category_id + ''"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item v-if="form.product_type == 1 && form.print_method == 20" label="商品分组" prop="category_id"
+            <el-form-item v-if="form.product_type == 1 && form.print_method == 20" :label="$t('商品分组')" prop="category_id"
                 :rules="[{ required: true, message: ' ' }]">
-                <el-select v-model="form.category_id" multiple placeholder="请选择">
+                <el-select v-model="form.category_id" multiple :placeholder="$t('请选择')">
                     <el-option v-for="item in storeList" :key="item.category_id" :label="item.name"
                         :value="item.category_id + ''"></el-option>
                 </el-select>
             </el-form-item>
 
-            <el-form-item v-if="form.print_method == 30" label="打印标签" prop="label_id">
-                <el-select v-model="form.label_id" multiple placeholder="请选择">
+            <el-form-item v-if="form.print_method == 30" :label="$t('打印标签')" prop="label_id">
+                <el-select v-model="form.label_id" multiple :placeholder="$t('请选择')">
                     <el-option v-for="item in labelList" :key="item.label_id" :label="item.label_name"
                         :value="item.label_id + ''"></el-option>
                 </el-select>
-                <div class="tips">不选择打印全部</div>
+                <div class="tips">{{ $t('不选择打印全部') }}</div>
             </el-form-item>
 
 
@@ -144,7 +146,7 @@ export default {
                                 message: '恭喜你，添加成功',
                                 type: 'success'
                             });
-                            this.$emit('close',1)
+                            this.$emit('close', 1)
                         })
                         .catch(error => {
                             self.loading = false;

@@ -6,7 +6,7 @@
     -->
   <div class="user">
     <div class="common-level-rail">
-      <el-button size="small" type="primary" icon="Plus" @click="addClick" v-auth="'/auth/role/add'">添加角色</el-button>
+      <el-button size="small" type="primary" icon="Plus" @click="addClick" v-auth="'/auth/role/add'">{{$t('添加角色')}}</el-button>
     </div>
 
     <!--内容-->
@@ -14,13 +14,13 @@
       <div class="table-wrap">
         <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
           <el-table-column prop="role_id" label="ID"></el-table-column>
-          <el-table-column prop="role_name_h1" label="角色名称"></el-table-column>
-          <el-table-column prop="sort" label="排序"></el-table-column>
-          <el-table-column prop="create_time" label="添加时间"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="120">
+          <el-table-column prop="role_name_h1" :label="$t('角色名称')"></el-table-column>
+          <el-table-column prop="sort" :label="$t('排序')"></el-table-column>
+          <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
+          <el-table-column fixed="right" :label="$t('操作')" width="120">
             <template #default="scope">
-              <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/auth/role/edit'">编辑</el-button>
-              <el-button @click="deleteClick(scope.row)" type="primary" link size="small" v-auth="'/auth/role/delete'">删除</el-button>
+              <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/auth/role/edit'">{{$t('编辑')}}</el-button>
+              <el-button @click="deleteClick(scope.row)" type="primary" link size="small" v-auth="'/auth/role/delete'">{{$t('删除')}}</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -130,9 +130,9 @@ export default {
     /*删除*/
     deleteClick(row) {
       let self = this;
-      ElMessageBox.confirm('此操作将永久删除该记录, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+      ElMessageBox.confirm($t('此操作将永久删除该记录, 是否继续?'), $t('提示'), {
+          confirmButtonText: $t('确定'),
+          cancelButtonText: $t('取消'),
           type: 'warning'
         })
         .then(() => {

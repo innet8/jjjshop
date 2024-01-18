@@ -570,6 +570,8 @@ class Setting extends BaseModel
                         'ip' => '',
                         'port' => '',
                     ],
+                    // 高级设置密码
+                    'advanced_password' => '',
                     'is_wait_color' => '0', // 是否开启等待时长颜色
                     // 时长颜色 10分钟-黄色#ffff00 20分钟-红色#ff0000
                     'wait_color' => [],

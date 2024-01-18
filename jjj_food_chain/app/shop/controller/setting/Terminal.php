@@ -190,6 +190,7 @@ class Terminal extends Controller
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/shop/setting.Terminal/kitchen")
      * @Apidoc\Param("server", type="array", require=true, desc="厨显服务器连接")
+     * @Apidoc\Param("advanced_password", type="int", require=true, default=0, desc="高级设置密码")
      * @Apidoc\Param("is_wait_color", type="int", require=true, default=0, desc="是否开启等待颜色 0-关闭 1-开启")
      * @Apidoc\Param("wait_color", type="array", require=true, desc="等待颜色")
      * @Apidoc\Param("language", type="array", require=true, desc="常用语言")
@@ -228,6 +229,41 @@ class Terminal extends Controller
         return $this->renderError($model->getError() ?: '操作失败');
     }
 
+    /**
+     * @Apidoc\Title("厨显端-设置密码")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/setting.Terminal/editKitchenAdvancedPassword")
+     * @Apidoc\Param("advanced_password", type="string", require=true, default="", desc="高级设置密码")
+     * @Apidoc\Param("new_advanced_password", type="string", require=true, default="", desc="新密码")
+     * @Apidoc\Param("confirm_advanced_password", type="string", require=true, default="", desc="确认密码")
+     * @Apidoc\Returned()
+     */
+    public function editKitchenAdvancedPassword()
+    {
+        $model = new SettingModel;
+        $data = $this->request->param();
+        //
+        $setting = SettingModel::getItem(SettingEnum::KITCHEN);
+        if (empty($data['advanced_password']) && !empty($setting['advanced_password'])) {
+            return $this->renderError('请输入原密码');
+        }
+        if ($setting['advanced_password'] != $data['advanced_password']) {
+            return $this->renderError('原密码错误');
+        }
+        //
+        if (empty($data['new_advanced_password']) || empty($data['confirm_advanced_password'])) {
+            return $this->renderError('请输入新密码');
+        }
+        if ($data['new_advanced_password'] != $data['confirm_advanced_password']) {
+            return $this->renderError('两次密码不一致');
+        }
+        $setting['advanced_password'] = $data['new_advanced_password'];
+        $shop_supplier_id = $this->store['user']['shop_supplier_id'];
+        if ($model->edit(SettingEnum::KITCHEN, $setting, $shop_supplier_id)) {
+            return $this->renderSuccess('操作成功');
+        }
+        return $this->renderError($model->getError() ?: '操作失败');
+    }
 
 
     /**
@@ -249,6 +285,14 @@ class Terminal extends Controller
         }
         // 平板端高级设置密码
         if ($key == SettingEnum::TABLET) {
+            if (!empty($ret['advanced_password'])) {
+                $ret['advanced_password'] = true;
+            }else{
+                $ret['advanced_password'] = false;
+            }
+        }
+        // 厨显端高级设置密码
+        if ($key == SettingEnum::KITCHEN) {
             if (!empty($ret['advanced_password'])) {
                 $ret['advanced_password'] = true;
             }else{

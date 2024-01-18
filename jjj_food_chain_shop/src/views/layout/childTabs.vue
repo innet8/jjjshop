@@ -1,7 +1,7 @@
 <template >
     <div class="el-tabs-container">
         <el-tabs :model-value="activeValue" @tab-click="tabClick">
-            <el-tab-pane :label="$t(item.value)" :name="item.key" v-for="(item, index) in tabList" :key="index"></el-tab-pane>
+            <el-tab-pane :label="item.value" :name="item.key" v-for="(item, index) in tabList" :key="index"></el-tab-pane>
         </el-tabs>
     </div>
 </template>

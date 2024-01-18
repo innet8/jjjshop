@@ -8,33 +8,33 @@
 
         <!--添加等级-->
         <div class="common-level-rail"><el-button size="small" type="primary" @click="addClick"
-                v-auth="'/supplier/printing/add'">添加</el-button></div>
+                v-auth="'/supplier/printing/add'">{{ $t('添加') }}</el-button></div>
 
         <!--内容-->
         <div class="product-content">
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
                     <el-table-column prop="id" label="ID"></el-table-column>
-                    <el-table-column prop="name" label="名称"></el-table-column>
-                    <el-table-column prop="printer.printer_name" label="打印机名称"></el-table-column>
-                    <el-table-column prop="printer.printer_type.text" label="打印机类型"></el-table-column>
-                    <el-table-column prop="product_type" label="打印类型	">
+                    <el-table-column prop="name" :label="$t('名称')"></el-table-column>
+                    <el-table-column prop="printer.printer_name" :label="$t('打印机名称')"></el-table-column>
+                    <el-table-column prop="printer.printer_type.text" :label="$t('打印机类型')"></el-table-column>
+                    <el-table-column prop="product_type" :label="$t('打印类型')">
                         <template #default="scope">
-                            <div>{{ scope.row.type == 10 ? '小票打印' : '标签打印' }}</div>
+                            <div>{{ scope.row.type == 10 ? $t('小票打印') : $t('标签打印') }}</div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="is_open" label="状态">
+                    <el-table-column prop="is_open" :label="$t('状态')">
                         <template #default="scope">
-                            <div>{{ scope.row.is_open == 0 ? '关闭' : '开启' }}</div>
+                            <div>{{ scope.row.is_open == 0 ? $t('关闭') : $t('开启') }}</div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="create_time" label="添加时间"></el-table-column>
-                    <el-table-column fixed="right" label="操作" width="120">
+                    <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
+                    <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/supplier/printing/edit'">编辑</el-button>
+                                v-auth="'/supplier/printing/edit'">{{ $t('编辑') }}</el-button>
                             <el-button @click="deleteClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/supplier/printing/delete'">删除</el-button>
+                                v-auth="'/supplier/printing/delete'">{{ $t('删除') }}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -48,8 +48,10 @@
             </div>
         </div>
 
-        <add v-if="open_add" :open_add="open_add" @close="(e) => { open_add = false; if(e==1){ this.getData();} }"></add>
-        <edit v-if="open_edit" :open_edit="open_edit" :editId="editId" @close="(e) => { open_edit = false; if(e==1){ this.getData();} }"></edit>
+        <add v-if="open_add" :open_add="open_add" @close="(e) => { open_add = false; if (e == 1) { this.getData(); } }">
+        </add>
+        <edit v-if="open_edit" :open_edit="open_edit" :editId="editId"
+            @close="(e) => { open_edit = false; if (e == 1) { this.getData(); } }"></edit>
     </div>
 </template>
 
@@ -134,9 +136,9 @@ export default {
         /*删除用户*/
         deleteClick(row) {
             let self = this;
-            ElMessageBox.confirm('此操作将永久删除该记录, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            ElMessageBox.confirm($t('此操作将永久删除该记录, 是否继续?'), $t('提示'), {
+                confirmButtonText: $t('确定'),
+                cancelButtonText: $t('取消'),
                 type: 'warning'
             })
                 .then(() => {

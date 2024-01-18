@@ -2,7 +2,7 @@
     <!--
     	描述：商品-加料库-添加加料
     -->
-    <el-dialog title="编辑加料" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
+    <el-dialog :title="$t('编辑加料')" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
         :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
             <template v-for="(item, index) in languageList" :key="index">
@@ -11,17 +11,17 @@
                     <el-input type="text" v-model="form.feed_name[item.key]"></el-input>
                 </el-form-item>
             </template>
-            <el-form-item label="排序" prop="sort">
+            <el-form-item :label="$t('排序')" prop="sort">
                 <el-input type="text" v-model.number="form.sort"></el-input>
             </el-form-item>
-            <el-form-item label="价格" prop="price">
+            <el-form-item :label="$t('价格')" prop="price">
                 <el-input type="number" v-model="form.price"></el-input>
             </el-form-item>
         </el-form>
         <template #footer>
             <div class="dialog-footer">
-                <el-button @click="dialogFormVisible">取 消</el-button>
-                <el-button type="primary" @click="submit" :loading="loading">确 定</el-button>
+                <el-button @click="dialogFormVisible">{{ $t('取消') }}</el-button>
+                <el-button type="primary" @click="submit" :loading="loading">{{ $t('确定') }}</el-button>
             </div>
         </template>
     </el-dialog>
@@ -96,7 +96,7 @@ export default {
                     PorductApi.editFeed(params).then(data => {
                         self.loading = false;
                         ElMessage({
-                            message: '修改成功',
+                            message: $t('修改成功'),
                             type: 'success'
                         });
                         self.dialogFormVisible(true);

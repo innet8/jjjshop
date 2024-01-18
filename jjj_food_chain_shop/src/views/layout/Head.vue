@@ -11,7 +11,7 @@
                 <div class="header-lang">
                     <el-dropdown trigger="click" @command="setLanguage">
                         <span class="el-dropdown-link">
-                            <SvgIcon class="data-box-icon" name="language"></SvgIcon>
+                            <SvgIcon class="language-icon" name="language"></SvgIcon>
                         </span>
                         <template #dropdown>
                             <el-dropdown-menu>
@@ -179,5 +179,10 @@ export default defineComponent({
 
 .header-navbar-icon .icon-geren9 {
     font-size: 20px;
+}
+.language-icon{
+    color: #fff;
+    width: 16px;
+    height: 16px;
 }
 </style>

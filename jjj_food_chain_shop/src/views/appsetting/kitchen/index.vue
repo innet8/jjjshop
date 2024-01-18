@@ -8,13 +8,13 @@
                 <el-input style="width: 100px;" v-model="form.server.port"></el-input>
             </el-form-item>
 
-            <el-form-item :label="$t('等待时长颜色：')" :rules="[{ required: true, message: $t(' ') }]">
+            <el-form-item :label="$t('等待时长颜色：')" :rules="[{ required: true, message: '' }]">
                 <el-radio-group v-model="form.is_wait_color">
                     <el-radio label="1">{{ $t('开') }}</el-radio>
                     <el-radio label="0">{{ $t('关') }}</el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item v-if="form.is_wait_color == 1" label="" :rules="[{ required: true, message: $t(' ') }]">
+            <el-form-item v-if="form.is_wait_color == 1" label="" :rules="[{ required: true, message: '' }]">
                 <div class="max-w460 color-box">
                     <el-input v-model="input1" disabled></el-input>
                     <el-select v-model="form.wait_color[0]">
@@ -31,6 +31,13 @@
                 </div>
 
             </el-form-item>
+
+
+            <el-form-item :label="$t('高级设置密码')" prop="password" :rules="[{ required: true, message: '' }]">
+                <el-input class="max-w460" v-model="password" type="password" disabled></el-input>
+                <el-button @click="setPassword" type="primary" link size="small">{{ $t('设置密码') }}</el-button>
+            </el-form-item>
+
             <el-form-item :label="$t('常用语言')" prop="language" :rules="[{ required: true, message: $t('请选择常用语言') }]">
                 <el-checkbox-group v-model="form.language">
                     <el-checkbox v-for="item in languageList" :key="item.key" :label="item.key"
@@ -49,14 +56,18 @@
             </el-form-item>
         </el-form>
         <div class="common-button-wrapper">
-            <el-button size="small" type="info" @click="cancelFunc">{{ $t('重置') }}</el-button>
+            <el-button size="small" type="info" @click="getData">{{ $t('重置') }}</el-button>
             <el-button size="small" type="primary" @click="onSubmit" :loading="loading">{{ $t('保存') }}</el-button>
         </div>
+        <setPassword :advancedPassword="form.advanced_password" v-if="open" :open="open"  @close="(e) => { open = false; if (e == 1) { this.getData(); } }">
+        </setPassword>
     </div>
 </template>
 <script>
 import Terminal from '@/api/terminal.js';
+import setPassword from './setPassword.vue';
 export default {
+    components:{setPassword},
     data() {
         return {
             form: {
@@ -67,11 +78,15 @@ export default {
                 },
                 language: [],
                 default_language: 'th',
+                advanced_password: false,
                 wait_color: ['', ''],
             },
-            input1: this.$t('10分钟'),
-            input1: this.$t('10分钟及以上'),
+            input1: $t('10分钟'),
+            input2: $t('10分钟及以上'),
             languageList: [],
+            open:false,
+            loading:false,
+            password:'',
         }
     },
     created() {
@@ -92,6 +107,9 @@ export default {
         },
     },
     methods: {
+        setPassword() {
+            this.open = true
+        },
         getData() {
             let self = this;
             self.loading = true;
@@ -99,6 +117,9 @@ export default {
                 self.loading = false;
                 self.form = data.data.vars.values
                 self.languageList = data.data.vars.values.language_list
+                if (self.form.advanced_password) {
+                    self.password = 666666
+                }
             }).catch(error => {
                 self.loading = false;
             });

@@ -12,4 +12,5 @@ export default {
 	messageName: 'msg',
 	withCredentials: true,
 	responseType: 'json',
+    currency:'currency',
 };

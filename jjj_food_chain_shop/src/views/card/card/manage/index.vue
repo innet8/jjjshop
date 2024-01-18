@@ -60,10 +60,10 @@
                     </el-table-column>
                     <el-table-column prop="sort" :label="$t('排序')"></el-table-column>
                     <el-table-column prop="create_time" :label="$t('创建时间')"></el-table-column>
-                    <el-table-column fixed="right" :label="$t('操作')">
+                    <el-table-column fixed="right" :label="$t('操作')" width="200">
                         <template #default="scope">
                             <el-button @click="putClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/card/card/put'" v-if="scope.row.type_id != 3">发卡</el-button>
+                                v-auth="'/card/card/put'" v-if="scope.row.type_id != 3">{{ $t('发卡') }}</el-button>
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
                                 v-auth="'/card/card/edit'">{{ $t('编辑') }}
                             </el-button>
@@ -137,7 +137,7 @@ export default {
                         CardApi.setStatus(Params, true)
                             .then(data => {
                                 ElMessage({
-                                    message: war + '成功',
+                                    message: war + $t('成功'),
                                     type: 'success'
                                 });
                                 self.loading = false

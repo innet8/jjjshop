@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { setStorage, getStorage } from '@/utils/storageData';
 import AuthApi from '@/api/auth.js';
 import configObj from "@/config";
-let { strongToken, renderMenu, menu } = configObj;
+let { strongToken, renderMenu, menu ,currency} = configObj;
 import { handRouterTable, handMenuData } from '@/utils/router';
 export const useUserStore = defineStore('main', {
 	state: () => {
@@ -12,6 +12,7 @@ export const useUserStore = defineStore('main', {
 			list: {},
 			menus: getStorage(menu),
 			renderMenus: getStorage(renderMenu),
+            currency:getStorage(currency),
 		};
 	},
 	getters: {},
@@ -43,7 +44,7 @@ export const useUserStore = defineStore('main', {
 		 */
 		async afterLogin(info) {
 			this.userInfo = this.userInfo || {};
-			const { data: { app_id, shop_name, shop_supplier_id, supplier_name, token, user_name, user_type, version, logoUrl } } = info;
+			const { data: { app_id, shop_name, shop_supplier_id, supplier_name, token, user_name, user_type, version, logoUrl ,currency } } = info;
 			const { data: { menus } } = await AuthApi.getRoleList({ token });
 			let renderMenusList = handMenuData(JSON.parse(JSON.stringify(menus)));
 			let menusList = handRouterTable(JSON.parse(JSON.stringify(menus)));
@@ -58,8 +59,10 @@ export const useUserStore = defineStore('main', {
 			this.userInfo.supplier_name = supplier_name;
 			this.userInfo.user_type = user_type;
 			this.token = token;
+            this.currency = currency;
 			this.renderMenus = renderMenusList;
 			this.menus = menusList;
+			setStorage(JSON.stringify(currency), 'currency');
 			setStorage(JSON.stringify(token), strongToken);
 			setStorage(JSON.stringify(this.userInfo), 'userInfo');
 		},
