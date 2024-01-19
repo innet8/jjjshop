@@ -520,9 +520,8 @@ class Cart extends CartModel
         $this->startTrans();
         try {
 
-            $return_order = 0;
             // 已存在order_id，直接添加到订单
-            if (isset($data['order_id'])) {
+            if (isset($data['order_id']) && $data['order_id'] > 0) {
                 $orderProduct = new OrderProductModel;
                 $order_product_id = $orderProduct->isExist($data);
                 // 存在修改数量、否则新增
@@ -538,14 +537,14 @@ class Cart extends CartModel
                         'image_id' => $productDetail['logo']['image_id'],
                         'deduct_stock_type' => $productDetail['deduct_stock_type'],
                         'spec_type' => $productDetail['spec_type'],
-                        'product_sku_id' => $productDetail['sku']['product_sku_id'],
+                        'product_sku_id' => $data['product_sku_id'],
                         'product_attr' => $data['describe'],
                         'content' => $productDetail['content'],
                         'product_price' => $data['price'],
                         'line_price' => $data['product_price'],
                         'total_num' => $data['product_num'],
-                        'total_price' => $data['product_num'] * $data['total_price'],
-                        'total_pay_price' => $data['product_num'] * $data['total_price'],
+                        'total_price' => $data['product_num'] * $data['price'],
+                        'total_pay_price' => $data['product_num'] * $data['price'],
                     ];
 
                     $orderProduct->save($inArr);

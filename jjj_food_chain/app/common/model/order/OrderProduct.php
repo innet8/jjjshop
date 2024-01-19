@@ -3,6 +3,8 @@
 namespace app\common\model\order;
 
 use app\common\model\BaseModel;
+use app\common\model\product\Product as ProductModel;
+use app\common\model\product\ProductSku as ProductSkuModel;
 
 /**
  * 订单商品模型
@@ -133,10 +135,61 @@ class OrderProduct extends BaseModel
             $model = $model->where('table_id', '=', $data['table_id']);
         }
         $order_product_id = $model->where('is_send_kitchen', '=', 0)
+            ->where('order_id', '=', $data['order_id'])
             ->where('product_id', '=', $data['product_id'])
             ->where('product_sku_id', '=', $data['product_sku_id'])
             ->where('product_attr', '=', $data['attr'])
             ->value('order_product_id');
         return $order_product_id;
+    }
+
+    //判断商品库存
+    public function getStockState($product_id, $product_sku_id, $product_num)
+    {
+        return (new ProductSkuModel)->where('product_id', '=', $product_id)
+            ->where('product_sku_id', '=', $product_sku_id)
+            ->where('stock_num', '>', $product_num)
+            ->count();
+    }
+
+    //判断商品是否下架
+    public function productState($product_id)
+    {
+        return (new ProductModel)->where('product_id', '=', $product_id)
+            ->where('product_status', '=', 10)
+            ->where('is_delete', '=', 0)
+            ->count();
+    }
+
+    //
+    public function sub($param)
+    {
+        //判断商品是否下架
+        $product = $this->productState($this['product_id']);
+        if (!$product && $param['type'] != 'down') {
+            $this->error = '商品已下架';
+            return false;
+        }
+
+        $stockStatus = $this->getStockState($this['product_id'], $this['product_sku_id'], $param['product_num']);
+        if (!$stockStatus) {
+            $this->error = '商品库存不足';
+            return false;
+        }
+        if ($param['product_num'] <= 0) {
+            return $this->delete();
+        }
+        return $this->save(['total_num' => $param['product_num']]);
+    }
+
+    // 删除未送厨商品
+    public function delProduct($order_product_id)
+    {
+        $model = $this->where('order_product_id', '=', $order_product_id)->find();
+        if ($model->is_send_kitchen == 1) {
+            $this->error = '商品已送厨，禁止删除';
+            return false;
+        }
+        return $model->delete();
     }
 }
