@@ -19,9 +19,8 @@ class UserShiftLog extends Controller
      * @Apidoc\Title("列表")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/shop/user.UserShiftLog/index")
-     * @Apidoc\Param("user_name", type="string", require=true, default="", desc="收银员名称")
-     * @Apidoc\Param("start_time", type="string", require=true, default="", desc="开始时间")
-     * @Apidoc\Param("end_time", type="string", require=true, default="", desc="结束时间")
+     * @Apidoc\Param("user_id", type="string", require=true, default="", desc="收银员id")
+     * @Apidoc\Param("date", type="array", require=true, default="", desc="起始时间")
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("list", type="array", ref="app\common\model\shop\UserShiftLog\getList", desc="列表",children={
      *     @Apidoc\Param ("total_money",type="float",desc="营业收入"),

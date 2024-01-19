@@ -59,8 +59,9 @@ class UserShiftLog extends BaseModel
     public function getList($params)
     {
         $username = $params['user_name'] ?? '';
-        $startTime = $params['start_time'] ?? 0;
-        $endTime = $params['end_time'] ?? 0;
+        $userId = $params['user_id'] ?? 0;
+        $startTime = isset($params['date'][0]) ? strtotime($params['date'][0]) : 0;
+        $endTime = isset($params['date'][1]) ? strtotime($params['date'][1]) : 0;
         $model = $this;
         $model = $model->alias('a')->leftJoin('shop_user su','a.shift_user_id = su.shop_user_id');
 
@@ -69,6 +70,10 @@ class UserShiftLog extends BaseModel
                 $q->where('su.user_name', 'like', '%' . $username . '%');
                 $q->whereOr('su.real_name', 'like', '%' . $username . '%');
             });
+        }
+
+        if ($userId) {
+            $model = $model->where('a.shift_user_id', '=', $userId);
         }
 
         if ($startTime && $endTime) {
