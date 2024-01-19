@@ -9,6 +9,10 @@ let Terminal = {
     editCashierPassword(data, errorback) {
         return request._post('/shop/setting.Terminal/editCashierPassword', data, errorback);
     },
+    /*收银机高级设置密码*/
+    editCashierAdvancedPassword(data, errorback) {
+        return request._post('/shop/setting.Terminal/editCashierAdvancedPassword', data, errorback);
+    },
     /*设置收银机设置*/
     saveTerminal(data, errorback) {
         return request._post('/shop/setting.Terminal/cashier', data, errorback);

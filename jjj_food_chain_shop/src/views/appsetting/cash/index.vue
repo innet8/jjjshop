@@ -40,9 +40,14 @@
                 </el-radio-group>
             </el-form-item>
 
+            <el-form-item :label="$t('高级设置密码')" prop="password" :rules="[{ required: true, message: '' }]">
+                <el-input class="max-w460" type="password" v-model="password" disabled></el-input>
+                <el-button @click="setPassword($t('修改高级密码'))" type="primary" link size="small">{{ $t('设置密码') }}</el-button>
+            </el-form-item>
+
             <el-form-item :label="$t('钱箱密码')" prop="password" :rules="[{ required: true, message: '' }]">
                 <el-input class="max-w460" type="password" v-model="password" disabled></el-input>
-                <el-button @click="setPassword" type="primary" link size="small">{{ $t('设置密码') }}</el-button>
+                <el-button @click="setPassword($t('修改钱箱密码'))" type="primary" link size="small">{{ $t('设置密码') }}</el-button>
             </el-form-item>
 
             <el-form-item :label="$t('自动锁屏')" prop="auto_lock_screen" :rules="[{ required: true, message: $t('请选择锁屏时间') }]">
@@ -75,7 +80,7 @@
             <el-button size="small" type="primary" @click="onSubmit" :loading="loading">{{ $t('保存') }}</el-button>
         </div>
 
-        <setPassword v-if="open" :open="open" :cashierPassword="form.cashier_password"
+        <setPassword v-if="open" :open="open" :openTitle="openTitle" :cashierPassword="form.cashier_password"
             @close="(e) => { open = false; if (e == 1) { this.getData(); } }">
         </setPassword>
     </div>
@@ -89,6 +94,7 @@ export default {
     data() {
         return {
             open: false,
+            openTitle: '',
             loading: false,
             form: {
                 server: {
@@ -150,8 +156,9 @@ export default {
         },
     },
     methods: {
-        setPassword() {
-            this.open = true
+        setPassword(e) {
+            this.open = true;
+            this.openTitle = e
         },
 
         getData() {

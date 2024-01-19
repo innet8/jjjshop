@@ -2,10 +2,10 @@
     <el-dialog class="" @close="handleClose" v-model="dialogVisible" :close-on-click-modal="false"
         :close-on-press-escape="false" :title="$t('设置厨显密码')">
         <el-form size="small" ref="form" :model="form" label-position="top" :rules="rules">
-            <el-form-item v-if="have" :label="$t('原密碼')" prop="advanced_password"
+            <!-- <el-form-item v-if="have" :label="$t('原密碼')" prop="advanced_password"
                 :rules="[{ required: true, message: $t('请输入原密碼') }]">
                 <el-input type="password" v-model="form.advanced_password"></el-input>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item :label="have ? $t('新密碼') : $t('密碼')" prop="new_advanced_password" :rules="[{ required: true, message: $t('请输入密码') }]">
                 <el-input v-model="form.new_advanced_password" type="password"></el-input>
             </el-form-item>
