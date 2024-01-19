@@ -43,6 +43,8 @@ class UpdateSizeToTable extends Migrator
         $this->table('order_product')->changeColumn('product_name', 'string', array_merge($arr,['comment' => '产品名称']))->update();
         // 
         $this->table('cashier_cart')->changeColumn('describe', 'string', array_merge($arr,['comment' => '商品综合描述']))->update();
+        // 
+        $this->table('shop_role')->changeColumn('role_name', 'string', array_merge($arr,['comment' => '角色名称']))->update();
     }
 
     public function down()
