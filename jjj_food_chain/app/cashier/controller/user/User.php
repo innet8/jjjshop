@@ -25,7 +25,6 @@ class User extends Controller
     public function index($mobile)
     {
         $list = UserModel::getUserList($mobile);
-        trace($list);
         if (empty($list) || count($list) == 0) {
             return $this->renderError('用户不存在');
         }
@@ -53,6 +52,9 @@ class User extends Controller
             $where['mobile'] = $mobile;
         }
         $detail = UserModel::detail($where);
+        if (!$detail) {
+            return $this->renderError('用户不存在');
+        }
         return $this->renderSuccess('', $detail);
     }
 
