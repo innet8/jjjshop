@@ -17,6 +17,7 @@ class Feed extends Controller
      * @Apidoc\Title("列表")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url("/index.php/shop/product.expand.feed/index")
+     * @Apidoc\Param("feed_name", type="string", require=false, default="", desc="加料名称")
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Feed\getList", desc="列表")
      */

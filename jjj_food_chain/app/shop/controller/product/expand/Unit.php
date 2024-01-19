@@ -17,6 +17,7 @@ class Unit extends Controller
      * @Apidoc\Title("列表")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url("/index.php/shop/product.expand.unit/index")
+     * @Apidoc\Param("unit_name", type="string", require=false, default="", desc="单位名称")
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Unit\getList", desc="列表")
      */

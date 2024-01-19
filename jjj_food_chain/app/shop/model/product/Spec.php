@@ -15,6 +15,9 @@ class Spec extends SpecModel
     public function getList($data, $shop_supplier_id)
     {
         $model = $this;
+        if (isset($data['spec_name']) && !empty($data['spec_name'])) {
+            $model = $model->where('spec_name', 'like', '%' . trim($data['spec_name']) . '%');
+        }
         return $model->where('shop_supplier_id', '=', $shop_supplier_id)
             ->order(['sort' => 'asc', 'create_time' => 'desc'])
             ->paginate($data);

@@ -17,6 +17,7 @@ class Spec extends Controller
      * @Apidoc\Title("列表")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url("/index.php/shop/product.expand.spec/index")
+     * @Apidoc\Param("spec_name", type="string", require=false, default="", desc="规格名称")
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Spec\getList", desc="列表")
      */

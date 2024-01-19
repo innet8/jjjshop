@@ -17,6 +17,7 @@ class Label extends Controller
      * @Apidoc\Title("列表")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url("/index.php/shop/product.expand.label/index")
+     * @Apidoc\Param("label_name", type="string", require=false, default="", desc="标签名称")
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Label\getList", desc="列表")
      */
