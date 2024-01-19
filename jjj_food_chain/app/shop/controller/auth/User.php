@@ -62,6 +62,18 @@ class User extends Controller
     {
         $data = $this->postData();
         $model = new UserModel();
+        // 用户名是否为4-16位纯数字
+        if (!validateNumber($data['user_name'])) {
+            return $this->renderError('用户名必须为4-16位纯数字');
+        }
+        // 密码是否为4-16位纯数字
+        if (!validateNumber($data['password'])) {
+            return $this->renderError('密码必须为4-16位纯数字');
+        }
+        // 姓名
+        if (empty($data['real_name'])) {
+            return $this->renderError('请输入姓名');
+        }
         $num = $model->getUserName(['user_name' => $data['user_name']]);
         if ($num > 0) {
             return $this->renderError('用户名已存在');
@@ -116,6 +128,18 @@ class User extends Controller
         }
 
         $model = new UserModel();
+        // 用户名是否为4-16位纯数字
+        if (!validateNumber($data['user_name'])) {
+            return $this->renderError('用户名必须为4-16位纯数字');
+        }
+        // 密码是否为4-16位纯数字
+        if (!validateNumber($data['password'])) {
+            return $this->renderError('密码必须为4-16位纯数字');
+        }
+        // 姓名
+        if (empty($data['real_name'])) {
+            return $this->renderError('请输入姓名');
+        }
         $num = $model->getUserName(['user_name' => $data['user_name']], $data['shop_user_id']);
         if ($num > 0) {
             return $this->renderError('用户名已存在');

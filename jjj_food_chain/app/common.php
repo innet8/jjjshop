@@ -605,3 +605,14 @@ function generateNumber()
 
     return $datePart . $fixedPart . $randomPart;
 }
+
+/**
+ * 验证是否为4-16位纯数字
+ *
+ * @param string $str
+ * @return bool
+ */
+function validateNumber($str)
+{
+    return preg_match('/^\d{4,16}$/', $str) === 1;
+}
