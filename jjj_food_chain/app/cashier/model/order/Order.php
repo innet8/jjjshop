@@ -72,12 +72,23 @@ class Order extends OrderModel
                 break;
         }
         if (isset($params['time']) && $params['time']) {
-            $startTime = strtotime($params['time'][0]);
-            $endTime = strtotime($params['time'][0]) + 86399;
+
+            if (isset($params['time'][0]) && isset($params['time'][1])) {
+                $startTime = strtotime($params['time'][0]);
+                trace($startTime);
+                $endTime = strtotime($params['time'][1]);
+                if ($startTime == $endTime) {
+                    $endTime = $startTime + 86399;
+                }
+                $model = $model->where('create_time', 'between', [$startTime, $endTime]);
+            } else {
+                $startTime = strtotime($params['time'][0]);
+                $model = $model->where('create_time', '>', $startTime);
+            }
+
         }
-        if ($startTime && $endTime) {
-            $model = $model->where('create_time', 'between', [$startTime, $endTime]);
-        }
+
+
 
         switch ($params['dataType'] ?? 1) {
             case '1'://进行中
