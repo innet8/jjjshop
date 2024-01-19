@@ -55,11 +55,11 @@ class UserShiftLog extends Controller
     public function shift()
     {
         $data = $this->postData();
-        if (!isset($data['cash_taken_out'])) {
-            return $this->renderError('请输入本班取出現金');
+        if (!isset($data['cash_taken_out']) || $data['cash_taken_out'] < 0) {
+            return $this->renderError('请输入本班取出現金正确金额');
         }
-        if (!isset($data['cash_left'])) {
-            return $this->renderError('请输入本班遗留备用金');
+        if (!isset($data['cash_left']) || $data['cash_left'] < 0) {
+            return $this->renderError('请输入本班遗留备用金正确金额');
         }
         $data['shop_supplier_id'] = $this->cashier['user']['shop_supplier_id'];
         $data['shop_user_id'] = $this->cashier['user']['cashier_id'];
