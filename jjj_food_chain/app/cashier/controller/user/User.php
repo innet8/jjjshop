@@ -25,6 +25,10 @@ class User extends Controller
     public function index($mobile)
     {
         $list = UserModel::getUserList($mobile);
+        trace($list);
+        if (empty($list) || count($list) == 0) {
+            return $this->renderError('用户不存在');
+        }
         return $this->renderSuccess('', compact('list'));
     }
 
