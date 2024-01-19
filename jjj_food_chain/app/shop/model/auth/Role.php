@@ -58,27 +58,32 @@ class Role extends RoleModel
         return $prefix;
     }
 
+    /**
+     * 添加
+     *
+     * @param [type] $data
+     * @return bool
+     */
     public function add($data)
     {
         $this->startTrans();
         try {
-            $arr = [
+            $res = self::create([
                 'role_name' => $data['role_name'],
-                'sort' => $data['sort'],
+                'sort' => max($data['sort'] ?? 1, 1),
                 'app_id' => self::$app_id
-            ];
-            $res = self::create($arr);
-            $arr1 = [];
+            ]);
+
+            $model = new RoleAccess();
+            $roleAccess = [];
             foreach ($data['access_id'] as $val) {
-                $arr1[] = [
+                $roleAccess[] = [
                     'role_id' => $res['role_id'],
                     'access_id' => $val,
                     'app_id' => self::$app_id
                 ];
             }
-            $model = new RoleAccess();
-            $model->saveAll($arr1);
-            // 事务提交
+            $model->saveAll($roleAccess);
             $this->commit();
             return true;
         } catch (\Exception $e) {
