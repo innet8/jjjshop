@@ -527,7 +527,7 @@ class Setting extends BaseModel
                     // 上传后的轮播内容url（图片 + 视频）
                     'carousel' => [],
                     'is_auto_send' => '0', // 收银结账自动送厨房
-                    'cashier_password' => '', // 钱箱密码
+                    'cashier_password' => '666888', // 钱箱密码
                     // 自动锁屏 默认5分钟存秒
                     'auto_lock_screen' => 300,
                     // 语言列表
@@ -553,7 +553,7 @@ class Setting extends BaseModel
                         'port' => '',
                     ],
                     // 高级设置密码
-                    'advanced_password' => '',
+                    'advanced_password' => '666888' ,
                     // 语言列表
                     'language_list' => LANGUAGE_LIST,
                     // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
@@ -571,7 +571,7 @@ class Setting extends BaseModel
                         'port' => '',
                     ],
                     // 高级设置密码
-                    'advanced_password' => '',
+                    'advanced_password' => '666888',
                     'is_wait_color' => '0', // 是否开启等待时长颜色
                     // 时长颜色 10分钟-黄色#ffff00 20分钟-红色#ff0000
                     'wait_color' => [],

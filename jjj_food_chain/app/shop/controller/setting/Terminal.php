@@ -77,12 +77,12 @@ class Terminal extends Controller
         $data = $this->request->param();
         //
         $setting = SettingModel::getItem(SettingEnum::CASHIER);
-        if (empty($data['cashier_password']) && !empty($setting['cashier_password'])) {
-            return $this->renderError('请输入原密码');
-        }
-        if ($setting['cashier_password'] != $data['cashier_password']) {
-            return $this->renderError('原密码错误');
-        }
+        // if (empty($data['cashier_password']) && !empty($setting['cashier_password'])) {
+        //     return $this->renderError('请输入原密码');
+        // }
+        // if ($setting['cashier_password'] != $data['cashier_password']) {
+        //     return $this->renderError('原密码错误');
+        // }
         //
         if (empty($data['new_cashier_password']) || empty($data['confirm_cashier_password'])) {
             return $this->renderError('请输入新密码');
@@ -164,12 +164,12 @@ class Terminal extends Controller
         $data = $this->request->param();
         //
         $setting = SettingModel::getItem(SettingEnum::TABLET);
-        if (empty($data['advanced_password']) && !empty($setting['advanced_password'])) {
-            return $this->renderError('请输入原密码');
-        }
-        if ($setting['advanced_password'] != $data['advanced_password']) {
-            return $this->renderError('原密码错误');
-        }
+        // if (empty($data['advanced_password']) && !empty($setting['advanced_password'])) {
+        //     return $this->renderError('请输入原密码');
+        // }
+        // if ($setting['advanced_password'] != $data['advanced_password']) {
+        //     return $this->renderError('原密码错误');
+        // }
         //
         if (empty($data['new_advanced_password']) || empty($data['confirm_advanced_password'])) {
             return $this->renderError('请输入新密码');
@@ -244,12 +244,12 @@ class Terminal extends Controller
         $data = $this->request->param();
         //
         $setting = SettingModel::getItem(SettingEnum::KITCHEN);
-        if (empty($data['advanced_password']) && !empty($setting['advanced_password'])) {
-            return $this->renderError('请输入原密码');
-        }
-        if ($setting['advanced_password'] != $data['advanced_password']) {
-            return $this->renderError('原密码错误');
-        }
+        // if (empty($data['advanced_password']) && !empty($setting['advanced_password'])) {
+        //     return $this->renderError('请输入原密码');
+        // }
+        // if ($setting['advanced_password'] != $data['advanced_password']) {
+        //     return $this->renderError('原密码错误');
+        // }
         //
         if (empty($data['new_advanced_password']) || empty($data['confirm_advanced_password'])) {
             return $this->renderError('请输入新密码');
