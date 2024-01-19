@@ -45,7 +45,7 @@ class Order extends Controller
      * @Apidoc\Title("收银收款")
      * @Apidoc\Tag("收银收款")
      * @Apidoc\Method("POST")
-     * @Apidoc\Url("/index.php/cashier/order.order/index")
+     * @Apidoc\Url("/index.php/cashier/order.order/buy")
      * @Apidoc\Param("delivery", type="int",require=true, default=0, desc="配送方式(10外卖配送 20上门取 30打包带走 40店内就餐)")
      * @Apidoc\Param("pay_type", type="int",require=true, default=0, desc="支付方式(10余额支付 20微信支付 40现金支付)")
      * @Apidoc\Param("user_id", type="int",require=false, default=0, desc="用户id")

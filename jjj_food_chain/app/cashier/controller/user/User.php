@@ -104,8 +104,8 @@ class User extends Controller
         $model = new CartModel;
         $list = $model->preOrderCartPrice($this->cashier['user']['shop_supplier_id'], $mobile, $table_id, $order_id);
         if (!$list) {
-            return $this->renderError($model->getError() ?: '操作失败');
+            return $this->renderError($model->getError() ?: '请求失败');
         }
-        return $this->renderSuccess('合计信息', $list);
+        return $this->renderSuccess('请求成功', $list);
     }
 }
