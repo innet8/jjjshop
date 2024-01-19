@@ -29,16 +29,23 @@ class Table extends Controller
      * @Apidoc\Desc("绑定桌台")
      * @Apidoc\Method("POST")
      * @Apidoc\Param("table_id", type="int", require=true, desc="桌号ID")
+     * @Apidoc\Param("old_table_id", type="int", require=false, desc="解绑桌号ID")
      * @Apidoc\Url("/index.php/tablet/table.table/bind")
      */
-    public function bind($table_id)
+    public function bind($table_id, $old_table_id = 0)
     {
         $model = new TableModel;
         if (!$model->bindTable($this->table['shop_supplier_id'], $table_id)) {
             return $this->renderError($model->getError() ?: '绑定桌台失败');
         }
+        if ($old_table_id > 0) {
+            $old = new TableModel;
+            $old->unbindTable($this->table['shop_supplier_id'], $old_table_id);
+        }
         return $this->renderSuccess('绑定桌台成功');
     }
+
+
 
     /**
      * @Apidoc\Title("解绑桌台")
