@@ -36,12 +36,11 @@ class InitTable extends Migrator
 
         $host = Env::get('DB_HOST');
         $port = Env::get('DB_PORT');
-        $rootPassword = Env::get('DB_ROOT_PASSWORD');
         $username = Env::get('DB_USERNAME');
         $password = Env::get('DB_PASSWORD');
         $databaseName = Env::get('DB_DATABASE');
         $dsn = "mysql:host={$host};port={$port}";
-        $pdo = new PDO($dsn, 'root', $rootPassword);
+        $pdo = new PDO($dsn, $username, $password);
         // 检测数据库
         $dbExists = $pdo->query("SELECT COUNT(*) FROM information_schema.schemata WHERE schema_name = '{$databaseName}'")->fetchColumn();
         if (!$dbExists) {
