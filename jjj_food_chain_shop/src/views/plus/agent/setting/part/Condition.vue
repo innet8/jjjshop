@@ -132,7 +132,7 @@ export default {
 };
 </script>
 
-<style scoped="scoped">
+<style scoped>
 .tips {
   color: #ccc;
 }

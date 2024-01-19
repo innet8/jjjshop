@@ -106,7 +106,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .attention {
   display: -webkit-box;
   display: -ms-flexbox;

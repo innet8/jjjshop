@@ -921,7 +921,7 @@ export default {
 };
 </script>
 
-<style scoped="">
+<style scoped>
 .map-container {
   border: 1px solid #dddddd;
   overflow: hidden;

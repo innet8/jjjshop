@@ -101,7 +101,7 @@
   });
 </script>
 
-<style>
+<style scoped>
   .operation-wrap {
     height: 124px;
     border-radius: 8px;

@@ -28,7 +28,7 @@ button,
 input,
 select,
 figure,
-figcaption,
+figcaption
 {
 padding: 0;
 margin: 0;
@@ -41,9 +41,9 @@ font-family: "Microsoft Yahei";
 -webkit-tap-highlight-color: transparent;
 -webkit-font-smoothing: antialiased;
 
-&:hover {
-	outline: none;
-}
+    &:hover {
+        outline: none;
+    }
 }
 
 :root {

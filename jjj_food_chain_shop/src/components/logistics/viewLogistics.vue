@@ -70,7 +70,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   .el-step__main .el-step__description {
     padding-bottom: 10px;
   }

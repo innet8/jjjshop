@@ -27,5 +27,3 @@
   }
 </script>
 
-<style>
-</style>

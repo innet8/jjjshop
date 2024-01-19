@@ -426,7 +426,7 @@
     }
   };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
   .product-info {
     padding: 10px 0;
     border-top: 1px solid #eeeeee;

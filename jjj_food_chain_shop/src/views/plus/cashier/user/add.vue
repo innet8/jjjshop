@@ -144,7 +144,7 @@
   };
 </script>
 
-<style>
+<style scoped>
   .img {
     margin-top: 10px;
   }

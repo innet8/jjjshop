@@ -277,7 +277,7 @@
 	};
 </script>
 
-<style>
+<style scoped>
 	.el-message-box__message p {
 		word-break: break-all;
 	}

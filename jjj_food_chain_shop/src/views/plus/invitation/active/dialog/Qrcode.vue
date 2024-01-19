@@ -66,4 +66,3 @@
 	};
 </script>
 
-<style></style>

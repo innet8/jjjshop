@@ -14,6 +14,3 @@ const Unlock = ()=>{
     router.push('/home')
 }
 </script>
-<style lang="">
-    
-</style>

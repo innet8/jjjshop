@@ -129,7 +129,7 @@
   };
 </script>
 
-<style>
+<style scoped>
   .d-c-s {
     display: flex;
     justify-content: center;

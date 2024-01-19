@@ -80,7 +80,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .marketing-box .el-tabs__item {
   font-size: 14px;
 }

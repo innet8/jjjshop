@@ -111,5 +111,3 @@
   };
 </script>
 
-<style>
-</style>
