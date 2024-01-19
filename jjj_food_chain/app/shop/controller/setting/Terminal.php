@@ -20,7 +20,6 @@ class Terminal extends Controller
      * @Apidoc\Url ("/index.php/shop/setting.Terminal/cashier")
      * @Apidoc\Param("carousel", type="array", require=true, desc="上传后的轮播内容url（图片 + 视频）")
      * @Apidoc\Param("is_auto_send", type="int", require=true, default=0, desc="收银结账自动送厨房 0-关闭 1-开启")
-     * @Apidoc\Param("cashier_password", type="string", require=true, default="", desc="钱箱密码")
      * @Apidoc\Param("auto_lock_screen", type="int", require=true, default=0, desc="自动锁屏")
      * @Apidoc\Param("language", type="array", require=true, desc="常用语言")
      * @Apidoc\Param("default_language", type="string", require=true, default="", desc="默认语言")
@@ -50,7 +49,6 @@ class Terminal extends Controller
         $arr = [
             'carousel' => $data['carousel'] ?? [], // 轮播内容url
             'is_auto_send' => $data['is_auto_send'] ?? 0, // 收银结账自动送厨房
-            'cashier_password' => $data['cashier_password'] ?? '', // 钱箱密码
             'auto_lock_screen' => $data['auto_lock_screen'] ?? 300, // 自动锁屏 5分钟
             'language' => $data['language'] ?? [], // 常用语言
             'default_language' => $data['default_language'] ?? 'en', // 默认语言
@@ -107,7 +105,6 @@ class Terminal extends Controller
      * @Apidoc\Param("is_customer_order", type="int", require=true, default=0, desc="顾客可开桌 0-关闭 1-开启")
      * @Apidoc\Param("is_show_sold_out", type="int", require=true, default=0, desc="显示售罄商品 0-关闭 1-开启")
      * @Apidoc\Param("server", type="array", require=true, desc="平板服务器连接，【ip、port】")
-     * @Apidoc\Param("advanced_password", type="int", require=true, default=0, desc="高级设置密码")
      * @Apidoc\Param("language", type="array", require=true, desc="常用语言")
      * @Apidoc\Param("default_language", type="string", require=true, default="", desc="默认语言")
      * @Apidoc\Returned()
@@ -190,7 +187,6 @@ class Terminal extends Controller
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/shop/setting.Terminal/kitchen")
      * @Apidoc\Param("server", type="array", require=true, desc="厨显服务器连接")
-     * @Apidoc\Param("advanced_password", type="int", require=true, default=0, desc="高级设置密码")
      * @Apidoc\Param("is_wait_color", type="int", require=true, default=0, desc="是否开启等待颜色 0-关闭 1-开启")
      * @Apidoc\Param("wait_color", type="array", require=true, desc="等待颜色")
      * @Apidoc\Param("language", type="array", require=true, desc="常用语言")
