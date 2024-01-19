@@ -3,7 +3,6 @@ declare (strict_types = 1);
 
 namespace app\common\command;
 
-use help\SystemHelp;
 use think\console\Input;
 use think\console\Output;
 use think\console\Command;
@@ -27,11 +26,6 @@ class Lang extends Command
 
     protected function execute(Input $input, Output $output)
     {
-
-        // 
-        dump(SystemHelp::cmd("ifconfig | grep 'inet ' | grep -v 127.0.0.1 | awk '{print $2}'"));
-        die;
-
         // 指令输出
         $output->writeln('lang');
         $channel = $input->getOption('channel') ?: 'google';
