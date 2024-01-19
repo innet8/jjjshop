@@ -36,6 +36,15 @@ judge() {
 # source $(pwd)/.env.example
 
 git-clone(){
+    git --version >/dev/null 2>&1
+    GIT_INSTALLED=$?
+    if [ $GIT_INSTALLED -eq 0 ]; then
+        echo "Git is already installed."
+    else
+        echo "Git is not installed. Installing Git..."
+        sudo apt update
+        sudo apt install git
+    fi
     echo -e "${Green}拉取项目代码${Font}"
     cd /
     git clone --depth=1 https://github.com/innet8/jjjshop.git
@@ -51,7 +60,8 @@ git-clone(){
 
 update-job(){
     cd /jjjshop/jjj_food_chain
-    git clone --depth=1 https://github.com/innet8/jjjshop.git
+    git fetch --all && git reset --hard origin/$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
+    git pull
     sudo php think migrate:run
 }
 
