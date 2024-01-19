@@ -646,5 +646,7 @@
     "原始密码": "original password",
     "新密码": "New Password",
     "确认新密码": "Confirm the new password",
-    "登录": "Log in"
+    "登录": "Log in",
+    "修改高级密码": "Change advanced password",
+    "修改钱箱密码": "Change cash drawer password"
 }
