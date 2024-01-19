@@ -2,9 +2,10 @@
 
 namespace app\common\model\settings;
 
-use app\common\enum\settings\SettingEnum;
+use think\facade\Env;
 use think\facade\Cache;
 use app\common\model\BaseModel;
+use app\common\enum\settings\SettingEnum;
 
 define('LANGUAGE_LIST', [
     [
@@ -527,6 +528,13 @@ class Setting extends BaseModel
                     // 上传后的轮播内容url（图片 + 视频）
                     'carousel' => [],
                     'is_auto_send' => '0', // 收银结账自动送厨房
+                    // 收银机服务器连接
+                    'server' => [
+                        'ip' => Env::get('HARDWARE_SERVER_URL', ''),
+                        'port' => Env::get('HARDWARE_SERVER_PORT', ''),
+                    ],
+                    // 高级设置密码
+                    'advanced_password' => '666888',
                     'cashier_password' => '666888', // 钱箱密码
                     // 自动锁屏 默认5分钟存秒
                     'auto_lock_screen' => 300,
@@ -549,11 +557,11 @@ class Setting extends BaseModel
                     'is_show_sold_out' => '0', // 是否显示售罄商品
                     // 平板服务器连接
                     'server' => [
-                        'ip' => '',
-                        'port' => '',
+                        'ip' => Env::get('HARDWARE_SERVER_URL', ''),
+                        'port' => Env::get('HARDWARE_SERVER_PORT', ''),
                     ],
                     // 高级设置密码
-                    'advanced_password' => '666888' ,
+                    'advanced_password' => '666888',
                     // 语言列表
                     'language_list' => LANGUAGE_LIST,
                     // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
@@ -567,8 +575,8 @@ class Setting extends BaseModel
                 'values' => [
                     // 厨显服务器连接
                     'server' => [
-                        'ip' => '',
-                        'port' => '',
+                        'ip' => Env::get('HARDWARE_SERVER_URL', ''),
+                        'port' => Env::get('HARDWARE_SERVER_PORT', ''),
                     ],
                     // 高级设置密码
                     'advanced_password' => '666888',
@@ -584,5 +592,4 @@ class Setting extends BaseModel
             ],
         ];
     }
-
 }
