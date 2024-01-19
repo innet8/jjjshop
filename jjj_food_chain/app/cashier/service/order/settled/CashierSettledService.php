@@ -89,6 +89,30 @@ abstract class CashierSettledService extends BaseService
     }
 
     /**
+     * 订单确认-收银端
+     */
+    public function settlementCashier()
+    {
+        // 整理订单数据
+        $this->orderData = $this->getOrderData();
+        // 订单商品总数量
+        $orderTotalNum = helper::getArrayColumnSum($this->productList, 'product_num');
+        // 设置订单商品总金额(不含优惠折扣)
+        $this->setOrderTotalPrice();
+        // 计算订单商品的实际付款金额
+        $this->setOrderProductPayPrice();
+        // 计算订单最终金额
+        $this->setOrderPayPrice();
+        // 计算订单积分赠送数量
+        $this->setOrderPointsBonus();
+        // 返回订单数据
+        return array_merge([
+            'product_list' => $this->productList,   // 商品信息
+            'order_total_num' => $orderTotalNum,        // 商品总数量
+        ], $this->orderData, $this->settledRule);
+    }
+
+    /**
      * 验证订单商品的状态
      * @return bool
      */

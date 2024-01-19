@@ -35,10 +35,12 @@ class Cart extends Controller
         $data = $this->postData();
         $data['eat_type'] = 20;
         $model = new CartModel();
-        if (!$model->add($data, $this->cashier['user'])) {
-            return $this->renderError($model->getError() ?: '加入购物车失败');
+        $order_id = $model->addToOrder($data, $this->cashier['user']);
+        if ($order_id > 0) {
+            return $this->renderSuccess('添加商品成功', ['order_id' => $order_id]);
         }
-        return $this->renderSuccess('加入购物车成功');
+        return $this->renderError($model->getError() ?: '添加商品失败');
+
     }
 
     /**

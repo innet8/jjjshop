@@ -1,0 +1,10 @@
+#!/bin/bash
+
+build() {
+    cd jjj_food_chain_shop
+    npm run translate
+    npm run build
+    rm -rf ../jjj_food_chain/public/shop && cp -r ./dist ../jjj_food_chain/public/shop
+}
+
+build

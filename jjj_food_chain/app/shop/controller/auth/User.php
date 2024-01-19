@@ -133,7 +133,7 @@ class User extends Controller
             return $this->renderError('用户名必须为4-16位纯数字');
         }
         // 密码是否为4-16位纯数字
-        if (!validateNumber($data['password'])) {
+        if (!empty($data['password']) && !validateNumber($data['password'])) {
             return $this->renderError('密码必须为4-16位纯数字');
         }
         // 姓名
@@ -205,6 +205,9 @@ class User extends Controller
             $menus = $model->getListByUser($user['shop_user_id'], $user['user_type'], $supplier);
 
             foreach ($menus as $key => $val) {
+                if (!isset($val['children'][0]['path'])) {
+                    continue;
+                }
                 if ($val['redirect_name'] != $val['children'][0]['path']) {
                     $menus[$key]['redirect_name'] = $menus[$key]['children'][0]['path'];
                 }

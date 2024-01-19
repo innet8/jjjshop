@@ -158,8 +158,9 @@ class User extends UserModel
             $this->error = '用户不存在';
             return false;
         }
-
-        $userToDelete->update(['is_delete' => 1]);
+        $userToDelete->is_delete = 1;
+        $userToDelete->save();
+        // 
         return UserRole::destroy(['shop_user_id' => $shop_user_id]);
     }
 
