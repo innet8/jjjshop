@@ -122,4 +122,21 @@ class OrderProduct extends BaseModel
         }
         return 0;
     }
+
+    /**
+     * 判断订单未送厨商品是否存在
+     */
+    public function isExist($data)
+    {
+        $model = $this;
+        if (isset($data['table_id']) && $data['table_id']) {
+            $model = $model->where('table_id', '=', $data['table_id']);
+        }
+        $order_product_id = $model->where('is_send_kitchen', '=', 0)
+            ->where('product_id', '=', $data['product_id'])
+            ->where('product_sku_id', '=', $data['product_sku_id'])
+            ->where('product_attr', '=', $data['attr'])
+            ->value('order_product_id');
+        return $order_product_id;
+    }
 }

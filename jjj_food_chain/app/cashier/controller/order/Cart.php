@@ -35,10 +35,12 @@ class Cart extends Controller
         $data = $this->postData();
         $data['eat_type'] = 20;
         $model = new CartModel();
-        if (!$model->add($data, $this->cashier['user'])) {
-            return $this->renderError($model->getError() ?: '加入购物车失败');
+        $order_id = $model->addToOrder($data, $this->cashier['user']);
+        if ($order_id > 0) {
+            return $this->renderSuccess('添加商品成功', ['order_id' => $order_id]);
         }
-        return $this->renderSuccess('加入购物车成功');
+        return $this->renderError($model->getError() ?: '添加商品失败');
+
     }
 
     /**
@@ -56,9 +58,27 @@ class Cart extends Controller
         $model = new CartModel();
         // 挂单数量
         $stayNum = $model->stayNum($this->cashier['user']);
-        // 购物车 + 送厨商品列表 + 购物车计算
-        $allProductInfo = $model->getOrderCartDetail($this->cashier['user'], 0, $order_id);
-        return $this->renderSuccess('', compact('allProductInfo', 'delivery', 'stayNum', 'order_id'));
+        // 购物车商品列表
+        $productList = $model->getList($this->cashier['user']);
+        if (!empty($productList) && isset($productList[0])) {
+            $order_id = $order_id ? $order_id : $productList[0]['order_id'];
+        }
+        // 送厨商品列表
+        $orderProductList = [];
+        if ($order_id) {
+            $orderProductList = OrderModel::detail($order_id)['product'];
+        }
+        // 购物车金额
+        $cartInfo = $model->getCartPrice($this->cashier['user'], $delivery);
+
+        return $this->renderSuccess('', compact('orderProductList','productList', 'cartInfo', 'delivery', 'stayNum', 'order_id'));
+
+//        $model = new CartModel();
+//        // 挂单数量
+//        $stayNum = $model->stayNum($this->cashier['user']);
+//        // 购物车 + 送厨商品列表 + 购物车计算
+//        $allProductInfo = $model->getOrderCartDetail($this->cashier['user'], 0, $order_id);
+//        return $this->renderSuccess('', compact('allProductInfo', 'delivery', 'stayNum', 'order_id'));
     }
 
     /**
