@@ -9,7 +9,7 @@
                     <el-form-item prop="account">
                         <div class="left-img-input"><img class="l-img" src="/src/assets/img/user.png">
                             <el-input class="l-input" type="text" v-model="ruleForm.account" auto-complete="off"
-                            :placeholder="$t('账号')">
+                            :placeholder="$t('请输入用户名')">
                             </el-input>
                         </div>
                         <!-- <el-input type="text" v-model="ruleForm.account" auto-complete="off" placeholder="账号"></el-input> -->
@@ -18,7 +18,7 @@
                     <el-form-item prop="checkPass">
                         <div class="left-img-input"><img class="l-img" src="/src/assets/img/password.png">
                             <el-input type="password" class="l-input" v-model="ruleForm.checkPass" auto-complete="off"
-                                :placeholder="$t('密码')">
+                                :placeholder="$t('请输入登录密码')">
                             </el-input>
                         </div>
                         <!-- <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off" placeholder="密码"></el-input> -->
@@ -127,7 +127,7 @@ export default {
                 /*密码*/
                 checkPass: [{
                     required: true,
-                    message: $t('请输入密码'),
+                    message: $t('请输入登录密码'),
                     trigger: 'blur'
                 }],
                 verifycode: [{
