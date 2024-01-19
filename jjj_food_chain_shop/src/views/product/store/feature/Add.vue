@@ -9,14 +9,14 @@
                     <el-input v-model="form.name[item.key]" autocomplete="off"></el-input>
                 </el-form-item>
             </template>
-            <el-form-item :label="$t('分类图片')" prop="image_id">
+            <!-- <el-form-item :label="$t('分类图片')" prop="image_id">
                 <el-row>
                     <el-button type="primary" @click="openUpload">{{ $t('选择图片') }}</el-button>
                     <div v-if="form.image_id != ''" class="img">
                         <img :src="file_path" width="100" height="100" />
                     </div>
                 </el-row>
-            </el-form-item>
+            </el-form-item> -->
 
             <el-form-item :label="$t('分类排序')" prop="sort">
                 <el-input v-model.number="form.sort" autocomplete="off"></el-input>

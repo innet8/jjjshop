@@ -36,7 +36,7 @@
           </el-form-item> -->
                     <!--登录-->
                     <el-button type="primary" style="width:100%;height: 48px;font-size: 18px;margin-top: 6px;"
-                        @click.native.prevent="SubmitFunc" :loading="logining">登录
+                        @click.native.prevent="SubmitFunc" :loading="logining">{{ $t('登录') }}
                     </el-button>
                 </div>
 

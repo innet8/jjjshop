@@ -645,5 +645,6 @@
     "修改密码": "change Password",
     "原始密码": "original password",
     "新密码": "New Password",
-    "确认新密码": "Confirm the new password"
+    "确认新密码": "Confirm the new password",
+    "登录": "Log in"
 }

@@ -11,11 +11,11 @@
                 <el-table size="small" :data="tableData" row-key="category_id" default-expand-all
                     :tree-props="{ children: 'child' }" style="width: 100%" v-loading="loading">
                     <el-table-column prop="name_text" :label="$t('分类名称')" width="180"></el-table-column>
-                    <el-table-column prop="" :label="$t('图片')" width="180">
+                    <!-- <el-table-column prop="" :label="$t('图片')" width="180">
                         <template #default="scope">
                             <img v-if="scope.row.images" v-img-url="scope.row.images.file_path" alt="" width="50" />
                         </template>
-                    </el-table-column>
+                    </el-table-column> -->
                     <el-table-column prop="sort" :label="$t('分类排序')"></el-table-column>
                     <el-table-column prop="sort" :label="$t('状态')">
                         <template #default="scope">
