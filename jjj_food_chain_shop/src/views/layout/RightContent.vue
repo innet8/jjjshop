@@ -18,4 +18,4 @@ import ChildTabs from '@/views/layout/ChildTabs.vue';
 import { useRoute } from 'vue-router';
 const route = useRoute()
 </script>
-<style></style>
+

@@ -257,4 +257,4 @@
 .active.card {
   border: 2px solid #4aa3f7;
 }
-</style><style lang="scss"></style>
+</style>

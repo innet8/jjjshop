@@ -48,19 +48,19 @@
             </div>
         </div>
 
-        <add v-if="open_add" :open_add="open_add" @close="(e) => { open_add = false; if (e == 1) { this.getData(); } }">
-        </add>
-        <edit v-if="open_edit" :open_edit="open_edit" :editId="editId"
-            @close="(e) => { open_edit = false; if (e == 1) { this.getData(); } }"></edit>
+        <Add v-if="open_add" :open_add="open_add" @close="(e) => { open_add = false; if (e == 1) { this.getData(); } }">
+        </Add>
+        <Edit v-if="open_edit" :open_edit="open_edit" :editId="editId"
+            @close="(e) => { open_edit = false; if (e == 1) { this.getData(); } }"></Edit>
     </div>
 </template>
 
 <script>
 import SupplierApi from '@/api/supplier.js';
-import add from './add.vue';
-import edit from './edit.vue'
+import Add from './add.vue';
+import Edit from './edit.vue'
 export default {
-    components: { add, edit },
+    components: { Add, Edit },
     data() {
         return {
             /*是否加载完成*/
@@ -169,4 +169,4 @@ export default {
 };
 </script>
 
-<style></style>
+

@@ -28,7 +28,7 @@ button,
 input,
 select,
 figure,
-figcaption,
+figcaption
 	{
 	padding: 0;
 	margin: 0;
@@ -41,9 +41,9 @@ figcaption,
 	-webkit-tap-highlight-color: transparent;
 	-webkit-font-smoothing: antialiased;
 
-	&:hover {
+	/* &:hover {
 		outline: none;
-	}
+	} */
 }
 
 article,
@@ -289,7 +289,7 @@ template {
 }
 
 .clearfix {
-	*zoom: 1
+	zoom: 1
 }
 
 body {

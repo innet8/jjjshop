@@ -120,7 +120,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style lang="scss" scoped>
 .operation-wrap {
     height: 124px;
     border-radius: 8px;
