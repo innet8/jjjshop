@@ -258,7 +258,7 @@
   };
 </script>
 
-<style>
+<style scoped>
   .no-list .el-checkbox {
     display: none;
   }

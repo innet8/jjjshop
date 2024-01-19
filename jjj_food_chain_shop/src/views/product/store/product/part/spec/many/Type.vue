@@ -96,7 +96,7 @@ export default {
 };
 </script>
 
-<style scoped="scoped">
+<style scoped>
 .spec-many-type {
     margin-top: 16px;
     padding: 20px;

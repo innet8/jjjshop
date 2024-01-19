@@ -272,7 +272,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .reward-list .reward-item {
   margin-bottom: 10px;
   padding: 10px 20px;

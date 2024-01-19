@@ -174,7 +174,7 @@ export default {
 };
 </script>
 
-<style scoped="scoped">
+<style scoped>
   .Echarts{ box-sizing: border-box;}
   .Echarts>div{ width: 100%; height: 360px; box-sizing: border-box;}
 </style>

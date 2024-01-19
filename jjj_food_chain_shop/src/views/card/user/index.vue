@@ -126,6 +126,4 @@
   });
 </script>
 
-<style>
 
-</style>

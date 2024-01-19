@@ -132,7 +132,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .plan-setiting .item {
   width: 240px;
   height: 160px;

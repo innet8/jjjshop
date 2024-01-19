@@ -154,6 +154,6 @@ export default {
 };
 </script>
 
-<style scoped="scoped">
+<style scoped>
   .select-user li{ width: 30px;}
 </style>

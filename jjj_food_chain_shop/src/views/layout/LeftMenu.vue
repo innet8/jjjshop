@@ -178,7 +178,7 @@ export default defineComponent({
     }
 });
 </script>
-<style>
+<style scoped>
 .home-login .icon-tubiaozhizuomoban- {
     color: #3a8ee6;
     font-size: 28px;

@@ -60,7 +60,7 @@ export default {
 };
 </script>
 
-<style scoped="scoped">
+<style scoped>
 .right-box {
     width: 100%;
     box-sizing: border-box;

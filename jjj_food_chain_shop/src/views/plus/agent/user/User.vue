@@ -261,6 +261,6 @@ export default {
 };
 </script>
 
-<style scoped="scoped">
+<style scoped>
   .el-button{margin-left: 0; margin-right: 10px;}
 </style>

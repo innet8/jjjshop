@@ -44,7 +44,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   .max-w180 {
     max-width: 180px;
   }

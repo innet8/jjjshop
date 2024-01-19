@@ -232,7 +232,7 @@
     }
   };
 </script>
-<style>
+<style scoped>
   .reward_box {
     border: 1px solid #409EFF;
     border-radius: 10px;

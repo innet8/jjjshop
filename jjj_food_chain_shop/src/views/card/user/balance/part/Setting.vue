@@ -99,5 +99,3 @@
   };
 </script>
 
-<style>
-</style>

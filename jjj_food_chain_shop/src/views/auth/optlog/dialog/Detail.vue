@@ -68,7 +68,7 @@ export default {
 };
 </script>
 
-<style scoped="scoped">
+<style scoped>
   .item-content-box{
     padding-top: 4px;
     line-height: 20px;

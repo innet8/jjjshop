@@ -334,7 +334,7 @@
   };
 </script>
 
-<style scoped="scoped">
+<style scoped>
   .open-sign {
     padding: 20px;
     background: #e2f0ff;

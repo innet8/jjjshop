@@ -290,7 +290,7 @@
   };
 </script>
 
-<style scoped="">
+<style scoped>
   .referee-name {
     width: 33.333333%;
   }

@@ -149,5 +149,3 @@
     }
 </script>
 
-<style>
-</style>

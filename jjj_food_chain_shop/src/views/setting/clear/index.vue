@@ -80,7 +80,7 @@
   };
 </script>
 
-<style>
+<style scoped>
   .tips {
     color: #ccc;
   }

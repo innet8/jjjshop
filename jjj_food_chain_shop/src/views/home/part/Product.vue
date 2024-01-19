@@ -33,7 +33,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   .sales-product-box .bd-box{ border-top: 1px solid #EEEEEE;}
   .sales-product-box .left-box{ width: 69%; border-right: 1px solid #EEEEEE;}
 </style>

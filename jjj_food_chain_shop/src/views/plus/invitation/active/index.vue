@@ -268,7 +268,7 @@
   };
 </script>
 
-<style>
+<style scoped>
   .point-list .el-input-number--mini {
     width: auto;
   }

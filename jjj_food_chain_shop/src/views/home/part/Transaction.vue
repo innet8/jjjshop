@@ -190,7 +190,7 @@ let myChart = null;
   };
 </script>
 
-<style>
+<style scoped>
   .Echarts {
     box-sizing: border-box;
   }

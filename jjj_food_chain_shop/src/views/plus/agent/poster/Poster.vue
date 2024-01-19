@@ -232,7 +232,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .poster-box .left-box {
   position: relative;
   width: 375px;
