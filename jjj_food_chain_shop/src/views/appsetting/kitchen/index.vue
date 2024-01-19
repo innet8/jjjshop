@@ -3,9 +3,9 @@
         <el-form size="small" ref="form" :model="form" label-position="top">
 
             <el-form-item :label="$t('服务器连接地址')" prop="server" :rules="[{ required: true, message: $t('请输入服务器连接地址') }]">
-                <el-input style="width: 200px;" v-model="form.server.ip"></el-input>
+                <el-input style="width: 200px;" disabled v-model="form.server.ip"></el-input>
                 <p>:</p>
-                <el-input style="width: 100px;" v-model="form.server.port"></el-input>
+                <el-input style="width: 100px;" disabled v-model="form.server.port"></el-input>
             </el-form-item>
 
             <el-form-item :label="$t('等待时长颜色：')" :rules="[{ required: true, message: '' }]">
