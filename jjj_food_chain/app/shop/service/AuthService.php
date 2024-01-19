@@ -112,7 +112,7 @@ class AuthService
     private function checkAccess($url)
     {
         // 超级管理员无需验证
-        if ($this->user['is_super']) {
+        if ($this->user && $this->user['is_super'] ?? '') {
             return true;
         }
         // 验证当前请求是否在白名单
