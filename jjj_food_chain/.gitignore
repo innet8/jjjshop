@@ -8,4 +8,5 @@ composer.lock
 /node_modules
 /runtime/*
 /docker/mysql/*
+/public/uploads/*
 /public/temp/*
