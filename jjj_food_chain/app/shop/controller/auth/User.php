@@ -205,6 +205,9 @@ class User extends Controller
             $menus = $model->getListByUser($user['shop_user_id'], $user['user_type'], $supplier);
 
             foreach ($menus as $key => $val) {
+                if (!isset($val['children'][0]['path'])) {
+                    continue;
+                }
                 if ($val['redirect_name'] != $val['children'][0]['path']) {
                     $menus[$key]['redirect_name'] = $menus[$key]['children'][0]['path'];
                 }
