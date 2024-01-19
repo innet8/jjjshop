@@ -621,7 +621,7 @@ function validateNumber($str)
 
 /**
  *  获取局域网ip
- * @return bool
+ * @return string
  */
 function getLanIp()
 {
