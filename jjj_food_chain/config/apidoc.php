@@ -62,6 +62,14 @@ return [
             'path'=>'app\tablet\controller',
             // （必须）唯一的key
             'key'=>'tablet',
+        ],
+        [
+            // （必须）标题
+            'title'=> '厨显端接口',
+            // （必须）控制器目录地址
+            'path'=>'app\kitchen\controller',
+            // （必须）唯一的key
+            'key'=>'kitchen',
         ]
     ],
 

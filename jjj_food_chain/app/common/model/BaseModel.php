@@ -73,11 +73,20 @@ class BaseModel extends Model
     }
 
     /**
+     * 设置app_id (厨显模块)
+     */
+    protected static function setKitchenAppId()
+    {
+        self::$app_id = request()->header('appId') ?: request()->param('app_id');
+    }
+
+
+    /**
      * 设置app_id (cashier模块)
      */
     protected static function setCashierAppId()
     {
-        self::$app_id = request()->header('appId');
+        self::$app_id = request()->header('appId') ?: request()->param('app_id');
     }
 
     /**
