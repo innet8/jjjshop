@@ -1,23 +1,23 @@
 <template>
-	<el-dialog title="修改密码" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
+	<el-dialog :title="$t('修改密码')" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
 		:close-on-press-escape="false" width="30%">
 		<el-form size="small" :model="form" label-position="top" ref="form">
-			<el-form-item label="原始密码" :label-width="formLabelWidth" prop="oldpass"
+			<el-form-item :label="$t('原始密码')" :label-width="formLabelWidth" prop="oldpass"
 				:rules="[{required: true,message: ' '}]">
 				<el-input type="password" v-model="form.oldpass" autocomplete="off"></el-input>
 			</el-form-item>
-			<el-form-item label="新密码" :label-width="formLabelWidth" prop="password"
+			<el-form-item :label="$t('新密码')" :label-width="formLabelWidth" prop="password"
 				:rules="[{required: true,message: ' '}]">
 				<el-input type="password" v-model="form.password" autocomplete="off"></el-input>
 			</el-form-item>
-			<el-form-item label="确认新密码" :label-width="formLabelWidth" prop="confirmPass"
+			<el-form-item :label="$t('确认新密码')" :label-width="formLabelWidth" prop="confirmPass"
 				:rules="[{required: true,message: ' '}]">
 				<el-input type="password" v-model="form.confirmPass" autocomplete="off"></el-input>
 			</el-form-item>
 		</el-form>
 		<template #footer>
-			<el-button @click="dialogFormVisible">取 消</el-button>
-			<el-button type="primary" @click="submitFunc(form.user_id)" :loading="loading">确 定</el-button>
+			<el-button @click="dialogFormVisible">{{ $t('取消') }}</el-button>
+			<el-button type="primary" @click="submitFunc(form.user_id)" :loading="loading">{{ $t('确定') }}</el-button>
 		</template>
 	</el-dialog>
 </template>

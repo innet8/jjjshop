@@ -642,5 +642,8 @@
     "打印机": "printer",
     "商品分组": "Product grouping",
     "不选择打印全部": "Don't choose to print all",
-    "修改密码": "change Password"
+    "修改密码": "change Password",
+    "原始密码": "original password",
+    "新密码": "New Password",
+    "确认新密码": "Confirm the new password"
 }
