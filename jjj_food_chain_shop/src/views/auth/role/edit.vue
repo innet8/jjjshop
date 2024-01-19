@@ -18,8 +18,8 @@
                     :default-checked-keys="select_menu" :props="defaultProps" @check="handleCheckChange"></el-tree>
             </el-form-item>
 
-            <el-form-item :label="$t('排序：')"><el-input type="number" v-model="form.sort" :placeholder="$t('请输入排序')"
-                    class="max-w460"></el-input></el-form-item>
+            <!-- <el-form-item :label="$t('排序：')"><el-input type="number" v-model="form.sort" :placeholder="$t('请输入排序')"
+                    class="max-w460"></el-input></el-form-item> -->
 
             <!--提交-->
             <div class="common-button-wrapper">

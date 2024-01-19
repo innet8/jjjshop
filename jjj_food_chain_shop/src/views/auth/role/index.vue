@@ -15,7 +15,7 @@
         <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
           <el-table-column prop="role_id" label="ID"></el-table-column>
           <el-table-column prop="role_name_h1" :label="$t('角色名称')"></el-table-column>
-          <el-table-column prop="sort" :label="$t('排序')"></el-table-column>
+          <!-- <el-table-column prop="sort" :label="$t('排序')"></el-table-column> -->
           <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
           <el-table-column fixed="right" :label="$t('操作')" width="120">
             <template #default="scope">
