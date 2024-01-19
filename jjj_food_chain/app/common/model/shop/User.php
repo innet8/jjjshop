@@ -58,7 +58,7 @@ class User extends BaseModel
     public static function detail($where, $with = [])
     {
         !is_array($where) && $where = ['shop_user_id' => (int)$where];
-        return static::where(array_merge(['is_delete' => 0], $where))->with($with)->find();
+        return static::where(array_merge(['is_delete' => 0], $where))->with($with)->find()->hidden(['password']);
     }
 
     /**
