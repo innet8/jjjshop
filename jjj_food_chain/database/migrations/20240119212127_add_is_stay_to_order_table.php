@@ -3,7 +3,7 @@
 use think\migration\Migrator;
 use think\migration\db\Column;
 
-class AddIsSendKitchenToOrderProductTable extends Migrator
+class AddIsStayToOrderTable extends Migrator
 {
     /**
      * Change Method.
@@ -28,9 +28,10 @@ class AddIsSendKitchenToOrderProductTable extends Migrator
      */
     public function change()
     {
-        $table = $this->table('order_product');
-        $table->addColumn(Column::integer('is_send_kitchen')->setNull(false)->setDefault(0)->setComment('送厨状态 0-否 1-是')->setAfter('product_name'));
-        $table->addColumn(Column::integer('send_kitchen_time')->setNull(false)->setDefault(0)->setComment('送厨时间')->setAfter('product_name'));
+        // 桌台表
+        $table = $this->table('order');
+        $table->addColumn(Column::integer('is_stay')->setNull(false)->setDefault(0)->setComment('挂单状态 0-否 1-是')->setAfter('order_price'));
+        $table->addColumn(Column::integer('stay_time')->setNull(false)->setDefault(0)->setComment('挂单时间')->setAfter('order_price'));
         $table->update();
     }
 }

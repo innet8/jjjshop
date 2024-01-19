@@ -2,9 +2,12 @@
 
 namespace app\common\model\order;
 
+use app\common\library\helper;
 use app\common\model\BaseModel;
+use app\common\model\order\Order as OrderModel;
 use app\common\model\product\Product as ProductModel;
 use app\common\model\product\ProductSku as ProductSkuModel;
+use think\facade\Log;
 
 /**
  * 订单商品模型
@@ -191,5 +194,50 @@ class OrderProduct extends BaseModel
             return false;
         }
         return $model->delete();
+    }
+
+    // 未送厨商品备注
+    public function updateKitchenRemark($order_product_id, $remark)
+    {
+        return $this->where('order_product_id', '=', $order_product_id)->update(['kitchen_remark' => $remark]);
+    }
+
+    // 收银端列表商品改价
+    public function changePrice($order_product_id, $money)
+    {
+        $this->startTrans();
+        try {
+            if ($money < 0) {
+                $this->error = "价格错误";
+                return false;
+            }
+            $p = OrderProduct::where('order_product_id', '=', $order_product_id)->find();
+            if (!$p) {
+                $this->error = "商品不存在";
+                return false;
+            }
+            $p->product_price = $money;
+            $p->total_price = helper::bcmul($money, $p->total_num);
+            if ($p->save()) {
+                // 更新
+                (new OrderModel)->reloadPrice($p['order_id']);
+                $this->commit();
+                return true;
+            } else {
+                $this->error = "商品不存在";
+                return false;
+            }
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
+            $this->error = $e->getMessage();
+            $this->rollback();
+            return false;
+        }
+    }
+
+    // 送厨
+    public function sendKitchen($order_product_ids)
+    {
+        return $this->whereIn('order_product_id', $order_product_ids)->update(['is_send_kitchen' => 1, 'send_kitchen_time' => time()]);
     }
 }

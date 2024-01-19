@@ -332,11 +332,14 @@ class Order extends OrderModel
             $this->error = "订单已完成,不允许退菜";
             return false;
         }
-        if (count($this['product']) <= 1) {
+
+        $orderProduct = OrderProduct::detail($order_product_id);
+
+        if (count($this['product']) <= 1 && $orderProduct['total_num'] <= $num) {
             $this->error = "仅剩一个商品，不允许退菜，请选择退单";
             return false;
         }
-        $orderProduct = OrderProduct::detail($order_product_id);
+
         if ($orderProduct['total_num'] < $num) {
             $this->error = "退菜数量不能大于当前商品数量";
             return false;
@@ -578,5 +581,32 @@ class Order extends OrderModel
         }
     }
 
+    // 整单取消
+    public function delStay($order_id)
+    {
+        // 把送厨的订单删除
+        (new OrderProduct)->where('order_id', '=', $order_id)->delete();
+        // 把订单取消
+        $detail = Order::detail($order_id);
+        return $detail?->cancels();
+    }
+
+    // 挂单列表
+    public function getStayList()
+    {
+        return $this->with(['product'])->where('is_stay', '=', 1)->where('order_status', '=', 10)->select();
+    }
+
+    // 订单挂单
+    public function stayOrder($order_id)
+    {
+        return $this->where('order_id', '=', $order_id)->update(['is_stay' => 1, 'stay_time' => time()]);
+    }
+
+    // 订单取单
+    public function pickOrder($order_id)
+    {
+        return $this->where('order_id', '=', $order_id)->update(['is_stay' => 0]);
+    }
 
 }

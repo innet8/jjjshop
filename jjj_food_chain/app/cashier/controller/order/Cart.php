@@ -5,6 +5,7 @@ namespace app\cashier\controller\order;
 use app\cashier\controller\Controller;
 use app\cashier\model\order\Cart as CartModel;
 use app\cashier\model\order\Order as OrderModel;
+use app\common\model\order\OrderProduct;
 use hg\apidoc\annotation as Apidoc;
 
 /**
@@ -55,6 +56,24 @@ class Cart extends Controller
      */
     public function list($delivery = 40, $order_id = 0)
     {
+//        $model = new CartModel();
+//        // 挂单数量
+//        $stayNum = $model->stayNum($this->cashier['user']);
+//        // 购物车商品列表
+//        $productList = $model->getList($this->cashier['user']);
+//        if (!empty($productList) && isset($productList[0])) {
+//            $order_id = $order_id ? $order_id : $productList[0]['order_id'];
+//        }
+//        // 送厨商品列表
+//        $orderProductList = [];
+//        if ($order_id) {
+//            $orderProductList = OrderModel::detail($order_id)['product'];
+//        }
+//        // 购物车金额
+//        $cartInfo = $model->getCartPrice($this->cashier['user'], $delivery);
+//
+//        return $this->renderSuccess('', compact('orderProductList','productList', 'cartInfo', 'delivery', 'stayNum', 'order_id'));
+
         $model = new CartModel();
         // 挂单数量
         $stayNum = $model->stayNum($this->cashier['user']);
@@ -67,14 +86,15 @@ class Cart extends Controller
      * @Apidoc\Title("商品改价")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/changePrice")
-     * @Apidoc\Param("cart_id", type="int", require=true, desc="购物车ID")
+     * @Apidoc\Param("order_product_id", type="int", require=true, desc="购物车ID")
      * @Apidoc\Param("price", type="float", require=true, desc="价格")
      * @Apidoc\Returned()
      */
-    public function changePrice($cart_id, $price)
+    public function changePrice($order_product_id, $price)
     {
-        $model = new CartModel();
-        if ($model->changePrice($cart_id, $price, $this->cashier['user'])) {
+
+        $model = new OrderProduct();
+        if ($model->changePrice($order_product_id, $price)) {
             return $this->renderSuccess('改价成功');
         };
         return $this->renderError($model->getError() ?: '改价失败');
@@ -84,13 +104,13 @@ class Cart extends Controller
      * @Apidoc\Title("删除商品")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/delProduct")
-     * @Apidoc\Param("cart_id", type="int", require=true, desc="购物车商品ID")
+     * @Apidoc\Param("order_product_id", type="int", require=true, desc="订单商品ID")
      * @Apidoc\Returned()
      */
-    public function delProduct($cart_id)
+    public function delProduct($order_product_id)
     {
-        $model = new CartModel();
-        if ($model->delProduct($cart_id)) {
+        $model = new OrderProduct();
+        if ($model->delProduct($order_product_id)) {
             return $this->renderSuccess('删除成功');
         };
         return $this->renderError($model->getError() ?: '删除失败');
@@ -100,13 +120,19 @@ class Cart extends Controller
      * @Apidoc\Title("整单取消")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/delStay")
-     * @Apidoc\Param("cart_no", type="string", require=false, desc="挂起单号")
+     * @Apidoc\Param("order_id", type="int", require=false, desc="订单号")
      * @Apidoc\Returned()
      */
-    public function delStay($cart_no = '')
+    public function delStay($order_id)
     {
-        $model = new CartModel();
-        if ($model->delStay($cart_no)) {
+//        $model = new CartModel();
+//        if ($model->delStay($cart_no)) {
+//            return $this->renderSuccess('取消成功');
+//        };
+//        return $this->renderError($model->getError() ?: '取消失败');
+
+        $model = new OrderModel();
+        if ($model->delStay($order_id)) {
             return $this->renderSuccess('取消成功');
         };
         return $this->renderError($model->getError() ?: '取消失败');
@@ -121,9 +147,9 @@ class Cart extends Controller
      */
     public function stayList()
     {
-        $model = new CartModel();
+        $model = new OrderModel();
         // 购物车商品列表
-        $productList = $model->getStayList($this->cashier['user']);
+        $productList = $model->getStayList();
         return $this->renderSuccess('', compact('productList'));
     }
 
@@ -131,13 +157,13 @@ class Cart extends Controller
      * @Apidoc\Title("挂单")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/stay")
-     * @Apidoc\Param("order_id", type="int", require=false, desc="订单id")
+     * @Apidoc\Param("order_id", type="int", require=true, desc="订单ID")
      * @Apidoc\Returned()
      */
-    public function stay($order_id = 0)
+    public function stay($order_id)
     {
-        $model = new CartModel();
-        if ($model->stayCart($this->cashier['user'], $order_id)) {
+        $model = new OrderModel();
+        if ($model->stayOrder($order_id)) {
             return $this->renderSuccess('挂单成功');
         };
         return $this->renderError($model->getError() ?: '挂单失败');
@@ -147,17 +173,16 @@ class Cart extends Controller
      * @Apidoc\Title("取单")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/pick")
-     * @Apidoc\Param("cart_no", type="string", require=true, desc="挂起单号")
+     * @Apidoc\Param("order_id", type="int", require=true, desc="订单ID")
      * @Apidoc\Returned()
      */
-    public function pick($cart_no)
+    public function pick($order_id)
     {
-        $model = new CartModel();
-        if ($model->pickCart($cart_no, $this->cashier['user'])) {
-            $order_id = $model->checkOrderByCardNo($cart_no);
-            return $this->renderSuccess('取单成功', compact('order_id'));
+        $model = new OrderModel();
+        if ($model->pickOrder($order_id)) {
+            return $this->renderSuccess('取单成功');
         };
-        return $this->renderError($model->getError() ?: '请先将购物车内的商品挂单或结账后再取单');
+        return $this->renderError($model->getError() ?: '取单失败');
     }
 
     /**
@@ -199,15 +224,15 @@ class Cart extends Controller
      * @Apidoc\Title("加减购物商品数量")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/sub")
-     * @Apidoc\Param("cart_id", type="int", require=true, desc="购物车商品ID")
+     * @Apidoc\Param("order_product_id", type="int", require=true, desc="订单商品ID")
      * @Apidoc\Param("product_num", type="int", require=true, desc="商品数量")
-     * @Apidoc\Param("type", type="string", require=true, default="mid", desc="操作类型：mid-中间件操作，up-加，down-减")
      * @Apidoc\Returned()
      */
-    public function sub($cart_id)
+    public function sub($order_product_id)
     {
-        $model = CartModel::detail($cart_id);
+        $model = OrderProduct::detail($order_product_id);
         if ($model->sub($this->postData())) {
+            (new OrderModel())->reloadPrice($model['order_id']);
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model->getError() ?: '操作失败');
@@ -230,14 +255,20 @@ class Cart extends Controller
      * @Apidoc\Title("备注")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/remark")
-     * @Apidoc\Param("cart_id", type="int", require=true, desc="购物车商品ID")
+     * @Apidoc\Param("order_product_id", type="int", require=true, desc="订单商品ID")
      * @Apidoc\Param("remark", type="string", require=true, desc="备注")
      * @Apidoc\Returned()
      */
-    public function remark($cart_id, $remark)
+    public function remark($order_product_id, $remark)
     {
-        $model = new CartModel();
-        if ($model->updateRemark($cart_id, $remark)) {
+//        $model = new CartModel();
+//        if ($model->updateRemark($cart_id, $remark)) {
+//            return $this->renderSuccess('备注成功');
+//        }
+//        return $this->renderError($model->getError() ?: '备注失败');
+
+        $model = new OrderProduct();
+        if ($model->updateKitchenRemark($order_product_id, $remark)) {
             return $this->renderSuccess('备注成功');
         }
         return $this->renderError($model->getError() ?: '备注失败');
@@ -251,13 +282,12 @@ class Cart extends Controller
      * @Apidoc\Param("order_id", type="int", require=false, desc="订单id")
      * @Apidoc\Returned()
      */
-    public function sendKitchen()
+    public function sendKitchen($order_product_ids = [301, 300])
     {
-        $params = $this->postData();
-        $user = $this->cashier['user'];
-        $model = new CartModel();
-        if ($order_id = $model->sendKitchen($params, $user)) {
-            return $this->renderSuccess('送厨成功', compact('order_id'));
+
+        $model = new OrderProduct();
+        if ($model->sendKitchen($order_product_ids)) {
+            return $this->renderSuccess('送厨成功');
         }
         return $this->renderError($model->getError() ?: '送厨失败');
     }
