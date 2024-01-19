@@ -48,27 +48,27 @@ export default defineComponent({
             sourceList: [
                 {
                     key: 'spec',
-                    value: '规格库',
+                    value: $t('规格库'),
                     path: '/product/expand/spec/index'
                 },
                 {
                     key: 'attr',
-                    value: '属性库',
+                    value: $t('属性库'),
                     path: '/product/expand/attr/index'
                 },
                 {
                     key: 'feed',
-                    value: '加料库',
+                    value: $t('加料库'),
                     path: '/product/expand/feed/index'
                 },
                 {
                     key: 'unit',
-                    value: '单位库',
+                    value: $t('单位库'),
                     path: '/product/expand/unit/index'
                 },
                 {
                     key: 'labels',
-                    value: '打印标签',
+                    value: $t('打印标签'),
                     path: '/product/expand/label/index'
                 }
             ],

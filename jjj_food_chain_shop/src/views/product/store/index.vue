@@ -40,17 +40,17 @@ export default defineComponent({
             /*切换数组原始数据*/
             sourceList: [{
                 key: 'productindex',
-                value: '商品管理',
+                value: $t('商品管理'),
                 path: '/product/store/product/index'
             },
             {
                 key: 'categoryindex',
-                value: '分类管理',
+                value: $t('分类管理'),
                 path: '/product/store/category/index'
             },
             {
                 key: 'featureindex',
-                value: '特色管理',
+                value: $t('特色管理'),
                 path: '/product/store/feature/index'
             },
             ],

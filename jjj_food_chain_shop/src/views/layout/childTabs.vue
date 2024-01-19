@@ -21,6 +21,7 @@ bus_on("tabData", (res) => {
     activeValue.value = res.active;
     tab_type.value = res.tab_type;
 })
+
 bus_on('activeValue', (res) => {
     if (res && res.params) {
         activeValue.value = res.params;

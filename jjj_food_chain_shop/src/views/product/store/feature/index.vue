@@ -61,7 +61,8 @@ export default {
             categoryModel: {
                 catList: [],
                 model: {}
-            }
+            },
+            tableData:[],
         };
     },
     created() {
