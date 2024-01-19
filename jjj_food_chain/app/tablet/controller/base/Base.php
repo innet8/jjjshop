@@ -2,10 +2,10 @@
 
 namespace app\tablet\controller\base;
 
-use app\common\model\store\Table;
-use hg\apidoc\annotation as Apidoc;
 use app\tablet\controller\Controller;
-use app\common\model\call\Call as CallModel;
+use app\common\model\supplier\Supplier as SupplierModel;
+use hg\apidoc\annotation as Apidoc;
+
 
 /**
  * 基础
@@ -17,17 +17,47 @@ class Base extends Controller
      * @Apidoc\Desc("基础信息")
      * @Apidoc\Method("POST")
      * @Apidoc\Url("/index.php/tablet/base.base/getInfo")
-     * @Apidoc\Param("table_id", type="int", require=true, default="0", desc="卓位id")
-     * @Apidoc\Param("call_type", type="int", require=true, default="1", desc="呼叫类型(1服务员,2收款)")
-     * @Apidoc\Param("shop_supplier_id", type="int", require=true, default="0", desc="门店id")
      */
     public function getInfo()
     {
+        $detail = (new SupplierModel)->find();
+        return $this->renderSuccess('基础信息', $detail);
+    }
 
+    /**
+     * @Apidoc\Title("验证密码")
+     * @Apidoc\Desc("验证密码")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/index.php/tablet/base.base/verifyPassword")
+     * @Apidoc\Param("password", type="string", require=true, desc="密码")
+     */
+    public function verifyPassword($password)
+    {
+        $detail = (new SupplierModel)->find();
+        if ($password == $detail['shop_supplier_id']) {
+            return $this->renderSuccess('验证成功');
+        }
+        return $this->renderError('验证失败');
+    }
+
+    /**
+     * @Apidoc\Title("首页广告")
+     * @Apidoc\Desc("首页广告")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/index.php/tablet/base.base/ad")
+     */
+    public function ad()
+    {
         $list = [
-            'shop_supplier_id' => 10001
+            [
+                'name' => 'ad_1',
+                'url' => 'https://www.baidu.com/'
+            ],
+            [
+                'name' => 'ad_2',
+                'url' => 'https://www.baidu.com/'
+            ]
         ];
-        // 
-        return $this->renderSuccess('基础信息', $list);
+        return $this->renderSuccess('请求成功', $list);
     }
 }
