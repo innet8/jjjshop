@@ -124,7 +124,6 @@
         self.$refs.form.validate(valid => {
           if (valid) {
             self.loading = true;
-            console.log(params)
             PointsApi.addProduct({
                 params: JSON.stringify(params)
               }, true)

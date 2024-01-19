@@ -90,7 +90,6 @@ export default {
         },
 
         changeStatus(row) {
-            console.log(123123);
             let self = this;
             let params = {
                 key: row.value,

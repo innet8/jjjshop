@@ -84,7 +84,7 @@
           .then(res => {
             if (res.code == 1) {
               self.loading = false;
-               console.log(self.excludeIds);
+
               /*判断是否需要去重*/
               if(self.excludeIds&&typeof(self.excludeIds)!='undefined'&&self.excludeIds.length>0){
                 res.data.specList.forEach(item=>{

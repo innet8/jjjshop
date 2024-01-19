@@ -217,7 +217,7 @@
               file_path: e.params.product_image
             }
           }
-          console.log(e.params.product_name)
+
           if (self.product_type == 0) {
             self.takeoutData.push(params)
           } else {

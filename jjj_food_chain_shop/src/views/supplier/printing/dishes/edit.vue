@@ -135,7 +135,6 @@ export default {
             )
                 .then(data => {
                     Object.assign(self.form, data.data.model);
-                    console.log(self.form)
                     this.storeList = data.data.storeList;
                     this.takeList = data.data.takeList;
                     this.type = data.data.printerList;

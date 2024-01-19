@@ -66,7 +66,7 @@ export default {
           } else {
             self.form.status = false;
           }
-          console.log(self.form);
+
         })
         .catch(error => {
           self.loading = false;

@@ -87,7 +87,6 @@
           .then(res => {
             self.loading = false;
             Object.assign(self.form, res.data);
-            console.log(self.form)
           })
           .catch(error => {
             self.loading = false;

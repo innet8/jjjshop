@@ -54,7 +54,6 @@
          cost_price:0,
          is_full:0
        })
-       console.log(self.form.model.sku)
       },
 
       /*删除规格组事件*/

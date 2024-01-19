@@ -193,7 +193,7 @@ export default {
     /*获取链接并关闭弹窗*/
     closeLinkset(e) {
       this.is_linkset = false;
-      console.log(e);
+
       this.form.link = e;
     },
 

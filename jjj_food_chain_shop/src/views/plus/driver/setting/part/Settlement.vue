@@ -59,7 +59,7 @@
     created() {
 
       this.form = this.settingData.data.settlement.values;
-      console.log(this.form)
+
       this.list = this.settingData.pay_type;
 
     },

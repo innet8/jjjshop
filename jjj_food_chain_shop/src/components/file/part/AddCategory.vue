@@ -45,7 +45,6 @@ export default {
 	},
 	props:['category'],
 	created() {
-		console.log(this.category);
 		if(this.category!=null){
 			this.form.categoryname=this.category.group_name;
 			this.form.group_id=this.category.group_id;

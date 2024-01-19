@@ -121,7 +121,7 @@
       onSubmit() {
         let self = this;
         let params = this.form;
-        console.log(params)
+
         if (params.coupon_ids.length <= 0) {
           params.coupon_ids = ''
         }

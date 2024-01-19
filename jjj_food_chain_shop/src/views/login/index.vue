@@ -65,10 +65,10 @@ import bgimg from '@/assets/img/login_bg.png';
 import logimg from '@/assets/img/login_logo.png';
 import UserApi from '@/api/user.js';
 import { useUserStore } from '@/store';
-import { useLockscreenStore } from "@/store/model/lockscreen.js"
+// import { useLockscreenStore } from "@/store/model/lockscreen.js"
 import { languageStore } from '@/store/model/language.js';
 import SvgIcon from "@/components/svg-icon/SvgIcon.vue";
-const useLockscreen = useLockscreenStore();
+// const useLockscreen = useLockscreenStore();
 const { afterLogin } = useUserStore();
 const language = languageStore()
 const languageNow = language.getLanguage().language
@@ -166,7 +166,7 @@ export default {
                     this.randomNum(0, this.identifyCodes.length)
                 ];
             }
-            // console.log("this.identifyCode:", this.identifyCode);
+   
         },
         /*获取基础配置*/
         getData() {
@@ -211,7 +211,7 @@ export default {
                             _this.$router.push({
                                 path: '/home'
                             })
-                            useLockscreen.setLock(false);
+                            // useLockscreen.setLock(false);
                         })
                         .catch(error => {
                             //接口调用方法统一处理

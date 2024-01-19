@@ -147,7 +147,6 @@
               coupon_num: 1
             });
             self.tableData.push(e.params);
-            console.log(self.form.coupon)
           } else {
             let flag = true;
             self.form.coupon.forEach((item, index) => {
@@ -175,7 +174,6 @@
           id: id
         }, true).then(data => {
           self.form = formatModel(self.form, data.data.data);
-          console.log(self.form)
           self.Grade = data.data.list;
           if (data.data.data.coupon_list) {
             self.form.coupon = JSON.parse(self.form.coupon)

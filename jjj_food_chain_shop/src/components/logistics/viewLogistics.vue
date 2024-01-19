@@ -40,7 +40,7 @@
         if (n != o) {
           if (n) {
             this.activities = n;
-            console.log(this.activities)
+
 
           }
         }

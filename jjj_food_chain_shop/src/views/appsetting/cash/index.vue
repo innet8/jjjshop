@@ -192,7 +192,7 @@ export default {
             });
         },
         upLoad(data) {
-            console.log(data);
+ 
             this.form.carousel.push(
                 {
                     real_name: data.real_name,

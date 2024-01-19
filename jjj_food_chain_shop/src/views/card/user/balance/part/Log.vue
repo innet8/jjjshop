@@ -140,7 +140,6 @@ export default {
             Params.page = self.curPage;
             Params.list_rows = self.pageSize;
             UserApi.BalanceLog(Params, true).then(data => {
-                //  console.log(data.data.list.data);
                 self.loading = false;
                 self.tableData = data.data.list.data;
                 self.totalDataNumber = data.data.list.total;

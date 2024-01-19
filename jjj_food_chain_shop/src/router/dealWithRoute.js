@@ -3,6 +3,7 @@ import router from './index.js'
 let modules = import.meta.glob(['../views/*.vue', '../views/*/*.vue', '../views/*/*/*.vue', '../views/*/*/*/*.vue',
 	'../views/*/*/*/*/*.vue'
 ])
+
 let count = 0;
 const dealWithRoute = async (data, parent = 'Home') => {
 	for (let item of data) {

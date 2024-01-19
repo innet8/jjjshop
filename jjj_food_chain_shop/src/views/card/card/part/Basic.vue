@@ -130,7 +130,6 @@
       closeProductDialogFunc(e) {
         let self = this;
         self.open_add = e.openDialog;
-        console.log(e)
         if (e.type == 'success') {
           let params = {
             coupon_id: e.params.coupon_id,
@@ -147,7 +146,6 @@
       },
       delcoupon(item) {
         let self = this;
-        console.log(item)
         let n = self.form.model.open_coupons.indexOf(item);
         self.form.model.open_coupons.splice(n, 1);
       },

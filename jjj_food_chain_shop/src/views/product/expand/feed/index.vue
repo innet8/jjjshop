@@ -160,7 +160,6 @@ export default {
         },
         deleteBatch() {
             let self = this;
-            console.log(this.multipleSelection);
             let arr = [];
             this.multipleSelection.forEach((item, index) => {
                 arr.push(item.feed_id);

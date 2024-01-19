@@ -75,7 +75,6 @@ export default {
     created() {
         this.dialogVisible = this.open_edit;
         this.form.attribute_value = this.editform.attribute_value;
-        console.log(this.form);
         this.form.attribute_id = this.editform.attribute_id;
         this.form.attribute_name = JSON.parse(this.editform.attribute_name);
         this.form.sort = this.editform.sort;

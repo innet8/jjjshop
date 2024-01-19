@@ -56,7 +56,6 @@ export default {
           self.loading = false;
           self.listData = res.data.list;
           //self.buildTree(data.data.list, false);
-          console.log(res);
         })
         .catch((error) => {});
     },

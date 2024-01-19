@@ -203,7 +203,7 @@
         if (this.user_type != 0) {
           this.activeName = "complete";
         }
-        console.log(this.user_type)
+
       },
       /*跨多列*/
       arraySpanMethod(row) {

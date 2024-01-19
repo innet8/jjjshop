@@ -417,7 +417,6 @@
             if (self.detail.address != null) {
               self.addressData = self.detail.address;
             }
-            console.log(self.addressData)
           })
           .catch(error => {
             self.loading = false;

@@ -101,7 +101,6 @@
       addUser() {
         let self = this;
         let params = self.form;
-        console.log(params)
         self.$refs.form.validate((valid) => {
           if (valid) {
             self.loading = true;

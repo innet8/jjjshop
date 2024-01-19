@@ -186,7 +186,6 @@
             }
             Object.assign(self.form, res.data);
             self.form.model.product_status = res.data.model.product_status.value;
-            console.log(self.form)
           })
           .catch(error => {
             self.loading = false;

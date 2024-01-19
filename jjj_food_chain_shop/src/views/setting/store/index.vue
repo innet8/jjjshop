@@ -82,7 +82,6 @@
             self.form = Object.assign(self.form,vars);
             self.form.customer = vars.kuaidi100.customer;
             self.form.key = vars.kuaidi100.key;
-            console.log(self.form)
             self.loading = false;
           })
           .catch(error => {

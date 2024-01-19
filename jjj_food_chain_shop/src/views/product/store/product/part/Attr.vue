@@ -76,7 +76,6 @@ export default {
                 much: 2,
             },
             )
-            console.log(this.form.model.product_attr);
         },
         handleDelete(index) {
             this.form.model.product_attr.splice(index, 1);

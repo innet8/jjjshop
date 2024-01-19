@@ -70,7 +70,6 @@
       returnProductImgsFunc(e) {
         if (e != null) {
           let imgs = e;
-          console.log(imgs)
           this.form.model.file_path = imgs[0].file_path;
           this.form.model.image_id = imgs[0].file_id;
         }

@@ -24,6 +24,7 @@ import {
 import VueUeditorWrap from 'vue-ueditor-wrap'
 import filters from '@/filters/index.js' 
 import I18n from "./lang/index";
+
 const app = createApp(App);
 /** 加载自定义指令 */
 loadDirectives(app)
