@@ -530,8 +530,8 @@ class Setting extends BaseModel
                     'is_auto_send' => '0', // 收银结账自动送厨房
                     // 收银机服务器连接
                     'server' => [
-                        'ip' => Env::get('HARDWARE_SERVER_URL', ''),
-                        'port' => Env::get('HARDWARE_SERVER_PORT', ''),
+                        'ip' => Env::get('HARDWARE_SERVER_URL', getLanIp()),
+                        'port' => Env::get('HARDWARE_SERVER_PORT', '8080'),
                     ],
                     // 高级设置密码
                     'advanced_password' => '666888',
@@ -557,8 +557,8 @@ class Setting extends BaseModel
                     'is_show_sold_out' => '0', // 是否显示售罄商品
                     // 平板服务器连接
                     'server' => [
-                        'ip' => Env::get('HARDWARE_SERVER_URL', ''),
-                        'port' => Env::get('HARDWARE_SERVER_PORT', ''),
+                        'ip' => Env::get('HARDWARE_SERVER_URL', getLanIp()),
+                        'port' => Env::get('HARDWARE_SERVER_PORT', '8080'),
                     ],
                     // 高级设置密码
                     'advanced_password' => '666888',
@@ -575,8 +575,8 @@ class Setting extends BaseModel
                 'values' => [
                     // 厨显服务器连接
                     'server' => [
-                        'ip' => Env::get('HARDWARE_SERVER_URL', ''),
-                        'port' => Env::get('HARDWARE_SERVER_PORT', ''),
+                        'ip' => Env::get('HARDWARE_SERVER_URL', getLanIp()),
+                        'port' => Env::get('HARDWARE_SERVER_PORT', '8080'),
                     ],
                     // 高级设置密码
                     'advanced_password' => '666888',

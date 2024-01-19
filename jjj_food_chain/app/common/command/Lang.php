@@ -3,11 +3,12 @@ declare (strict_types = 1);
 
 namespace app\common\command;
 
-use think\console\Command;
+use help\SystemHelp;
 use think\console\Input;
-use think\console\input\Argument;
-use think\console\input\Option;
 use think\console\Output;
+use think\console\Command;
+use think\console\input\Option;
+use think\console\input\Argument;
 use app\common\library\language\Language;
 
 // 语言翻译
@@ -26,6 +27,11 @@ class Lang extends Command
 
     protected function execute(Input $input, Output $output)
     {
+
+        // 
+        dump(SystemHelp::cmd("ifconfig | grep 'inet ' | grep -v 127.0.0.1 | awk '{print $2}'"));
+        die;
+
         // 指令输出
         $output->writeln('lang');
         $channel = $input->getOption('channel') ?: 'google';

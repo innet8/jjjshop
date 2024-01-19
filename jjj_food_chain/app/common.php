@@ -1,10 +1,11 @@
 <?php
 
-use think\facade\Request;
+use help\SystemHelp;
 use think\facade\Log;
 use \Firebase\JWT\JWT;
 use \Firebase\JWT\Key;
 use think\facade\Config;
+use think\facade\Request;
 
 // 应用公共文件
 /**
@@ -615,4 +616,14 @@ function generateNumber()
 function validateNumber($str)
 {
     return preg_match('/^\d{4,16}$/', $str) === 1;
+}
+
+
+/**
+ *  获取局域网ip
+ * @return bool
+ */
+function getLanIp()
+{
+    return SystemHelp::cmd("ifconfig | grep 'inet ' | grep -v 127.0.0.1 | awk '{print $2}'");
 }
