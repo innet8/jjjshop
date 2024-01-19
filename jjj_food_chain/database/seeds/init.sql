@@ -40,7 +40,7 @@ CREATE TABLE `jjjfood_admin_user`  (
 -- ----------------------------
 -- Records of jjjfood_admin_user
 -- ----------------------------
-INSERT INTO `jjjfood_admin_user` VALUES (@appid, 'admin', '06e0213dcf92e986d383029494966903', 1529926348, 1595127602);
+INSERT INTO `jjjfood_admin_user` VALUES (@appid, '000000', '570f42a9531aac95f2a5b1de8b084ae9', 1529926348, 1595127602);
 
 -- ----------------------------
 -- Table structure for jjjfood_agent_apply
@@ -6576,7 +6576,7 @@ CREATE TABLE `jjjfood_shop_user`  (
 -- ----------------------------
 -- Records of jjjfood_shop_user
 -- ----------------------------
-INSERT INTO `jjjfood_shop_user` VALUES (@appid, 'admin', '06e0213dcf92e986d383029494966903', '管理员', 1, @appid, 0, 0, 0, @appid, 1529926348, 1629773332);
+INSERT INTO `jjjfood_shop_user` VALUES (@appid, '000000', '570f42a9531aac95f2a5b1de8b084ae9', '管理员', 1, @appid, 0, 0, 0, @appid, 1529926348, 1629773332);
 
 -- ----------------------------
 -- Table structure for jjjfood_shop_user_role
