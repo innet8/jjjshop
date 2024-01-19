@@ -24,7 +24,7 @@ class Call extends Controller
      */
     public function index($status)
     {
-        $list = (new CallModel)->getList($status, $this->cashier['user']['shop_supplier_id'] ?? 0);
+        $list = (new CallModel)->getList($status, $this->cashier['user']['shop_supplier_id'] ?? 0, $this->postData());
         return $this->renderSuccess('', compact('list'));
     }
 

@@ -12,9 +12,9 @@ class Call extends BaseModel
     /**
      * 获取列表记录
      */
-    public function getList(int $status = 0, int $shopSupplierId = 0)
+    public function getList(int $status = 0, int $shopSupplierId = 0, $params)
     {
-        return $this->withoutGlobalScope()->where('status', $status)->where('shop_supplier_id', $shopSupplierId)->select();
+        return $this->withoutGlobalScope()->where('status', $status)->where('shop_supplier_id', $shopSupplierId)->paginate($params);
     }
 
     /**
