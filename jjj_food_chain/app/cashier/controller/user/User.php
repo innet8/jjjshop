@@ -64,7 +64,6 @@ class User extends Controller
      * @Apidoc\Url ("/index.php/cashier/user.User/add")
      * @Apidoc\Param("mobile", type="string", require=true, desc="手机号")
      * @Apidoc\Param("nick_name", type="string", require=false, desc="昵称")
-     * @Apidoc\Param("password", type="string", require=true, desc="密码")
      * @Apidoc\Returned()
      */
     public function add()
