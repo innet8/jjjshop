@@ -3,6 +3,7 @@
 namespace app\cashier\controller;
 
 use app\common\model\settings\Setting as SettingModel;
+use app\common\enum\settings\SettingEnum;
 use hg\apidoc\annotation as Apidoc;
 
 /**
@@ -40,7 +41,7 @@ class Index extends Controller
     {
         $user = $this->cashier;
         // 货币信息
-        $currency = SettingModel::getSupplierItem('currency', $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
+        $currency = SettingModel::getSupplierItem(SettingEnum::CURRENCY, $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
         $user['currency'] = [
             'unit' => $currency['unit'],
             'is_open' => $currency['is_open'],
@@ -50,7 +51,7 @@ class Index extends Controller
             ],
         ];
         // 收银机设置
-        $cashier = SettingModel::getSupplierItem('cashier', $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
+        $cashier = SettingModel::getSupplierItem(SettingEnum::CASHIER, $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
         unset($cashier['cashier_password']);
         unset($cashier['advanced_password']);
         unset($cashier['language_list']);
@@ -82,7 +83,7 @@ class Index extends Controller
      */
     public function lang()
     {
-        $cashier = SettingModel::getSupplierItem('cashier', $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
+        $cashier = SettingModel::getSupplierItem(SettingEnum::CASHIER, $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
         $lang['language'] = $cashier['language'];
         $lang['default_language'] = $cashier['default_language'];
         return $this->renderSuccess('请求成功', $lang);
@@ -96,7 +97,7 @@ class Index extends Controller
      */
     public function ad()
     {
-        $cashier = SettingModel::getSupplierItem('cashier', $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
+        $cashier = SettingModel::getSupplierItem(SettingEnum::CASHIER, $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
         $list = [];
         if (isset($cashier['carousel']) && !empty($cashier['carousel'])) {
             $list = $cashier['carousel'];
@@ -113,7 +114,7 @@ class Index extends Controller
      */
     public function verifyPassword($password)
     {
-        $cashier = SettingModel::getSupplierItem('cashier', $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
+        $cashier = SettingModel::getSupplierItem(SettingEnum::CASHIER, $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
         if ($password == $cashier['cashier_password']) {
             return $this->renderSuccess('验证成功');
         }
@@ -129,7 +130,7 @@ class Index extends Controller
      */
     public function verifyAdvancedPassword($password)
     {
-        $cashier = SettingModel::getSupplierItem('cashier', $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
+        $cashier = SettingModel::getSupplierItem(SettingEnum::CASHIER, $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
         if ($password == $cashier['advanced_password']) {
             return $this->renderSuccess('验证成功');
         }
@@ -146,10 +147,10 @@ class Index extends Controller
      */
     public function setServer($ip, $port)
     {
-        $cashier = SettingModel::getSupplierItem('cashier', $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
+        $cashier = SettingModel::getSupplierItem(SettingEnum::CASHIER, $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
         $cashier['server']['ip'] = $ip;
         $cashier['server']['port'] = $port;
-        SettingModel::updateSetting('cashier', $cashier, $this->cashier['user']['shop_supplier_id']);
+        SettingModel::updateSetting(SettingEnum::CASHIER, $cashier, $this->cashier['user']['shop_supplier_id']);
         return $this->renderSuccess('设置成功');
     }
 }

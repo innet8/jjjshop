@@ -5,6 +5,7 @@ namespace app\kitchen\controller\base;
 use app\kitchen\controller\Controller;
 use app\common\model\supplier\Supplier as SupplierModel;
 use app\common\model\settings\Setting as SettingModel;
+use app\common\enum\settings\SettingEnum;
 use hg\apidoc\annotation as Apidoc;
 
 
@@ -18,6 +19,14 @@ class Base extends Controller
      * @Apidoc\Desc("基础信息")
      * @Apidoc\Method("POST")
      * @Apidoc\Url("/index.php/kitchen/base.base/getInfo")
+     * @Apidoc\Returned("currency", type="object", desc="货币", children={
+     *    @Apidoc\Param ("unit",type="string",desc="主单位"),
+     *    @Apidoc\Param ("is_open",type="string",desc="是否开启副单位 0-关闭 1-开启"),
+     *    @Apidoc\Param ("vices",type="object",desc="副单位",children={
+     *       @Apidoc\Param ("vice_unit",type="string",desc="副单位"),
+     *      @Apidoc\Param ("unit_rate",type="float",desc="副单位比例"),
+     *   }),
+     * })
      * @Apidoc\Returned("kitchen", type="object", desc="厨显端设置", children={
      *    @Apidoc\Param ("is_wait_color",type="string",desc="是否开启等待时长颜色 0-关闭 1-开启"),
      *    @Apidoc\Param ("wait_color",type="array",desc="是时长颜色 10分钟-黄色#ffff00 20分钟-红色#ff0000"),
@@ -32,8 +41,18 @@ class Base extends Controller
     public function getInfo()
     {
         $app = (new SupplierModel)->find();
+        // 货币信息
+        $currency = SettingModel::getSupplierItem(SettingEnum::CURRENCY, $this->kitchen['shop_supplier_id'], $this->kitchen['app_id']);
+        $user['currency'] = [
+            'unit' => $currency['unit'],
+            'is_open' => $currency['is_open'],
+            'vices' => [
+                'vice_unit' => $currency['vice_unit'],
+                'unit_rate' => $currency['unit_rate'],
+            ],
+        ];
         // 厨显端设置
-        $kitchen = SettingModel::getSupplierItem('kitchen', $this->kitchen['shop_supplier_id'], $this->kitchen['app_id'] ?? 0);
+        $kitchen = SettingModel::getSupplierItem(SettingEnum::KITCHEN, $this->kitchen['shop_supplier_id'], $this->kitchen['app_id'] ?? 0);
         unset($kitchen['advanced_password']);
         unset($kitchen['language_list']);
         $supplier['kitchen'] = $kitchen;
@@ -48,7 +67,7 @@ class Base extends Controller
      */
     public function lang()
     {
-        $kitchen = SettingModel::getSupplierItem('kitchen', $this->kitchen['shop_supplier_id'], $this->kitchen['app_id'] ?? 0);
+        $kitchen = SettingModel::getSupplierItem(SettingEnum::KITCHEN, $this->kitchen['shop_supplier_id'], $this->kitchen['app_id'] ?? 0);
         $lang['language'] = $kitchen['language'];
         $lang['default_language'] = $kitchen['default_language'];
         return $this->renderSuccess('请求成功', $lang);
@@ -63,7 +82,7 @@ class Base extends Controller
      */
     public function verifyAdvancedPassword($password)
     {
-        $kitchen = SettingModel::getSupplierItem('kitchen', $this->kitchen['shop_supplier_id'], $this->kitchen['app_id'] ?? 0);
+        $kitchen = SettingModel::getSupplierItem(SettingEnum::KITCHEN, $this->kitchen['shop_supplier_id'], $this->kitchen['app_id'] ?? 0);
         if ($password == $kitchen['advanced_password']) {
             return $this->renderSuccess('验证成功');
         }
@@ -80,10 +99,10 @@ class Base extends Controller
      */
     public function setServer($ip, $port)
     {
-        $kitchen = SettingModel::getSupplierItem('kitchen', $this->kitchen['shop_supplier_id'], $this->kitchen['app_id'] ?? 0);
+        $kitchen = SettingModel::getSupplierItem(SettingEnum::KITCHEN, $this->kitchen['shop_supplier_id'], $this->kitchen['app_id'] ?? 0);
         $kitchen['server']['ip'] = $ip;
         $kitchen['server']['port'] = $port;
-        SettingModel::updateSetting('kitchen', $kitchen, $this->kitchen['shop_supplier_id']);
+        SettingModel::updateSetting(SettingEnum::KITCHEN, $kitchen, $this->kitchen['shop_supplier_id']);
         return $this->renderSuccess('设置成功');
     }
 }

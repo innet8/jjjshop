@@ -5,6 +5,7 @@ namespace app\tablet\controller\base;
 use app\tablet\controller\Controller;
 use app\common\model\supplier\Supplier as SupplierModel;
 use app\common\model\settings\Setting as SettingModel;
+use app\common\enum\settings\SettingEnum;
 use hg\apidoc\annotation as Apidoc;
 
 
@@ -18,6 +19,14 @@ class Base extends Controller
      * @Apidoc\Desc("基础信息")
      * @Apidoc\Method("POST")
      * @Apidoc\Url("/index.php/tablet/base.base/getInfo")
+     * @Apidoc\Returned("detail.currency", type="object", desc="货币", children={
+     *    @Apidoc\Param ("unit",type="string",desc="主单位"),
+     *    @Apidoc\Param ("is_open",type="string",desc="是否开启副单位 0-关闭 1-开启"),
+     *    @Apidoc\Param ("vices",type="object",desc="副单位",children={
+     *       @Apidoc\Param ("vice_unit",type="string",desc="副单位"),
+     *      @Apidoc\Param ("unit_rate",type="float",desc="副单位比例"),
+     *   }),
+     * })
      * @Apidoc\Returned("detail.tablet", type="object", desc="平板端设置", children={
      *    @Apidoc\Param ("carousel",type="array",desc="轮播内容url（图片 + 视频）"),
      *    @Apidoc\Param ("is_call_service",type="string",desc="是否开启呼叫服务员 0-关闭 1-开启"),
@@ -34,8 +43,18 @@ class Base extends Controller
     public function getInfo()
     {
         $detail = (new SupplierModel)->withoutGlobalScope()->where('is_delete', '=', 0)->find();
+        // 货币信息
+        $currency = SettingModel::getSupplierItem(SettingEnum::CURRENCY, $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
+        $detail['currency'] = [
+            'unit' => $currency['unit'],
+            'is_open' => $currency['is_open'],
+            'vices' => [
+                'vice_unit' => $currency['vice_unit'],
+                'unit_rate' => $currency['unit_rate'],
+            ],
+        ];
         // 平板端设置
-        $tablet = SettingModel::getSupplierItem('tablet', $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
+        $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
         unset($tablet['advanced_password']);
         unset($tablet['language_list']);
         $detail['tablet'] = $tablet;
@@ -50,7 +69,7 @@ class Base extends Controller
      */
     public function lang()
     {
-        $tablet = SettingModel::getSupplierItem('tablet', $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
+        $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
         $lang['language'] = $tablet['language'];
         $lang['default_language'] = $tablet['default_language'];
         return $this->renderSuccess('请求成功', $lang);
@@ -64,7 +83,7 @@ class Base extends Controller
      */
     public function ad()
     {
-        $tablet = SettingModel::getSupplierItem('tablet', $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
+        $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
         $list = [];
         if (isset($tablet['carousel']) && !empty($tablet['carousel'])) {
             $list = $tablet['carousel'];
@@ -81,7 +100,7 @@ class Base extends Controller
      */
     public function verifyPassword($password)
     {
-        $tablet = SettingModel::getSupplierItem('tablet', $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
+        $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
         if ($password == $tablet['advanced_password']) {
             return $this->renderSuccess('验证成功');
         }
@@ -98,10 +117,10 @@ class Base extends Controller
      */
     public function setServer($ip, $port)
     {
-        $tablet = SettingModel::getSupplierItem('tablet', $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
+        $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
         $tablet['server']['ip'] = $ip;
         $tablet['server']['port'] = $port;
-        SettingModel::updateSetting('tablet', $tablet, $this->table['shop_supplier_id']);
+        SettingModel::updateSetting(SettingEnum::TABLET, $tablet, $this->table['shop_supplier_id']);
         return $this->renderSuccess('设置成功');
     }
 }
