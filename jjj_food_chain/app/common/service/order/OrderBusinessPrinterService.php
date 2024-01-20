@@ -2,6 +2,7 @@
 
 namespace app\common\service\order;
 
+use think\facade\Cache;
 use app\common\enum\settings\SettingEnum;
 use app\common\enum\settings\PrinterTypeEnum;
 use app\common\model\settings\Printer as PrinterModel;
@@ -27,6 +28,10 @@ class OrderBusinessPrinterService
         if ($currency['unit'] ?? '') {
             $this->currencyUnit = $currency['unit'];
         }
+        // 商米一体机打印
+        $content = $this->getPrintContent(PrinterTypeEnum::SUNMI_LAN,$data);
+        Cache::set("printer_data_cache", array_unique(array_merge(Cache::get("printer_data_cache",[]),[$content])), 60 * 60);
+        // 
         // 获取当前的打印机
         $printer = PrinterModel::detail($printerConfig['seller_printer_id']);
         if (empty($printer) || $printer['is_delete']) {
@@ -53,7 +58,12 @@ class OrderBusinessPrinterService
         *商米打印机
         *
         */
-        if ($printer['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
+        if ($printer == PrinterTypeEnum::SUNMI_LAN || $printer['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
+            $printer = new SunmiCloudPrinter(567);
+
+            $printer->appendText("测试打印内容\n");
+            dump($printer->orderData);
+            die;
             $printer = new SunmiCloudPrinter(567);
             $printer->lineFeed();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);

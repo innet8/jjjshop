@@ -2,6 +2,7 @@
 
 namespace app\common\service\order;
 
+use think\Cache;
 use app\common\library\helper;
 use app\common\model\shop\User;
 use app\cashier\model\order\Order;
@@ -30,6 +31,9 @@ class OrderHandoverPrinterService
         if ($currency['unit'] ?? '') {
             $this->currencyUnit = $currency['unit'];
         }
+        // 商米一体机打印
+        // $content = $this->getPrintContent(PrinterTypeEnum::SUNMI_LAN,$data);
+        // Cache::set("printer_data_cache", array_unique(array_merge(Cache::get("printer_data_cache",[]),[$content])), 60 * 60);
         // 获取当前的打印机
         $printer = PrinterModel::detail($printerConfig['seller_printer_id']);
         if (empty($printer) || $printer['is_delete']) {
