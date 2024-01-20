@@ -204,8 +204,9 @@ class Cart extends Controller
     /**
      * @Apidoc\Title("折扣抹零")
      * @Apidoc\Method("POST")
-     * @Apidoc\Url ("/index.php/cashier/order.cart/changeMoney")
-     * @Apidoc\Param("type", type="int", require=true, default="1", desc="折扣方式：1-改价 2-折扣 3-抹零")
+     * @Apidoc\Url ("/index.php/cashier/order.Cart/changeMoney")
+     * @Apidoc\Param("order_id", type="int", require=true, desc="订单ID")
+     * @Apidoc\Param("type", type="int", require=true, desc="折扣方式 1-订单改价 2-折扣 3-抹零")
      * @Apidoc\Param("money", type="float", require=false, desc="改价价格 （type-1 必填）")
      * @Apidoc\Param("rate", type="float", require=false, desc="折扣 （type-2 必填）")
      * @Apidoc\Param("discountType", type="int", require=false, desc="抹零类型 1-抹分 2-抹角 3-四舍五入到角 4-四舍五入到元 （type-3 必填）")
@@ -213,11 +214,16 @@ class Cart extends Controller
      */
     public function changeMoney()
     {
-        $model = new CartModel();
+//        $model = new CartModel();
+//        if ($model->changeMoney($this->cashier['user'], $this->postData())) {
+//            return $this->renderSuccess('成功');
+//        };
+//        return $this->renderError($model->getError() ?: '失败');
+        $model = new OrderModel();
         if ($model->changeMoney($this->cashier['user'], $this->postData())) {
-            return $this->renderSuccess('成功');
+            return $this->renderSuccess('改价成功');
         };
-        return $this->renderError($model->getError() ?: '失败');
+        return $this->renderError($model->getError() ?: '改价失败');
     }
 
     /**
