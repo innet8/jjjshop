@@ -170,6 +170,16 @@ class Order extends OrderModel
         return $this->save(['order_status' => 20]);
     }
 
+    // 取消开台订单
+    public function CashierOrderCancels()
+    {
+        if ($this->pay_status['value'] == 20) {
+            $this->error = "订单已付款，不允许取消";
+            return false;
+        }
+        return $this->save(['order_status' => 20]);
+    }
+
     /**
      * 待支付订单详情
      */
@@ -590,7 +600,7 @@ class Order extends OrderModel
             (new OrderProduct)->where('order_id', '=', $order_id)->delete();
             // 把订单取消
             $detail = Order::detail($order_id);
-            $detail?->cancels();
+            $detail->CashierOrderCancels();
             $this->commit();
             return true;
         } catch (\Exception $e) {

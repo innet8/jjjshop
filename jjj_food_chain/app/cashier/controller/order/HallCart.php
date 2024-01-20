@@ -139,11 +139,10 @@ class HallCart extends Controller
      */
     public function cancel($table_id)
     {
-        $detail = OrderModel::detail([
-            ['table_id', '=', $table_id]
-        ]);
+        $detail = OrderModel::getTableUnderwayOrder($table_id);
         if (!$detail) {
-            $this->renderError('订单不存在');
+            TableModel::close($table_id);
+            return $this->renderError('订单不存在');
         }
 
         $order_id = $detail['order_id'];

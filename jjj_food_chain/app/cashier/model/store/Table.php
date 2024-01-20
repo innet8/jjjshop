@@ -51,6 +51,27 @@ class Table extends TableModel
         return compact('total_num', 'available_num', 'list');
     }
 
+
+    /**
+     * 获取空闲桌台列表数据
+     */
+    public function getEnableList($area_id, $type_id)
+    {
+        $model = $this;
+        $list = $model->when(!empty($area_id), function ($query) use ($area_id) {
+                return $query->where('area_id', '=', $area_id);
+            })
+            ->when(!empty($type_id), function ($query) use ($type_id) {
+                return $query->where('type_id', '=', $type_id);
+            })
+            ->where('status', '=', 10)
+            ->order(['sort' => 'asc', 'create_time' => 'desc'])
+            ->select();
+
+        return $list;
+    }
+
+
     private function formatPayEndTime($leftTime)
     {
         if ($leftTime <= 0) {

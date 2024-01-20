@@ -422,6 +422,22 @@ class Order extends BaseModel
     }
 
     /**
+     * 获取桌台进行中订单
+     * @param $table_id
+     * @return array|mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public static function getTableUnderwayOrder($table_id)
+    {
+        return self::with('product')->where([
+            ['table_id', '=', $table_id],
+            ['order_status', '=', 10]
+        ])->order('order_id', 'desc')->find();
+    }
+
+    /**
      * 订单详情
      * @param $where
      * @param string[] $with
