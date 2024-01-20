@@ -201,10 +201,10 @@ class User extends BaseModel
     */
     public function add($data)
     {
-        if (empty($data['nick_name'])) {
-            $this->error = '昵称不能为空';
-            return false;
-        }
+//        if (empty($data['nick_name'])) {
+//            $this->error = '昵称不能为空';
+//            return false;
+//        }
         if (empty($data['mobile'])) {
             $this->error = '手机号不能为空';
             return false;

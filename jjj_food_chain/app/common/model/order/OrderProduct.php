@@ -236,8 +236,8 @@ class OrderProduct extends BaseModel
     }
 
     // 送厨
-    public function sendKitchen($order_product_ids)
+    public function sendKitchen($order_id)
     {
-        return $this->whereIn('order_product_id', $order_product_ids)->update(['is_send_kitchen' => 1, 'send_kitchen_time' => time()]);
+        return $this->where('order_id', '=', $order_id)->update(['is_send_kitchen' => 1, 'send_kitchen_time' => time()]);
     }
 }
