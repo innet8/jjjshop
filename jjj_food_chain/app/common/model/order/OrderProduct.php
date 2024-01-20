@@ -26,7 +26,7 @@ class OrderProduct extends BaseModel
      */
     public function getProductNameTextAttr($value, $data)
     {
-        return extractLanguage($data['product_name']); 
+        return extractLanguage($data['product_name']);
     }
 
     /**
@@ -199,7 +199,7 @@ class OrderProduct extends BaseModel
     // 未送厨商品备注
     public function updateKitchenRemark($order_product_id, $remark)
     {
-        return $this->where('order_product_id', '=', $order_product_id)->update(['kitchen_remark' => $remark]);
+        return $this->where('order_product_id', '=', $order_product_id)->update(['remark' => $remark]);
     }
 
     // 收银端列表商品改价
