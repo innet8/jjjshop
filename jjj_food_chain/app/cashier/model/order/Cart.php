@@ -896,10 +896,12 @@ class Cart extends CartModel
         }
 
         // 购物车列表统计
+        $cart_total_num = 0;                  // 购物商品数量
         $cart_product_price = 0;              // 购物车商品原价
         $cart_product_pay_price = 0;          // 购物车商品实付价钱
         $cart_user_discount_money = 0;        // 会员折扣
         foreach ($cartList as $product) {
+            $cart_total_num += $product['product_num'];
             $cart_product_price += $product['price'] * $product['product_num'];
             $cart_product_pay_price += $product['product_price'] * $product['product_num'];
             $cart_user_discount_money += $product['price'] - $product['product_price'];
@@ -915,6 +917,13 @@ class Cart extends CartModel
         $cart_pay_price = helper::bcadd($cart_product_pay_price, $cart_consume_fee);
         // 订单信息
         if ($order) {
+            $num = 0;
+            if (isset($order['product'])) {
+                foreach ($order['product'] as $item) {
+                    $num += $item['total_num'];
+                }
+            }
+            $order_total_num = $num;
             $order_total_price = $order['total_price'];
             $order_service_money = $order['service_money'];
             $order_setting_service_money = $order['setting_service_money'];
@@ -923,6 +932,7 @@ class Cart extends CartModel
             $order_user_discount_money = $order['user_discount_money'];
             $order_pay_price = $order['pay_price'];
         } else {
+            $order_total_num = 0;
             $order_total_price = 0;
             $order_service_money = 0;
             $order_setting_service_money = 0;
@@ -932,6 +942,7 @@ class Cart extends CartModel
             $order_pay_price = 0;
         }
         // 订单 + 购物车 统计
+        $total_num = helper::bcadd($order_total_num, $cart_total_num, 0);                                     // 商品总数量
         $total_price = helper::bcadd($order_total_price, $cart_product_pay_price);                         // 小计
         $service_money = helper::bcadd($order_service_money, $order_setting_service_money);                // 服务费
         $special_discount = $order_discount_money;                                                         // 優惠折扣
@@ -950,6 +961,7 @@ class Cart extends CartModel
                 'cart_user_discount_money' => $cart_user_discount_money,                     // 会员折扣
             ],
             'sumInfo' => [
+                'total_num' => $total_num,                                          // 商品总数
                 'subtotal' => $total_price,                                         // 小计
                 'service_money' => $service_money,                                  // 服务费
                 'special_discount' => $special_discount,                            // 優惠折扣
