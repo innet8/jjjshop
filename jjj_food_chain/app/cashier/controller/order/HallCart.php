@@ -16,36 +16,36 @@ use hg\apidoc\annotation as Apidoc;
  */
 class HallCart extends Controller
 {
-    /**
-     * @Apidoc\Title("当前商品列表")
-     * @Apidoc\Method("POST")
-     * @Apidoc\Url ("/index.php/cashier/order.HallCart/list")
-     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
-     * @Apidoc\Returned("list",type="array",ref="app\cashier\model\order\Cart\getList")
-     */
-    public function list($table_id)
-    {
-        $model = new CartModel();
-        // 购物车商品列表
-        $productList = $model->getList($this->cashier['user'], 10, $table_id);
-        //购物车金额
-        $cartInfo = $model->getCartPrice($this->cashier['user'], 40, 10, $table_id);
-        return $this->renderSuccess('', compact('productList', 'cartInfo'));
-    }
-
-    /**
-     * @Apidoc\Title("当前桌台订单")
-     * @Apidoc\Method("POST")
-     * @Apidoc\Url ("/index.php/cashier/order.HallCart/detail")
-     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
-     * @Apidoc\Returned("list",type="array",ref="app\cashier\model\order\Order\getOrderInfo")
-     */
-    public function detail($table_id)
-    {
-        $model = new OrderModel();
-        $detail = $model->getOrderInfo($table_id);
-        return $this->renderSuccess('', compact('detail'));
-    }
+//    /**
+//     * @Apidoc\Title("当前商品列表")
+//     * @Apidoc\Method("POST")
+//     * @Apidoc\Url ("/index.php/cashier/order.HallCart/list")
+//     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+//     * @Apidoc\Returned("list",type="array",ref="app\cashier\model\order\Cart\getList")
+//     */
+//    public function list($table_id)
+//    {
+//        $model = new CartModel();
+//        // 购物车商品列表
+//        $productList = $model->getList($this->cashier['user'], 10, $table_id);
+//        //购物车金额
+//        $cartInfo = $model->getCartPrice($this->cashier['user'], 40, 10, $table_id);
+//        return $this->renderSuccess('', compact('productList', 'cartInfo'));
+//    }
+//
+//    /**
+//     * @Apidoc\Title("当前桌台订单")
+//     * @Apidoc\Method("POST")
+//     * @Apidoc\Url ("/index.php/cashier/order.HallCart/detail")
+//     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+//     * @Apidoc\Returned("list",type="array",ref="app\cashier\model\order\Order\getOrderInfo")
+//     */
+//    public function detail($table_id)
+//    {
+//        $model = new OrderModel();
+//        $detail = $model->getOrderInfo($table_id);
+//        return $this->renderSuccess('', compact('detail'));
+//    }
 
     /**
      * @Apidoc\Title("当前桌台菜品列表（订单+购物车）")

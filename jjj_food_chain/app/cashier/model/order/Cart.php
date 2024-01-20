@@ -908,7 +908,7 @@ class Cart extends CartModel
         $consumeFee = SettingModel::getSupplierItem(SettingEnum::TAX_RATE, $cashier['shop_supplier_id']);
         $cart_consume_fee = 0;
         if ($consumeFee['is_open']) {
-            $consume_rate = $consumeFee['tax_rate'];
+            $consume_rate = helper::bcdiv($consumeFee['tax_rate'], 100);
             $cart_consume_fee = floatval(helper::bcmul($cart_product_pay_price, $consume_rate));
         }
         // 购物车应付

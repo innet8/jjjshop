@@ -1062,7 +1062,7 @@ class Order extends BaseModel
                     // 会员卡
                     $discountRatio = $discount;
                 }
-                trace('bbbbb');
+                trace('折扣');
                 trace($discountRatio);
                 if ($discountRatio <= 1) {
                     if ($alone_grade_type == 20) {
@@ -1144,7 +1144,7 @@ class Order extends BaseModel
         $consumeFee = SettingModel::getSupplierItem(SettingEnum::TAX_RATE, $order['supplier']['shop_supplier_id']);
         $consume_fee = 0;
         if ($consumeFee['is_open']) {
-            $consume_rate = $consumeFee['tax_rate'];
+            $consume_rate = helper::bcdiv($consumeFee['tax_rate'], 100);
             $consume_fee = helper::bcmul($total_price, $consume_rate);
         }
         // 会员优惠金额
