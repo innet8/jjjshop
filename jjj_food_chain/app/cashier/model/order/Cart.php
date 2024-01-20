@@ -952,14 +952,14 @@ class Cart extends CartModel
 
         return [
             'orderInfo' => $order ?? [],
-            'cartInfo' => [
-                'list' => $cartList,
-                'cart_product_price' => $cart_product_price,                                 // 购物车商品原价
-                'cart_product_pay_price' => $cart_product_pay_price,                         // 购物车商品实付价钱
-                'cart_pay_price' => $cart_pay_price,                                         // 购物车实付价钱
-                'cart_consumption_tax_money' => $cart_consume_fee,                           // 消费税
-                'cart_user_discount_money' => $cart_user_discount_money,                     // 会员折扣
-            ],
+//            'cartInfo' => [
+//                'list' => $cartList,
+//                'cart_product_price' => $cart_product_price,                                 // 购物车商品原价
+//                'cart_product_pay_price' => $cart_product_pay_price,                         // 购物车商品实付价钱
+//                'cart_pay_price' => $cart_pay_price,                                         // 购物车实付价钱
+//                'cart_consumption_tax_money' => $cart_consume_fee,                           // 消费税
+//                'cart_user_discount_money' => $cart_user_discount_money,                     // 会员折扣
+//            ],
             'sumInfo' => [
                 'total_num' => $total_num,                                          // 商品总数
                 'subtotal' => $total_price,                                         // 小计

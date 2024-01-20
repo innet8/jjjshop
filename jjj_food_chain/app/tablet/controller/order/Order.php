@@ -2,6 +2,7 @@
 
 namespace app\tablet\controller\order;
 
+use app\common\model\order\OrderProduct;
 use app\tablet\model\store\Table as TableModel;
 use app\cashier\service\order\settled\CashierOrderSettledService;
 use app\tablet\model\order\Cart as CartModel;
@@ -69,48 +70,52 @@ class Order extends Controller
     }
 
     /**
-     * @Apidoc\Title("桌台订单(已下单商品)")
+     * @Apidoc\Title("桌台未下单商品")
      * @Apidoc\Method("POST")
-     * @Apidoc\Url ("/index.php/tablet/order.Order/detail")
+     * @Apidoc\Url ("/index.php/tablet/order.Order/getUnSendKitchen")
      * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
-     * @Apidoc\Returned("list",type="array",ref="app\cashier\model\order\Order\getOrderInfo")
+     * @Apidoc\Returned("list",type="array",ref="app\tablet\model\order\Order\getUnSendKitchen")
      */
-    public function detail()
+    public function getUnSendKitchen($table_id)
     {
         $model = new OrderModel();
-        $detail = $model->getOrderInfo($this->table['table_id']);
+        $detail = $model->getUnSendKitchen($table_id);
         $detail['product_num'] = isset($detail) ? count($detail['product']) : 0;
         return $this->renderSuccess('', compact('detail'));
     }
 
     /**
-     * @Apidoc\Title("桌台购物车(未下单商品)")
+     * @Apidoc\Title("桌台已下单商品")
      * @Apidoc\Method("POST")
-     * @Apidoc\Url ("/index.php/tablet/order.Order/list")
-     * @Apidoc\Returned("list",type="array",ref="app\cashier\model\order\Cart\getList")
+     * @Apidoc\Url ("/index.php/tablet/order.Order/getSendKitchen")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+     * @Apidoc\Returned("list",type="array",ref="app\tablet\model\order\Order\getSendKitchen")
      */
-    public function list()
+    public function getSendKitchen($table_id)
     {
-        $cartInfo = (new CartModel())->getCartDetail($this->table['shop_supplier_id'], $this->table['table_id']);
-        return $this->renderSuccess('', compact('cartInfo'));
+        $model = new OrderModel();
+        $detail = $model->getSendKitchen($table_id);
+        $detail['product_num'] = isset($detail) ? count($detail['product']) : 0;
+        return $this->renderSuccess('', compact('detail'));
     }
 
     /**
      * @Apidoc\Title("修改商品数量")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/tablet/order.Order/sub")
+     * @Apidoc\Param("order_product_id", type="int", require=true, desc="订单商品ID")
      * @Apidoc\Param("product_num", type="int", require=true, desc="商品数量")
-     * @Apidoc\Param("cart_id", type="int", require=true, desc="桌台购物车ID")
      * @Apidoc\Returned()
      */
-    public function sub($cart_id)
+    public function sub($order_product_id)
     {
-        $model = CartModel::detail($cart_id);
-        if ($model && $model->sub($this->postData())) {
-            $model->reloadPrice($this->table['shop_supplier_id'], $model['table_id']);
+        $model = OrderProduct::detail($order_product_id);
+        if ($model->sub($this->postData())) {
+            (new OrderModel())->reloadPrice($model['order_id']);
             return $this->renderSuccess('操作成功');
         }
-        return $this->renderError($model ? $model->getError() : '操作失败');
+        return $this->renderError($model->getError() ?: '操作失败');
+
     }
 
     /**
