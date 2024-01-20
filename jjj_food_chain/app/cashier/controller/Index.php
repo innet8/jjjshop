@@ -56,4 +56,20 @@ class Index extends Controller
         ];
         return $this->renderSuccess('', compact('settings'));
     }
+
+    /**
+     * @Apidoc\Title("校验钱箱密码")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/index/verifyPassword")
+     * @Apidoc\Param("password", type="string", require=true, desc="密码")
+     * @Apidoc\Returned()
+     */
+    public function verifyPassword($password)
+    {
+        $cashier = SettingModel::getSupplierItem('cashier', $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
+        if ($password == $cashier['cashier_password']) {
+            return $this->renderSuccess('验证成功');
+        }
+        return $this->renderError('验证失败');
+    }
 }
