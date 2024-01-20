@@ -60,11 +60,6 @@ class OrderBusinessPrinterService
         */
         if ($printer == PrinterTypeEnum::SUNMI_LAN || $printer['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
             $printer = new SunmiCloudPrinter(567);
-
-            $printer->appendText("测试打印内容\n");
-            dump($printer->orderData);
-            die;
-            $printer = new SunmiCloudPrinter(567);
             $printer->lineFeed();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
             $printer->appendText("*".__("店铺名称")."({$data['supplier']['name']})*\n");
