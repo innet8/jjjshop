@@ -147,7 +147,8 @@ class HallCart extends Controller
 
     /**
      * 清空购物车
-     * @return array
+     * @param $table_id
+     * @return \think\response\Json
      */
     public function delete($table_id)
     {

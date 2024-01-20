@@ -2,6 +2,7 @@
 
 namespace app\tablet\model\order;
 
+use app\common\enum\order\OrderStatusEnum;
 use think\facade\Log;
 use app\api\model\order\OrderProduct;
 use app\common\model\supplier\Supplier;
@@ -27,6 +28,18 @@ class Order extends OrderModel
     protected $hidden = [
         'update_time',
     ];
+
+    //  已送厨
+    public function sendKitchenProduct()
+    {
+        return $this->hasMany('app\\common\\model\\order\\OrderProduct', 'order_id', 'order_id')->where('is_send_kitchen', 1)->hidden(['content']);
+    }
+
+    // 未送厨
+    public function unSendKitchenProduct()
+    {
+        return $this->hasMany('app\\common\\model\\order\\OrderProduct', 'order_id', 'order_id')->where('is_send_kitchen', 0)->hidden(['content']);
+    }
 
     /**
      * 用户中心订单列表
@@ -212,7 +225,25 @@ class Order extends OrderModel
             ->find();
     }
 
+    //查询桌号订单未送厨商品
+    public function getUnSendKitchen($table_id)
+    {
+        return $this->with('unSendKitchenProduct')
+            ->where('table_id', '=', $table_id)
+            ->where('order_status', '=', OrderStatusEnum::NORMAL)
+            ->where('is_delete', '=', 0)
+            ->find();
+    }
 
+    //查询桌号订单未送厨商品
+    public function getSendKitchen($table_id)
+    {
+        return $this->with('sendKitchenProduct')
+            ->where('table_id', '=', $table_id)
+            ->where('order_status', '=', OrderStatusEnum::NORMAL)
+            ->where('is_delete', '=', 0)
+            ->find();
+    }
 
     //查询桌号信息
     public function orderPay($data)
