@@ -37,9 +37,9 @@ class Table extends Controller
      */
     public function tableType()
     {
-        $model = new TableTypeModel;
-        $list = $model->getList($this->postData(), $this->cashier['user']['shop_supplier_id']);
-        return $this->renderSuccess('', compact('list'));
+        $model = new TableModel;
+        $list = $model->getAreaType($this->cashier['user']['shop_supplier_id']);
+        return $this->renderSuccess('', $list);
     }
 
     /**

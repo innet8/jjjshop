@@ -4,8 +4,6 @@
 namespace app\cashier\model\store;
 
 use app\common\model\store\Table as TableModel;
-use app\cashier\model\order\Order as OrderModel;
-use app\cashier\model\order\Cart as CartModel;
 
 /**
  * 桌位模型
@@ -20,31 +18,31 @@ class Table extends TableModel
         $model = $this;
         // 查询列表数据
         $total_num =  $model->with(['underwayOrder'])
-            ->when($area_id, function ($query) use ($area_id) {
+            ->when(!empty($area_id), function ($query) use ($area_id) {
                 return $query->where('area_id', '=', $area_id);
             })
-            ->when($type_id, function ($query) use ($type_id) {
+            ->when(!empty($type_id), function ($query) use ($type_id) {
                 return $query->where('type_id', '=', $type_id);
             })->count();
 
         $available_num =  $model->with(['underwayOrder'])
-            ->when($area_id, function ($query) use ($area_id) {
+            ->when(!empty($area_id), function ($query) use ($area_id) {
                 return $query->where('area_id', '=', $area_id);
             })
-            ->when($type_id, function ($query) use ($type_id) {
+            ->when(!empty($type_id), function ($query) use ($type_id) {
                 return $query->where('type_id', '=', $type_id);
             })
             ->where('status', '=', 10)
             ->count();
 
         $list = $model->with(['underwayOrder'])
-            ->when($area_id, function ($query) use ($area_id) {
+            ->when(!empty($area_id), function ($query) use ($area_id) {
                 return $query->where('area_id', '=', $area_id);
             })
-            ->when($type_id, function ($query) use ($type_id) {
+            ->when(!empty($type_id), function ($query) use ($type_id) {
                 return $query->where('type_id', '=', $type_id);
             })
-            ->when($status!=0, function ($query) use ($status) {
+            ->when(!empty($status), function ($query) use ($status) {
                 return $query->where('status', '=', $status);
             })
             ->order(['sort' => 'asc', 'create_time' => 'desc'])

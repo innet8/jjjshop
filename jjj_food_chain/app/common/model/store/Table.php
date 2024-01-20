@@ -39,4 +39,12 @@ class Table extends BaseModel
     }
 
 
+
+    // 获取桌台分类
+    public static function getAreaType($shop_supplier_id)
+    {
+        $areaList = (new TableArea)->where('shop_supplier_id', '=', $shop_supplier_id)->select();
+        $typeList = (new TableType)->where('shop_supplier_id', '=', $shop_supplier_id)->select();
+        return compact('areaList', 'typeList');
+    }
 }
