@@ -20,7 +20,7 @@ class Base extends Controller
      */
     public function getInfo()
     {
-        $detail = (new SupplierModel)->find();
+        $detail = (new SupplierModel)->withoutGlobalScope()->where('is_delete', '=', 0)->find();
         return $this->renderSuccess('基础信息', $detail);
     }
 

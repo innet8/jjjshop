@@ -282,11 +282,11 @@ class Cart extends Controller
      * @Apidoc\Param("order_id", type="int", require=false, desc="订单id")
      * @Apidoc\Returned()
      */
-    public function sendKitchen($order_product_ids = [301, 300])
+    public function sendKitchen($order_id)
     {
 
         $model = new OrderProduct();
-        if ($model->sendKitchen($order_product_ids)) {
+        if ($model->sendKitchen($order_id)) {
             return $this->renderSuccess('送厨成功');
         }
         return $this->renderError($model->getError() ?: '送厨失败');
