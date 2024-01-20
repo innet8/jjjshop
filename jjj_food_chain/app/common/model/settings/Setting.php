@@ -108,7 +108,7 @@ class Setting extends BaseModel
             $where['shop_supplier_id'] = $shop_supplier_id;
         }
 
-        return self::where('key', '=', $key)->where($where)->find();
+        return self::where('key', '=', $key)->where($where)->find() ?? new self;
     }
 
     /**
@@ -162,13 +162,17 @@ class Setting extends BaseModel
         // 删除系统设置缓存
         Cache::delete('setting_' . self::$app_id. '_' . $shop_supplier_id);
 
-        return $model->save([
-            'key' => $key,
-            'describe' => SettingEnum::data()[$key]['describe'],
-            'values' => $values,
-            'app_id' => self::$app_id,
-            'shop_supplier_id' => $shop_supplier_id
-        ]) !== false;
+        $model = $model->save(
+            [
+                'key' => $key,
+                'describe' => SettingEnum::data()[$key]['describe'],
+                'values' => $values,
+                'app_id' => self::$app_id,
+                'shop_supplier_id' => $shop_supplier_id
+            ]
+        );
+
+        return $model !== null;
     }
 
 
@@ -541,9 +545,11 @@ class Setting extends BaseModel
                     // 语言列表
                     'language_list' => LANGUAGE_LIST,
                     // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
-                    'language' => [],
+                    'language' => [
+                        'th', 'en', 'zh', 'zh-tw'
+                    ],
                     // 默认语言
-                    'default_language' => '',
+                    'default_language' => 'en',
                 ],
             ],
             SettingEnum::TABLET => [
@@ -565,8 +571,10 @@ class Setting extends BaseModel
                     // 语言列表
                     'language_list' => LANGUAGE_LIST,
                     // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
-                    'language' => [],
-                    'default_language' => '', // 默认语言
+                    'language' => [
+                        'th', 'en', 'zh', 'zh-tw'
+                    ],
+                    'default_language' => 'en', // 默认语言
                 ],
             ],
             SettingEnum::KITCHEN => [
@@ -586,7 +594,9 @@ class Setting extends BaseModel
                     // 语言列表
                     'language_list' => LANGUAGE_LIST,
                     // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
-                    'language' => [],
+                    'language' => [
+                        'th', 'en', 'zh', 'zh-tw'
+                    ],
                     'default_language' => 'en', // 默认语言
                 ],
             ],

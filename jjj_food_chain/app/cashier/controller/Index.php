@@ -58,6 +58,36 @@ class Index extends Controller
     }
 
     /**
+     * @Apidoc\Title("语言获取")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/index/lang")
+     * @Apidoc\Returned()
+     */
+    public function lang()
+    {
+        $cashier = SettingModel::getSupplierItem('cashier', $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
+        $lang['language'] = $cashier['language'];
+        $lang['default_language'] = $cashier['default_language'];
+        return $this->renderSuccess('请求成功', $lang);
+    }
+
+    /**
+     * @Apidoc\Title("首页广告")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/index/ad")
+     * @Apidoc\Returned()
+     */
+    public function ad()
+    {
+        $cashier = SettingModel::getSupplierItem('cashier', $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
+        $list = [];
+        if (isset($cashier['carousel']) && !empty($cashier['carousel'])) {
+            $list = $cashier['carousel'];
+        }
+        return $this->renderSuccess('请求成功', $list);
+    }
+
+    /**
      * @Apidoc\Title("校验钱箱密码")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/cashier/index/verifyPassword")
@@ -68,6 +98,22 @@ class Index extends Controller
     {
         $cashier = SettingModel::getSupplierItem('cashier', $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
         if ($password == $cashier['cashier_password']) {
+            return $this->renderSuccess('验证成功');
+        }
+        return $this->renderError('验证失败');
+    }
+
+    /**
+     * @Apidoc\Title("校验高级密码")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/index/verifyAdvancedPassword")
+     * @Apidoc\Param("password", type="string", require=true, desc="密码")
+     * @Apidoc\Returned()
+     */
+    public function verifyAdvancedPassword($password)
+    {
+        $cashier = SettingModel::getSupplierItem('cashier', $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
+        if ($password == $cashier['advanced_password']) {
             return $this->renderSuccess('验证成功');
         }
         return $this->renderError('验证失败');
