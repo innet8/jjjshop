@@ -6,6 +6,7 @@ use app\cashier\controller\Controller;
 use app\cashier\model\order\Cart as CartModel;
 use app\cashier\model\order\Order as OrderModel;
 use app\cashier\model\store\Table as TableModel;
+use app\common\model\order\OrderProduct;
 use hg\apidoc\annotation as Apidoc;
 
 /**
@@ -43,7 +44,6 @@ class HallCart extends Controller
     {
         $model = new OrderModel();
         $detail = $model->getOrderInfo($table_id);
-        $detail['product_num'] = isset($detail) ? count($detail['product']) : 0;
         return $this->renderSuccess('', compact('detail'));
     }
 
@@ -56,8 +56,12 @@ class HallCart extends Controller
      */
     public function tableProductList($table_id)
     {
+        $detail = OrderModel::detail([
+            ['table_id', '=', $table_id]
+        ]);
+        $order_id = $detail['order_id'];
         $allProductInfo = (new CartModel())->getOrderCartDetail($this->cashier['user'], $table_id);
-        return $this->renderSuccess('', $allProductInfo);
+        return $this->renderSuccess('', compact('allProductInfo', 'order_id'));
     }
 
     /**
@@ -98,33 +102,32 @@ class HallCart extends Controller
      */
     public function add()
     {
-        $data = $this->request->param();
+        $data = $this->postData();
         $data['eat_type'] = 10;
         $model = new CartModel();
-        if (!$model->add($data, $this->cashier['user'])) {
-            return $this->renderError($model->getError() ?: '加入购物车失败');
+        $order_id = $model->addToOrder($data, $this->cashier['user']);
+        if ($order_id > 0) {
+            return $this->renderSuccess('添加商品成功', ['order_id' => $order_id]);
         }
-        // 更新购物车价格统计
-        $model->reloadPrice($this->cashier['user'], $data['table_id']);
-        return $this->renderSuccess('加入购物车成功');
+        return $this->renderError($model->getError() ?: '添加商品失败');
     }
 
     /**
      * @Apidoc\Title("修改商品数量")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/sub")
+     * @Apidoc\Param("order_product_id", type="int", require=true, desc="订单商品ID")
      * @Apidoc\Param("product_num", type="int", require=true, desc="商品数量")
-     * @Apidoc\Param("cart_id", type="int", require=true, desc="桌台购物车ID")
      * @Apidoc\Returned()
      */
-    public function sub($cart_id)
+    public function sub($order_product_id)
     {
-        $model = CartModel::detail($cart_id);
-        if ($model && $model->sub($this->postData())) {
-            $model->reloadPrice($this->cashier['user'], $model['table_id']);
+        $model = OrderProduct::detail($order_product_id);
+        if ($model->sub($this->postData())) {
+            (new OrderModel())->reloadPrice($model['order_id']);
             return $this->renderSuccess('操作成功');
         }
-        return $this->renderError($model ? $model->getError() : '操作失败');
+        return $this->renderError($model->getError() ?: '操作失败');
     }
 
     /**
@@ -136,13 +139,21 @@ class HallCart extends Controller
      */
     public function cancel($table_id)
     {
-        $model = new OrderModel;
-        if ($model->cancel($table_id)) {
+        $detail = OrderModel::detail([
+            ['table_id', '=', $table_id]
+        ]);
+        if (!$detail) {
+            $this->renderError('订单不存在');
+        }
+
+        $order_id = $detail['order_id'];
+        $model = new OrderModel();
+        if ($model->delStay($order_id)) {
             // 修改桌台状态
             TableModel::close($table_id);
-            return $this->renderSuccess('订单取消成功');
-        }
-        return $this->renderError($model->getError() ?: '订单取消失败');
+            return $this->renderSuccess('取消成功');
+        };
+        return $this->renderError($model->getError() ?: '取消失败');
     }
 
     /**
@@ -154,5 +165,19 @@ class HallCart extends Controller
     {
         (new CartModel)->deleteTableAll($this->cashier['user'], $table_id);
         return $this->renderSuccess('删除成功');
+    }
+
+    /**
+     * @Apidoc\Title("桌台未送厨房商品")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/getUnSendKitchen")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+     * @Apidoc\Returned("list",type="array",ref="app\common\model\order\Order\getUnSendKitchen")
+     */
+    public function getUnSendKitchen($table_id)
+    {
+        $model = new OrderModel();
+        $detail = $model->getUnSendKitchen($table_id);
+        return $this->renderSuccess('', compact('detail'));
     }
 }

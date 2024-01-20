@@ -124,35 +124,35 @@ class Order extends Controller
         return $this->renderSuccess('下单成功');
     }
 
-    /**
-     * @Apidoc\Title("桌台协助点餐、加餐(送厨)")
-     * @Apidoc\Method("POST")
-     * @Apidoc\Url ("/index.php/cashier/order.Order/addMeal")
-     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
-     * @Apidoc\Param("order_id", type="int", require=true, desc="订单ID")
-     * @Apidoc\Param("meal_num", type="int", require=true, desc="就餐人数")
-     * @Apidoc\Param("user_id", type="int", require=false, desc="会员ID（会员自己开台必填）")
-     * @Apidoc\Returned()
-     */
-    public function addMeal()
-    {
-        // 获取加菜商品列表
-        $params = $this->postData();
-        $params['eat_type'] = 10;
-        $user = $this->cashier['user'];
-        // 商品结算信息
-        $CartModel = new CartModel();
-        // 购物车商品列表
-        $productList = $CartModel->getCartList($user, $params['table_id'], 10);
-        // 加餐订单提交
-        $orderModel = new OrderModel;
-        if ($orderModel->mealHallOrder($productList, $params)) {
-            // 移出购物车中已下单的商品
-            $CartModel->deleteTableAll($this->cashier['user'], $params['table_id']);
-            return $this->renderSuccess('协助点餐成功');
-        }
-        return $this->renderError($orderModel->getError() ?: '协助点餐失败');
-    }
+//    /**
+//     * @Apidoc\Title("桌台协助点餐、加餐(送厨)")
+//     * @Apidoc\Method("POST")
+//     * @Apidoc\Url ("/index.php/cashier/order.Order/addMeal")
+//     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+//     * @Apidoc\Param("order_id", type="int", require=true, desc="订单ID")
+//     * @Apidoc\Param("meal_num", type="int", require=true, desc="就餐人数")
+//     * @Apidoc\Param("user_id", type="int", require=false, desc="会员ID（会员自己开台必填）")
+//     * @Apidoc\Returned()
+//     */
+//    public function addMeal()
+//    {
+//        // 获取加菜商品列表
+//        $params = $this->postData();
+//        $params['eat_type'] = 10;
+//        $user = $this->cashier['user'];
+//        // 商品结算信息
+//        $CartModel = new CartModel();
+//        // 购物车商品列表
+//        $productList = $CartModel->getCartList($user, $params['table_id'], 10);
+//        // 加餐订单提交
+//        $orderModel = new OrderModel;
+//        if ($orderModel->mealHallOrder($productList, $params)) {
+//            // 移出购物车中已下单的商品
+//            $CartModel->deleteTableAll($this->cashier['user'], $params['table_id']);
+//            return $this->renderSuccess('协助点餐成功');
+//        }
+//        return $this->renderError($orderModel->getError() ?: '协助点餐失败');
+//    }
 
     /**
      * @Apidoc\Title("桌台修改就餐人数")

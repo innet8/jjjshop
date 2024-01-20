@@ -559,9 +559,8 @@ class Cart extends CartModel
                     'eat_type' => 10
                 ];
                 $orderService = new CashierOrderSettledService($user, [], $param);
-                // 获取订单信息
+                // 初始化订单信息
                 $orderInfo = $orderService->settlementCashier();
-                // 订单结算提交
                 if ($orderService->hasError()) {
                     return $this->renderError($orderService->getError());
                 }

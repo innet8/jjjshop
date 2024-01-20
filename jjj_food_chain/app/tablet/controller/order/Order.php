@@ -80,7 +80,6 @@ class Order extends Controller
     {
         $model = new OrderModel();
         $detail = $model->getUnSendKitchen($table_id);
-        $detail['product_num'] = isset($detail) ? count($detail['product']) : 0;
         return $this->renderSuccess('', compact('detail'));
     }
 
@@ -95,7 +94,6 @@ class Order extends Controller
     {
         $model = new OrderModel();
         $detail = $model->getSendKitchen($table_id);
-        $detail['product_num'] = isset($detail) ? count($detail['product']) : 0;
         return $this->renderSuccess('', compact('detail'));
     }
 

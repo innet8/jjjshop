@@ -584,11 +584,22 @@ class Order extends OrderModel
     // 整单取消
     public function delStay($order_id)
     {
-        // 把送厨的订单删除
-        (new OrderProduct)->where('order_id', '=', $order_id)->delete();
-        // 把订单取消
-        $detail = Order::detail($order_id);
-        return $detail?->cancels();
+        $this->startTrans();
+        try {
+            // 把送厨的订单删除
+            (new OrderProduct)->where('order_id', '=', $order_id)->delete();
+            // 把订单取消
+            $detail = Order::detail($order_id);
+            $detail?->cancels();
+            $this->commit();
+            return true;
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
+            $this->error = $e->getMessage();
+            $this->rollback();
+            return false;
+        }
+
     }
 
     // 挂单列表
@@ -614,4 +625,6 @@ class Order extends OrderModel
     {
         return $this->where('is_stay', '=', 1)->where('order_status', '=', 10)->count();
     }
+
+
 }
