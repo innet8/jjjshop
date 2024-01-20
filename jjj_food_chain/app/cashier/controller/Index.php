@@ -118,4 +118,21 @@ class Index extends Controller
         }
         return $this->renderError('验证失败');
     }
+
+    /**
+     * @Apidoc\Title("设置服务连接地址")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/index/setServer")
+     * @Apidoc\Param("ip", type="string", require=true, desc="ip地址")
+     * @Apidoc\Param("port", type="string", require=true, desc="端口号")
+     * @Apidoc\Returned()
+     */
+    public function setServer($ip, $port)
+    {
+        $cashier = SettingModel::getSupplierItem('cashier', $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
+        $cashier['server']['ip'] = $ip;
+        $cashier['server']['port'] = $port;
+        SettingModel::updateSetting('cashier', $cashier, $this->cashier['user']['shop_supplier_id']);
+        return $this->renderSuccess('设置成功');
+    }
 }
