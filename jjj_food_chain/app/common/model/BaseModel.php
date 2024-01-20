@@ -80,7 +80,6 @@ class BaseModel extends Model
         self::$app_id = request()->header('appId') ?: request()->param('app_id');
     }
 
-
     /**
      * 设置app_id (cashier模块)
      */

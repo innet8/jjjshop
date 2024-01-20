@@ -23,6 +23,9 @@ class Passport extends Controller
     public function login()
     {
         $user = $this->postData();
+        if (!isset($user['password']) || !isset($user['user_name'])){
+            return $this->renderError('参数错误');
+        }
         $user['password'] = salt_hash($user['password']);
         $model = new User();
         if ($userInfo = $model->checkLogin($user)) {

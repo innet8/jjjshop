@@ -18,7 +18,8 @@ class User extends UserModel
         $where['user_name'] = $user['user_name'];
         $where['password'] = $user['password'];
         $where['is_delete'] = 0;
-
+        // 
+        $user = $this->where($where)->with(['app', 'supplier'])->find();
         if (!$user = $this->where($where)->with(['app', 'supplier'])->find()) {
             $this->error = '账号或密码错误，请重新输入';
             return false;

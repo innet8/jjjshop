@@ -1,0 +1,1 @@
+import{$ as r}from"./index-3bbd2984.js";function e(){return r("store.paytype/index")}function n(e){return r("user.User/detail",e)}function t(e){return r("order.order/buy",e)}function o(e){return r("order.order/print",e)}function u(e){return r("user.User/recharge",e)}export{o as a,t as b,u as c,n as f,e as g};

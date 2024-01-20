@@ -1,10 +1,21 @@
 #!/bin/bash
 
 build() {
+    # 店家后台
     cd jjj_food_chain_shop
+    git pull
+    npm i
     npm run translate
     npm run build
     rm -rf ../jjj_food_chain/public/shop && cp -r ./dist ../jjj_food_chain/public/shop
+
+    # 收银端 
+    cd ../tmp/cash-register-system
+    git pull
+    npm i
+    npm run translate
+    npm run build:h5 
+    rm -rf ../../jjj_food_chain/public/cashier && cp -r ./dist/build/h5 ../../jjj_food_chain/public/cashier
 }
 
 build
