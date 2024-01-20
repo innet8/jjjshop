@@ -24,6 +24,17 @@ class Index extends Controller
      *      @Apidoc\Param ("unit_rate",type="float",desc="副单位比例"),
      *   }),
      * })
+     * @Apidoc\Returned("cashier", type="object", desc="收银机设置", children={
+     *    @Apidoc\Param ("carousel",type="array",desc="轮播内容url（图片 + 视频）"),
+     *    @Apidoc\Param ("is_auto_send",type="string",desc="收银结账自动送厨房 0-关闭 1-开启"),
+     *    @Apidoc\Param ("auto_lock_screen",type="string",desc="自动锁屏（秒），默认5分钟"),
+     *    @Apidoc\Param ("server",type="object",desc="服务器连接",children={
+     *       @Apidoc\Param ("ip",type="string",desc="ip地址"),
+     *      @Apidoc\Param ("port",type="float",desc="端口号"),
+     *   }),
+     *    @Apidoc\Param ("language",type="array",desc="常用语言，默认th, en, zh, zh-tw"),
+     *    @Apidoc\Param ("default_language",type="array",desc="默认语言，默认en"),
+     * })
      */
     public function index()
     {
@@ -38,6 +49,12 @@ class Index extends Controller
                 'unit_rate' => $currency['unit_rate'],
             ],
         ];
+        // 收银机设置
+        $cashier = SettingModel::getSupplierItem('cashier', $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
+        unset($cashier['cashier_password']);
+        unset($cashier['advanced_password']);
+        unset($cashier['language_list']);
+        $user['cashier'] = $cashier;
         return $this->renderSuccess('', compact('user'));
     }
 
@@ -58,7 +75,7 @@ class Index extends Controller
     }
 
     /**
-     * @Apidoc\Title("语言获取")
+     * @Apidoc\Title("语言获取（废除）")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/cashier/index/lang")
      * @Apidoc\Returned()
@@ -72,7 +89,7 @@ class Index extends Controller
     }
 
     /**
-     * @Apidoc\Title("首页广告")
+     * @Apidoc\Title("首页广告（废除）")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/cashier/index/ad")
      * @Apidoc\Returned()

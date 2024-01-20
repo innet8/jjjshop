@@ -74,7 +74,7 @@ class Controller extends JjjController
 //            throw new BaseException(['msg' => '缺少必要的参数：tableid', 'code' => -1]);
 //        }
         $this->table = [
-            'shop_supplier_id' => $sid,
+            'shop_supplier_id' => $sid ?? 0,
             'table_id' => $tid ?? 0,
         ];
         return true;
