@@ -605,7 +605,6 @@ class Cart extends CartModel
             return false;
         }
 
-
     }
 
     /**

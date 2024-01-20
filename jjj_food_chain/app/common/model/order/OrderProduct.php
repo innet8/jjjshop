@@ -133,11 +133,7 @@ class OrderProduct extends BaseModel
      */
     public function isExist($data)
     {
-
         $model = $this;
-        if (isset($data['table_id']) && $data['table_id']) {
-            $model = $model->where('table_id', '=', $data['table_id']);
-        }
         $order_product_id = $model->where('is_send_kitchen', '=', 0)
             ->where('order_id', '=', $data['order_id'])
             ->where('product_id', '=', $data['product_id'])

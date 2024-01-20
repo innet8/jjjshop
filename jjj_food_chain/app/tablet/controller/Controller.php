@@ -76,6 +76,7 @@ class Controller extends JjjController
         $this->table = [
             'shop_supplier_id' => $sid ?? 0,
             'table_id' => $tid ?? 0,
+            'cashier_id' => 0,
         ];
         return true;
     }

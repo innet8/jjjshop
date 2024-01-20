@@ -144,7 +144,6 @@ class HallCart extends Controller
             TableModel::close($table_id);
             return $this->renderError('订单不存在');
         }
-
         $order_id = $detail['order_id'];
         $model = new OrderModel();
         if ($model->delStay($order_id)) {
@@ -194,5 +193,51 @@ class HallCart extends Controller
             return $this->renderSuccess('删除成功');
         };
         return $this->renderError($model->getError() ?: '删除失败');
+    }
+
+    /**
+     * @Apidoc\Title("桌台送厨")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/sendKitchen")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+     * @Apidoc\Returned()
+     */
+    public function sendKitchen($table_id)
+    {
+        $detail = OrderModel::getTableUnderwayOrder($table_id);
+        if (!$detail) {
+            return $this->renderError('订单不存在');
+        }
+        $order_id = $detail['order_id'];
+
+        $model = new OrderProduct();
+        if ($model->sendKitchen($order_id)) {
+            return $this->renderSuccess('送厨成功');
+        }
+        return $this->renderError($model->getError() ?: '送厨失败');
+    }
+
+    /**
+     * @Apidoc\Title("桌台-退菜")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/moveProduct")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台id")
+     * @Apidoc\Param("order_product_id", type="int", require=true, desc="订单商品记录id")
+     * @Apidoc\Param("num", type="int", require=true, desc="商品数量")
+     * @Apidoc\Param("return_reason", type="string", require=true, desc="退菜原因")
+     * @Apidoc\Returned()
+     */
+    public function moveProduct($table_id, $order_product_id, $num, $return_reason = '')
+    {
+        $detail = OrderModel::getTableUnderwayOrder($table_id);
+        if (!$detail) {
+            return $this->renderError('订单不存在');
+        }
+        $order_id = $detail['order_id'];
+        $detail = OrderModel::detail($order_id);
+        if ($detail?->moveProduct($order_product_id, $num, $return_reason)) {
+            return $this->renderSuccess('退菜成功');
+        }
+        return $this->renderError($detail?->getError() ?: '退菜失败');
     }
 }
