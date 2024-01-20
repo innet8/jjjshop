@@ -49,6 +49,7 @@ git-clone(){
     cd /
     git clone --depth=1 https://github.com/innet8/jjjshop.git
     chown -R www-data:root /jjjshop/
+    chmod +x /jjjshop/jjj_food_chain/lanp-install.sh
     cd /jjjshop/jjj_food_chain
     if [ $? -ne 0 ]; then
         echo -e "${Error}拉取失败${Font}"
@@ -63,6 +64,7 @@ update-job(){
     git fetch --all && git reset --hard origin/$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
     git pull
     sudo php think migrate:run
+    chmod +x /jjjshop/jjj_food_chain/lanp-install.sh
 }
 
 check-env(){
