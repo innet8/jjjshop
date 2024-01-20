@@ -179,4 +179,20 @@ class HallCart extends Controller
         $detail = $model->getUnSendKitchen($table_id);
         return $this->renderSuccess('', compact('detail'));
     }
+
+    /**
+     * @Apidoc\Title("删除商品")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/delProduct")
+     * @Apidoc\Param("order_product_id", type="int", require=true, desc="订单商品ID")
+     * @Apidoc\Returned()
+     */
+    public function delProduct($order_product_id)
+    {
+        $model = new OrderProduct();
+        if ($model->delProduct($order_product_id)) {
+            return $this->renderSuccess('删除成功');
+        };
+        return $this->renderError($model->getError() ?: '删除失败');
+    }
 }

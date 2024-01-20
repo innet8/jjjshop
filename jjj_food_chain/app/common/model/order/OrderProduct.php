@@ -133,6 +133,7 @@ class OrderProduct extends BaseModel
      */
     public function isExist($data)
     {
+
         $model = $this;
         if (isset($data['table_id']) && $data['table_id']) {
             $model = $model->where('table_id', '=', $data['table_id']);
@@ -141,7 +142,7 @@ class OrderProduct extends BaseModel
             ->where('order_id', '=', $data['order_id'])
             ->where('product_id', '=', $data['product_id'])
             ->where('product_sku_id', '=', $data['product_sku_id'])
-            ->where('product_attr', '=', $data['attr'])
+            ->where('product_attr', '=', $data['describe'])
             ->value('order_product_id');
         return $order_product_id;
     }
@@ -189,6 +190,10 @@ class OrderProduct extends BaseModel
     public function delProduct($order_product_id)
     {
         $model = $this->where('order_product_id', '=', $order_product_id)->find();
+        if (!$model) {
+            $this->error = '记录不存在';
+            return false;
+        }
         if ($model->is_send_kitchen == 1) {
             $this->error = '商品已送厨，禁止删除';
             return false;
