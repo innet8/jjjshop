@@ -220,7 +220,7 @@ class Order extends OrderModel
             $this->error = "订单已支付";
             return false;
         }
-        if ($data['user_id'] > 0) {
+        if (isset($data['user_id']) && $data['user_id'] > 0) {
             $this->save(['user_id' => $data['user_id']]);
         }
         return $this->onPayment($this['order_no'], $data['pay_type']);

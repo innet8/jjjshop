@@ -46,39 +46,51 @@ class Order extends Controller
      * @Apidoc\Tag("收银收款")
      * @Apidoc\Method("POST")
      * @Apidoc\Url("/index.php/cashier/order.order/buy")
+     * @Apidoc\Param("order_id", type="int", require=true, desc="订单ID")
      * @Apidoc\Param("delivery", type="int",require=true, default=0, desc="配送方式(10外卖配送 20上门取 30打包带走 40店内就餐)")
-     * @Apidoc\Param("pay_type", type="int",require=true, default=0, desc="支付方式(10余额支付 20微信支付 40现金支付)")
-     * @Apidoc\Param("user_id", type="int",require=false, default=0, desc="用户id")
+     * @Apidoc\Param("pay_type", type="int",require=true, default=0, desc="付款类型  10-余额收款 40-现金收款 50-微信收款 60-支付宝收款 70-POS机收款")
+     * @Apidoc\Param("user_id", type="int",require=false, default=0, desc="用户id （pay_type为余额收款必填）")
      */
-    public function buy()
+    public function buy($order_id)
     {
-        // 立即购买：获取订单商品列表
-        $params = $this->postData();
-        $user = $this->cashier['user'];
-        // 商品结算信息
-        $CartModel = new CartModel();
-        // 购物车商品列表
-        $productList = $CartModel->getCartList($user);
-        if (count($productList) <= 0) {
-            return $this->renderError('购物车商品不能为空');
+//        // 立即购买：获取订单商品列表
+//        $params = $this->postData();
+//        $user = $this->cashier['user'];
+//        // 商品结算信息
+//        $CartModel = new CartModel();
+//        // 购物车商品列表
+//        $productList = $CartModel->getCartList($user);
+//        if (count($productList) <= 0) {
+//            return $this->renderError('购物车商品不能为空');
+//        }
+//        $params['eat_type'] = 20;
+//        // 实例化订单service
+//        $orderService = new CashierOrderSettledService($user, $productList, $params);
+//        // 获取订单信息
+//        $orderInfo = $orderService->settlement();
+//        // 订单结算提交
+//        if ($orderService->hasError()) {
+//            return $this->renderError($orderService->getError());
+//        }
+//        // 创建订单
+//        $order_id = $orderService->createOrder($orderInfo);
+//        if (!$order_id) {
+//            return $this->renderError($orderService->getError() ?: '订单创建失败');
+//        }
+//        // 移出购物车中已下单的商品
+//        $CartModel->deleteAll($this->cashier['user']);
+//        return $this->renderSuccess('收款成功');
+        $detail = OrderModel::detail([
+            ['order_id', '=', $order_id],
+            ['order_status', '=', 10],
+        ]);
+        if (!$detail) {
+            return $this->renderError('订单不存在');
         }
-        $params['eat_type'] = 20;
-        // 实例化订单service
-        $orderService = new CashierOrderSettledService($user, $productList, $params);
-        // 获取订单信息
-        $orderInfo = $orderService->settlement();
-        // 订单结算提交
-        if ($orderService->hasError()) {
-            return $this->renderError($orderService->getError());
+        if ($detail->orderPay($this->postData())) {
+            return $this->renderSuccess('结账成功');
         }
-        // 创建订单
-        $order_id = $orderService->createOrder($orderInfo);
-        if (!$order_id) {
-            return $this->renderError($orderService->getError() ?: '订单创建失败');
-        }
-        // 移出购物车中已下单的商品
-        $CartModel->deleteAll($this->cashier['user']);
-        return $this->renderSuccess('收款成功');
+        return $this->renderError($detail->getError() ?: '结账失败');
     }
 
     /**
