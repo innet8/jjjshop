@@ -609,4 +609,9 @@ class Order extends OrderModel
         return $this->where('order_id', '=', $order_id)->update(['is_stay' => 0]);
     }
 
+    // 订单挂单数量
+    public function stayOrderNum()
+    {
+        return $this->where('is_stay', '=', 1)->where('order_status', '=', 10)->count();
+    }
 }

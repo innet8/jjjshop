@@ -76,7 +76,7 @@ class Cart extends Controller
 
         $model = new CartModel();
         // 挂单数量
-        $stayNum = $model->stayNum($this->cashier['user']);
+        $stayNum = (new OrderModel)->stayOrderNum();
         // 购物车 + 送厨商品列表 + 购物车计算
         $allProductInfo = $model->getOrderCartDetail($this->cashier['user'], 0, $order_id);
         return $this->renderSuccess('', compact('allProductInfo', 'delivery', 'stayNum', 'order_id'));
