@@ -12,6 +12,10 @@ class Access extends BaseModel
     protected $name = 'shop_access';
     protected $pk = 'access_id';
 
+    // 路由筛选名称
+    const SHOP_ROUTE_NAME = '管理后台';
+    const CASHIER_ROUTE_NAME = '收银台';
+
     /*
      * 获取所有权限
      */
@@ -89,5 +93,21 @@ class Access extends BaseModel
             ->where('is_show', '=', 1)
             ->order(['sort' => 'asc', 'create_time' => 'asc'])
             ->select();
+    }
+
+    /**
+     * 根据名称获取菜单的子菜单
+     */
+    public function getRouteMenu(array $menus, string $name): array
+    {
+        $adminMenu = array_filter($menus[0]['children'], function ($val) use($name) {
+            return $val['name'] == $name;
+        });
+
+        if (!empty($adminMenu)) {
+            return reset($adminMenu)['children'];
+        }
+
+        return [];
     }
 }

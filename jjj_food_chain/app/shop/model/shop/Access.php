@@ -77,4 +77,12 @@ class Access extends AccessModel
         }
         return $ar;
     }
+
+    /**
+     * 获取商家后台路由
+     */
+    public function formatShopMenu($menus)
+    {
+        return $this->getRouteMenu($menus, AccessModel::SHOP_ROUTE_NAME);
+    }
 }

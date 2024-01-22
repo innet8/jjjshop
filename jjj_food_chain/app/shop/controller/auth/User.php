@@ -213,6 +213,7 @@ class User extends Controller
                 }
             }
         }
+        $menus = $model->formatShopMenu($menus);
         return $this->renderSuccess('', compact('menus'));
     }
 
