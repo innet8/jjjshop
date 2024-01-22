@@ -8,7 +8,7 @@
         <!--form表单-->
         <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
             <!--小票打印设置-->
-            <el-form-item :label="$t('商户小票打印')" :rules="[{ required: true }]">
+            <!-- <el-form-item :label="$t('商户小票打印')" :rules="[{ required: true }]">
                 <div>
                     <el-radio v-model="form.seller_open" :label="'1'">{{ $t('开启') }}</el-radio>
                     <el-radio v-model="form.seller_open" :label="'0'">{{ $t('关闭') }}</el-radio>
@@ -43,7 +43,7 @@
                     <el-option v-for="(item, index) in printerList" :key="index" :label="item.printer_name"
                         :value="item.printer_id + ''"></el-option>
                 </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item :label="$t('收银打印')" :rules="[{ required: true }]">
                 <div>
                     <el-radio v-model="form.cashier_open" :label="'1'">{{ $t('开启') }}</el-radio>
