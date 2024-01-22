@@ -61,7 +61,7 @@ class OrderBusinessPrinterService
     private function getPrintContent($printer,$data)
     {
         $startTime = date('Y-m-d H:i:s', $data['times'][0]);
-        $endTime = $data['times'][1] ? date('Y-m-d H:i:s', $data['times'][1]) : date('Y-m-d H:i:s');
+        $endTime = $data['times'][1] ? date('Y-m-d H:i:s', $data['times'][1]) : date('Y/m/d H:i:s');
 
         /* *
         *
@@ -86,7 +86,7 @@ class OrderBusinessPrinterService
                 [60, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
             );
-            $printer->printInColumns(__("时间"), $startTime." ". __("至")." " . $endTime);
+            $printer->printInColumns(__("时间"), $startTime."". __("至")."" . $endTime);
             $printer->lineFeed();
             // 
             $printer->restoreDefaultLineSpacing();
