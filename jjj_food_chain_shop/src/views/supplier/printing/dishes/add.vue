@@ -36,7 +36,7 @@
             <el-form-item :label="$t('打印方式')">
                 <div>
                     <el-radio v-model="form.print_method" :label="10">{{ $t('整单打印') }}</el-radio>
-                    <el-radio v-model="form.print_method" :label="20">{{ $t('按商品分组打印') }}</el-radio>
+                    <el-radio v-model="form.print_method" :label="20">{{ $t('按商品分类打印') }}</el-radio>
                     <el-radio v-model="form.print_method" :label="30">{{ $t('按标签打印') }}</el-radio>
                     <el-radio v-model="form.print_method" :label="40">{{ $t('按一菜一单打印') }}</el-radio>
                 </div>
@@ -53,14 +53,14 @@
                         :value="item.printer_id"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item v-if="form.product_type == 0 && form.print_method == 20" :label="$t('商品分组')" prop="category_id"
+            <el-form-item v-if="form.product_type == 0 && form.print_method == 20" :label="$t('商品分类')" prop="category_id"
                 :rules="[{ required: true, message: ' ' }]">
                 <el-select v-model="form.category_id" multiple :placeholder="$t('请选择')">
                     <el-option v-for="item in takeList" :key="item.category_id" :label="item.name_text"
                         :value="item.category_id + ''"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item v-if="form.product_type == 1 && form.print_method == 20" :label="$t('商品分组')" prop="category_id"
+            <el-form-item v-if="form.product_type == 1 && form.print_method == 20" :label="$t('商品分类')" prop="category_id"
                 :rules="[{ required: true, message: ' ' }]">
                 <el-select v-model="form.category_id" multiple :placeholder="$t('请选择')">
                     <el-option v-for="item in storeList" :key="item.category_id" :label="item.name_text"
