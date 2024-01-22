@@ -88,7 +88,6 @@
               /*判断是否需要去重*/
               if(self.excludeIds&&typeof(self.excludeIds)!='undefined'&&self.excludeIds.length>0){
                 res.data.specList.forEach(item=>{
-                  console.log(item.product_sku_id);
                   if(self.excludeIds.indexOf(item.product_sku_id)>-1){
                     item.noChoose=false;
                   }else{

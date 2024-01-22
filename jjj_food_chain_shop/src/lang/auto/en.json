@@ -648,5 +648,16 @@
     "确认新密码": "Confirm the new password",
     "登录": "Log in",
     "修改高级密码": "Change advanced password",
-    "修改钱箱密码": "Change cash drawer password"
+    "修改钱箱密码": "Change cash drawer password",
+    "添加普通分类": "Add general category",
+    "分类级别": "Classification level",
+    "一级分类": "First level classification",
+    "二级分类": "Secondary classification",
+    "上级分类": "Sub-headings",
+    "请选择上级分类": "Please select the upper level category",
+    "编辑普通分类": "Edit general categories",
+    "添加特色分类": "Add featured categories",
+    "编辑特色分类": "Edit Featured Category",
+    "全部分类": "All Categories",
+    "请输入规格名称": "Please enter the specification name"
 }

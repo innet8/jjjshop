@@ -1,10 +1,17 @@
 <template>
-    <el-dialog title="修改分类" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
+    <el-dialog :title="$t('编辑普通分类')" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
         :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
-            <el-form-item :label="$t('父级分类')">
-                <el-select v-model="form.parent_id" :label="$t('无')">
-                    <el-option :value="0" :label="$t('无')"></el-option>
+            <el-form-item :label="$t('分类级别')" prop="parent">
+                <el-radio-group v-model="parent" @change="radioChange">
+                    <el-radio :label="1">{{ $t('一级分类') }}</el-radio>
+                    <el-radio :label="0">{{ $t('二级分类') }}</el-radio>
+                </el-radio-group>
+            </el-form-item>
+
+            <el-form-item v-if="parent == 0" :label="$t('上级分类')" prop="parent_id"
+                :rules="[{ required: true, message: $t('请选择上级分类') }]">
+                <el-select v-model="form.parent_id" :placeholder="$t('请选择上级分类')">
                     <template v-for="cat in category" :key="cat.category_id">
                         <el-option :value="cat.category_id" :label="cat.name_text"></el-option>
                     </template>
@@ -13,7 +20,7 @@
             <template v-for="(item, index) in languageList" :key="index">
                 <el-form-item :label="$t('分类名称') + `(${item.label})`" :prop="`name.${item.key}`"
                     :rules="[{ required: true, message: $t('请输入分类名称') }]">
-                    <el-input v-model="form.name[item.key]" autocomplete="off"></el-input>
+                    <el-input v-model="form.name[item.key]" :placeholder="$t('请输入分类名称')" :maxlength="50" autocomplete="off"></el-input>
                 </el-form-item>
             </template>
             <!-- <el-form-item :label="$t('分类图片')" prop="image_id">
@@ -52,8 +59,9 @@ export default {
     },
     data() {
         return {
-            languageList:languageList,
+            languageList: languageList,
             category: [],
+            parent: 1,
             form: {
                 parent_id: 0,
                 category_id: 0,
@@ -96,7 +104,9 @@ export default {
         this.form.name = JSON.parse(this.editform.model.name);
         this.form.sort = this.editform.model.sort;
         this.form.image_id = this.editform.model.image_id;
-        this.file_path = this.editform.model.images.file_path;
+        if (this.editform.model.parent_id != 0) {
+            this.parent = 0;
+        }
     },
     methods: {
         /*获取父级分类*/
@@ -113,6 +123,10 @@ export default {
                 .catch(error => {
                     self.loading = false;
                 });
+        },
+
+        radioChange(e) {
+            this.form.parent_id = '';
         },
         /*修改用户*/
         addUser() {
@@ -170,4 +184,5 @@ export default {
 <style scoped>
 .img {
     margin-top: 10px;
-}</style>
+}
+</style>

@@ -105,7 +105,6 @@
       /*关闭获取用户*/
       closeGetuserFunc(e) {
         if (e && e.type != 'error') {
-          console.log(e)
           this.select_list = [...e.params];
         }
         this.open_getuser = false;

@@ -5,15 +5,16 @@
     <el-dialog :title="$t('添加规格')" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
         :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
+
+            <template v-for="(item, index) in languageList" :key="index">
+                <el-form-item :label="$t('规格名称') + `(${item.label})`" prop="spec_name.th">
+                    <el-input v-model="form.spec_name[item.key]" :placeholder="$t('请输入规格名称')" :maxlength="50"
+                        autocomplete="off"></el-input>
+                </el-form-item>
+            </template>
             <el-form-item :label="$t('排序')" prop="sort">
                 <el-input v-model.number="form.sort" autocomplete="off"></el-input>
             </el-form-item>
-            <template v-for="(item, index) in languageList" :key="index">
-                <el-form-item :label="$t('规格名称') + `(${item.label})`" prop="spec_name.th">
-                    <el-input v-model="form.spec_name[item.key]" autocomplete="off"></el-input>
-                </el-form-item>
-            </template>
-
 
         </el-form>
         <template #footer>
@@ -37,7 +38,7 @@ export default {
     },
     data() {
         return {
-            languageList:languageList,
+            languageList: languageList,
             form: {
                 spec_name: JSON.parse(languageData),
                 sort: 100,

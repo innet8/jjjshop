@@ -10,7 +10,7 @@
 
             <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
                 <el-form-item :label="$t('商品分类')">
-                    <el-select size="small" v-model="searchForm.category_id" :placeholder="$t('所有分类')">
+                    <el-select size="small" v-model="searchForm.category_id" :placeholder="$t('全部分类')">
                         <el-option :label="$t('全部')" value="0"></el-option>
                         <template v-for="cat in categoryList" :key="cat.category_id">
                             <el-option :value="cat.category_id" :label="cat.name_text"></el-option>
@@ -52,7 +52,7 @@
         <div class="product-content">
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-                    <el-table-column prop="product_name" :label="$t('产品')" width="400px">
+                    <el-table-column prop="product_name" :label="$t('商品名称')" width="400px">
                         <template #default="scope">
                             <div class="product-info">
                                 <div class="pic"><img v-img-url="scope.row.image[0].file_path" alt="" /></div>
@@ -72,7 +72,7 @@
                                 @click="undercarriage(scope.row, scope.row.product_status.value == 10 ? 20 : 10)"></el-switch>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="create_time" :label="$t('发布时间')"></el-table-column>
+                    <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
                     <el-table-column prop="product_sort" :label="$t('排序')"></el-table-column>
                     <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">

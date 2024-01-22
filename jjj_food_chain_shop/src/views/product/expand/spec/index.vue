@@ -16,7 +16,7 @@
                     @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="45"></el-table-column>
                     <el-table-column prop="spec_id" label="ID"></el-table-column>
-                    <el-table-column prop="spec_name_text" :label="$t('规格名')" width="400px"></el-table-column>
+                    <el-table-column prop="spec_name_text" :label="$t('规格名称')" width="400px"></el-table-column>
                     <el-table-column prop="sort" :label="$t('排序')"></el-table-column>
                     <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">

@@ -141,7 +141,7 @@ export default {
         })
         .catch(error => {
           self.loading = false;
-          console.log(error);
+          (error);
         });
     },
 

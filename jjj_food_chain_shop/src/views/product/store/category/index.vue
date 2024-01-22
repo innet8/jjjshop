@@ -1,16 +1,35 @@
 <template>
     <div class="product">
+        <!--搜索表单-->
+        <div class="common-seach-wrap">
 
-        <div class="common-level-rail">
-            <el-button size="small" type="primary" @click="addClick" icon="Plus"
-                v-auth="'/product/store/category/Add'">{{$t('添加分类')}}</el-button>
+            <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
+
+                <el-form-item :label="$t('分类名称')"><el-input size="small" v-model="searchForm.name"
+                        :placeholder="$t('请输入分类名称')"></el-input></el-form-item>
+                <el-form-item>
+                    <el-button size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button size="small" type="primary" @click="addClick" icon="Plus"
+                        v-auth="'/product/store/category/Add'">{{ $t('添加分类') }}</el-button>
+                </el-form-item>
+
+
+            </el-form>
         </div>
         <!--内容-->
         <div class="product-content">
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" row-key="category_id" default-expand-all
                     :tree-props="{ children: 'child' }" style="width: 100%" v-loading="loading">
-                    <el-table-column prop="name_text" :label="$t('分类名称')" width="180"></el-table-column>
+                    <el-table-column prop="name_text" :label="$t('分类名称')" ></el-table-column>
+                    <el-table-column prop="name_text" :label="$t('分类级别')" >
+                        <template #default="scope">
+                            <p v-if="scope.row.parent_id == 0">{{ $t('一级分类') }}</p>
+                            <p v-else>{{ $t('二级分类') }}</p>
+                        </template>
+                    </el-table-column>
                     <!-- <el-table-column prop="" :label="$t('图片')" width="180">
                         <template #default="scope">
                             <img v-if="scope.row.images" v-img-url="scope.row.images.file_path" alt="" width="50" />
@@ -28,9 +47,9 @@
                     <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/product/store/category/Edit'">{{$t('编辑')}}</el-button>
+                                v-auth="'/product/store/category/Edit'">{{ $t('编辑') }}</el-button>
                             <el-button @click="deleteClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/product/store/category/Delete'">{{$t('删除')}}</el-button>
+                                v-auth="'/product/store/category/Delete'">{{ $t('删除') }}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -77,6 +96,9 @@ export default {
                 catList: [],
                 model: {}
             },
+            searchForm: {
+                name: '',
+            },
         };
     },
     created() {
@@ -84,13 +106,13 @@ export default {
         this.getData();
     },
     methods: {
-        // hasImages(e) {
-        //   if (e) {
-        //     return e.file_path;
-        //   } else {
-        //     return '';
-        //   }
-        // },
+
+        /*搜索查询*/
+        onSubmit() {
+            this.curPage = 1;
+            this.getData();
+        },
+
         handleClick() {
             this.getData();
         },
@@ -152,7 +174,7 @@ export default {
         /*删除分类*/
         deleteClick(row) {
             let self = this;
-            ElMessageBox.confirm($t('删除后不可恢复，确认删除该记录吗?'), $t('提示'), {
+            ElMessageBox.confirm($t('删除后不可恢复，确认删除吗?'), $t('提示'), {
                 type: 'warning'
             }).then(() => {
                 PorductApi.storeCatDel({

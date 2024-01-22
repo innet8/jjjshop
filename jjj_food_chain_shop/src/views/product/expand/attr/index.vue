@@ -13,7 +13,7 @@
       <div class="table-wrap">
         <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="45"></el-table-column>
-          <el-table-column prop="attribute_name_text" :label="$t('属性名')" width="400px"></el-table-column>
+          <el-table-column prop="attribute_name_text" :label="$t('属性名称')" width="400px"></el-table-column>
           <el-table-column prop="attribute_value_text" :label="$t('属性值')">
             <template  #default="scope">
              {{attrjoin(scope.row.attribute_value_text)}}
