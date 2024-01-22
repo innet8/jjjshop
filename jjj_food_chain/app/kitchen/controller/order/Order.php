@@ -19,10 +19,10 @@ class Order extends Controller
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned()
      */
-    public function list($shop_supplier_id)
+    public function list()
     {
         $model = new OrderModel;
-        $list = [];
+        $list = $model->getKitchenList($this->postData(), $this->kitchen);
         return $this->renderSuccess('', compact('list'));
     }
 }
