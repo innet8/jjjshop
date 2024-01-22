@@ -116,7 +116,7 @@ class User extends UserModel
                 'reg_source' => 'home', //注册来源
                 'gender' => $data['gender'], //性别
                 'grade_id' => $data['grade_id'] ?: GradeModel::getDefaultGradeId(), //默认等级
-                'birthday' => $data['birthday'] ? strtotime($data['birthday']) : null, //生日
+                'birthday' => $data['birthday'] ? strtotime($data['birthday']) : 0, //生日
                 'app_id' => self::$app_id,
             ]);
         } else {
