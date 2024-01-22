@@ -11,7 +11,7 @@
             :label-width="formLabelWidth">
             <el-form-item :label="$t('用户名')" prop="user_name"><el-input v-model="form.user_name"
                     :placeholder="$t('请输入用户名')"></el-input></el-form-item>
-            <el-form-item :label="$t('所属角色')" prop="role_id">
+            <el-form-item :label="$t('角色')" prop="role_id">
                 <el-select v-model="form.role_id" :multiple="true">
                     <el-option v-for="item in roleList" :value="item.role_id" :key="item.role_id"
                         :label="item.role_name_h1"></el-option>

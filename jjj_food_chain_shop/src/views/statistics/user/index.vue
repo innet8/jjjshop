@@ -29,7 +29,7 @@
         </div>
         <div class="table-wrap">
             <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-                <el-table-column prop="id" label="ID" width="80"></el-table-column>
+               
                 <el-table-column prop="shift_no" :label="$t('交班编号')" width="180"></el-table-column>
                 <el-table-column prop="user.real_name" :label="$t('收银员')"></el-table-column>
                 <el-table-column prop="" :label="$t('当班时间')" width="170">

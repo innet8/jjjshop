@@ -8,7 +8,7 @@
     <!--搜索表单-->
     <div class="common-seach-wrap">
       <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item :label="$t('关键词')"><el-input v-model="formInline.search" :placeholder="$t('请输入关键词')"></el-input></el-form-item>
+
         <el-form-item :label="$t('状态')">
           <el-select v-model="formInline.status" :placeholder="$t('请选择')">
             <el-option :label="$t('全部')" :value="-1"></el-option>
@@ -16,6 +16,7 @@
             <el-option :label="$t('有效')" :value="1"></el-option>
             </el-select>
         </el-form-item>
+        <el-form-item :label="$t('会员卡名称')"><el-input v-model="formInline.search" :placeholder="$t('请输入会员卡名称')"></el-input></el-form-item>
         <el-form-item><el-button type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button></el-form-item>
       </el-form>
     </div>
@@ -47,9 +48,9 @@
           <el-table-column prop="pay_price" :label="$t('价格')"></el-table-column>
 
           <el-table-column prop="pay_time_text" :label="$t('领取时间')"></el-table-column>
-          <el-table-column fixed="right" :label="$t('操作')" width="120">
+          <el-table-column fixed="right" :label="$t('操作')" width="160">
             <template #default="scope">
-              <el-button @click="putClick(scope.row)" type="primary" link size="small" v-if="scope.row.expire_time > 0 ">{{ $t('延期') }}</el-button>
+              <el-button @click="putClick(scope.row)" type="primary" link size="small" v-if="scope.row.expire_time > 0 ">{{ $t('调整有效期') }}</el-button>
               <el-button @click="cancel(scope.row)" type="primary" link size="small" v-if="scope.row.pay_type==30">{{ $t('撤销') }}</el-button>
             </template>
           </el-table-column>

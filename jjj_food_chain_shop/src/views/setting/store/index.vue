@@ -18,12 +18,12 @@
         <img class="mt10" v-img-url="form.logoUrl" :width="100">
       </el-form-item>
       
-      <!-- <el-form-item label="店铺ID" prop="customer">
+      <el-form-item label="店铺ID" prop="customer">
         <el-input v-model="form.customer" placeholder="" class="max-w460"></el-input>
       </el-form-item>
       <el-form-item label="机器码" prop="key">
         <el-input v-model="form.key" placeholder="" class="max-w460"></el-input>
-      </el-form-item> -->
+      </el-form-item>
       <!--提交-->
       <div class="common-button-wrapper">
         <el-button type="primary" @click="onSubmit" :loading="loading">{{$t('提交')}}</el-button>

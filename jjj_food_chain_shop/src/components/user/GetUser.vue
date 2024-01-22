@@ -4,24 +4,24 @@
     	时间：2019-10-25
     	描述：组件-选择用户
     -->
-  <el-dialog title="选择用户" v-model="dialogVisible" @close="cancelFunc" :modal-append-to-body="true" append-to-body :close-on-click-modal="false" :close-on-press-escape="false" width="800px">
+  <el-dialog :title="$t('选择用户')" v-model="dialogVisible" @close="cancelFunc" :modal-append-to-body="true" append-to-body :close-on-click-modal="false" :close-on-press-escape="false" width="800px">
     <div class="common-seach-wrap">
       <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="等级">
-          <el-select v-model="formInline.grade_id" placeholder="请选择会员等级" style="width: 120px;">
-            <el-option label="全部" value="0"></el-option>
+        <el-form-item :label="$t('等级')">
+          <el-select v-model="formInline.grade_id" :placeholder="$t('请选择会员等级')" style="width: 120px;">
+            <el-option :label="$t('全部')" value="0"></el-option>
             <el-option v-for="(item, index) in gradeList" :key="index" :label="item.name" :value="item.grade_id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="性别">
-          <el-select v-model="formInline.sex" placeholder="请选择性别" style="width: 120px;">
-            <el-option label="全部" value="-1"></el-option>
+        <el-form-item :label="$t('性别')">
+          <el-select v-model="formInline.sex" :placeholder="$t('请选择性别')" style="width: 120px;">
+            <el-option :label="$t('全部')" value="-1"></el-option>
             <el-option v-for="(item, index) in sex" :key="index" :label="item" :value="index"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="微信昵称"><el-input placeholder="请输入微信昵称" v-model="formInline.nick_name"></el-input></el-form-item>
+        <el-form-item :label="$t('微信昵称')"><el-input :placeholder="$t('请输入微信昵称')" v-model="formInline.nick_name"></el-input></el-form-item>
         <el-form-item>
-          <el-button icon="el-icon-search" @click="search">查询</el-button>
+          <el-button icon="el-icon-search" @click="search">{{ $t('查询') }}</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -30,27 +30,27 @@
     <div class="product-content">
       <div class="table-wrap">
         <el-table :data="tableData" size="small" border style="width: 100%" v-loading="loading" @selection-change="handleSelectionChange">
-          <el-table-column prop="" label="微信头像" width="70">
+          <!-- <el-table-column prop="" label="微信头像" width="70">
             <template #default="scope">
               <img :src="scope.row.avatarUrl" class="radius" :width="30" :height="30" />
             </template>
-          </el-table-column>
-          <el-table-column prop="nickName" label="昵称"></el-table-column>
-          <el-table-column prop="balance" label="用户余额">
+          </el-table-column> -->
+          <el-table-column prop="nickName" :label="$t('昵称')"></el-table-column>
+          <el-table-column prop="balance" :label="$t('用户余额')">
             <template #default="scope">
               <span class="orange">￥{{ scope.row.balance }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="grade.name" label="会员等级"></el-table-column>
-          <el-table-column prop="pay_money" label="累积消费金额"></el-table-column>
-          <el-table-column prop="gender" label="性别" width="50">
+          <el-table-column prop="grade.name" :label="$t('会员等级')"></el-table-column>
+          <el-table-column prop="pay_money" :label="$t('累积消费金额')"></el-table-column>
+          <el-table-column prop="gender" :label="$t('性别')" width="50">
             <template #default="scope">
-              <span v-if="scope.row.gender == 1">男</span>
-              <span v-else-if="scope.row.gender == 0">女</span>
-              <span v-else-if="scope.row.gender == 2">未知</span>
+              <span v-if="scope.row.gender == 1">{{ $t('男') }}</span>
+              <span v-else-if="scope.row.gender == 0">{{ $t('女') }}</span>
+              <span v-else-if="scope.row.gender == 2">{{ $t('未知') }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="create_time" label="注册时间" width="140"></el-table-column>
+          <el-table-column prop="create_time" :label="$t('注册时间')" width="140"></el-table-column>
           <!-- <el-table-column label="操作" width="80">
             <template #default="scope">
               <el-button type="primary" size="" @click="selectUser(scope.row)">选择</el-button>
@@ -76,8 +76,8 @@
     </div>
     <template #footer>
       <div class="dialog-footer">
-        <el-button size="small" @click="dialogVisible = false">取 消</el-button>
-        <el-button size="small" type="primary" @click="confirmFunc">确 定</el-button>
+        <el-button size="small" @click="dialogVisible = false">{{ $t('取消') }}</el-button>
+        <el-button size="small" type="primary" @click="confirmFunc">{{ $t('确定') }}</el-button>
       </div>
     </template>
   </el-dialog>
