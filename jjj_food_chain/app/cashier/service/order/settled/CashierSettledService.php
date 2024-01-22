@@ -154,6 +154,8 @@ abstract class CashierSettledService extends BaseService
         if (isset($this->params['table_id']) && ($this->params['table_id'] > 0)) {
             $table = TableModel::detail($this->params['table_id']);
             $table_no = $table['table_no'];
+        }else{
+            $table_no = getTableNumber();
         }
         return [
             // 支付方式

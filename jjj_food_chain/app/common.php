@@ -627,3 +627,21 @@ function getLanIp()
 {
     return SystemHelp::cmd("ifconfig | grep 'inet ' | grep -v 127.0.0.1 | awk '{print $2}'");
 }
+
+/**
+ * 收银流水单号：每天从0001开始自增
+ *
+ * @return string
+ */
+function getTableNumber()
+{
+    $key = 'table_number_' . date('Ymd');
+    $number = cache($key);
+    if (!$number) {
+        $number = 1;
+    } else {
+        $number++;
+    }
+    cache($key, $number, 86400);
+    return str_pad($number, 4, '0', STR_PAD_LEFT);
+}
