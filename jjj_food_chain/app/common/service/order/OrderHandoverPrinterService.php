@@ -2,7 +2,7 @@
 
 namespace app\common\service\order;
 
-use think\Cache;
+use think\facade\Cache;
 use app\common\library\helper;
 use app\common\model\shop\User;
 use app\cashier\model\order\Order;
@@ -27,24 +27,32 @@ class OrderHandoverPrinterService
      */
     public function cashierPrint($printerConfig, $data)
     { 
+        if (($printerConfig['cashier_open'] ?? '') != 1){
+            return;
+        }
+        // 
         $currency = SettingModel::getSupplierItem(SettingEnum::CURRENCY, $data['shop_supplier_id'], $data['app_id']);
         if ($currency['unit'] ?? '') {
             $this->currencyUnit = $currency['unit'];
         }
         // 商米一体机打印
-        // $content = $this->getPrintContent(PrinterTypeEnum::SUNMI_LAN,$data);
-        // Cache::set("printer_data_cache", array_unique(array_merge(Cache::get("printer_data_cache",[]),[$content])), 60 * 60);
-        // 获取当前的打印机
-        $printer = PrinterModel::detail($printerConfig['seller_printer_id']);
-        if (empty($printer) || $printer['is_delete']) {
-            return false;
+        if (($printerConfig['cashier_printer_id'] ?? '0') == '0') {
+            $content = $this->getPrintContent(PrinterTypeEnum::SUNMI_LAN,$data);
+            Cache::set("printer_data_cache", array_unique(array_merge(Cache::get("printer_data_cache",[]),[$content])), 60 * 60 * 24);
+            return true;
+        } else {
+            // 获取当前的打印机
+            $printer = PrinterModel::detail($printerConfig['cashier_printer_id']);
+            if (empty($printer) || $printer['is_delete']) {
+                return false;
+            }
+            // 实例化打印机驱动
+            $printerDriver = new PrinterDriver($printer);
+            // 获取订单打印内容
+            $content = $this->getPrintContent($printer, $data);
+            // 执行打印请求
+            return $printerDriver->printTicket($content);
         }
-        // 实例化打印机驱动
-        $printerDriver = new PrinterDriver($printer);
-        // 获取订单打印内容
-        $content = $this->getPrintContent($printer, $data);
-        // 执行打印请求
-        return $printerDriver->printTicket($content);
     }
 
     /**
@@ -78,7 +86,7 @@ class OrderHandoverPrinterService
         *商米打印机
         *
         */
-        if ($printer['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
+        if ($printer == PrinterTypeEnum::SUNMI_LAN || $printer['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
             $printer = new SunmiCloudPrinter(567);
             $printer->lineFeed();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);

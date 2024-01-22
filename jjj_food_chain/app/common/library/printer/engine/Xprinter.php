@@ -21,7 +21,7 @@ class Xprinter extends Basics
     {
         $config = json_decode($this->config, true);
         $content = hex2bin($content);
-        $fp=@fsockopen( $config['IP'] ?? self::PRINTER_IP, $config['PORT'] ??  self::PRINTER_PORT,$errno,$errstr,60);
+        $fp=@fsockopen( $config['IP'] ?? self::PRINTER_IP, $config['PORT'] ??  self::PRINTER_PORT,$errno,$errstr, 10);
         if($fp===false){ //连接打印机出错
             // DOTO 记录日志
             trace("连接打印机出错");

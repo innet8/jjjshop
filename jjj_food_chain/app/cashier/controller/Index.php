@@ -2,9 +2,10 @@
 
 namespace app\cashier\controller;
 
-use app\common\model\settings\Setting as SettingModel;
-use app\common\enum\settings\SettingEnum;
+use think\facade\Cache;
 use hg\apidoc\annotation as Apidoc;
+use app\common\enum\settings\SettingEnum;
+use app\common\model\settings\Setting as SettingModel;
 
 /**
  * 基础信息
@@ -152,5 +153,16 @@ class Index extends Controller
         $cashier['server']['port'] = $port;
         SettingModel::updateSetting(SettingEnum::CASHIER, $cashier, $this->cashier['user']['shop_supplier_id']);
         return $this->renderSuccess('设置成功');
+    }
+
+    /**
+     * @Apidoc\Title("获取打印数据")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/index/printData")
+     * @Apidoc\Returned()
+     */
+    public function printData()
+    {
+        return $this->renderSuccess('', Cache::pull("printer_data_cache") ?: []);
     }
 }

@@ -303,10 +303,8 @@ class Order extends Controller
         if (!$order) {
             return $this->renderError('订单不存在');
         }
-        // 打印机设置
-        $printerConfig = SettingModel::getSupplierItem('printer', $order['shop_supplier_id'], $order['app_id']);
         //发送打印
-        $res = (new OrderPrinterService)->sellerPrint($printerConfig, $order, true);
+        $res = (new OrderPrinterService)->printTicket($order);
         //
         return  $res ? $this->renderSuccess('打印成功') : $this->renderError('打印失败，未连接打印机');
     }

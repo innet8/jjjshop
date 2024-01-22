@@ -302,6 +302,8 @@ class Setting extends BaseModel
                     'buyer_printer_id' => '', // 顾客打印机id
                     'seller_open' => '0',   // 商家是否开启打印
                     'seller_printer_id' => '', // 商家打印机id
+                    'cashier_open' => '1',   // 是否开启打印
+                    'cashier_printer_id' => '0', // 打印机id
                     'order_status' => [], // 订单类型 10下单打印 20付款打印 30确认收货打印
                 ],
             ],
