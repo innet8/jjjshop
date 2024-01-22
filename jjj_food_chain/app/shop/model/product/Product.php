@@ -111,7 +111,7 @@ class Product extends ProductModel
             $stock = $sku['stock_num'];
             $product_price = $sku['product_price'];
             $cost_price = $sku['cost_price'];
-            $bag_price = $sku['bag_price'];
+            $bag_price = $sku['bag_price'] ?? 0;
         } else if ($data['spec_type'] == '20') {
             //更新规格
             (new Spec)->updateSpec($data['sku']);
@@ -119,7 +119,7 @@ class Product extends ProductModel
             $model->addSkuList($this['product_id'], $data['sku'], $productSkuIdList);
             $product_price = $data['sku'][0]['product_price'];
             $cost_price = $data['sku'][0]['cost_price'];
-            $bag_price = $data['sku'][0]['bag_price'];
+            $bag_price = $data['sku'][0]['bag_price'] ?? 0;
             foreach ($data['sku'] as $item) {
                 $stock += $item['stock_num'];
                 if ($item['product_price'] < $product_price) {
@@ -129,7 +129,7 @@ class Product extends ProductModel
                     $cost_price = $item['cost_price'];
                 }
                 if ($item['bag_price'] < $bag_price) {
-                    $bag_price = $item['bag_price'];
+                    $bag_price = $item['bag_price'] ?? 0;
                 }
             }
         }
@@ -280,7 +280,7 @@ class Product extends ProductModel
             $stock = $data['sku']['stock_num'];
             $product_price = $data['sku']['product_price'];
             $cost_price = $data['sku']['cost_price'];
-            $bag_price = $data['sku']['bag_price'];
+            $bag_price = $data['sku']['bag_price'] ?? 0;
         } else if ($data['spec_type'] == '20') {
             //更新规格
             (new Spec)->updateSpec($data['sku']);
@@ -288,7 +288,7 @@ class Product extends ProductModel
             $model->addSkuList($this['product_id'], $data['sku'], $productSkuIdList);
             $product_price = $data['sku'][0]['product_price'];
             $cost_price = $data['sku'][0]['cost_price'];
-            $bag_price = $data['sku'][0]['bag_price'];
+            $bag_price = $data['sku'][0]['bag_price'] ?? 0;
             foreach ($data['sku'] as $item) {
                 $stock += $item['stock_num'];
                 if ($item['product_price'] < $product_price) {
@@ -298,7 +298,7 @@ class Product extends ProductModel
                     $cost_price = $item['cost_price'];
                 }
                 if ($item['bag_price'] < $bag_price) {
-                    $bag_price = $item['bag_price'];
+                    $bag_price = $item['bag_price'] ?? 0;
                 }
             }
         }
