@@ -208,6 +208,8 @@ import refund from './dialog/refund.vue';
 import qs from 'qs';
 import { useUserStore } from '@/store';
 const { token, currency } = useUserStore();
+import { languageStore } from '@/store/model/language';
+
 export default {
     components: {
         Cancel,
@@ -399,7 +401,7 @@ export default {
         onExport: function () {
             let baseUrl = window.location.protocol + '//' + window.location.host;
             this.searchForm.token = this.token;
-            window.location.href = baseUrl + '/index.php/shop/store.operate/export?' + qs.stringify(this.searchForm);
+            window.location.href = baseUrl + '/index.php/shop/store.operate/export?' + qs.stringify(this.searchForm) + '&language=' + languageStore().language;
         },
         /*打开取消*/
         cancelClick(item) {

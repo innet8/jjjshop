@@ -693,5 +693,8 @@
     "来源": "source",
     "送厨打印": "Send to the kitchen for printing",
     "按一菜一单打印": "Print one by one",
-    "按商品分类打印": "Print by product category"
+    "按商品分类打印": "Print by product category",
+    "原密码": "old password",
+    "请输入原密码": "Please enter the original password",
+    "这个商品打印?": "Is this product printable?"
 }
