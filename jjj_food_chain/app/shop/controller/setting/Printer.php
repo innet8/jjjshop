@@ -56,8 +56,12 @@ class Printer extends Controller
         // 新增记录
         $model = new PrinterModel;
         $data = $this->postData();
+        // 
         if (empty($data['printer_name'])) {
             return $this->renderError('请输入打印机名称');
+        }
+        if (strlen($data['printer_name'] ?? '') > 50) {
+            return $this->renderError('名称限制输入50字符');
         }
         if (empty($data['printer_type'])) {
             return $this->renderError('请选择打印机类型');

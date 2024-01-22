@@ -27,7 +27,7 @@
                             <div v-if="scope.row.print_method == 10">{{ $t('整单打印') }}</div>
                             <div v-if="scope.row.print_method == 20">{{ $t('按商品分组打印') }}</div>
                             <div v-if="scope.row.print_method == 30">{{ $t('按标签打印') }}</div>
-                            <div v-if="scope.row.print_method == 40">{{ $t('一菜一单') }}</div>
+                            <div v-if="scope.row.print_method == 40">{{ $t('按一菜一单打印') }}</div>
                         </template>
                     </el-table-column>
 
