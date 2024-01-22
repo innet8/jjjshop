@@ -201,7 +201,7 @@ class Order extends Controller
         if (!$detail) {
             return $this->renderError('桌台已关闭');
         }
-        if ($detail->changeTable($new_table_id)) {
+        if ($detail->exchangeTable($old_table_id, $new_table_id)) {
             return $this->renderSuccess('转台成功');
         }
         return $this->renderError($detail->getError() ?: '转台失败');
@@ -212,13 +212,16 @@ class Order extends Controller
      * @Apidoc\Tag("桌台结账")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url("/index.php/cashier/order.order/pay")
-     * @Apidoc\Param("order_id", type="int",require=true, default=0, desc="订单id")
+     * @Apidoc\Param("table_id", type="int",require=true, default=0, desc="桌台id")
      * @Apidoc\Param("pay_type", type="int",require=true, default=0, desc="付款类型  10-余额收款 40-现金收款 50-微信收款 60-支付宝收款 70-POS机收款")
      * @Apidoc\Param("user_id", type="int",require=false, default=0, desc="用户id （pay_type为余额收款必填）")
      */
-    public function pay($order_id)
+    public function pay($table_id)
     {
-        $detail = OrderModel::detail($order_id);
+        $detail = OrderModel::getTableUnderwayOrder($table_id);
+        if (!$detail) {
+            return $this->renderSuccess('桌台订单不存在');
+        }
         if ($detail->orderPay($this->postData())) {
             TableModel::close($detail['table_id']);
             return $this->renderSuccess('结账成功');

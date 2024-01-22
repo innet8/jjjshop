@@ -328,6 +328,31 @@ class Order extends OrderModel
         return $this->save(['table_id' => $table_id]);
     }
 
+    // 交换桌台(转台)
+    public function exchangeTable($old_table_id, $new_table_id)
+    {
+        if ($this['order_status']['value'] != 10) {
+            $this->error = "订单状态错误，不允许转台";
+            return false;
+        }
+        $newTable = TableModel::detail($new_table_id);
+
+        $this->startTrans();
+        try {
+            $this->save(['table_id' => $new_table_id, 'table_no' => $newTable['table_no']]);
+            TableModel::open($new_table_id);
+            TableModel::close($old_table_id);
+            $this->commit();
+            return true;
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
+            $this->error = $e->getMessage();
+            $this->rollback();
+            return false;
+        }
+
+    }
+
     //查询桌号信息
     public function orderPay($data)
     {
