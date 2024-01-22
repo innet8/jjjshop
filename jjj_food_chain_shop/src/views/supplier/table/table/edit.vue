@@ -7,29 +7,29 @@
   <el-dialog title="添加类型" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
     :close-on-press-escape="false">
     <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
-      <el-form-item label="桌位编号" prop="table_no" :label-width="formLabelWidth">
+        <el-form-item :label="$t('桌位名称')" prop="table_no" :label-width="formLabelWidth">
         <el-input v-model="form.table_no" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="类型名称" prop="type_id" :label-width="formLabelWidth">
-        <el-select v-model="form.type_id" placeholder="类型名称">
+      <el-form-item :label="$t('所属类型')" prop="type_id" :label-width="formLabelWidth">
+        <el-select v-model="form.type_id" :placeholder="$t('所属类型')">
           <el-option v-for="item in type" :key="item.type_id" :label="item.type_name" :value="item.type_id">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="所属区域" prop="area_id" :label-width="formLabelWidth">
-        <el-select v-model="form.area_id" placeholder="所属区域">
+      <el-form-item :label="$t('所属区域')" prop="area_id" :label-width="formLabelWidth" >
+        <el-select v-model="form.area_id" :placeholder="$t('所属区域')">
           <el-option v-for="item in area_list" :key="item.area_id" :label="item.area_name" :value="item.area_id">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="排序" prop="sort" :label-width="formLabelWidth">
+      <el-form-item :label="$t('分类排序')" prop="sort" :label-width="formLabelWidth">
         <el-input v-model.number="form.sort" autocomplete="off"></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
     <div class="dialog-footer">
-      <el-button @click="dialogFormVisible">取 消</el-button>
-      <el-button type="primary" @click="addUser" :loading="loading">确 定</el-button>
+      <el-button @click="dialogFormVisible">{{ $t('取消') }}</el-button>
+      <el-button type="primary" @click="addUser" :loading="loading">{{ $t('确定') }}</el-button>
     </div>
     </template>
   </el-dialog>

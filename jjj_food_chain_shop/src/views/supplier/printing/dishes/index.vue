@@ -16,13 +16,21 @@
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
                     <el-table-column prop="id" label="ID"></el-table-column>
                     <el-table-column prop="name" :label="$t('名称')"></el-table-column>
-                    <el-table-column prop="printer.printer_name" :label="$t('打印机名称')"></el-table-column>
-                    <el-table-column prop="printer.printer_type.text" :label="$t('打印机类型')"></el-table-column>
-                    <el-table-column prop="product_type" :label="$t('打印类型')">
+                    <el-table-column prop="printer.printer_name" :label="$t('打印机')"></el-table-column>
+                    <el-table-column prop="product_type" :label="$t('打印模式')">
                         <template #default="scope">
-                            <div>{{ scope.row.type == 10 ? $t('小票打印') : $t('标签打印') }}</div>
+                            <div>{{ scope.row.type == 10 ? $t('付款打印') : $t('送厨打印') }}</div>
                         </template>
                     </el-table-column>
+                    <el-table-column prop="print_method" :label="$t('打印方式')">
+                        <template #default="scope">
+                            <div v-if="scope.row.print_method == 10">{{ $t('整单打印') }}</div>
+                            <div v-if="scope.row.print_method == 20">{{ $t('按商品分组打印') }}</div>
+                            <div v-if="scope.row.print_method == 30">{{ $t('按标签打印') }}</div>
+                            <div v-if="scope.row.print_method == 40">{{ $t('一菜一单') }}</div>
+                        </template>
+                    </el-table-column>
+
                     <el-table-column prop="is_open" :label="$t('状态')">
                         <template #default="scope">
                             <div>{{ scope.row.is_open == 0 ? $t('关闭') : $t('开启') }}</div>

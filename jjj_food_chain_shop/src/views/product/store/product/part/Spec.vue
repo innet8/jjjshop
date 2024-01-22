@@ -78,7 +78,7 @@ export default {
                 this.form.sku = {
                     product_price: '',
                     stock_num: '',
-                    bag_price: '',
+                    bag_price: 0,
                     cost_price: 0,
                     is_full: 0
                 }

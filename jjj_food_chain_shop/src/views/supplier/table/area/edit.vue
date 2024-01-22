@@ -10,7 +10,7 @@
             <el-form-item :label="$t('分类名称')" prop="name" :label-width="formLabelWidth">
                 <el-input v-model="form.area_name" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('排序')" prop="sort" :label-width="formLabelWidth">
+            <el-form-item :label="$t('分类排序')" prop="sort" :label-width="formLabelWidth">
                 <el-input v-model.number="form.sort" autocomplete="off"></el-input>
             </el-form-item>
         </el-form>

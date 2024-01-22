@@ -42,27 +42,27 @@ export default {
                 {
                     printer_id: 1,
                     printer_name: $t('交班单'),
-                    create_time: '',
+                    create_time: '2023-12-29 15:26:26',
                 },
                 {
                     printer_id: 2,
                     printer_name: $t('结账单'),
-                    create_time: '',
+                    create_time: '2023-12-29 15:26:26',
                 },
                 {
                     printer_id: 3,
                     printer_name: $t('预结账单'),
-                    create_time: '',
+                    create_time: '2023-12-29 15:26:26',
                 },
                 {
                     printer_id: 4,
                     printer_name: $t('一菜一单'),
-                    create_time: '',
+                    create_time: '2023-12-29 15:26:26',
                 },
                 {
                     printer_id: 5,
                     printer_name: $t('营业数据'),
-                    create_time: '',
+                    create_time: '2023-12-29 15:26:26',
                 },
             ],
             /*一页多少条*/
