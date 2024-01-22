@@ -249,8 +249,22 @@ class OrderProduct extends BaseModel
         $order['product'] = $order->product()->where('is_send_kitchen', 0)->select();
         (new OrderPrinterService)->printProductTicket($order, 30);
         // 
-        $res = $this->where('order_id', '=', $order_id)->update(['is_send_kitchen' => 1, 'send_kitchen_time' => time()]);
-        // 
-        return $res;
+        return $this->where('order_id', '=', $order_id)->where('is_send_kitchen', '=', 0)->update(['is_send_kitchen' => 1, 'send_kitchen_time' => time()]);
+    }
+
+    // 订单送厨商品按送厨时间分组
+    public static function getGroupByTime($order_id)
+    {
+        $orderProductList = OrderProduct::where('order_id', '=', $order_id)->where('is_send_kitchen', '=', 1)->select();
+        $result = [];
+
+        foreach ($orderProductList as $orderProduct) {
+            $sendKitchenTime = format_time_his($orderProduct->send_kitchen_time);
+            if (!isset($result[$sendKitchenTime])) {
+                $result[$sendKitchenTime] = [];
+            }
+            $result[$sendKitchenTime][] = $orderProduct;
+        }
+        return $result;
     }
 }

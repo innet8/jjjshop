@@ -38,6 +38,14 @@ class Table extends BaseModel
         return static::where($filter)->find();
     }
 
+    // 查询桌台是否进行中
+    public static function isOpen($table_id)
+    {
+        $tableStatus = static::where('table_id', '=', $table_id)->value('status');
+
+        return $tableStatus == 30;
+    }
+
 
 
     // 获取桌台分类
