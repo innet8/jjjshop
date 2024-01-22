@@ -186,16 +186,35 @@ class OrderProduct extends BaseModel
     // 删除未送厨商品
     public function delProduct($order_product_id)
     {
-        $model = $this->where('order_product_id', '=', $order_product_id)->find();
-        if (!$model) {
-            $this->error = '记录不存在';
+        $this->startTrans();
+        try {
+            $model = $this->where('order_product_id', '=', $order_product_id)->find();
+            $order_id = $model['order_id'];
+            if (!$model) {
+                $this->error = '记录不存在';
+                return false;
+            }
+            if ($model->is_send_kitchen == 1) {
+                $this->error = '商品已送厨，禁止删除';
+                return false;
+            }
+            $model->delete();
+            // 收银台订单副表为空删除主订单
+            if (self::where('order_id', '=', $order_id)->count() == 0) {
+                $order = OrderModel::where('order_id', '=', $order_id)->find();
+                if ($order['table_id'] == 0) {
+                    $order->delete();
+                }
+            }
+            $this->commit();
+            return true;
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
+            $this->error = $e->getMessage();
+            $this->rollback();
             return false;
         }
-        if ($model->is_send_kitchen == 1) {
-            $this->error = '商品已送厨，禁止删除';
-            return false;
-        }
-        return $model->delete();
+
     }
 
     // 未送厨商品备注
