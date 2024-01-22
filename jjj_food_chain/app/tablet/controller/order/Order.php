@@ -96,12 +96,22 @@ class Order extends Controller
      */
     public function getSendKitchen($table_id)
     {
+//        $model = new OrderModel();
+//        $detail = $model->getSendKitchen($table_id);
+//        if ($detail) {
+//            $detail['sendKitchenProductTotalPrice'] = helper::getArrayColumnSum($detail['sendKitchenProduct'], 'total_price');
+//        }
+//        return $this->renderSuccess('', compact('detail'));
         $model = new OrderModel();
-        $detail = $model->getSendKitchen($table_id);
-        if ($detail) {
-            $detail['sendKitchenProductTotalPrice'] = helper::getArrayColumnSum($detail['sendKitchenProduct'], 'total_price');
+        $order = $model->getSendKitchen($table_id);
+        $sendKitchenProductTotalPrice = 0;
+        $list = [];
+
+        if ($order) {
+            $sendKitchenProductTotalPrice = helper::getArrayColumnSum($order['sendKitchenProduct'], 'total_price');
+            $list = OrderProduct::getGroupByTime($order['order_id']);
         }
-        return $this->renderSuccess('', compact('detail'));
+        return $this->renderSuccess('请求成功', compact('list', 'sendKitchenProductTotalPrice'));
     }
 
     /**

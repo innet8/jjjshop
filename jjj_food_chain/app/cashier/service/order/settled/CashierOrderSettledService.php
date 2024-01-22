@@ -4,6 +4,7 @@ namespace app\cashier\service\order\settled;
 
 use app\common\enum\order\OrderSourceEnum;
 use app\cashier\model\order\Order as OrderModel;
+use app\common\enum\order\OrderStatusEnum;
 
 /**
  * 普通订单结算服务类
@@ -36,12 +37,12 @@ class CashierOrderSettledService extends CashierSettledService
                 return false;
             }
             $cashierOrder = OrderModel::where('table_id', '=', $this->params['table_id'])
-                ->where('order_status', '=', 10)
+                ->where('order_status', '=', OrderStatusEnum::NORMAL)
                 ->where('order_source', '=', 20)
                 ->where('eat_type', '=', 10)
                 ->find();
             if ($cashierOrder) {
-                $this->error = "桌台存在进行中订单";
+                $this->error = "桌台已被使用";
                 return false;
             }
 //            $Order = OrderModel::where('table_id', '=', $this->params['table_id'])

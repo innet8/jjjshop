@@ -3,6 +3,7 @@
 namespace app\tablet\controller;
 use app\cashier\model\cashier\User as UserModel;
 use app\common\exception\BaseException;
+use app\common\model\store\Table;
 use app\JjjController;
 
 
@@ -32,6 +33,14 @@ class Controller extends JjjController
         '/base/base/getInfo'
     ];
 
+    protected array $allowTableAction = [
+        '/base/base/getInfo',
+        '/table/table/bind',
+        '/table/table/index',
+        '/table/table/getInfo',
+        'order/order/tableBuy'
+    ];
+
     /**
      * 后台初始化
      */
@@ -40,6 +49,8 @@ class Controller extends JjjController
         // 当前路由信息
         $this->getRouteinfo();
         $this->checkBind();
+        $this->checkTable();
+
     }
 
     /**
@@ -67,17 +78,33 @@ class Controller extends JjjController
         }
         $sid = Request()->header('sid');
         if (!$sid) {
-            throw new BaseException(['msg' => '缺少必要的参数：sid', 'code' => -1]);
+            throw new BaseException(['msg' => '缺少必要的参数：Sid', 'code' => -1]);
         }
         $tid = Request()->header('tid');
-//        if (!$tid) {
-//            throw new BaseException(['msg' => '缺少必要的参数：tableid', 'code' => -1]);
-//        }
         $this->table = [
             'shop_supplier_id' => $sid ?? 0,
             'table_id' => $tid ?? 0,
             'cashier_id' => 0,
         ];
+        return true;
+    }
+
+    /**
+     * 验证桌台状态
+     * @throws BaseException
+     */
+    private function checkTable()
+    {
+        if (in_array($this->routeUri, $this->allowTableAction)) {
+            return true;
+        }
+        if (!$this->table['table_id']) {
+            throw new BaseException(['msg' => '缺少必要的参数：Tid', 'code' => -1]);
+        }
+        if (!Table::isOpen($this->table['table_id'])) {
+            throw new BaseException(['msg' => '桌台已关闭，请重新开台：Tid', 'code' => -2]);
+        }
+
         return true;
     }
 }
