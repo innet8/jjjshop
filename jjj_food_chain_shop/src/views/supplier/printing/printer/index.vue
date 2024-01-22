@@ -7,7 +7,7 @@
     <div class="user">
         <!--添加等级-->
         <div class="common-level-rail">
-            <el-button size="small" type="primary" @click="addClick" v-auth="'/setting/printer/add'">{{ $t('添加') }}</el-button>
+            <el-button size="small" type="primary" @click="addClick" v-auth="'/supplier/printing/printer/add'">{{ $t('添加') }}</el-button>
         </div>
 
         <!--内容-->
@@ -22,9 +22,9 @@
                     <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/setting/printer/edit'">{{ $t('编辑') }}</el-button>
+                                v-auth="'/supplier/printing/printer/edit'">{{ $t('编辑') }}</el-button>
                             <el-button @click="deleteClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/setting/printer/delete'">{{ $t('删除') }}</el-button>
+                                v-auth="'/supplier/printing/printer/delete'">{{ $t('删除') }}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>

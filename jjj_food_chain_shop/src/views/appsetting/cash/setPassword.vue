@@ -2,15 +2,15 @@
     <el-dialog class="" @close="handleClose" v-model="dialogVisible" :close-on-click-modal="false"
         :close-on-press-escape="false" :title="openTitle">
         <el-form size="small" ref="form" :model="form" label-position="top" :rules="rules">
-            <!-- <el-form-item v-if="have" :label="$t('原密碼')" prop="cashier_password"
-                :rules="[{ required: true, message: $t('请输入原密碼') }]">
+            <!-- <el-form-item v-if="have" :label="$t('原密码')" prop="cashier_password"
+                :rules="[{ required: true, message: $t('请输入原密码') }]">
                 <el-input type="password" v-model="form.cashier_password"></el-input>
             </el-form-item> -->
-            <el-form-item :label="have ? $t('新密碼') : $t('密碼')" prop="new_cashier_password"
+            <el-form-item :label="have ? $t('新密码') : $t('密码')" prop="new_cashier_password"
                 :rules="[{ required: true, message: $t('请输入密码') }]">
                 <el-input v-model="form.new_cashier_password" type="password"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('确认密碼')" prop="confirm_cashier_password">
+            <el-form-item :label="$t('确认密码')" prop="confirm_cashier_password">
                 <el-input v-model="form.confirm_cashier_password" type="password"></el-input>
             </el-form-item>
         </el-form>
@@ -33,7 +33,7 @@ export default {
     data() {
         let validatePass2 = (rule, value, callback) => {
             if (value === '') {
-                callback(new Error($t('请输入确认密碼')))
+                callback(new Error($t('请输入确认密码')))
             } else if (value !== this.form.new_cashier_password) {
                 callback(new Error($t('两次密码不一致！')))
             } else {

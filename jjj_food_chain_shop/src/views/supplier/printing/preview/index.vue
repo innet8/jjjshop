@@ -12,7 +12,7 @@
                     <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">
                             <el-button @click="previewClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/setting/printer/edit'">{{ $t('预览') }}</el-button>
+                                v-auth="'/supplier/printing/preview/preview'">{{ $t('预览') }}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>

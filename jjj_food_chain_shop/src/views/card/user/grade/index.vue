@@ -8,7 +8,7 @@
         <!--添加等级-->
         <div class="common-level-rail">
             <el-button size="small" type="primary" @click="addClick" icon="Plus"
-                v-auth="'/user/grade/add'">{{ $t('添加等级') }}</el-button>
+                v-auth="'/card/user/grade/add'">{{ $t('添加等级') }}</el-button>
         </div>
 
         <!--内容-->
@@ -30,9 +30,9 @@
                     <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/user/grade/edit'">{{ $t('编辑') }}</el-button>
+                                v-auth="'/card/user/grade/edit'">{{ $t('编辑') }}</el-button>
                             <el-button @click="deleteClick(scope.row)" type="primary" link size="small"
-                                v-if="scope.row.is_default == 0" v-auth="'/user/grade/delete'">{{ $t('删除') }}</el-button>
+                                v-if="scope.row.is_default == 0" v-auth="'/card/user/grade/delete'">{{ $t('删除') }}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>

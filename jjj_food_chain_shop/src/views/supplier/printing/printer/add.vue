@@ -4,7 +4,7 @@
         <!--form表单-->
         <el-form size="small" ref="form" :model="form" label-position="top">
             <!--添加门店-->
-            <el-form-item :label="$t('打印机名称')" prop="printer_name" :rules="[{ required: true, message: ' ' }]">
+            <el-form-item :label="$t('打印机名称')+$t('：')" prop="printer_name" :rules="[{ required: true, message: ' ' }]">
                 <el-input v-model="form.printer_name"></el-input>
             </el-form-item>
             <el-form-item :label="$t('打印机类型')" prop="printer_type" :rules="[{ required: true, message: ' ' }]">

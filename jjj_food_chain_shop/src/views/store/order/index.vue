@@ -30,7 +30,7 @@
                     <el-button size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-button size="small" type="success" @click="onExport">{{ $t('导出') }}</el-button>
+                    <el-button v-auth="'/store/operate/export'" size="small" type="success" @click="onExport">{{ $t('导出') }}</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -167,7 +167,11 @@
                                     v-auth="'/store/operate/refund'">{{ $t('退款') }}</el-button>
                                 <el-button v-if="scope.row.order_status.value == 10 && scope.row.pay_status.value == 20"
                                     @click="cancelClick(scope.row)" type="primary" link size="small"
-                                    v-auth="'/store/operate/orderCancel'">{{ $t('取消') }}
+                                    v-auth="'/store/operate/order_cancel'">{{ $t('取消') }}
+                                </el-button>
+                                <el-button v-if="scope.row.order_status.value == 10 && scope.row.pay_status.value == 20"
+                                    @click="cancelClick(scope.row)" type="primary" link size="small"
+                                    v-auth="'/store/order/delete'">{{ $t('删除') }}
                                 </el-button>
                                 <!-- <el-button v-if="scope.row.order_status.value == 10 && scope.row.pay_status.value == 20"
                                     @click="verifyClick(scope.row)" type="primary" link size="small"

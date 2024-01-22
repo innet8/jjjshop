@@ -8,7 +8,7 @@
         <!--添加产品分类-->
         <div class="common-level-rail">
             <el-button size="small" type="primary" @click="addClick" icon="Plus"
-                v-auth="'/store/table/type/add'">{{ $t('添加类型') }}</el-button>
+                v-auth="'/supplier/table/type/add'">{{ $t('添加类型') }}</el-button>
         </div>
         <!--内容-->
         <div class="product-content">
@@ -25,9 +25,9 @@
                     <el-table-column fixed="right" :label="$t('操作')" width="100">
                         <template #default="scope">
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/store/table/type/edit'">{{ $t('编辑') }}</el-button>
+                                v-auth="'/supplier/table/type/edit'">{{ $t('编辑') }}</el-button>
                             <el-button @click="deleteClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/store/table/type/delete'">{{ $t('删除') }}</el-button>
+                                v-auth="'/supplier/table/type/delete'">{{ $t('删除') }}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>

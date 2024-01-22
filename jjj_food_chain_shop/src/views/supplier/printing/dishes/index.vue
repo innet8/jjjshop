@@ -8,7 +8,7 @@
 
         <!--添加等级-->
         <div class="common-level-rail"><el-button size="small" type="primary" @click="addClick"
-                v-auth="'/supplier/printing/add'">{{ $t('添加') }}</el-button></div>
+                v-auth="'/supplier/printing/dishes/add'">{{ $t('添加') }}</el-button></div>
 
         <!--内容-->
         <div class="product-content">
@@ -33,16 +33,19 @@
 
                     <el-table-column prop="is_open" :label="$t('状态')">
                         <template #default="scope">
-                            <div>{{ scope.row.is_open == 0 ? $t('关闭') : $t('开启') }}</div>
+                            <!-- <div>{{ scope.row.is_open == 0 ? $t('关闭') : $t('开启') }}</div> -->
+                            <el-switch :disabled="!this.$filter.isAuth('/supplier/printing/dishes/state')" :model-value="scope.row.is_open" :active-value="1" :inactive-value="0"
+                                @click="changeStatus(scope.row)">
+                            </el-switch>
                         </template>
                     </el-table-column>
                     <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
                     <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/supplier/printing/edit'">{{ $t('编辑') }}</el-button>
+                                v-auth="'/supplier/printing/dishes/edit'">{{ $t('编辑') }}</el-button>
                             <el-button @click="deleteClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/supplier/printing/delete'">{{ $t('删除') }}</el-button>
+                                v-auth="'/supplier/printing/dishes/delete'">{{ $t('删除') }}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -172,7 +175,33 @@ export default {
                 .catch(() => {
                     self.loading = false;
                 });
-        }
+        },
+        changeStatus(row) {
+            let self = this;
+            let params = {
+                id: row.id,
+                status: row.is_open == 1 ? 0 : 1,
+            }
+            let text = ''
+            text = row.is_open == 1 ? $t('禁用') : $t('启用');
+            ElMessageBox.confirm( $t("确定")+ text + $t("这个商品打印?"),  $t("提示"), {
+                confirmButtonText: $t("确定"),
+                cancelButtonText: $t("取消"),
+                type: "warning",
+            })
+                .then(() => {
+                    self.loading = true;
+                    SupplierApi.setStatus(params, true)
+                        .then(data => {
+                            self.loading = false;
+                            self.getData();
+                        })
+                        .catch(error => {
+                            self.loading = false;
+                        });
+                })
+                .catch(() => { });
+        },
     }
 };
 </script>

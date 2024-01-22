@@ -29,7 +29,7 @@
                     <el-table-column prop="is_status" :label="$t('状态')" width="80">
                         <template #default="scope">
                             <el-switch
-                                :disabled="!(scope.row.is_super < 1 || (scope.row.is_super == 1 && scope.row.user_type == 1))"
+                                :disabled="!(scope.row.is_super < 1 || (scope.row.is_super == 1 && scope.row.user_type == 1)) || !this.$filter.isAuth('/auth/user/state')"
                                 v-model="scope.row.is_status" :active-value="0" :inactive-value="1"
                                 @change="isShowFunc(scope.row)" active-color="#13ce66" inactive-color="#cccccc"></el-switch>
                         </template>

@@ -16,7 +16,7 @@
                     <el-table-column prop="sort" :label="$t('排序')"></el-table-column>
                     <el-table-column prop="" :label="$t('状态')">
                         <template #default="scope">
-                            <el-switch :model-value="scope.row.status" :active-value="1" :inactive-value="0"
+                            <el-switch :disabled="!this.$filter.isAuth('/supplier/pay/state')" :model-value="scope.row.status" :active-value="1" :inactive-value="0"
                                 @click="changeStatus(scope.row)"></el-switch>
                         </template>
                     </el-table-column>
