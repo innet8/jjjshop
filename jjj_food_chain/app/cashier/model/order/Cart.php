@@ -868,10 +868,10 @@ class Cart extends CartModel
     {
         // 用户信息
         $user = (new UserModel)->where('mobile', $mobile)->with(['grade', 'card'])->find();
-//        if (!$user) {
-//            $this->error = "用户不存在";
-//            return false;
-//        }
+        if (!$user) {
+            $this->error = "用户不存在";
+            return false;
+        }
 
         // 桌台
         $table_service_money = 0;
@@ -940,7 +940,7 @@ class Cart extends CartModel
         }
         $total_consumption_tax_money = $consume_fee;    // 总消费税
 
-        return compact('total_product_price', 'total_product_pay_price', 'total_user_discount_money', 'total_service_money', 'total_consumption_tax_money');
+        return compact('user', 'total_product_price', 'total_product_pay_price', 'total_user_discount_money', 'total_service_money', 'total_consumption_tax_money');
 
     }
 

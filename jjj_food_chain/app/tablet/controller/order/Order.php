@@ -2,6 +2,7 @@
 
 namespace app\tablet\controller\order;
 
+use app\common\library\helper;
 use app\common\model\order\OrderProduct;
 use app\tablet\model\store\Table as TableModel;
 use app\cashier\service\order\settled\CashierOrderSettledService;
@@ -80,6 +81,9 @@ class Order extends Controller
     {
         $model = new OrderModel();
         $detail = $model->getUnSendKitchen($table_id);
+        if ($detail) {
+            $detail['unSendKitchenProductTotalPrice'] = helper::getArrayColumnSum($detail['unSendKitchenProduct'], 'total_price');
+        }
         return $this->renderSuccess('', compact('detail'));
     }
 
@@ -94,6 +98,9 @@ class Order extends Controller
     {
         $model = new OrderModel();
         $detail = $model->getSendKitchen($table_id);
+        if ($detail) {
+            $detail['sendKitchenProductTotalPrice'] = helper::getArrayColumnSum($detail['sendKitchenProduct'], 'total_price');
+        }
         return $this->renderSuccess('', compact('detail'));
     }
 
@@ -191,7 +198,6 @@ class Order extends Controller
             return $this->renderError('订单不存在');
         }
         $order_id = $detail['order_id'];
-        trace($order_id);
         $model = new OrderProduct();
         if ($model->sendKitchen($order_id)) {
             return $this->renderSuccess('下单成功');
