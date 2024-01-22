@@ -35,7 +35,10 @@ class Controller extends JjjController
 
     protected array $allowTableAction = [
         '/base/base/getInfo',
-        '/table/table/bind'
+        '/table/table/bind',
+        '/table/table/index',
+        '/table/table/getInfo',
+        'order/order/tableBuy'
     ];
 
     /**

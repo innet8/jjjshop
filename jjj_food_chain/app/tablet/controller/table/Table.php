@@ -62,4 +62,17 @@ class Table extends Controller
         }
         return $this->renderSuccess('解绑成功');
     }
+
+    /**
+     * @Apidoc\Title("获取桌台信息")
+     * @Apidoc\Desc("获取桌台信息")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌号ID")
+     * @Apidoc\Url("/index.php/tablet/table.table/getInfo")
+     */
+    public function getInfo($table_id)
+    {
+        $table = TableModel::detail($table_id);
+        return $this->renderSuccess('桌台信息', $table);
+    }
 }
