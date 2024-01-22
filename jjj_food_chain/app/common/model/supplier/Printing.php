@@ -81,4 +81,12 @@ class Printing extends BaseModel
             ->select();
     }
 
+    /**
+     * 设置状态
+     */
+    public function setStatus($status)
+    {
+        return $this->save(['is_open' => $status ? 1 : 0]);
+    }
+
 }

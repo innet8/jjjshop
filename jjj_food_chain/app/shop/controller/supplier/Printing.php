@@ -108,11 +108,11 @@ class Printing extends Controller
             $labelList = (new LabelModel)->getAllList($this->store['user']['shop_supplier_id']);
             return $this->renderSuccess('', compact('model', 'printerList', 'printerTagList', 'storeList', 'takeList', 'labelList'));
         }
-        // 
+        //
         if (strlen($param['name'] ?? '') > 50) {
             return $this->renderError('名称限制输入50字符');
         }
-        // 
+        //
         if ($model->edit($this->postData())) {
             return $this->renderSuccess('更新成功');
         }
@@ -134,5 +134,23 @@ class Printing extends Controller
             return $this->renderError('删除失败');
         }
         return $this->renderSuccess($model->getError() ?: '删除成功');
+    }
+
+    /**
+     * @Apidoc\Title("状态")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/supplier.Printing/setStatus")
+     * @Apidoc\Param("id", type="int", require=true, default=0, desc="id")
+     * @Apidoc\Param("status", type="int", require=true, default=0, desc="状态 0-关闭 1-开启")
+     * @Apidoc\Returned()
+     */
+    public function setStatus($id, $status)
+    {
+        // 详情
+        $model = PrintingModel::detail($id);
+        if (!$model->setStatus($status)) {
+            return $this->renderError('操作失败');
+        }
+        return $this->renderSuccess($model->getError() ?: '操作成功');
     }
 }
