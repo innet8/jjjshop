@@ -38,7 +38,7 @@
                     <el-radio v-model="form.print_method" :label="10">{{ $t('整单打印') }}</el-radio>
                     <el-radio v-model="form.print_method" :label="20">{{ $t('按商品分组打印') }}</el-radio>
                     <el-radio v-model="form.print_method" :label="30">{{ $t('按标签打印') }}</el-radio>
-                    <el-radio v-model="form.print_method" :label="40">{{ $t('一菜一单') }}</el-radio>
+                    <el-radio v-model="form.print_method" :label="40">{{ $t('按一菜一单打印') }}</el-radio>
                 </div>
             </el-form-item>
             <el-form-item v-if="form.type == 10" :label="$t('打印机') " prop="printer_id" :rules="[{ required: true, message: ' ' }]">
