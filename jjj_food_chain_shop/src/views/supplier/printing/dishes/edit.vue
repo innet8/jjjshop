@@ -70,7 +70,7 @@
 
             <el-form-item v-if="form.print_method == 30" :label="$t('打印标签')" prop="label_id">
                 <el-select v-model="form.label_id" multiple :placeholder="$t('请选择')">
-                    <el-option v-for="item in labelList" :key="item.label_id" :label="item.label_name"
+                    <el-option v-for="item in labelList" :key="item.label_id" :label="item.label_name_text"
                         :value="item.label_id + ''"></el-option>
                 </el-select>
                 <div class="tips">{{ $t('不选择打印全部') }}</div>
