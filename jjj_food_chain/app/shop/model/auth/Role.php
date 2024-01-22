@@ -61,6 +61,41 @@ class Role extends RoleModel
     /**
      * 添加
      *
+     * @param array $data
+     * @return bool
+     */
+    public function addFromMigrate(array $data)
+    {
+        $this->startTrans();
+        try {
+            $role = self::create([
+                'role_name' => $data['role_name'],
+                'sort' => max($data['sort'] ?? 1, 1),
+                'app_id' => $data['app_id']
+            ]);
+
+            $roleAccessModel = new RoleAccess();
+            $roleAccessData = array_map(function ($accessId) use ($role, $data) {
+                return [
+                    'role_id' => $role['role_id'],
+                    'access_id' => $accessId,
+                    'app_id' => $data['app_id']
+                ];
+            }, $data['access_id']);
+
+            $roleAccessModel->saveAll($roleAccessData);
+            $this->commit();
+            return true;
+        } catch (\Exception $e) {
+            $this->error = $e->getMessage();
+            $this->rollback();
+            return false;
+        }
+    }
+
+    /**
+     * 添加
+     *
      * @param [type] $data
      * @return bool
      */

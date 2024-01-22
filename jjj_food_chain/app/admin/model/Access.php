@@ -32,7 +32,7 @@ class Access extends AccessModel
             return false;
         }
         $data['access_id'] = time();
-        $data['app_id'] = self::$app_id;
+        $data['app_id'] = self::$app_id ?? 0;
         return $this->save($data);
     }
 
