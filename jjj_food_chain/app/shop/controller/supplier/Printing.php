@@ -93,6 +93,7 @@ class Printing extends Controller
      */
     public function edit($id)
     {
+        $param = $this->postData();
         $model = PrintingModel::detail($id);
         if ($this->request->isGet()) {
             // 获取打印机列表
@@ -107,6 +108,11 @@ class Printing extends Controller
             $labelList = (new LabelModel)->getAllList($this->store['user']['shop_supplier_id']);
             return $this->renderSuccess('', compact('model', 'printerList', 'printerTagList', 'storeList', 'takeList', 'labelList'));
         }
+        // 
+        if (strlen($param['name']) > 50) {
+            return $this->renderError('名称限制输入50字符');
+        }
+        // 
         if ($model->edit($this->postData())) {
             return $this->renderSuccess('更新成功');
         }
