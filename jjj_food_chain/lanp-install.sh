@@ -99,21 +99,20 @@ server {
     server_name localhost;
 
     location /admin {
-            index index.html;
+        index index.html;
     }
     location /h5 {
         try_files \$uri \$uri/ @router;
     }
     location @router {
-         rewrite ^.*$ /h5/index.html last;
+        rewrite ^.*$ /h5/index.html last;
     }
     location /shop {
-            index index.html;
+        index index.html;
     }
     location /cashier {
-            index index.html;
+        index index.html;
     }
-
 
     location / {
         rewrite ^/index.php/(.*)$ /index.php?s=/\$1 last;
