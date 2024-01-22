@@ -38,6 +38,9 @@ class OrderPrinterService
         // 商米一体机打印
         if (($printerConfig['cashier_printer_id'] ?? '0') == '0') {
             $content = $this->getPrintContent($order, PrinterTypeEnum::SUNMI_LAN);
+            $content = hex2bin($content);
+            $content = iconv("UTF-8","GBK//IGNORE",$content);
+            $content = bin2hex($content);
             Cache::set("printer_data_cache", array_unique(array_merge(Cache::get("printer_data_cache",[]),[$content])), 60 * 60 * 24);
             return true;
         } else {
