@@ -58,7 +58,7 @@ class HallCart extends Controller
     public function tableProductList($table_id)
     {
         $detail = OrderModel::getTableUnderwayOrder($table_id);
-        $order_id = $detail['order_id'];
+        $order_id = isset($detail['order_id']) ? $detail['order_id'] : 0;
         $allProductInfo = (new CartModel())->getOrderCartDetail($this->cashier['user'], $table_id);
         return $this->renderSuccess('', compact('allProductInfo', 'order_id'));
     }
@@ -67,7 +67,7 @@ class HallCart extends Controller
      * @Apidoc\Title("折扣抹零")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.HallCart/changeMoney")
-     * @Apidoc\Param("order_id", type="int", require=true, desc="订单ID")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
      * @Apidoc\Param("type", type="int", require=true, desc="折扣方式 1-订单改价 2-折扣 3-抹零")
      * @Apidoc\Param("money", type="float", require=false, desc="改价价格 （type-1 必填）")
      * @Apidoc\Param("rate", type="float", require=false, desc="折扣 （type-2 必填）")

@@ -72,23 +72,24 @@ class Order extends OrderModel
                 break;
         }
         if (isset($params['time']) && $params['time']) {
-
-            if (isset($params['time'][0]) && isset($params['time'][1])) {
+            if ($params['time'][0] && $params['time'][1]) {
                 $startTime = strtotime($params['time'][0]);
-                trace($startTime);
                 $endTime = strtotime($params['time'][1]);
                 if ($startTime == $endTime) {
                     $endTime = $startTime + 86399;
                 }
                 $model = $model->where('create_time', 'between', [$startTime, $endTime]);
-            } else {
+            } else if ($params['time'][0]) {
                 $startTime = strtotime($params['time'][0]);
                 $model = $model->where('create_time', '>', $startTime);
+            } else if ($params['time'][1]) {
+                $endTime = strtotime($params['time'][1]);
+                $model = $model->where('create_time', '<', $endTime);
+            } else {
+                $model = $model->where('create_time', 'between', [$startTime, $endTime]);
             }
 
         }
-
-
 
         switch ($params['dataType'] ?? 1) {
             case '1'://进行中
@@ -244,7 +245,12 @@ class Order extends OrderModel
      */
     public function changeMoney($user, $data)
     {
-        $detail = self::detail($data['order_id']);
+        if (isset($data['order_id']) && $data['order_id'] > 0) {
+            $detail = self::detail($data['order_id']);
+        } else if (isset($data['table_id']) && $data['table_id'] > 0) {
+            $detail = self::getTableUnderwayOrder($data['table_id']);
+        }
+
         if ($detail['pay_status']['value'] != 10) {
             $this->error = "订单已支付不允许改价";
             return false;

@@ -190,16 +190,18 @@ class Order extends Controller
      * @Apidoc\Title("桌台转台")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url("/index.php/cashier/order.order/changeTable")
-     * @Apidoc\Param("order_id", type="int", require=false, desc="订单id")
-     * @Apidoc\Param("table_id", type="int", require=false, desc="桌台ID")
-     * @Apidoc\Param("area_id", type="int", require=false, desc="区域ID")
-     * @Apidoc\Param("type_id", type="int", require=false, desc="桌台类型ID")
+     * @Apidoc\Param("old_table_id", type="int", require=false, desc="原桌台ID")
+     * @Apidoc\Param("new_table_id", type="int", require=false, desc="新桌台ID")
      * @Apidoc\Returned("list",type="array",ref="app\cashier\model\store\Table\getList")
      */
-    public function changeTable($order_id, $table_id)
+    public function changeTable($old_table_id, $new_table_id)
     {
-        $detail = OrderModel::detail($order_id);
-        if ($detail->changeTable($table_id)) {
+
+        $detail = OrderModel::getTableUnderwayOrder($old_table_id);
+        if (!$detail) {
+            return $this->renderError('桌台已关闭');
+        }
+        if ($detail->changeTable($new_table_id)) {
             return $this->renderSuccess('转台成功');
         }
         return $this->renderError($detail->getError() ?: '转台失败');
