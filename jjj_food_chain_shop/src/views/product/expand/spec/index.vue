@@ -7,7 +7,7 @@
         <div class="common-level-rail">
             <el-button size="small" type="primary" icon="Plus" v-auth="'/product/expand/spec/add'" @click="addClick">
                 {{$t('添加规格')}}</el-button>
-            <el-button size="small" v-auth="'/product/expand/spec/delete'" @click="deleteBatch">{{$t('批量删除')}}</el-button>
+            <el-button size="small" v-auth="'/product/expand/spec/batch_delete'" @click="deleteBatch">{{$t('批量删除')}}</el-button>
         </div>
         <!--内容-->
         <div class="product-content">

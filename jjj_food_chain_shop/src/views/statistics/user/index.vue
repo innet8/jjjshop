@@ -23,7 +23,7 @@
                     <el-button size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-button size="small" type="success" @click="onExport">{{ $t('导出') }}</el-button>
+                    <el-button v-auth="'/statistics/user/export'" size="small" type="success" @click="onExport">{{ $t('导出') }}</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -48,7 +48,7 @@
                 <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
                 <el-table-column fixed="right" :label="$t('操作')" width="120">
                     <template #default="scope">
-                        <el-button @click="detailClick(scope.row)" type="primary" link size="small">{{ $t('详情')
+                        <el-button v-auth="'/statistics/user/detail'" @click="detailClick(scope.row)" type="primary" link size="small">{{ $t('详情')
                         }}</el-button>
                     </template>
                 </el-table-column>

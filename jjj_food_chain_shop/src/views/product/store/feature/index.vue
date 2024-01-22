@@ -1,7 +1,7 @@
 <template >
     <div class="product">
         <div class="common-level-rail">
-            <el-button size="small" type="primary" @click="addClick" icon="Plus" v-auth="'/product/store/category/Add'">{{
+            <el-button size="small" type="primary" @click="addClick" icon="Plus" v-auth="'/product/store/feature/add'">{{
                 $t('添加分类') }}</el-button>
         </div>
         <div class="product-content">
@@ -12,7 +12,7 @@
 
                     <el-table-column prop="sort" :label="$t('状态')">
                         <template #default="scope">
-                            <el-switch v-model="scope.row.status" :active-value="1" :inactive-value="0"
+                            <el-switch :disabled="!this.$filter.isAuth('/product/store/feature/state')" v-model="scope.row.status" :active-value="1" :inactive-value="0"
                                 @change="statusSet($event, scope.row.category_id)">
                             </el-switch>
                         </template>
@@ -22,9 +22,9 @@
                     <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/product/store/category/Edit'">{{ $t('编辑') }}</el-button>
+                                v-auth="'/product/store/feature/edit'">{{ $t('编辑') }}</el-button>
                             <el-button @click="deleteClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/product/store/category/Delete'">{{ $t('删除') }}</el-button>
+                                v-auth="'/product/store/feature/delete'">{{ $t('删除') }}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>

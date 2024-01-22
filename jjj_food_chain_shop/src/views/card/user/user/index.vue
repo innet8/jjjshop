@@ -28,7 +28,7 @@
                 <el-form-item><el-button type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button></el-form-item>
 
             </el-form>
-            <div class="common-level-rail"> <el-button type="primary" icon="Plus" @click="addMenber">{{ $t('添加会员') }}</el-button></div>
+            <div class="common-level-rail"> <el-button type="primary" v-auth="'/card/user/user/add'" icon="Plus" @click="addMenber">{{ $t('添加会员') }}</el-button></div>
         </div>
         <!--内容-->
         <div class="product-content">
@@ -64,13 +64,13 @@
                     <el-table-column fixed="right" :label="$t('操作')" width="180">
                         <template #default="scope">
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/user/user/edit'">{{ $t('编辑') }}</el-button>
+                                v-auth="'/card/user/user/edit'">{{ $t('编辑') }}</el-button>
                             <el-button @click="addClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/user/user/recharge'">{{ $t('充值') }}</el-button>
+                                v-auth="'/card/user/user/recharge'">{{ $t('充值') }}</el-button>
                             <!-- <el-button @click="gradeClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/user/user/grade'">会员等级</el-button> -->
+                                v-auth="'/card/user/user/grade'">会员等级</el-button> -->
                             <el-button @click="deleteClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/user/user/delete'">{{ $t('删除') }}</el-button>
+                                v-auth="'/card/user/user/delete'">{{ $t('删除') }}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>

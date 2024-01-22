@@ -72,5 +72,8 @@ let SupplierApi = {
   EditPrinting(data, errorback) {
     return request._post('/shop/supplier.printing/edit', data, errorback);
   },
+  setStatus(data, errorback) {
+    return request._post('/shop/supplier.Printing/setStatus', data, errorback);
+  },
 }
 export default SupplierApi;

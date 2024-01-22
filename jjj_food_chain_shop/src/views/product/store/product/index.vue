@@ -68,7 +68,7 @@
                     <el-table-column prop="product_stock" :label="$t('库存')"></el-table-column>
                     <el-table-column prop="product_status.text" :label="$t('状态')" width="100">
                         <template #default="scope">
-                            <el-switch :model-value="scope.row.product_status.value == 10 ? true : false"
+                            <el-switch :disabled="!this.$filter.isAuth('/product/store/product/state')" :model-value="scope.row.product_status.value == 10 ? true : false"
                                 @click="undercarriage(scope.row, scope.row.product_status.value == 10 ? 20 : 10)"></el-switch>
                         </template>
                     </el-table-column>

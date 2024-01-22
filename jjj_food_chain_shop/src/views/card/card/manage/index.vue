@@ -55,7 +55,7 @@
                     </el-table-column>
                     <el-table-column prop="status" :label="$t('状态')">
                         <template #default="scope">
-                            <el-switch :model-value="scope.row.status == 0 ? true : false" @click="handleChange(scope.row)"
+                            <el-switch :disabled="!this.$filter.isAuth('/card/card/state')" :model-value="scope.row.status == 0 ? true : false" @click="handleChange(scope.row)"
                                 :loading="loading" />
                         </template>
                     </el-table-column>
