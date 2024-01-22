@@ -6,6 +6,7 @@ use app\cashier\controller\Controller;
 use app\cashier\model\order\Cart as CartModel;
 use app\cashier\model\order\Order as OrderModel;
 use app\cashier\model\store\Table as TableModel;
+use app\common\enum\order\OrderStatusEnum;
 use app\common\model\order\OrderProduct;
 use hg\apidoc\annotation as Apidoc;
 
@@ -57,7 +58,8 @@ class HallCart extends Controller
     public function tableProductList($table_id)
     {
         $detail = OrderModel::detail([
-            ['table_id', '=', $table_id]
+            ['table_id', '=', $table_id],
+            ['order_status', '=', OrderStatusEnum::NORMAL]
         ]);
         $order_id = $detail['order_id'];
         $allProductInfo = (new CartModel())->getOrderCartDetail($this->cashier['user'], $table_id);
@@ -87,7 +89,7 @@ class HallCart extends Controller
     /**
      * @Apidoc\Title("添加商品")
      * @Apidoc\Method("POST")
-     * @Apidoc\Url ("/index.php/cashier/order.cart/add")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/add")
      * @Apidoc\Param("product_id", type="int", require=true, desc="商品ID")
      * @Apidoc\Param("product_num", type="int", require=true, desc="商品数量")
      * @Apidoc\Param("product_sku_id", type="int", require=true, desc="商品SKU ID")

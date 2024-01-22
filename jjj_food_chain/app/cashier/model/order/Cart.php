@@ -505,6 +505,7 @@ class Cart extends CartModel
      */
     public function addToOrder($data, $user)
     {
+        $param = $data;
         //判断商品是否下架
         $product = $this->productState($data['product_id']);
         if (!$product) {
@@ -523,7 +524,8 @@ class Cart extends CartModel
             // 已存在order_id，直接添加到订单
             if (isset($data['order_id']) && $data['order_id'] > 0) {
                 $orderProduct = new OrderProductModel;
-                $order_product_id = $orderProduct->isExist($data);
+//                $order_product_id = $orderProduct->isExist($data);
+                $order_product_id = 0;
                 // 存在修改数量、否则新增
                 if ($order_product_id) {
                     $orderProduct->where('order_product_id', '=', $order_product_id)->inc('total_num', $data['product_num'])->update();
@@ -551,13 +553,50 @@ class Cart extends CartModel
                 }
                 $return_order = $data['order_id'];
 
+            } else if(isset($data['table_id']) && $data['table_id'] > 0) {
+
+
+                $detail = OrderModel::detail([
+                    ['table_id', '=', $data['table_id']],
+                    ['order_status', '=', OrderStatusEnum::NORMAL]
+                ]);
+                $order_id = $detail['order_id'];
+                $data['order_id'] = $order_id;
+
+                $orderProduct = new OrderProductModel;
+//                $order_product_id = $orderProduct->isExist($data);
+                $order_product_id = 0;
+                // 存在修改数量、否则新增
+                if ($order_product_id) {
+                    $orderProduct->where('order_product_id', '=', $order_product_id)->inc('total_num', $data['product_num'])->update();
+                } else {
+                    $productDetail = ProductModel::where('product_id', '=', $data['product_id'])->find();
+                    $inArr = [
+                        'order_id' => $order_id,
+                        'app_id' => self::$app_id,
+                        'product_id' => $data['product_id'],
+                        'product_name' => $productDetail['product_name'],
+                        'image_id' => $productDetail['logo']['image_id'],
+                        'deduct_stock_type' => $productDetail['deduct_stock_type'],
+                        'spec_type' => $productDetail['spec_type'],
+                        'product_sku_id' => $data['product_sku_id'],
+                        'product_attr' => $data['describe'],
+                        'content' => $productDetail['content'],
+                        'product_price' => $data['price'],
+                        'line_price' => $data['product_price'],
+                        'total_num' => $data['product_num'],
+                        'total_price' => $data['product_num'] * $data['price'],
+                        'total_pay_price' => $data['product_num'] * $data['price'],
+                    ];
+
+                    $orderProduct->save($inArr);
+                }
+                $return_order = $data['order_id'];
             } else {
                 // order_id不存在创建新订单再加入商品
 
                 // 实例化订单service
-                $param = [
-                    'eat_type' => 10
-                ];
+                $param['eat_type'] = 10;
                 $orderService = new CashierOrderSettledService($user, [], $param);
                 // 初始化订单信息
                 $orderInfo = $orderService->settlementCashier();
