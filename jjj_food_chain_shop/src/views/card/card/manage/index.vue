@@ -13,9 +13,6 @@
         <!--搜索表单-->
         <div class="common-seach-wrap">
             <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
-                <el-form-item :label="$t('名称')">
-                    <el-input v-model="formInline.card_name" :placeholder="$t('请输入会员卡名称')"></el-input>
-                </el-form-item>
                 <el-form-item :label="$t('状态')">
                     <el-select v-model="formInline.status" :placeholder="$t('请选择')">
                         <el-option :label="$t('全部')" :value="-1"></el-option>
@@ -23,6 +20,10 @@
                         <el-option :label="$t('关闭')" :value="1"></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item :label="$t('会员卡名称')">
+                    <el-input v-model="formInline.card_name" :placeholder="$t('请输入会员卡名称')"></el-input>
+                </el-form-item>
+
                 <el-form-item>
                     <el-button type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
                 </el-form-item>
@@ -33,7 +34,7 @@
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
                     <el-table-column prop="card_id" label="ID"></el-table-column>
-                    <el-table-column prop="card_name" :label="$t('名称')"></el-table-column>
+                    <el-table-column prop="card_name" :label="$t('会员卡名称')"></el-table-column>
                     <el-table-column prop="expire" :label="$t('有效期')">
                         <template #default="scope">
                             <span v-if="scope.row.expire > 0">{{ scope.row.expire }}月</span>
@@ -59,7 +60,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="sort" :label="$t('排序')"></el-table-column>
-                    <el-table-column prop="create_time" :label="$t('创建时间')"></el-table-column>
+                    <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
                     <el-table-column fixed="right" :label="$t('操作')" width="200">
                         <template #default="scope">
                             <el-button @click="putClick(scope.row)" type="primary" link size="small"

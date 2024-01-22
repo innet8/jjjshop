@@ -33,7 +33,7 @@
                 <p>:</p>
                 <el-input style="width: 100px;" disabled v-model="form.server.port"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('收银结账自动送厨房：')">
+            <el-form-item :label="$t('收银结账自动送厨房：')"  prop="is_auto_send" :rules="[{ required: true, message: $t('') }]">
                 <el-radio-group v-model="form.is_auto_send">
                     <el-radio label="1">{{ $t('开') }}</el-radio>
                     <el-radio label="0">{{ $t('关') }}</el-radio>

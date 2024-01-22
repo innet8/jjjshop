@@ -22,7 +22,7 @@
         <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
           <el-table-column prop="opt_log_id" label="id" width="70"></el-table-column>
           <el-table-column prop="user_name" :label="$t('用户名')"></el-table-column>
-          <el-table-column prop="real_name" :label="$t('真实姓名')"></el-table-column>
+          <el-table-column prop="real_name" :label="$t('姓名')"></el-table-column>
           <el-table-column prop="url" label="Url" width="300">
             <template #default="scope">
               <el-input size="small" :placeholder="$t('请输入内容')" v-model="scope.row.url">
@@ -32,11 +32,10 @@
               </el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="title" :label="$t('标题')"></el-table-column>
           <el-table-column prop="ip" label="IP" width="120"></el-table-column>
-          <el-table-column prop="browser" label="Browser" width="120"></el-table-column>
+          <el-table-column prop="browser" :label="$t('来源')" width="120"></el-table-column>
           <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
-          <el-table-column fixed="right" :label="$t('操作')" width="50">
+          <el-table-column fixed="right" :label="$t('操作')" width="120">
             <template #default="scope">
               <el-button @click="openDetail(scope.row)" type="primary" link size="small">{{$t('详情')}}</el-button>
             </template>

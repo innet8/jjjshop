@@ -680,5 +680,15 @@
     "交班单、营业数据、预结账单、结账单": "Shift orders, business data, pre-paid bills, settlement statements",
     "选择等级": "Select level",
     "描述/说明": "Description/Instructions",
-    "自定义您店铺的积分名称": "Customize your store’s point name"
+    "自定义您店铺的积分名称": "Customize your store’s point name",
+    "选择用户": "Select user",
+    "请选择会员等级": "Please select membership level",
+    "请选择性别": "Please select gender",
+    "微信昵称": "WeChat nickname",
+    "请输入微信昵称": "Please enter your WeChat nickname",
+    "用户余额": "User balance",
+    "累积消费金额": "Accumulated consumption amount",
+    "未知": "unknown",
+    "调整有效期": "Adjust validity period",
+    "来源": "source"
 }
