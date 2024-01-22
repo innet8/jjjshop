@@ -24,34 +24,34 @@ class ExportService
         $sheet->getColumnDimension('P')->setWidth(30);
 
         //设置工作表标题名称
-        $sheet->setTitle('订单明细');
+        $sheet->setTitle(__('订单明细'));
 
-        $sheet->setCellValue('A1', '订单号');
-        $sheet->setCellValue('B1', '商品信息');
-        $sheet->setCellValue('C1', '订单总额');
-        $sheet->setCellValue('D1', '优惠券抵扣');
-        $sheet->setCellValue('E1', '满减金额');
-        $sheet->setCellValue('F1', '配送费');
-        $sheet->setCellValue('G1', '包装费');
-        $sheet->setCellValue('H1', '服务费');
-        $sheet->setCellValue('I1', '优惠金额');
-        $sheet->setCellValue('J1', '实付款金额');
-        $sheet->setCellValue('K1', '支付方式');
-        $sheet->setCellValue('L1', '下单时间');
-        $sheet->setCellValue('M1', '买家');
-        $sheet->setCellValue('N1', '买家留言');
-        $sheet->setCellValue('O1', '配送方式');
-        $sheet->setCellValue('P1', '自提联系电话');
-        $sheet->setCellValue('Q1', '收货人姓名');
-        $sheet->setCellValue('R1', '联系电话');
-        $sheet->setCellValue('S1', '收货人地址');
-        $sheet->setCellValue('T1', '付款状态');
-        $sheet->setCellValue('U1', '付款时间');
-        $sheet->setCellValue('V1', '核销时间');
-        $sheet->setCellValue('W1', '订单状态');
-        $sheet->setCellValue('X1', '微信支付交易号');
-        $sheet->setCellValue('Y1', '订单来源');
-        $sheet->setCellValue('Z1', '退款金额');
+        $sheet->setCellValue('A1', __('订单号'));
+        $sheet->setCellValue('B1', __('商品信息'));
+        $sheet->setCellValue('C1', __('订单总额'));
+        $sheet->setCellValue('D1', __('优惠券抵扣'));
+        $sheet->setCellValue('E1', __('满减金额'));
+        $sheet->setCellValue('F1', __('配送费'));
+        $sheet->setCellValue('G1', __('包装费'));
+        $sheet->setCellValue('H1', __('服务费'));
+        $sheet->setCellValue('I1', __('优惠金额'));
+        $sheet->setCellValue('J1', __('实付款金额'));
+        $sheet->setCellValue('K1', __('支付方式'));
+        $sheet->setCellValue('L1', __('下单时间'));
+        $sheet->setCellValue('M1', __('买家'));
+        $sheet->setCellValue('N1', __('买家留言'));
+        $sheet->setCellValue('O1', __('配送方式'));
+        $sheet->setCellValue('P1', __('自提联系电话'));
+        $sheet->setCellValue('Q1', __('收货人姓名'));
+        $sheet->setCellValue('R1', __('联系电话'));
+        $sheet->setCellValue('S1', __('收货人地址'));
+        $sheet->setCellValue('T1', __('付款状态'));
+        $sheet->setCellValue('U1', __('付款时间'));
+        $sheet->setCellValue('V1', __('核销时间'));
+        $sheet->setCellValue('W1', __('订单状态'));
+        $sheet->setCellValue('X1', __('微信支付交易号'));
+        $sheet->setCellValue('Y1', __('订单来源'));
+        $sheet->setCellValue('Z1', __('退款金额'));
 
         //填充数据
         $index = 0;
@@ -88,7 +88,7 @@ class ExportService
 
         //保存文件
         $writer = new Xlsx($spreadsheet);
-        $filename = iconv("UTF-8", "GB2312//IGNORE", '订单') . '-' . date('YmdHis') . '.xlsx';
+        $filename = iconv("UTF-8", "GB2312//IGNORE", __('订单')) . '-' . date('YmdHis') . '.xlsx';
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
@@ -110,21 +110,21 @@ class ExportService
         $sheet->getColumnDimension('B')->setWidth(10);
 
         //设置工作表标题名称
-        $sheet->setTitle('订单明细');
+        $sheet->setTitle(__('订单明细'));
 
-        $sheet->setCellValue('A1', '订单号');
-        $sheet->setCellValue('B1', '订单金额');
-        $sheet->setCellValue('C1', '订单状态');
-        $sheet->setCellValue('D1', '配送方式');
-        $sheet->setCellValue('E1', '配送费');
-        $sheet->setCellValue('F1', '配送状态');
-        $sheet->setCellValue('G1', '配送时间');
-        $sheet->setCellValue('H1', '送达时间');
-        $sheet->setCellValue('I1', '收货人姓名');
-        $sheet->setCellValue('J1', '联系电话');
-        $sheet->setCellValue('L1', '收货人地址');
-        $sheet->setCellValue('L1', '配送员');
-        $sheet->setCellValue('M1', '配送员电话');
+        $sheet->setCellValue('A1', __('订单号'));
+        $sheet->setCellValue('B1', __('订单金额'));
+        $sheet->setCellValue('C1', __('订单状态'));
+        $sheet->setCellValue('D1', __('配送方式'));
+        $sheet->setCellValue('E1', __('配送费'));
+        $sheet->setCellValue('F1', __('配送状态'));
+        $sheet->setCellValue('G1', __('配送时间'));
+        $sheet->setCellValue('H1', __('送达时间'));
+        $sheet->setCellValue('I1', __('收货人姓名'));
+        $sheet->setCellValue('J1', __('联系电话'));
+        $sheet->setCellValue('L1', __('收货人地址'));
+        $sheet->setCellValue('L1', __('配送员'));
+        $sheet->setCellValue('M1', __('配送员电话'));
 
         //填充数据
         $index = 0;
@@ -148,7 +148,7 @@ class ExportService
 
         //保存文件
         $writer = new Xlsx($spreadsheet);
-        $filename = iconv("UTF-8", "GB2312//IGNORE", '订单配送信息') . '-' . date('YmdHis') . '.xlsx';
+        $filename = iconv("UTF-8", "GB2312//IGNORE", __('订单配送信息')) . '-' . date('YmdHis') . '.xlsx';
 
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
@@ -171,28 +171,28 @@ class ExportService
         $sheet->getColumnDimension('P')->setWidth(30);
 
         //设置工作表标题名称
-        $sheet->setTitle('积分订单明细');
+        $sheet->setTitle(__('积分订单明细'));
 
-        $sheet->setCellValue('A1', '订单号');
-        $sheet->setCellValue('B1', '商品信息');
-        $sheet->setCellValue('C1', '订单总额');
-        $sheet->setCellValue('D1', '兑换积分');
-        $sheet->setCellValue('E1', '配送费');
-        $sheet->setCellValue('F1', '支付方式');
-        $sheet->setCellValue('G1', '下单时间');
-        $sheet->setCellValue('H1', '买家');
-        $sheet->setCellValue('I1', '配送方式');
-        $sheet->setCellValue('J1', '自提门店');
-        $sheet->setCellValue('K1', '门店电话');
-        $sheet->setCellValue('L1', '门店地址');
-        $sheet->setCellValue('M1', '收货人姓名');
-        $sheet->setCellValue('N1', '联系电话');
-        $sheet->setCellValue('O1', '收货人地址');
-        $sheet->setCellValue('P1', '付款状态');
-        $sheet->setCellValue('Q1', '付款时间');
-        $sheet->setCellValue('R1', '核销时间');
-        $sheet->setCellValue('S1', '订单状态');
-        $sheet->setCellValue('T1', '支付交易号');
+        $sheet->setCellValue('A1', __('订单号'));
+        $sheet->setCellValue('B1', __('商品信息'));
+        $sheet->setCellValue('C1', __('订单总额'));
+        $sheet->setCellValue('D1', __('兑换积分'));
+        $sheet->setCellValue('E1', __('配送费'));
+        $sheet->setCellValue('F1', __('支付方式'));
+        $sheet->setCellValue('G1', __('下单时间'));
+        $sheet->setCellValue('H1', __('买家'));
+        $sheet->setCellValue('I1', __('配送方式'));
+        $sheet->setCellValue('J1', __('自提门店'));
+        $sheet->setCellValue('K1', __('门店电话'));
+        $sheet->setCellValue('L1', __('门店地址'));
+        $sheet->setCellValue('M1', __('收货人姓名'));
+        $sheet->setCellValue('N1', __('联系电话'));
+        $sheet->setCellValue('O1', __('收货人地址'));
+        $sheet->setCellValue('P1', __('付款状态'));
+        $sheet->setCellValue('Q1', __('付款时间'));
+        $sheet->setCellValue('R1', __('核销时间'));
+        $sheet->setCellValue('S1', __('订单状态'));
+        $sheet->setCellValue('T1', __('支付交易号'));
 
         //填充数据
         $index = 0;
@@ -223,7 +223,7 @@ class ExportService
 
         //保存文件
         $writer = new Xlsx($spreadsheet);
-        $filename = iconv("UTF-8", "GB2312//IGNORE", '积分订单') . '-' . date('YmdHis') . '.xlsx';
+        $filename = iconv("UTF-8", "GB2312//IGNORE", __('积分订单')) . '-' . date('YmdHis') . '.xlsx';
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
@@ -239,10 +239,10 @@ class ExportService
     {
         $content = '';
         foreach ($order['product'] as $key => $product) {
-            $content .= ($key + 1) . ".商品名称：{$product['product_name']}\n";
-            !empty($product['product_attr']) && $content .= "　商品规格：{$product['product_attr']}\n";
-            $content .= "　购买数量：{$product['total_num']}\n";
-            $content .= "　商品总价：{$product['total_price']}元\n\n";
+            $content .= ($key + 1) . ".".__("商品名称")."：{$product['product_name']}\n";
+            !empty($product['product_attr']) && $content .= "　".__("商品规格")."：{$product['product_attr']}\n";
+            $content .= "　".__("购买数量")."：{$product['total_num']}\n";
+            $content .= "　".__("商品总价")."：{$product['total_price']}元\n\n";
         }
         return $content;
     }
@@ -263,14 +263,14 @@ class ExportService
         $sheet->getColumnDimension('F')->setWidth(20);
         $sheet->getColumnDimension('G')->setWidth(20);
         //设置工作表标题名称
-        $sheet->setTitle('订单明细');
-        $sheet->setCellValue('A1', '订单号');
-        $sheet->setCellValue('B1', '订单来源');
-        $sheet->setCellValue('C1', '应收金额');
-        $sheet->setCellValue('D1', '优惠金额');
-        $sheet->setCellValue('E1', '实付金额');
-        $sheet->setCellValue('F1', '预计收入');
-        $sheet->setCellValue('G1', '订单状态');
+        $sheet->setTitle(__('订单明细'));
+        $sheet->setCellValue('A1', __('订单号'));
+        $sheet->setCellValue('B1', __('订单来源'));
+        $sheet->setCellValue('C1', __('应收金额'));
+        $sheet->setCellValue('D1', __('优惠金额'));
+        $sheet->setCellValue('E1', __('实付金额'));
+        $sheet->setCellValue('F1', __('预计收入'));
+        $sheet->setCellValue('G1', __('订单状态'));
         //填充数据
         $index = 0;
         foreach ($list as $order) {
@@ -285,7 +285,7 @@ class ExportService
         }
         //保存文件
         $writer = new Xlsx($spreadsheet);
-        $filename = iconv("UTF-8", "GB2312//IGNORE", '订单') . '-' . date('YmdHis') . '.xlsx';
+        $filename = iconv("UTF-8", "GB2312//IGNORE", __('订单')) . '-' . date('YmdHis') . '.xlsx';
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
@@ -312,16 +312,16 @@ class ExportService
         $sheet->getColumnDimension('H')->setWidth(20);
         $sheet->getColumnDimension('I')->setWidth(20);
         //设置工作表标题名称
-        $sheet->setTitle('订单交易明细');
-        $sheet->setCellValue('A1', '订单号');
-        $sheet->setCellValue('B1', '订单类型');
-        $sheet->setCellValue('C1', '总金额');
-        $sheet->setCellValue('D1', '优惠金额');
-        $sheet->setCellValue('E1', '实付金额');
-        $sheet->setCellValue('F1', '实际到账');
-        $sheet->setCellValue('G1', '支付方式');
-        $sheet->setCellValue('H1', '订单状态');
-        $sheet->setCellValue('I1', '下单时间');
+        $sheet->setTitle(__('订单交易明细'));
+        $sheet->setCellValue('A1', __('订单号'));
+        $sheet->setCellValue('B1', __('订单类型'));
+        $sheet->setCellValue('C1', __('总金额'));
+        $sheet->setCellValue('D1', __('优惠金额'));
+        $sheet->setCellValue('E1', __('实付金额'));
+        $sheet->setCellValue('F1', __('实际到账'));
+        $sheet->setCellValue('G1', __('支付方式'));
+        $sheet->setCellValue('H1', __('订单状态'));
+        $sheet->setCellValue('I1', __('下单时间'));
         //填充数据
         $index = 0;
         foreach ($list as $order) {
@@ -338,7 +338,7 @@ class ExportService
         }
         //保存文件
         $writer = new Xlsx($spreadsheet);
-        $filename = iconv("UTF-8", "GB2312//IGNORE", '订单') . '-' . date('YmdHis') . '.xlsx';
+        $filename = iconv("UTF-8", "GB2312//IGNORE", __('订单')) . '-' . date('YmdHis') . '.xlsx';
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
@@ -361,12 +361,12 @@ class ExportService
         $sheet->getColumnDimension('D')->setWidth(20);
         $sheet->getColumnDimension('E')->setWidth(20);
         //设置工作表标题名称
-        $sheet->setTitle('商品销量明细');
-        $sheet->setCellValue('A1', '排名');
-        $sheet->setCellValue('B1', '商品名称');
-        $sheet->setCellValue('C1', '商品价格');
-        $sheet->setCellValue('D1', '销量');
-        $sheet->setCellValue('E1', '销售额(元)');
+        $sheet->setTitle(__('商品销量明细'));
+        $sheet->setCellValue('A1', __('排名'));
+        $sheet->setCellValue('B1', __('商品名称'));
+        $sheet->setCellValue('C1', __('商品价格'));
+        $sheet->setCellValue('D1', __('销量'));
+        $sheet->setCellValue('E1', __('销售额(元)'));
 
         //填充数据
         $index = 0;
@@ -380,7 +380,7 @@ class ExportService
         }
         //保存文件
         $writer = new Xlsx($spreadsheet);
-        $filename = iconv("UTF-8", "GB2312//IGNORE", '订单') . '-' . date('YmdHis') . '.xlsx';
+        $filename = iconv("UTF-8", "GB2312//IGNORE", __('订单')) . '-' . date('YmdHis') . '.xlsx';
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
@@ -407,21 +407,21 @@ class ExportService
         $sheet->getColumnDimension('M')->setWidth(20);
         $sheet->getColumnDimension('N')->setWidth(20);
         //设置工作表标题名称
-        $sheet->setTitle('团购订单明细');
-        $sheet->setCellValue('A1', '订单号');
-        $sheet->setCellValue('B1', '团购名称');
-        $sheet->setCellValue('C1', '团购价格');
-        $sheet->setCellValue('D1', '团购数量');
-        $sheet->setCellValue('E1', '订单总额');
-        $sheet->setCellValue('F1', '实付款金额');
-        $sheet->setCellValue('G1', '支付方式');
-        $sheet->setCellValue('H1', '下单时间');
-        $sheet->setCellValue('I1', '买家');
-        $sheet->setCellValue('J1', '买家电话');
-        $sheet->setCellValue('K1', '付款时间');
-        $sheet->setCellValue('L1', '核销时间');
-        $sheet->setCellValue('M1', '订单状态');
-        $sheet->setCellValue('N1', '微信支付交易号');
+        $sheet->setTitle(__('团购订单明细'));
+        $sheet->setCellValue('A1', __('订单号'));
+        $sheet->setCellValue('B1', __('团购名称'));
+        $sheet->setCellValue('C1', __('团购价格'));
+        $sheet->setCellValue('D1', __('团购数量'));
+        $sheet->setCellValue('E1', __('订单总额'));
+        $sheet->setCellValue('F1', __('实付款金额'));
+        $sheet->setCellValue('G1', __('支付方式'));
+        $sheet->setCellValue('H1', __('下单时间'));
+        $sheet->setCellValue('I1', __('买家'));
+        $sheet->setCellValue('J1', __('买家电话'));
+        $sheet->setCellValue('K1', __('付款时间'));
+        $sheet->setCellValue('L1', __('核销时间'));
+        $sheet->setCellValue('M1', __('订单状态'));
+        $sheet->setCellValue('N1', __('微信支付交易号'));
 
         //填充数据
         $index = 0;
@@ -444,7 +444,7 @@ class ExportService
         }
         //保存文件
         $writer = new Xlsx($spreadsheet);
-        $filename = iconv("UTF-8", "GB2312//IGNORE", '团购订单明细') . '-' . date('YmdHis') . '.xlsx';
+        $filename = iconv("UTF-8", "GB2312//IGNORE", __('团购订单明细')) . '-' . date('YmdHis') . '.xlsx';
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
@@ -465,20 +465,20 @@ class ExportService
         $sheet->getColumnDimension('I')->setWidth(50);
 
         //设置工作表标题名称
-        $sheet->setTitle('余额提现明细');
+        $sheet->setTitle(__('余额提现明细'));
 
         $sheet->setCellValue('A1', 'ID');
-        $sheet->setCellValue('B1', '用户ID');
-        $sheet->setCellValue('C1', '微信昵称');
-        $sheet->setCellValue('D1', '手机号');
-        $sheet->setCellValue('E1', '提现金额');
-        $sheet->setCellValue('F1', '实际到账');
-        $sheet->setCellValue('G1', '提现比例');
-        $sheet->setCellValue('H1', '提现方式');
-        $sheet->setCellValue('I1', '提现信息');
-        $sheet->setCellValue('J1', '审核状态');
-        $sheet->setCellValue('K1', '申请时间');
-        $sheet->setCellValue('L1', '审核时间');
+        $sheet->setCellValue('B1', __('用户ID'));
+        $sheet->setCellValue('C1', __('微信昵称'));
+        $sheet->setCellValue('D1', __('手机号'));
+        $sheet->setCellValue('E1', __('提现金额'));
+        $sheet->setCellValue('F1', __('实际到账'));
+        $sheet->setCellValue('G1', __('提现比例'));
+        $sheet->setCellValue('H1', __('提现方式'));
+        $sheet->setCellValue('I1', __('提现信息'));
+        $sheet->setCellValue('J1', __('审核状态'));
+        $sheet->setCellValue('K1', __('申请时间'));
+        $sheet->setCellValue('L1', __('审核时间'));
         //填充数据
         $index = 0;
         foreach ($list as $cash) {
@@ -497,7 +497,7 @@ class ExportService
             $index++;
         }
         //保存文件
-        $filename = iconv("UTF-8", "GB2312//IGNORE", '余额提现明细') . '-' . date('YmdHis') . '.xlsx';
+        $filename = iconv("UTF-8", "GB2312//IGNORE", __('余额提现明细')) . '-' . date('YmdHis') . '.xlsx';
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
@@ -513,12 +513,12 @@ class ExportService
     {
         $content = '';
         if ($cash['pay_type']['value'] == 20) {
-            $content .= "支付宝姓名：{$cash['alipay_name']}\n";
-            $content .= "  支付宝账号：{$cash['alipay_account']}\n";
+            $content .= __("支付宝姓名") . "：{$cash['alipay_name']}\n";
+            $content .= __("支付宝账号") . "  ：{$cash['alipay_account']}\n";
         } elseif ($cash['pay_type']['value'] == 30) {
-            $content .= "银行名称：{$cash['bank_name']}\n";
-            $content .= "  开户名：{$cash['bank_account']}\n";
-            $content .= "  银行卡号：{$cash['bank_card']}\n";
+            $content .= __("银行名称") ."：{$cash['bank_name']}\n";
+            $content .= __("开户名") ."  ：{$cash['bank_account']}\n";
+            $content .= __("银行卡号") ."  ：{$cash['bank_card']}\n";
         }
         return $content;
     }
