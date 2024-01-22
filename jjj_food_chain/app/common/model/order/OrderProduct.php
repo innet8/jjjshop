@@ -2,12 +2,13 @@
 
 namespace app\common\model\order;
 
+use think\facade\Log;
 use app\common\library\helper;
 use app\common\model\BaseModel;
 use app\common\model\order\Order as OrderModel;
+use app\common\service\order\OrderPrinterService;
 use app\common\model\product\Product as ProductModel;
 use app\common\model\product\ProductSku as ProductSkuModel;
-use think\facade\Log;
 
 /**
  * 订单商品模型
@@ -239,6 +240,17 @@ class OrderProduct extends BaseModel
     // 送厨
     public function sendKitchen($order_id)
     {
-        return $this->where('order_id', '=', $order_id)->update(['is_send_kitchen' => 1, 'send_kitchen_time' => time()]);
+        $order = OrderModel::where('order_id', $order_id)->find();
+        if (!$order) {
+            $this->error = "订单不存在";
+            return false;
+        }
+        // 菜品打印
+        $order['product'] = $order->product()->where('is_send_kitchen', 0)->select();
+        (new OrderPrinterService)->printProductTicket($order, 30);
+        // 
+        $res = $this->where('order_id', '=', $order_id)->update(['is_send_kitchen' => 1, 'send_kitchen_time' => time()]);
+        // 
+        return $res;
     }
 }

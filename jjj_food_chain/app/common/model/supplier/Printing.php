@@ -75,7 +75,7 @@ class Printing extends BaseModel
     {
         return $this->where('print_type', '=', $print_type)
             ->where('shop_supplier_id', '=', $shop_supplier_id)
-            ->where('product_type', '=', $product_type)
+            // ->where('product_type', '=', $product_type)
             ->where('is_open', '=', 1)
             ->where('is_delete', '=', 0)
             ->select();

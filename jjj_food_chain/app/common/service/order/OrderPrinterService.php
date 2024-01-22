@@ -488,7 +488,6 @@ class OrderPrinterService
      */
     public function printProductTicket($order, $print_type)
     {
-        
         //打印列表
         $list = (new PrintingModel())->getList($print_type, $order['shop_supplier_id'], $order['order_type']);
         if (count($list) > 0) {
@@ -503,16 +502,6 @@ class OrderPrinterService
                 if ($item['type'] == 10) {
                     if ($item['print_method'] == 40) { 
                         foreach ($order['product'] as $key => $product) {
-                            $prodcutDetail = ProductModel::detail($product['product_id']);
-                            if ($item['print_method'] == 20) {
-                                if ($item['category_id'] && !in_array($prodcutDetail['special_id'], $item['category_id']) && !in_array($prodcutDetail['category_id'], $data['category_id'])) {
-                                    continue;
-                                }
-                            } elseif ($item['print_method'] == 30) {
-                                if ($item['label_id'] && !in_array($prodcutDetail['label_id'], $item['label_id'])) {
-                                    continue;
-                                }
-                            }
                             // 获取订单打印内容
                             $content = $this->getPrintProductContent($item, $order, $printer, $product);
                             // 执行打印请求
@@ -524,7 +513,6 @@ class OrderPrinterService
                         //执行打印请求
                         $content && $PrinterDriver->printTicket($content);
                     }
-                   
                 } else {
                     // 获取订单打印内容
                     $this->getPrintTagProductContent($item, $order, $printer);
@@ -548,7 +536,7 @@ class OrderPrinterService
         *商米 和 芯烨 打印机 
         *
         */
-        if ( $printer && ( $printerType == PrinterTypeEnum::SUNMI_LAN || $printerType == PrinterTypeEnum::XPRINTER_LAN)) {
+        if ($printer && ( $printerType == PrinterTypeEnum::SUNMI_LAN || $printerType == PrinterTypeEnum::XPRINTER_LAN)) {
             $printer = new SunmiCloudPrinter(567);
             if($printerType != PrinterTypeEnum::XPRINTER_LAN){
                 $printer->lineFeed();
