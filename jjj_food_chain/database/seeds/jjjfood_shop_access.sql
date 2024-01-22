@@ -18,7 +18,7 @@ SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- appid
-SET @appid = CONCAT( LPAD(UNIX_TIMESTAMP(), 9, '0'), FLOOR(RAND() * 10));
+SET @appid = (SELECT app_id FROM jjjfood_shop_user LIMIT 0,1);
 
 -- ----------------------------
 -- Table structure for jjjfood_shop_access
