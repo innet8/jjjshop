@@ -135,14 +135,14 @@ class Order extends Controller
     {
         $detail = OrderModel::getTableUnderwayOrder($table_id);
         if (!$detail) {
-            return $this->renderError('订单不存在');
+            return $this->renderError('桌台已关闭');
         }
         $order_id = $detail['order_id'];
         $data = $this->postData();
         unset($data['table_id']);
         $data['order_id'] = $order_id;
         $data['eat_type'] = 10;
-        $model = new CartModel();
+        $model = new OrderModel();
         $order_id = $model->addToOrder($data, $this->table);
         if ($order_id > 0) {
             return $this->renderSuccess('添加商品成功', ['order_id' => $order_id]);

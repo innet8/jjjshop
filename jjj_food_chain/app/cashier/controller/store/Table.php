@@ -62,10 +62,9 @@ class Table extends Controller
     /**
      * @Apidoc\Title("获取空闲桌台")
      * @Apidoc\Method ("POST")
-     * @Apidoc\Url("/index.php/cashier/store.table/table")
+     * @Apidoc\Url("/index.php/cashier/store.table/getEnableTable")
      * @Apidoc\Param("area_id", type="int", require=false, desc="区域ID")
      * @Apidoc\Param("type_id", type="int", require=false, desc="桌台类型ID")
-     * @Apidoc\Param("table_status", type="int", require=false, desc="桌台状态 10-未开台 30-已开台")
      * @Apidoc\Returned("list",type="array",ref="app\cashier\model\store\Table\getList")
      */
     public function getEnableTable($area_id = '', $type_id = '')

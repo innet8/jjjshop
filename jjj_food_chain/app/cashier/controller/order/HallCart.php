@@ -103,7 +103,7 @@ class HallCart extends Controller
     {
         $data = $this->postData();
         $data['eat_type'] = 10;
-        $model = new CartModel();
+        $model = new OrderModel();
         $order_id = $model->addToOrder($data, $this->cashier['user']);
         if ($order_id > 0) {
             return $this->renderSuccess('添加商品成功', ['order_id' => $order_id]);

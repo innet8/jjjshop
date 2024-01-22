@@ -3,6 +3,7 @@
 namespace app\common\model\order;
 
 use app\api\model\user\CardRecord as CardRecordModel;
+use app\cashier\service\order\settled\CashierOrderSettledService;
 use app\common\enum\order\OrderSourceEnum;
 use app\common\enum\order\OrderStatusEnum;
 use app\common\enum\settings\SettingEnum;
@@ -13,6 +14,8 @@ use app\common\enum\order\OrderTypeEnum;
 use app\common\enum\order\OrderPayTypeEnum;
 use app\common\library\helper;
 use app\common\model\order\OrderProduct as OrderProductModel;
+use app\common\model\product\Product as ProductModel;
+use app\common\model\product\ProductSku as ProductSkuModel;
 use app\common\model\plus\discount\DiscountProduct;
 use app\common\model\settings\Setting as SettingModel;
 use app\common\service\order\OrderPrinterService;
@@ -1163,6 +1166,179 @@ class Order extends BaseModel
             'user_discount_money' => $user_discount_money
         ];
         $order->save($updateOrderArr);
+    }
+
+    /**
+     * 商品直接加入订单
+     */
+    public function addToOrder($data, $user)
+    {
+        $param = $data;
+        //判断商品是否下架
+        $product = $this->productState($data['product_id']);
+        if (!$product) {
+            $this->error = '商品已下架';
+            return false;
+        }
+        $stockStatus = $this->productStockState($data['product_id'], $data['product_sku_id']);
+        if (!$stockStatus) {
+            $this->error = '商品库存不足';
+            return false;
+        }
+
+        $this->startTrans();
+        try {
+
+            // 已存在order_id，直接添加到订单
+            if (isset($data['order_id']) && $data['order_id'] > 0) {
+                $orderProduct = new OrderProductModel;
+//                $order_product_id = $orderProduct->isExist($data);
+                $order_product_id = 0;
+                // 存在修改数量、否则新增
+                if ($order_product_id) {
+                    $orderProduct->where('order_product_id', '=', $order_product_id)->inc('total_num', $data['product_num'])->update();
+                } else {
+                    $productDetail = ProductModel::where('product_id', '=', $data['product_id'])->find();
+                    $inArr = [
+                        'order_id' => $data['order_id'],
+                        'app_id' => self::$app_id,
+                        'product_id' => $data['product_id'],
+                        'product_name' => $productDetail['product_name'],
+                        'image_id' => $productDetail['logo']['image_id'],
+                        'deduct_stock_type' => $productDetail['deduct_stock_type'],
+                        'spec_type' => $productDetail['spec_type'],
+                        'product_sku_id' => $data['product_sku_id'],
+                        'product_attr' => $data['describe'],
+                        'content' => $productDetail['content'],
+                        'product_price' => $data['price'],
+                        'line_price' => $data['product_price'],
+                        'total_num' => $data['product_num'],
+                        'total_price' => $data['product_num'] * $data['price'],
+                        'total_pay_price' => $data['product_num'] * $data['price'],
+                    ];
+
+                    $orderProduct->save($inArr);
+                }
+                $return_order = $data['order_id'];
+
+            } else if(isset($data['table_id']) && $data['table_id'] > 0) {
+
+
+                $detail = self::detail([
+                    ['table_id', '=', $data['table_id']],
+                    ['order_status', '=', OrderStatusEnum::NORMAL]
+                ]);
+                $order_id = $detail['order_id'];
+                $data['order_id'] = $order_id;
+
+                $orderProduct = new OrderProductModel;
+//                $order_product_id = $orderProduct->isExist($data);
+                $order_product_id = 0;
+                // 存在修改数量、否则新增
+                if ($order_product_id) {
+                    $orderProduct->where('order_product_id', '=', $order_product_id)->inc('total_num', $data['product_num'])->update();
+                } else {
+                    $productDetail = ProductModel::where('product_id', '=', $data['product_id'])->find();
+                    $inArr = [
+                        'order_id' => $order_id,
+                        'app_id' => self::$app_id,
+                        'product_id' => $data['product_id'],
+                        'product_name' => $productDetail['product_name'],
+                        'image_id' => $productDetail['logo']['image_id'],
+                        'deduct_stock_type' => $productDetail['deduct_stock_type'],
+                        'spec_type' => $productDetail['spec_type'],
+                        'product_sku_id' => $data['product_sku_id'],
+                        'product_attr' => $data['describe'],
+                        'content' => $productDetail['content'],
+                        'product_price' => $data['price'],
+                        'line_price' => $data['product_price'],
+                        'total_num' => $data['product_num'],
+                        'total_price' => $data['product_num'] * $data['price'],
+                        'total_pay_price' => $data['product_num'] * $data['price'],
+                    ];
+
+                    $orderProduct->save($inArr);
+                }
+                $return_order = $data['order_id'];
+            } else {
+                // order_id不存在创建新订单再加入商品
+
+                // 实例化订单service
+                $param['eat_type'] = 10;
+                $orderService = new CashierOrderSettledService($user, [], $param);
+                // 初始化订单信息
+                $orderInfo = $orderService->settlementCashier();
+                if ($orderService->hasError()) {
+                    return $this->renderError($orderService->getError());
+                }
+                // 创建订单
+                $order_id = $orderService->createOrder($orderInfo);
+                if (!$order_id) {
+                    return $this->renderError($orderService->getError() ?: '订单创建失败');
+                }
+
+                $productDetail = ProductModel::where('product_id', '=', $data['product_id'])->find();
+                $inArr = [
+                    'order_id' => $order_id,
+                    'app_id' => self::$app_id,
+                    'product_id' => $data['product_id'],
+                    'product_name' => $productDetail['product_name'],
+                    'image_id' => $productDetail['logo']['image_id'],
+                    'deduct_stock_type' => $productDetail['deduct_stock_type'],
+                    'spec_type' => $productDetail['spec_type'],
+                    'product_sku_id' => $data['product_sku_id'],
+                    'product_attr' => $data['describe'],
+                    'content' => $productDetail['content'],
+                    'product_price' => $data['price'],
+                    'line_price' => $data['product_price'],
+                    'total_num' => $data['product_num'],
+                    'total_price' => $data['product_num'] * $data['price'],
+                    'total_pay_price' => $data['product_num'] * $data['price'],
+                ];
+
+                (new OrderProductModel)->save($inArr);
+
+                $return_order = $order_id;
+            }
+
+            (new self)->reloadPrice($return_order);
+            $this->commit();
+            return $return_order;
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
+            $this->error = $e->getMessage();
+            $this->rollback();
+            return false;
+        }
+
+    }
+
+    //判断商品是否下架
+    public function productState($product_id)
+    {
+        return (new ProductModel)->where('product_id', '=', $product_id)
+            ->where('product_status', '=', 10)
+            ->where('is_delete', '=', 0)
+            ->count();
+    }
+
+    //判断商品库存
+    public function productStockState($product_id, $product_sku_id)
+    {
+        return (new ProductSkuModel)->where('product_id', '=', $product_id)
+            ->where('product_sku_id', '=', $product_sku_id)
+            ->where('stock_num', '>', 0)
+            ->count();
+    }
+
+    //判断商品库存
+    public function getStockState($product_id, $product_sku_id, $product_num)
+    {
+        return (new ProductSkuModel)->where('product_id', '=', $product_id)
+            ->where('product_sku_id', '=', $product_sku_id)
+            ->where('stock_num', '>', $product_num)
+            ->count();
     }
 
     //查询桌号订单未送厨商品
