@@ -57,10 +57,7 @@ class HallCart extends Controller
      */
     public function tableProductList($table_id)
     {
-        $detail = OrderModel::detail([
-            ['table_id', '=', $table_id],
-            ['order_status', '=', OrderStatusEnum::NORMAL]
-        ]);
+        $detail = OrderModel::getTableUnderwayOrder($table_id);
         $order_id = $detail['order_id'];
         $allProductInfo = (new CartModel())->getOrderCartDetail($this->cashier['user'], $table_id);
         return $this->renderSuccess('', compact('allProductInfo', 'order_id'));
@@ -235,8 +232,6 @@ class HallCart extends Controller
         if (!$detail) {
             return $this->renderError('订单不存在');
         }
-        $order_id = $detail['order_id'];
-        $detail = OrderModel::detail($order_id);
         if ($detail?->moveProduct($order_product_id, $num, $return_reason)) {
             return $this->renderSuccess('退菜成功');
         }

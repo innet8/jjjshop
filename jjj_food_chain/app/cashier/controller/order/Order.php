@@ -133,7 +133,7 @@ class Order extends Controller
         // 修改桌台状态
         TableModel::open($params['table_id']);
         // 返回结算信息
-        return $this->renderSuccess('下单成功');
+        return $this->renderSuccess('开台成功');
     }
 
 //    /**
@@ -171,16 +171,12 @@ class Order extends Controller
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.Order/updateMealNum")
      * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
-     * @Apidoc\Param("order_id", type="int", require=true, desc="订单ID")
      * @Apidoc\Param("meal_num", type="int", require=true, desc="就餐人数")
      * @Apidoc\Returned()
      */
-    public function updateMealNum($table_id, $order_id, $meal_num)
+    public function updateMealNum($table_id, $meal_num)
     {
-        $detail = OrderModel::detail([
-            ['order_id', '=', $order_id],
-            ['table_id', '=', $table_id]
-        ]);
+        $detail = OrderModel::getTableUnderwayOrder($table_id);
         if (!$detail) {
             return $this->renderError('记录不存在');
         }

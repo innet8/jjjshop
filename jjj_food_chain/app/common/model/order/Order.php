@@ -130,9 +130,9 @@ class Order extends BaseModel
     }
 
     // 支付时间格式化
-    public function getPayTimeTextAttr($value, $data){
-
-        return isset($data['pay_time']) ? format_time_his(strtotime($data['pay_time'])) : '';
+    public function getPayTimeTextAttr($value, $data)
+    {
+        return isset($data['pay_time']) && $data['pay_time'] != 0 ? format_time_his($data['pay_time']) : '-';
     }
 
     /**
@@ -433,7 +433,7 @@ class Order extends BaseModel
     {
         return self::with('product')->where([
             ['table_id', '=', $table_id],
-            ['order_status', '=', 10]
+            ['order_status', '=', OrderStatusEnum::NORMAL]
         ])->order('order_id', 'desc')->find();
     }
 
@@ -1029,7 +1029,7 @@ class Order extends BaseModel
             $user = null;
             if ($product->product['is_enable_grade'] && $product['total_price'] > 0) {
                 $user = $order['user'];
-                trace($user);
+//                trace($user);
                 if ($user) {
                     $discount = (new CardRecordModel)->getDiscount($user['user_id']);
                 } else {
@@ -1062,8 +1062,8 @@ class Order extends BaseModel
                     // 会员卡
                     $discountRatio = $discount;
                 }
-                trace('折扣');
-                trace($discountRatio);
+//                trace('折扣');
+//                trace($discountRatio);
                 if ($discountRatio <= 1) {
                     if ($alone_grade_type == 20) {
                         // 固定金额
@@ -1072,31 +1072,31 @@ class Order extends BaseModel
                     } else {
                         // 商品会员折扣后单价
                         $grade_product_price = helper::number2(helper::bcmul($product['product_price'], $discountRatio), true);
-                        trace('商品会员折扣后单价');
-                        trace($grade_product_price);
+//                        trace('商品会员折扣后单价');
+//                        trace($grade_product_price);
                     }
                     $productDiscount = DiscountProduct::getDiscount($product['product_id']);
-                    trace('========');
-                    trace($product['total_num']);
-                    trace('========');
+//                    trace('========');
+//                    trace($product['total_num']);
+//                    trace('========');
                     if ($product['total_num'] > 1 && $productDiscount) {
                         $gradeTotalPrice = $grade_product_price * ($product['total_num'] - 1) + round($grade_product_price * $productDiscount['discount'] / 10, 2);
                     } else {
                         $gradeTotalPrice = $grade_product_price * $product['total_num'];
-                        trace('商品会员折扣后单价 * 数量');
-                        trace($gradeTotalPrice);
+//                        trace('商品会员折扣后单价 * 数量');
+//                        trace($gradeTotalPrice);
                     }
                     $is_user_grade = !($discountRatio == 1);
                     $grade_ratio = $discountRatio == 1 ? 0 : $discountRatio;
-                    trace('折扣');
-                    trace($grade_ratio);
+//                    trace('折扣');
+//                    trace($grade_ratio);
                     // 原商品总价 - 折扣后
-                    trace('原商品总价');
-                    trace($product['total_price']);
-                    trace($product['product_price']);
+//                    trace('原商品总价');
+//                    trace($product['total_price']);
+//                    trace($product['product_price']);
                     $grade_total_money = helper::number2(helper::bcsub($product['product_price'] * $product['total_num'], $gradeTotalPrice));
-                    trace('优惠后与原商品差价');
-                    trace($grade_total_money);
+//                    trace('优惠后与原商品差价');
+//                    trace($grade_total_money);
                     $product['total_price'] = $gradeTotalPrice;
                 }
             }
@@ -1106,12 +1106,12 @@ class Order extends BaseModel
                 $ratio = $setting['gift_ratio'] / 100;
                 // 计算抵扣积分数量
                 $product_points_bonus = !$product['product']['is_points_gift'] ? 0 : helper::bcmul($product['total_price'], $ratio, 2);
-                trace('商品原价');
-                trace($product['product_price']);
-                trace('数量');
-                trace($product['total_num']);
-                trace('积分');
-                trace($product_points_bonus);
+//                trace('商品原价');
+//                trace($product['product_price']);
+//                trace('数量');
+//                trace($product['total_num']);
+//                trace('积分');
+//                trace($product_points_bonus);
             }
             $updateArr = [
                 'user_id' => $order['user_id'],
