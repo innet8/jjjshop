@@ -11,7 +11,7 @@
                     <el-input type="text" v-model="form.feed_name[item.key]"></el-input>
                 </el-form-item>
             </template>
-            <el-form-item :label="$t('排序')" prop="sort">
+            <el-form-item :label="$t('加料排序')" prop="sort">
                 <el-input type="text" v-model.number="form.sort"></el-input>
             </el-form-item>
             <el-form-item :label="$t('价格')" prop="price">

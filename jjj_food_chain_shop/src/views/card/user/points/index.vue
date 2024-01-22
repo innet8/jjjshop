@@ -8,7 +8,7 @@
     <el-form ref="form" size="small" :model="form" label-position="top" label-width="200px">
       <div class="common-form">{{ $t('积分设置') }}</div>
       <el-form-item :label="$t('积分名称') " prop="points_name" :rules="[{required: true,message: ' '}]">
-        <el-input v-model="form.points_name" autocomplete="off" class="max-w460"></el-input>
+        <el-input v-model="form.points_name" :placeholder="$t('自定义您店铺的积分名称')" autocomplete="off" class="max-w460"></el-input>
         <!-- <div class="lh18 mt10 gray9">
           <p>注：修改积分名称后，在买家端的所有页面里，看到的都是自定义的名称</p>
           <p>例：商家使用自定义的积分名称来做品牌运营。如京东把积分称为“京豆”，淘宝把积分称为“淘金币”</p>

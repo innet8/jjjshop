@@ -43,16 +43,16 @@
                             <span>{{ $t('全部订单') }} <el-tag size="">{{ order_count.all }}</el-tag></span>
                         </template>
                     </el-tab-pane>
-                    <el-tab-pane :label="$t('未付款')" name="payment">
+                    <el-tab-pane :label="$t('待付款')" name="payment">
                         <template #label>
-                            <span>{{ $t('未付款') }} <el-tag size="">{{ order_count.payment }}</el-tag></span>
+                            <span>{{ $t('待付款') }} <el-tag size="">{{ order_count.payment }}</el-tag></span>
                         </template>
                     </el-tab-pane>
-                    <el-tab-pane :label="$t('进行中')" name="process">
+                    <!-- <el-tab-pane :label="$t('进行中')" name="process">
                         <template #label>
                             <span>{{ $t('进行中') }} <el-tag size="">{{ order_count.process }}</el-tag></span>
                         </template>
-                    </el-tab-pane>
+                    </el-tab-pane> -->
                     <el-tab-pane :label="$t('已取消')" name="cancel">
                         <template #label>
                             <span>{{ $t('已取消') }} <el-tag size="">{{ order_count.cancel }}</el-tag></span>
@@ -64,17 +64,17 @@
                         </template>
                     </el-tab-pane>
                 </el-tabs>
-                <el-table size="small" :data="tableData.data" :span-method="arraySpanMethod" border style="width: 100%"
+                <el-table size="small" :data="tableData.data"  border style="width: 100%"
                     v-loading="loading">
-                    <el-table-column prop="order_no" :label="$t('订单信息')" width="400">
+                    <!-- <el-table-column prop="order_no" :label="$t('订单信息')" width="400">
                         <template #default="scope">
                             <div class="order-code" v-if="scope.row.is_top_row">
                                 <span class="state-text" :class="{ 'state-text-red': scope.row.order_source != 10 }">{{
                                     scope.row.order_source_text }}</span>
                                 <span class="c_main">{{ $t('订单号：') }}{{ scope.row.order_no }}</span>
-                                <span class="c_main">{{ $t('桌号：') }}{{ scope.row.table_no }}</span>
+                                <span class="c_main">{{ $t('桌号/序号：') }}{{ scope.row.table_no }}</span>
                                 <span class="">{{ $t('下单时间：') }}{{ scope.row.create_time }}</span>
-                                <!--是否取消申请中-->
+                            
                                 <span class="" v-if="scope.row.order_status == 21">
                                     <el-tag effect="dark" size="">{{ $t('取消申请中') }}</el-tag>
                                 </span>
@@ -98,8 +98,11 @@
                                 </div>
                             </template>
                         </template>
-                    </el-table-column>
-                    <el-table-column prop="state_text" :label="$t('交易状态')">
+                    </el-table-column> -->
+                    <el-table-column prop="order_source_text" :label="$t('订单类型')"></el-table-column>
+                    <el-table-column prop="table_no" :label="$t('桌号/序号')"></el-table-column>
+                    <el-table-column prop="order_no" :label="$t('订单号')"></el-table-column>
+                    <el-table-column prop="state_text" :label="$t('状态')">
                         <template #default="scope">
                             <div v-if="!scope.row.is_top_row">
                                 {{ scope.row.state_text }}
@@ -109,6 +112,7 @@
                     <el-table-column prop="pay_time_text" :label="$t('支付时间')"></el-table-column>
                     <el-table-column prop="order_price" :label="$t('订单金额')">
                         <template #default="scope">
+
                             <p>{{ currency.unit }}{{ scope.row.order_price }}</p>
                         </template>
                     </el-table-column>
@@ -132,6 +136,7 @@
                                 <div>{{ scope.row.user.nickName }}</div>
                                 <div class="gray9">ID：({{ scope.row.user.user_id }})</div>
                             </div>
+                            <p v-else>-</p>
                         </template>
                     </el-table-column>
                     <!-- <el-table-column prop="supplier.name" :label="$t('门店名称')"></el-table-column> -->
@@ -154,7 +159,7 @@
                         <template #default="scope">
                             <div v-if="!scope.row.is_top_row">
                                 <el-button @click="addClick(scope.row)" type="primary" link size="small"
-                                    v-auth="'/store/order/detail'">{{ $t('订单详情') }}
+                                    v-auth="'/store/order/detail'">{{ $t('详情') }}
                                 </el-button>
                                 <el-button
                                     v-if="scope.row.order_status.value == 10 && scope.row.pay_status.value == 20 && scope.row.refund_money == 0"
@@ -292,22 +297,22 @@ export default {
             self.loading = true;
             OrderApi.storeOrderlist(Params, true)
                 .then(res => {
-                    let list = [];
-                    for (let i = 0; i < res.data.list.data.length; i++) {
-                        let item = res.data.list.data[i];
-                        let topitem = {
-                            order_no: item.order_no,
-                            create_time: item.create_time,
-                            order_source: item.order_source,
-                            order_source_text: item.order_source_text,
-                            is_top_row: true,
-                            order_status: item.order_status.value,
-                            table_no: item.table_no,
-                        };
-                        list.push(topitem);
-                        list.push(item);
-                    }
-                    self.tableData.data = list;
+                    // let list = [];
+                    // for (let i = 0; i < res.data.list.data.length; i++) {
+                    //     let item = res.data.list.data[i];
+                    //     let topitem = {
+                    //         order_no: item.order_no,
+                    //         create_time: item.create_time,
+                    //         order_source: item.order_source,
+                    //         order_source_text: item.order_source_text,
+                    //         is_top_row: true,
+                    //         order_status: item.order_status.value,
+                    //         table_no: item.table_no,
+                    //     };
+                    //     list.push(topitem);
+                    //     list.push(item);
+                    // }
+                    self.tableData.data = res.data.list.data;
                     self.totalDataNumber = res.data.list.total;
                     self.exStyle = res.data.ex_style;
                     self.order_count = res.data.order_count.order_count;

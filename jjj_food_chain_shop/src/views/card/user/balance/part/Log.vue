@@ -8,15 +8,16 @@
         <!--搜索表单-->
         <div class="common-seach-wrap">
             <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
-                <el-form-item :label="$t('用户昵称')">
-                    <el-input v-model="formInline.search" :placeholder="$t('请输入昵称')"></el-input>
-                </el-form-item>
+
                 <el-form-item :label="$t('余额变动场景')">
                     <el-select v-model="formInline.scene" :placeholder="$t('请选择')">
                         <el-option :label="$t('全部')" value="0"></el-option>
                         <el-option v-for="(item, index) in Scene" :key="index" :label="item.name"
                             :value="item.value"></el-option>
                     </el-select>
+                </el-form-item>
+                <el-form-item :label="$t('用户昵称')">
+                    <el-input v-model="formInline.search" :placeholder="$t('请输入昵称')"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('起始日期')">
                     <div class="block">
@@ -35,7 +36,7 @@
         <div class="product-content">
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-                    <el-table-column prop="user_id" label="ID" width="80"></el-table-column>
+                    <el-table-column prop="log_id" label="ID" width="80"></el-table-column>
 
                     <el-table-column prop="user.nickName" :label="$t('昵称')">
                         <template #default="scope">
@@ -59,13 +60,13 @@
                         </template>
                     </el-table-column>
 
-                    <el-table-column prop="remark" :label="$t('管理员备注')">
+                    <el-table-column prop="remark" :label="$t('描述/说明')">
                         <template #default="scope">
                             <p v-if="scope.row.remark == ''">--</p>
                             <p v-else>{{ scope.row.remark }}</p>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="create_time" :label="$t('创建时间')" width="140"></el-table-column>
+                    <el-table-column prop="create_time" :label="$t('变动时间')" width="140"></el-table-column>
                 </el-table>
             </div>
 

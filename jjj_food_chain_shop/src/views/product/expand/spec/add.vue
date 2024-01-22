@@ -12,7 +12,7 @@
                         autocomplete="off"></el-input>
                 </el-form-item>
             </template>
-            <el-form-item :label="$t('排序')" prop="sort">
+            <el-form-item :label="$t('规格排序')" prop="sort">
                 <el-input v-model.number="form.sort" autocomplete="off"></el-input>
             </el-form-item>
 

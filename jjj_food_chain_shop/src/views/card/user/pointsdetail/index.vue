@@ -32,7 +32,6 @@
           <el-table-column prop="" :label="$t('昵称')">
             <template #default="scope">
               <span>{{scope.row.user.nickName}}</span>
-              <span class="gray9">({{ $t('用户ID') }}：{{scope.row.user.user_id}})</span>
             </template>
           </el-table-column>
           <el-table-column prop="user.mobile" :label="$t('手机号')" width="160">

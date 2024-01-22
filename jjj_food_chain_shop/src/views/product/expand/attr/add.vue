@@ -5,9 +5,7 @@
     <el-dialog :title="$t('添加属性')" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
         :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
-            <el-form-item :label="$t('排序')" prop="sort">
-                <el-input v-model.number="form.sort" autocomplete="off"></el-input>
-            </el-form-item>
+
 
             <template v-for="(item, index) in languageList" :key="index">
                 <el-form-item :label="$t('属性名称') + `(${item.label})`" :prop="`attribute_name.${[item.key]}`"
@@ -17,7 +15,7 @@
                 </el-form-item>
                 <el-form-item :label="$t('属性值')" class="attribute-value">
                     <div v-for="(items, indexs) in form.attribute_value" :key='indexs'>
-                        <el-input v-model="items[item.key]"  :placeholder="$t('请输入')" autocomplete="off"></el-input>
+                        <el-input v-model="items[item.key]"  :placeholder="$t('请输入')" :maxlength="50" autocomplete="off"></el-input>
                     </div>
                     <el-icon class="add-button" @click="addvalue">
                         <CirclePlusFilled />
@@ -27,7 +25,9 @@
                     </el-icon>
                 </el-form-item>
             </template>
-
+            <el-form-item :label="$t('属性排序')" prop="sort">
+                <el-input v-model.number="form.sort" autocomplete="off"></el-input>
+            </el-form-item>
         </el-form>
         <template #footer>
             <div class="dialog-footer">
