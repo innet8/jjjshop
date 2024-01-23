@@ -28,7 +28,11 @@ class OrderProduct extends BaseModel
      */
     public function getKitchenStatusAttr($value, $data)
     {
-        return $data['is_send_kitchen'] == 1 && $data['finish_num'] == $data['total_num'] ? 1 : 0;
+        try {
+           return $data['is_send_kitchen'] == 1 && $data['finish_num'] == $data['total_num'] ? 1 : 0;
+        } catch (\Throwable $th) {
+            return 0;
+        }
     }
 
     /**

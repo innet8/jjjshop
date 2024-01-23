@@ -141,7 +141,7 @@ class User extends UserModel
                 return false;
             }
         }
-        if ($data['password']) {
+        if ($data['password'] ?? '') {
             $data['password'] = md5($data['password']);
         } else {
             unset($data['password']);

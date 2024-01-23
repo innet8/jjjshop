@@ -22,7 +22,7 @@
                             <div class="fb mr10">{{ $t('会员卡信息') }}</div>
                             <div class="text item">
                                 <div> {{ $t('卡ID:') }}{{ form.card.card_id }}</div>
-                                <div>:{{ $t('有效期') }}
+                                <div>{{ $t('有效期') }}:
                                     <span v-if="form.expire_time > 0">{{ form.expire_time_text }}</span>
                                     <span v-else>{{ $t('永久有效') }}</span>
                                 </div>
