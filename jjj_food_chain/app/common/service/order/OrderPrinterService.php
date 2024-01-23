@@ -160,7 +160,7 @@ class OrderPrinterService
         *商米打印机 
         *
         */
-        if ($printer == PrinterTypeEnum::SUNMI_LAN || $printer['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
+        if ($printer['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
             $printer = new SunmiCloudPrinter(567);
             $printer->lineFeed();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
@@ -193,9 +193,9 @@ class OrderPrinterService
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->setupColumns(
-                [300, SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [320, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [96, SunmiCloudPrinter::ALIGN_CENTER, 0],
-                [150, SunmiCloudPrinter::ALIGN_RIGHT, 0]
+                [0, SunmiCloudPrinter::ALIGN_RIGHT, 0]
             );
             $printer->printInColumns(__("商品"), __("数量"), __("金额"));
             $printer->appendText("------------------------------------------------\n");
@@ -271,7 +271,7 @@ class OrderPrinterService
         *芯烨打印机 
         *
         */
-        if ($printer['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
+        if ($printer == PrinterTypeEnum::SUNMI_LAN ||  $printer['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
             $width = 48;
             $leftWidth = 32;
             $printer = new SunmiCloudPrinter(567);
