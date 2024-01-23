@@ -148,6 +148,11 @@ class User extends UserModel
 
     public function del($shop_user_id, $user)
     {
+        if ($this->checkCashierOnline($shop_user_id)) {
+            $this->error = '当前人员未交班，请先交班';
+            return false;
+        }
+
         if ($user['shop_user_id'] == $shop_user_id) {
             $this->error = '不能删除当前登录账号';
             return false;
@@ -160,7 +165,7 @@ class User extends UserModel
         }
         $userToDelete->is_delete = 1;
         $userToDelete->save();
-        // 
+        //
         return UserRole::destroy(['shop_user_id' => $shop_user_id]);
     }
 
@@ -169,8 +174,28 @@ class User extends UserModel
      */
     public function setStatus($status)
     {
+        if ($this->checkCashierOnline($this['shop_user_id'])) {
+            $this->error = '当前人员未交班，请先交班';
+            return false;
+        }
+
         return $this->save([
             'is_status' => $status
         ]);
+    }
+
+    /**
+     * 检测用户是否在收银坐班
+     *
+     * @param int $shop_user_id
+     * @return bool
+     */
+    public function checkCashierOnline($shop_user_id)
+    {
+        $where = [
+            'shop_user_id' => $shop_user_id,
+            'cashier_online' => 1,
+        ];
+        return self::where($where)->count() > 0;
     }
 }
