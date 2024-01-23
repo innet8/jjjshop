@@ -16,6 +16,7 @@ use app\common\enum\order\OrderPayStatusEnum;
 use app\common\model\order\OrderProductReturn;
 use app\common\model\order\Order as OrderModel;
 use app\cashier\model\store\Table as TableModel;
+use app\common\model\order\OrderProduct as OrderProductModel;
 use app\common\service\order\OrderRefundService;
 use app\common\service\order\OrderCompleteService;
 use app\common\service\product\factory\ProductFactory;
@@ -123,6 +124,9 @@ class Order extends OrderModel
         if (!$status) {
             $this->error = $PaySuccess->getError();
         }
+        // 订单商品送厨
+        (new OrderProductModel())->sendKitchen($this['order_id']);
+
         return $status;
     }
 
@@ -452,7 +456,8 @@ class Order extends OrderModel
     public function refund($data)
     {
         // 判断订单是否有效
-        if ($this['pay_status']['value'] != 20 || $this['order_status']['value'] != 10) {
+//        if ($this['pay_status']['value'] != 20 || $this['order_status']['value'] != 10) {
+        if ($this['pay_status']['value'] != 20 ) {
             $this->error = '该订单不合法';
             return false;
         }
