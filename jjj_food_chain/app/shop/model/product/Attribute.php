@@ -16,7 +16,7 @@ class Attribute extends AttributeModel
     {
         $model = $this;
         if (isset($data['attribute_name']) && !empty($data['attribute_name'])) {
-            $model = $model->where('attribute_name', 'like', '%' . trim($data['attribute_name']) . '%');
+            $model = $model->like('attribute_name', $data['attribute_name']);
         }
         return $model->where('shop_supplier_id', '=', $shop_supplier_id)
             ->order(['sort' => 'asc', 'create_time' => 'desc'])

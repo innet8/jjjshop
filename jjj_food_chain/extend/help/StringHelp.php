@@ -572,4 +572,21 @@ class StringHelp
         }
     }
 
+    /**
+     * 转义like查询
+     * @param string $str 转义的字符串
+     * @return boolean
+     */
+    public static function escapeLikeStr(string $str){
+        $escape_like_str = function ($str) {
+            $like_escape_char = '\\';
+            return str_replace([$like_escape_char, '%', '_'], [
+                $like_escape_char.$like_escape_char,
+                $like_escape_char.'%',
+                $like_escape_char.'_',
+            ], $str);
+        };
+        return $escape_like_str($str);
+    }
+
 }

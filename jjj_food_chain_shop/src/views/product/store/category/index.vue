@@ -2,9 +2,7 @@
     <div class="product">
         <!--搜索表单-->
         <div class="common-seach-wrap">
-
             <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
-
                 <el-form-item :label="$t('分类名称')"><el-input size="small" v-model="searchForm.name"
                         :placeholder="$t('请输入分类名称')"></el-input></el-form-item>
                 <el-form-item>
@@ -14,8 +12,6 @@
                     <el-button size="small" type="primary" @click="addClick" icon="Plus"
                         v-auth="'/product/store/category/add'">{{ $t('添加分类') }}</el-button>
                 </el-form-item>
-
-
             </el-form>
         </div>
         <!--内容-->
