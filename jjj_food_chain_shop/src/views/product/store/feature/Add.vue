@@ -12,7 +12,7 @@
 
 
             <el-form-item :label="$t('分类排序')" prop="sort">
-                <el-input v-model.number="form.sort" autocomplete="off"></el-input>
+                <el-input-number :controls="false" :placeholder="$t('分类排序不能为空')" :min="0" :max="999" v-model.number="form.sort" autocomplete="off"></el-input-number>
             </el-form-item>
         </el-form>
         <template #footer>
@@ -44,7 +44,7 @@ export default {
                 parent_id: 0,
                 category_id: 0,
                 name: JSON.parse(languageData),
-                sort: 100,
+                sort: null,
                 image_id: ''
             },
             formRules: {

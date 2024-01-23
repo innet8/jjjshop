@@ -13,7 +13,7 @@
                 </el-form-item>
             </template>
             <el-form-item :label="$t('单位排序')" prop="sort">
-                <el-input v-model.number="form.sort" autocomplete="off"></el-input>
+                <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('请输入单位排序')" v-model.number="form.sort" autocomplete="off"></el-input-number>
             </el-form-item>
         </el-form>
         <template #footer>

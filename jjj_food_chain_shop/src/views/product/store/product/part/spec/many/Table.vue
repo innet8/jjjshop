@@ -54,7 +54,7 @@
                     <el-table-column label="">
                         <template #default="scope">
                             <el-form-item label="" style="margin-bottom: 0;">
-                                <el-button type="primary" link @click='deleteAttr(scope.$index)'>删除</el-button>
+                                <el-button type="primary" link @click='deleteAttr(scope.$index)'>{{ $t('删除') }}</el-button>
                             </el-form-item>
                         </template>
                     </el-table-column>

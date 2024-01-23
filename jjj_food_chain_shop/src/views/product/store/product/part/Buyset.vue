@@ -21,13 +21,13 @@
       </el-radio-group>
     </el-form-item>
     <el-form-item :label="$t('初始销量：')">
-      <el-input type="number" min="0" v-model="form.model.sales_initial" class="max-w460"></el-input>
+      <el-input-number :controls="false" :min="0" v-model="form.model.sales_initial" class="max-w460"></el-input-number>
     </el-form-item>
-    <el-form-item :label="$t('商品排序：')" :rules="[{ required: true, message: ' ' }]" prop="model.product_sort">
-      <el-input type="number" min="0" v-model="form.model.product_sort" class="max-w460"></el-input>
+    <el-form-item :label="$t('商品排序：')" :rules="[{ required: true, message: $t('请输入商品排序') }]" prop="model.product_sort">
+      <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('请输入商品排序')" v-model="form.model.product_sort" class="max-w460"></el-input-number>
     </el-form-item>
     <el-form-item :label="$t('限购数量：')" :rules="[{ required: true, message: ' ' }]" prop="model.limit_num">
-      <el-input type="number" min="0" v-model="form.model.limit_num" class="max-w460"></el-input>
+      <el-input-number :controls="false" :min="0" v-model="form.model.limit_num" class="max-w460"></el-input-number>
       <div class="gray9">{{ $t('每个会员购买的最大数量，0为不限购') }}</div>
     </el-form-item>
 	<el-form-item :label="$t('打印标签：')" prop="model.label_id">
@@ -61,14 +61,14 @@
     </el-form-item>
 
     <el-form-item label="" v-if="form.model.is_alone_grade==1&&form.model.is_enable_grade==1">
-      <div class="percent-w100">
-        <el-table :data="form.gradeList" border size="" style="width: 100%">
-          <el-table-column prop="name" label="会员等级">
+      <div class="percent-w50">
+        <el-table :data="form.gradeList" border size="" >
+          <el-table-column prop="name" :label="$t('会员等级')">
           </el-table-column>
-          <el-table-column prop="name" label="折扣">
+          <el-table-column prop="name" :label="$t('折扣')">
             <template  #default="scope">
               <div class="d-s-c">
-                <el-input v-model="scope.row.product_equity" type="number" placeholder="请输入折扣"></el-input>
+                <el-input-number v-model="scope.row.product_equity" :min="0" :controls="false" :placeholder="$t('请输入折扣')"></el-input-number>
                 <span class="ml10">{{ grade_unit }}</span>
               </div>
             </template>
@@ -177,5 +177,12 @@
     }
   };
 </script>
+<style lang="scss" scoped>
 
+    :deep(.el-input__wrapper) {
+        padding-left: 7px !important;
+        padding-right: 7px !important;
+    }
+
+</style>
 
