@@ -24,9 +24,11 @@
         </el-form-item> -->
         <template v-for="(item, index) in languageList" :key="index">
             <el-form-item :label="index == 0 ? $t('商品单位：') : ''" :rules="[{ required: true, message: $t('请填写商品单位') }]"
-                prop="model.product_unit.th">
-                <el-input class="inline-input" v-model="form.model.product_unit[item.key]"
-                    :placeholder="$t('请输入') + `(${item.label})`"></el-input>
+                :prop="`model.product_unit.${item.key}`">
+                <el-autocomplete :fetch-suggestions="(e, h) => querySearch(e, h, item.key)" @select="(e) => selectChange(e)"
+                    class="inline-input" v-model="form.model.product_unit[item.key]"
+                    :placeholder="$t('请输入') + `(${item.label})`">
+                </el-autocomplete>
             </el-form-item>
         </template>
 
@@ -68,10 +70,45 @@ export default {
     data() {
         return {
             restaurants: [],
+            restaurants_zh: [],
+            restaurants_zhtw: [],
+            restaurants_en: [],
+            restaurants_th: [],
             languageList: languageList,
         }
     },
     inject: ['form'],
+    watch: {
+        'form': {
+            handler(val) {
+                this.restaurants_zh = [];
+                this.restaurants_zhtw = [];
+                this.restaurants_en = [];
+                this.restaurants_th = [];
+                val.unit.map((item, index) => {
+                    this.restaurants_zh.push({
+                        value: JSON.parse(item.unit_name).zh,
+                        index: index,
+                    })
+                    this.restaurants_zhtw.push({
+                        value: JSON.parse(item.unit_name).zhtw,
+                        index: index,
+                    })
+                    this.restaurants_en.push({
+                        value: JSON.parse(item.unit_name).en,
+                        index: index,
+                    })
+                    this.restaurants_th.push({
+                        value: JSON.parse(item.unit_name).th,
+                        index: index,
+                    })
+                })
+            },
+            deep: true,
+            immediate: true,
+        }
+    },
+
     methods: {
         changeSpec(e) {
             if (e == 10) {
@@ -86,32 +123,56 @@ export default {
                 this.form.sku = [];
             }
         },
-        querySearch(queryString, cb) {
-            let self = this;
-            if (self.restaurants.length == 0) {
-                self.form.unit.forEach((item, index) => {
-                    self.restaurants.push({
-                        value: item.unit_name
-                    })
-                })
+        querySearch(queryString, cb, key) {
+            let restaurants = [];
+            if (key == 'th') {
+                restaurants = this.restaurants_th
             }
-
-            var restaurants = this.restaurants;
-            var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+            if (key == 'zh') {
+                restaurants = this.restaurants_zh
+            }
+            if (key == 'zhtw') {
+                restaurants = this.restaurants_zhtw
+            }
+            if (key == 'en') {
+                restaurants = this.restaurants_en
+            }
+            let results = queryString ? restaurants.filter(this.createFilter(queryString, key)) : restaurants;
             // 调用 callback 返回建议列表的数据
             cb(results);
         },
-        createFilter(queryString) {
-            return (restaurant) => {
-                return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        createFilter(queryString, key) {
+            var restaurants = [];
+            if (key == 'th') {
+                restaurants = this.restaurants_th
+            }
+            if (key == 'zh') {
+                restaurants = this.restaurants_zh
+            }
+            if (key == 'zhtw') {
+                restaurants = this.restaurants_zhtw
+            }
+            if (key == 'en') {
+                restaurants = this.restaurants_en
+            }
+            return (restaurants) => {
+                return (restaurants.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
             };
+        },
+
+        selectChange(e) {
+            this.form.model.product_unit.zh = this.restaurants_zh[e.index].value
+            this.form.model.product_unit.th = this.restaurants_th[e.index].value
+            this.form.model.product_unit.en = this.restaurants_en[e.index].value
+            this.form.model.product_unit.zhtw = this.restaurants_zhtw[e.index].value
         },
     }
 };
 </script>
 
 <style scoped>
-.inline-input {
+:deep(.inline-input) {
     max-width: 460px;
+    width: 100%;
 }
 </style>
