@@ -370,8 +370,6 @@ class Product extends BaseModel
         if (empty($model)) {
             return $model;
         }
-        // trace('商品详情', 'debug');
-        // trace($model->toArray(), 'debug');
         // 整理商品数据并返回
         return $model->setProductListData($model, false);
     }
