@@ -10,15 +10,15 @@
 			<el-form size="small">
 				<el-form-item label="下载类型" :label-width="formLabelWidth">
 					<el-radio-group v-model="source">
-						<el-radio label="wx">微信小程序</el-radio>
-						<el-radio label="mp">公众号，H5网页</el-radio>
+						<el-radio label="wx">{{ $t('微信小程序') }}</el-radio>
+						<el-radio label="mp">{{ $t('公众号，H5网页') }}</el-radio>
 					</el-radio-group>
 				</el-form-item>
 			</el-form>
 			<template #footer>
 				<div class="dialog-footer">
-					<el-button @click="dialogFormVisible">取 消</el-button>
-					<el-button type="primary" @click="qrcodeClick">确 定</el-button>
+					<el-button @click="dialogFormVisible">{{ $('取 消') }}</el-button>
+					<el-button type="primary" @click="qrcodeClick">{{ $('确 定') }}</el-button>
 				</div>
 			</template>
 		</el-dialog>

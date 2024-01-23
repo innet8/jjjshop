@@ -7,7 +7,7 @@
     <el-dialog :title="$t('添加区域')" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
         :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
-            <el-form-item :label="$t('分类名称')" prop="name" :label-width="formLabelWidth">
+            <el-form-item :label="$t('分类名称')" prop="area_name" :label-width="formLabelWidth">
                 <el-input v-model="form.area_name" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item :label="$t('分类排序')" prop="sort" :label-width="formLabelWidth">
@@ -39,13 +39,11 @@ export default {
                     message: $t('请输入区域名称'),
                     trigger: 'blur'
                 }],
-                sort: [{
-                    required: true,
-                    message: $t('排序不能为空')
-                }, {
-                    type: 'number',
-                    message: $t('排序必须为数字')
-                }]
+                sort: [
+                    { required: true,  message: $t('排序不能为空') },
+                    { type: 'number', message: $t('排序必须为数字') },
+                    { type: 'number', min: 0, message: $t('请输入不小于0的数字'), trigger: 'blur' }
+                ]
             },
             /*左边长度*/
             formLabelWidth: '120px',

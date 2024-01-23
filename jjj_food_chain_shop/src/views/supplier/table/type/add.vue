@@ -10,14 +10,14 @@
             <el-form-item :label="$t('类型名称')" prop="type_name" :label-width="formLabelWidth">
                 <el-input v-model="form.type_name" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('最少人数')" prop="min_num" :label-width="formLabelWidth">
-                <el-input v-model.number="form.min_num" autocomplete="off"></el-input>
+            <el-form-item :label="$t('最少人数')" prop="min_num" type="number" :label-width="formLabelWidth">
+                <el-input v-model.number="form.min_num" autocomplete="off" type="number"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('最多人数')" prop="max_num" :label-width="formLabelWidth">
-                <el-input v-model.number="form.max_num" autocomplete="off"></el-input>
+            <el-form-item :label="$t('最多人数')" prop="max_num" type="number" :label-width="formLabelWidth">
+                <el-input v-model.number="form.max_num" autocomplete="off" type="number"></el-input>
             </el-form-item>
             <el-form-item :label="$t('排序')" prop="sort" :label-width="formLabelWidth">
-                <el-input v-model.number="form.sort" autocomplete="off"></el-input>
+                <el-input v-model.number="form.sort" autocomplete="off" :min="0"></el-input>
             </el-form-item>
         </el-form>
         <template #footer>
@@ -38,7 +38,7 @@ export default {
             form: {
                 type_name: '',
                 min_num: 1,
-                max_num: 1,
+                max_num: 100,
                 sort: 100,
             },
             formRules: {
@@ -47,13 +47,19 @@ export default {
                     message: $t('请输入类型名称'),
                     trigger: 'blur'
                 }],
-                sort: [{
-                    required: true,
-                    message: $t('排序不能为空')
-                }, {
-                    type: 'number',
-                    message: $t('排序必须为数字')
-                }]
+                min_num: [
+                    { required: true, message: $t('请输入最少人数'), trigger: 'blur'},
+                    { type: 'number', min: 0, max: 100, message: $t('请输入1-100之间的数'), trigger: 'blur' },
+                ],
+                max_num: [
+                    { required: true, message: $t('请输入最大人数'), trigger: 'blur'},
+                    { type: 'number', min: 0, max: 100, message: $t('请输入1-100之间的数'), trigger: 'blur' },
+                ],
+                sort: [
+                    { required: true,  message: $t('排序不能为空') },
+                    { type: 'number', message: $t('排序必须为数字') },
+                    { type: 'number', min: 0, message: $t('请输入不小于0的数字'), trigger: 'blur' }
+                ]
             },
             /*左边长度*/
             formLabelWidth: '120px',

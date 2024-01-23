@@ -2,13 +2,14 @@
 
 namespace app\common\exception;
 
-use think\exception\Handle;
-use think\exception\HttpException;
-use think\exception\ValidateException;
-use think\Response;
 use Throwable;
+use think\Response;
 use think\facade\Env;
 use think\facade\Log;
+use think\exception\Handle;
+use think\exception\HttpException;
+use think\db\exception\PDOException;
+use think\exception\ValidateException;
 
 /**
  * 重写Handle的render方法，实现自定义异常消息
@@ -26,7 +27,10 @@ class ExceptionHandler extends Handle
      */
     public function render($request, Throwable $e): Response
     {
-        if ($e instanceof BaseException) {
+        if ($e instanceof PDOException && strstr($e->getMessage(), 'String data, right truncated: 1406 Data too long for column')) {
+            $this->code = 0;
+            $this->message = "数据长度超过限制";
+        } else if ($e instanceof BaseException) {
             $this->code = $e->code;
             $this->message = $e->message;
         } else {

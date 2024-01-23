@@ -12,6 +12,7 @@
                 </el-form-item>
                 <el-form-item :label="$t('选择区域')">
                     <el-select size="small" v-model="form.area_id" :placeholder="$t('请选择')">
+                        <el-option :label="$t('全部')" value=""></el-option>
                         <el-option v-for="(item, index) in area_list" :key="index" :label="item.area_name"
                             :value="item.area_id">
                         </el-option>
@@ -19,6 +20,7 @@
                 </el-form-item>
                 <el-form-item :label="$t('选择类型')">
                     <el-select size="small" v-model="form.type_id" :placeholder="$t('请选择')">
+                        <el-option :label="$t('全部')" value=""></el-option>
                         <el-option v-for="(item, index) in type_list" :key="index" :label="item.type_name"
                             :value="item.type_id">
                         </el-option>

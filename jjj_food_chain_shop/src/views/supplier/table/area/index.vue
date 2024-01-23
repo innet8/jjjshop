@@ -14,7 +14,7 @@
         <div class="product-content">
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" row-key="category_id" style="width: 100%" v-loading="loading">
-                    <el-table-column prop="area_name" :label="$t('区域名称')" ></el-table-column>
+                    <el-table-column prop="area_name" :label="$t('区域名称')"></el-table-column>
                     <el-table-column prop="sort" :label="$t('排序')"></el-table-column>
                     <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
                     <el-table-column fixed="right" :label="$t('操作')" width="100">

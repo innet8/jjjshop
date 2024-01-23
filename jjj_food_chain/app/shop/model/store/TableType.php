@@ -67,6 +67,22 @@ class TableType extends TableTypeModel
      */
     private function validateForm($data, $scene = self::FORM_SCENE_ADD)
     {
+        if (strlen($data['type_name'] ?? '') > 50) {
+            $this->error = '类型名称不得超过50字符';
+            return false;
+        }
+        if ($data['min_num'] < 1 || $data['min_num'] > 100) {
+            $this->error = '请输入1-100之间的数';
+            return false;
+        }
+        if ($data['max_num'] < 1 || $data['max_num'] > 100) {
+            $this->error = '请输入1-100之间的数';
+            return false;
+        }
+        if ($data['min_num'] > $data['max_num']) {
+            $this->error = '最多人数不可小于最少人数';
+            return false;
+        }
         if ($scene === self::FORM_SCENE_ADD) {
             //查询桌号是否存在
             $count = $this->where('shop_supplier_id', '=', $data['shop_supplier_id'])
