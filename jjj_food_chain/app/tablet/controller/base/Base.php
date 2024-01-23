@@ -40,7 +40,7 @@ class Base extends Controller
             'app_id' => $shop['app_id'],
             'shop_supplier_id' => $shop['shop_supplier_id'],
         ]);
-        if (BindRecordModel::add($data)) {
+        if (!BindRecordModel::add($data)) {
             return $this->renderError('绑定失败');
         }
         return $this->renderSuccess('', compact('shop'));
