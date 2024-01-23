@@ -1,1 +1,0 @@
-import{_ as e}from"./_plugin-vue_export-helper-1b428a4d.js";import{o as r,c as s,X as a}from"./@vue-e5cdee21.js";const n=e({data:()=>({name:"sfsfsf"})},[["render",function(e,n,o,t,f,u){return r(),s("div",null," 我是独立页面"+a(f.name),1)}]]);export{n as default};
