@@ -3,6 +3,8 @@
 namespace app\common\model\supplier;
 
 use app\common\model\BaseModel;
+use app\common\model\settings\Setting as SettingModel;
+use app\common\enum\settings\SettingEnum;
 
 /**
  * 商家供应商模型
@@ -152,6 +154,30 @@ class Supplier extends BaseModel
         return $model->where('is_delete', '=', '0')
             ->order(['create_time' => 'desc'])
             ->select();
+    }
+
+    // 平板端获取基础信息
+    public static function getTabletBaseInfo()
+    {
+        $detail = (new self)->withoutGlobalScope()->where('is_delete', '=', 0)->find();
+
+        // 货币信息
+        $currency = SettingModel::getSupplierItem(SettingEnum::CURRENCY, $detail['shop_supplier_id'] ?? 0, $detail['app_id'] ?? 0);
+        $detail['currency'] = [
+            'unit' => $currency['unit'],
+            'is_open' => $currency['is_open'],
+            'vices' => [
+                'vice_unit' => $currency['vice_unit'],
+                'unit_rate' => $currency['unit_rate'],
+            ],
+        ];
+        // 平板端设置
+        $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $detail['shop_supplier_id'] ?? 0, $detail['app_id'] ?? 0);
+        unset($tablet['advanced_password']);
+        unset($tablet['language_list']);
+        $detail['tablet'] = $tablet;
+
+        return $detail;
     }
 
 }

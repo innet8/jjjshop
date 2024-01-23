@@ -25,7 +25,7 @@ class BindRecord extends BaseModel
     public static function add($data)
     {
         $model = new self();
-        $model->save([
+        return $model->save([
             'source' => $data['source'],
             'key' => $data['key'],
             'address' => $data['address'],

@@ -74,23 +74,8 @@ class Base extends Controller
      */
     public function getInfo()
     {
-        $detail = (new SupplierModel)->withoutGlobalScope()->where('is_delete', '=', 0)->find();
-        // 货币信息
-        $currency = SettingModel::getSupplierItem(SettingEnum::CURRENCY, $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
-        $detail['currency'] = [
-            'unit' => $currency['unit'],
-            'is_open' => $currency['is_open'],
-            'vices' => [
-                'vice_unit' => $currency['vice_unit'],
-                'unit_rate' => $currency['unit_rate'],
-            ],
-        ];
-        // 平板端设置
-        $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
-        unset($tablet['advanced_password']);
-        unset($tablet['language_list']);
-        $detail['tablet'] = $tablet;
-        return $this->renderSuccess('基础信息', $detail);
+        $info = SupplierModel::getTabletBaseInfo();
+        return $this->renderSuccess('基础信息', $info);
     }
 
     /**
