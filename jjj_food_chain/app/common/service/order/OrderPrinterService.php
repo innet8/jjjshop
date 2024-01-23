@@ -184,7 +184,9 @@ class OrderPrinterService
             );
             $printer->printInColumns(__("订单号"), $order->order_no);
             $printer->printInColumns(__("收银员"), $order->cashier?->real_name);
-            $printer->printInColumns(__("时间"), date('Y-m-d H:i:s', $order->pay_time));
+            if ($order->pay_time) {
+                $printer->printInColumns(__("时间"), date('Y-m-d H:i:s', $order->pay_time));
+            }
             $printer->lineFeed();
             // 
             $printer->restoreDefaultLineSpacing();
@@ -295,7 +297,9 @@ class OrderPrinterService
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->appendText(printText(__("订单号"), '', $order->order_no ,$width));
             $printer->appendText(printText(__("收银员"), '', $order->cashier?->real_name ,$width));
-            $printer->appendText(printText(__("时间"), '', date('Y-m-d H:i:s', $order->pay_time) ,$width));
+            if ($order->pay_time) {
+                $printer->appendText(printText(__("时间"), '', date('Y-m-d H:i:s', $order->pay_time) ,$width));
+            }
             $printer->lineFeed();
             $printer->lineFeed();
             // 
@@ -396,7 +400,9 @@ class OrderPrinterService
         }
         $content .= printText(__('订单号'), '', $order->order_no) . "<BR>";
         $content .= printText(__('收银员'), '', $order->cashier?->real_name) . "<BR>";
-        $content .= printText(__('时间'), '',  date('Y-m-d H:i:s', $order->pay_time)) . "<BR><BR>";
+        if ($order->pay_time) {
+            $content .= printText(__('时间'), '',  date('Y-m-d H:i:s', $order->pay_time)) . "<BR><BR>";
+        }
         // 
         $content .= printText(__('商品'), __('数量'),  __('金额'), $width, $leftWidth);
         $content .= "--------------------------------<BR>";
