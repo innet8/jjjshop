@@ -9,6 +9,7 @@ use app\common\model\order\Order as OrderModel;
 use app\common\service\order\OrderPrinterService;
 use app\common\model\product\Product as ProductModel;
 use app\common\model\product\ProductSku as ProductSkuModel;
+use app\common\service\product\factory\ProductFactory;
 
 /**
  * 订单商品模型
@@ -272,11 +273,12 @@ class OrderProduct extends BaseModel
     // 送厨
     public function sendKitchen($order_id)
     {
-        $order = OrderModel::where('order_id', $order_id)->find();
+        $order = (new OrderModel)->with('unSendKitchenProduct')->where('order_id', $order_id)->find();
         if (!$order) {
             $this->error = "订单不存在";
             return false;
         }
+        ProductFactory::getFactory($order['order_source'])->updateOrderProductStock($order['unSendKitchenProduct']);
         // 菜品打印
         $order['product'] = $order->product()->where('is_send_kitchen', 0)->select();
         (new OrderPrinterService)->printProductTicket($order, 30);

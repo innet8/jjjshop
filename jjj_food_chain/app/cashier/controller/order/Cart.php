@@ -290,10 +290,6 @@ class Cart extends Controller
      */
     public function sendKitchen($order_id)
     {
-        $detail = OrderModel::detail($order_id);
-        if (!$detail) {
-            return $this->renderError('订单不存在');
-        }
         $model = new OrderProduct();
         if ($model->sendKitchen($order_id)) {
             return $this->renderSuccess('送厨成功');

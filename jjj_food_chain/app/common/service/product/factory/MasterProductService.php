@@ -149,4 +149,61 @@ class MasterProductService extends ProductService
     {
         return (new ProductSkuModel)->updateAll($data);
     }
+
+    /**
+     * 送厨更新商品库存 (针对下单减库存的商品)
+     */
+    public function updateOrderProductStock($productList)
+    {
+        $productData = [];
+        $productSkuData = [];
+        foreach ($productList as $product) {
+            // 下单减库存
+            if ($product['deduct_stock_type'] == DeductStockTypeEnum::CREATE) {
+                // 总库存
+                $productData[] = [
+                    'data' => [
+                        'product_stock' => [
+                            'dec',
+                            $product['total_num']
+                        ]
+                    ]
+                    ,
+                    'where' => [
+                        'product_id' => $product['product_id'],
+                    ],
+                ];
+                $productSkuData[] = [
+                    'data' => [
+                        'stock_num' => [
+                            'dec',
+                            $product['total_num']
+                        ]
+                    ],
+                    'where' => [
+                        'product_id' => $product['product_id'],
+                        'product_sku_id' => $product['product_sku_id'],
+                    ],
+                ];
+            }
+            //更新第二件半价商品库存
+            if ($product['product_num'] > 1) {
+                $discountProduct = DiscountProductModel::getDiscountProduct($product['product_id']);
+                $discountProduct && $discountProduct->dec('stock', 1)->update();
+            }
+        }
+
+        try {
+            // 更新商品销量
+            trace($productData);
+            !empty($productData) && $this->updateProduct($productData);
+            // 更新商品sku库存
+            trace($productSkuData);
+            !empty($productSkuData) && $this->updateProductSku($productSkuData);
+        } catch (\Exception $e) {
+            log_write('master updateProductStock' . $e->getMessage());
+        }
+        return true;
+    }
+
 }

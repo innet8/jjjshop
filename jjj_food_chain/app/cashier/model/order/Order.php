@@ -357,7 +357,7 @@ class Order extends OrderModel
 
     }
 
-    //查询桌号信息
+    // 订单支付
     public function orderPay($data)
     {
         if ($this['pay_status']['value'] != 10) {

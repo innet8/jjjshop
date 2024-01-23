@@ -262,13 +262,14 @@ class Order extends OrderModel
 //                'total_price' => $this['total_price'] - $total_pay_price
 //            ]);
             $isPay = $this['pay_status']['value'] == 20 ? 1 : 0;
-//          $orderProduct['total_num'] = $num;
+            $orderProductNum = $orderProduct['total_num'];
+            $orderProduct['total_num'] = $num;
             // 退回商品库存
             ProductFactory::getFactory($this['order_source'])->backProductStock([$orderProduct], $isPay);
-            if ($orderProduct['total_num'] == $num) {
+            if ($orderProductNum == $num) {
                 $orderProduct->delete();
             } else {
-                $total_num = $orderProduct['total_num'] - $num;
+                $total_num = $orderProductNum - $num;
                 $orderProduct->save([
                     'total_num' => $total_num,
 //                    'total_price' => round($total_num * $orderProduct['product_price'], 2),

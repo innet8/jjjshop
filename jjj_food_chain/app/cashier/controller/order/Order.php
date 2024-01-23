@@ -5,6 +5,7 @@ namespace app\cashier\controller\order;
 use app\cashier\model\order\Cart as CartModel;
 use app\cashier\model\order\Order as OrderModel;
 use app\cashier\model\store\Table as TableModel;
+use app\common\enum\order\OrderStatusEnum;
 use app\common\model\order\Order as CommonOrderModel;
 use app\cashier\service\order\settled\CashierOrderSettledService;
 use app\cashier\controller\Controller;
@@ -82,7 +83,7 @@ class Order extends Controller
 //        return $this->renderSuccess('收款成功');
         $detail = OrderModel::detail([
             ['order_id', '=', $order_id],
-            ['order_status', '=', 10],
+            ['order_status', '=', OrderStatusEnum::NORMAL],
         ]);
         if (!$detail) {
             return $this->renderError('订单不存在');
