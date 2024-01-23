@@ -26,7 +26,11 @@ class Clear extends Controller
         if($this->request->isGet()){
             return $this->fetchData();
         }
-        $this->rmCache( $this->postData()['keys']);
+        $keys = $this->postData()['keys'] ?? '';
+        if (!$keys) {
+            return $this->renderError('请选择数据');
+        }
+        $this->rmCache( $this->postData()['keys'] );
         return $this->renderSuccess('操作成功');
     }
 
