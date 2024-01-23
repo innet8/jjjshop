@@ -24,7 +24,7 @@ class User extends UserModel
             return false;
         }
         if ($user['is_status'] == 1) {
-            $this->error = '账号被禁用，请联系平台';
+            $this->error = '账号被禁用，请联系管理员';
             return false;
         }
         if (empty($user['app'])) {
