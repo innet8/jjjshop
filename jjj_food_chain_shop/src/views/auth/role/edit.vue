@@ -83,6 +83,9 @@ export default {
                         .catch(error => {
                             self.loading = false;
                         });
+                } else {
+                    const divElement = document.querySelector('.main-div');
+                    divElement.scrollTop = 0;
                 }
             });
         },
