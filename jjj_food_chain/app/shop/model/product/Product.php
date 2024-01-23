@@ -117,18 +117,18 @@ class Product extends ProductModel
             (new Spec)->updateSpec($data['sku']);
             // 添加商品sku
             $model->addSkuList($this['product_id'], $data['sku'], $productSkuIdList);
-            $product_price = $data['sku'][0]['product_price'];
-            $cost_price = $data['sku'][0]['cost_price'];
+            $product_price = $data['sku'][0]['product_price'] ?? 0;
+            $cost_price = $data['sku'][0]['cost_price'] ?? 0;
             $bag_price = $data['sku'][0]['bag_price'] ?? 0;
             foreach ($data['sku'] as $item) {
-                $stock += $item['stock_num'];
+                $stock += (int)$item['stock_num'] ?? 0;
                 if ($item['product_price'] < $product_price) {
-                    $product_price = $item['product_price'];
+                    $product_price = $item['product_price'] ?? 0;
                 }
                 if ($item['cost_price'] < $cost_price) {
-                    $cost_price = $item['cost_price'];
+                    $cost_price = $item['cost_price'] ?? 0;
                 }
-                if ($item['bag_price'] < $bag_price) {
+                if (($item['bag_price'] ?? 0) < $bag_price) {
                     $bag_price = $item['bag_price'] ?? 0;
                 }
             }
