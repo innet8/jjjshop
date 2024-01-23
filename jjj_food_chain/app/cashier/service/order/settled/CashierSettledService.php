@@ -339,6 +339,7 @@ abstract class CashierSettledService extends BaseService
             'table_id' => $order['table_id'],
             'is_agent' => $this->settledRule['is_agent'] ? 1 : 0,
             'cashier_id' => $this->user['cashier_id'],
+            'callNo' => $order['callNo'],
             'eat_type' => $this->orderSource['eat_type'],
             'meal_num' => $order['meal_num'],
             'service_money' => $order['service_money'],

@@ -10,10 +10,6 @@ use app\JjjController;
  */
 class Controller extends JjjController
 {
-
-    // app_id
-    protected int $app_id;
-
     // 厨显
     protected array $kitchen;
 
@@ -64,12 +60,17 @@ class Controller extends JjjController
         if (in_array($this->routeUri, $this->allowAllAction)) {
             return true;
         }
+        $appid = Request()->header('appid');
+        if (!$appid) {
+            throw new BaseException(['msg' => '缺少必要的参数：Appid', 'code' => -1]);
+        }
         $sid = Request()->header('sid');
         if (!$sid) {
-            throw new BaseException(['msg' => '缺少必要的参数：sid', 'code' => -1]);
+            throw new BaseException(['msg' => '缺少必要的参数：Sid', 'code' => -1]);
         }
         $this->kitchen = [
-            'shop_supplier_id' => $sid,
+            'shop_supplier_id' => $sid ?? 0,
+            'app_id' => $appid ?? 0,
         ];
         return true;
     }
