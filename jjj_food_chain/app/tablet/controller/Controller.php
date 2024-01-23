@@ -38,7 +38,7 @@ class Controller extends JjjController
         '/table/table/bind',
         '/table/table/index',
         '/table/table/getInfo',
-        'order/order/tableBuy'
+        '/order/order/tableBuy'
     ];
 
     /**
