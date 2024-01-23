@@ -649,3 +649,15 @@ function getTableNumber()
     cache($key, $number, 86400);
     return str_pad($number, 4, '0', STR_PAD_LEFT);
 }
+
+/**
+ * 国际手机号码验证
+ */
+function checkMobile($mobile)
+{
+    $pattern = "/^(\+?0?86\-?)?1[3456789]\d{9}$/";
+    if (preg_match($pattern, $mobile)) {
+        return true;
+    }
+    return false;
+}

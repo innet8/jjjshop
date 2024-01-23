@@ -96,33 +96,43 @@ class User extends UserModel
      */
     public function add($data)
     {
-        if (empty($data['nick_name'])) {
-            $this->error = '昵称不能为空';
+        $nickName = $data['nick_name'] ?? null;
+        $mobile = $data['mobile'] ?? null;
+        $password = $data['password'] ?? null;
+        $gender = $data['gender'] ?? null;
+        $gradeId = $data['grade_id'] ?? GradeModel::getDefaultGradeId();
+        $birthday = $data['birthday'] ?? null;
+
+        if (!$nickName || !$mobile) {
+            $this->error = !$nickName ? '昵称不能为空' : '手机号不能为空';
             return false;
         }
-        if (empty($data['mobile'])) {
-            $this->error = '手机号不能为空';
+
+        // 校验手机号格式
+        if (!checkMobile($mobile)) {
+            $this->error = '手机号格式不正确';
             return false;
         }
-        $user = $this->where('mobile', '=', $data['mobile'])
+
+        $user = $this->where('mobile', '=', $mobile)
             ->where('is_delete', '=', 0)
             ->find();
 
-        if (!$user) {
-            return $this->save([
-                'nickName' => $data['nick_name'],
-                'mobile' => $data['mobile'],
-                'password' => md5($data['password']),
-                'reg_source' => 'home', //注册来源
-                'gender' => $data['gender'], //性别
-                'grade_id' => $data['grade_id'] ?: GradeModel::getDefaultGradeId(), //默认等级
-                'birthday' => $data['birthday'] ? strtotime($data['birthday']) : 0, //生日
-                'app_id' => self::$app_id,
-            ]);
-        } else {
+        if ($user) {
             $this->error = '会员已存在';
             return false;
         }
+
+        return $this->save([
+            'nickName' => $nickName,
+            'mobile' => $mobile,
+            'password' => md5($password),
+            'reg_source' => 'home', //注册来源
+            'gender' => $gender, //性别
+            'grade_id' => $gradeId, //默认等级
+            'birthday' => $birthday ? strtotime($birthday) : 0, //生日
+            'app_id' => self::$app_id,
+        ]);
     }
 
     /**
