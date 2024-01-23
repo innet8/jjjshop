@@ -16,7 +16,7 @@ class Unit extends UnitModel
     {
         $model = $this;
         if (isset($data['unit_name']) && !empty($data['unit_name'])) {
-            $model = $model->where('unit_name', 'like', '%' . trim($data['unit_name']) . '%');
+            $model = $model->like('unit_name', $data['unit_name']);
         }
         return $model->where('shop_supplier_id', '=', $shop_supplier_id)
             ->order(['sort' => 'asc', 'create_time' => 'desc'])

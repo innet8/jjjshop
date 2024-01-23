@@ -10,16 +10,23 @@
                 <el-form-item :label="$t('属性名称') + `(${item.label})`" :rules="[{ required: true, message: $t('请输入属性名称') }]">
                     <el-input v-model="form.attribute_name[item.key]" :placeholder="$t('如：温度')" :maxlength="50" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('属性值')" class="attribute-value">
-                    <div v-for="(items, indexs) in form.attribute_value" :key='indexs'>
-                        <el-input v-model="items[item.key]" :placeholder="$t('请输入')" :maxlength="50" autocomplete="off"></el-input>
+                <el-form-item :label="$t('属性值')" class="attribute-value" :rules=" form.attribute_value.length < 1 ? [] : [{ required: true, message: $t('请输入属性值') }]">
+                    <el-form-item v-for="(items, k) in form.attribute_value" :key='k' :prop="`form.attribute_value.[${k}].${item.key}`"
+                        :rules="[{ validator: ()=>{
+                            return items[item.key] ? true : false ;
+                        }, 
+                        message: $t('请输入属性值') }]"
+                    >
+                        <el-input v-model="items[item.key]"  :placeholder="$t('请输入')" :maxlength="50" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <div class="btn-warp">
+                        <el-icon class="add-button" @click="addvalue">
+                            <CirclePlusFilled />
+                        </el-icon>
+                        <el-icon class="add-button" @click="deleteattr">
+                            <RemoveFilled />
+                        </el-icon>
                     </div>
-                    <el-icon class="add-button" @click="addvalue">
-                        <CirclePlusFilled />
-                    </el-icon>
-                    <el-icon class="add-button" @click="deleteattr">
-                        <RemoveFilled />
-                    </el-icon>
                 </el-form-item>
             </template>
             <el-form-item :label="$t('属性排序')" prop="sort">
@@ -135,10 +142,17 @@ export default {
 
 .attribute-value :deep(.el-form-item__content) {
     gap: 12px;
+    align-items: start;
+}
+
+.btn-warp {
+    margin-top: 4px;
 }
 
 .attribute-value :deep(.el-form-item__content) .add-button {
     cursor: pointer;
     font-size: 24px;
+    margin-right: 8px;
 }
+
 </style>
