@@ -19,8 +19,17 @@ class OrderProduct extends BaseModel
     protected $pk = 'order_product_id';
 
     protected $append = [
-        'product_name_text'
+        'product_name_text',
+        'kitchen_status', // 菜品状态 0-制作中 1-已完成
     ];
+
+    /**
+     * 菜品状态
+     */
+    public function getKitchenStatusAttr($value, $data)
+    {
+        return $data['is_send_kitchen'] == 1 && $data['finish_num'] == $data['total_num'] ? 1 : 0;
+    }
 
     /**
      * 获取商品数据 (可指定某天)
@@ -267,7 +276,7 @@ class OrderProduct extends BaseModel
         // 菜品打印
         $order['product'] = $order->product()->where('is_send_kitchen', 0)->select();
         (new OrderPrinterService)->printProductTicket($order, 30);
-        // 
+        //
         return $this->where('order_id', '=', $order_id)->where('is_send_kitchen', '=', 0)->update(['is_send_kitchen' => 1, 'send_kitchen_time' => time()]);
     }
 
