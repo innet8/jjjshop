@@ -59,12 +59,12 @@ class User extends UserModel
     public function editPass($data, $user)
     {
         $user_info = User::detail($user['shop_user_id']);
-        if ($data['password'] != $data['confirmPass']) {
-            $this->error = '密码错误';
+        if ($user_info['password'] != salt_hash($data['oldpass'])) {
+            $this->error = '原密码错误';
             return false;
         }
-        if ($user_info['password'] != salt_hash($data['oldpass'])) {
-            $this->error = '两次密码不相同';
+        if ($data['password'] != $data['confirmPass']) {
+            $this->error = '两次密码输入不一致';
             return false;
         }
         $date['password'] = salt_hash($data['password']);
