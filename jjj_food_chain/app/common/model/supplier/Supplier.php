@@ -160,7 +160,6 @@ class Supplier extends BaseModel
     public static function getTabletBaseInfo()
     {
         $detail = (new self)->withoutGlobalScope()->where('is_delete', '=', 0)->find();
-
         // 货币信息
         $currency = SettingModel::getSupplierItem(SettingEnum::CURRENCY, $detail['shop_supplier_id'] ?? 0, $detail['app_id'] ?? 0);
         $detail['currency'] = [
