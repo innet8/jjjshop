@@ -39,6 +39,11 @@ class Product extends BaseModel
         $datas = $value ? json_decode($value, true) : [];
         foreach($datas as $key=>$data){
             $datas[$key]['attribute_name_text'] = extractLanguage($datas[$key]['attribute_name']);
+            if(isset($datas[$key]['attribute_value'])){
+                foreach($datas[$key]['attribute_value'] as $k=>$v){
+                    $datas[$key]['attribute_value'][$k] = extractLanguage($v);
+                }
+            }
         }
         return $datas;
     }
@@ -365,6 +370,8 @@ class Product extends BaseModel
         if (empty($model)) {
             return $model;
         }
+        // trace('商品详情', 'debug');
+        // trace($model->toArray(), 'debug');
         // 整理商品数据并返回
         return $model->setProductListData($model, false);
     }
