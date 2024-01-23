@@ -220,6 +220,7 @@ class OrderProduct extends BaseModel
                     $order->force()->delete();
                 }
             }
+            (new OrderModel)->reloadPrice($order_id);
             $this->commit();
             return true;
         } catch (\Exception $e) {
