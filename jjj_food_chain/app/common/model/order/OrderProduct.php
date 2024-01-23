@@ -212,7 +212,7 @@ class OrderProduct extends BaseModel
             if (self::where('order_id', '=', $order_id)->count() == 0) {
                 $order = OrderModel::where('order_id', '=', $order_id)->find();
                 if ($order['table_id'] == 0) {
-                    $order->delete();
+                    $order->force()->delete();
                 }
             }
             $this->commit();

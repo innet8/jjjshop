@@ -45,8 +45,6 @@ class Table extends Controller
         return $this->renderSuccess('绑定桌台成功');
     }
 
-
-
     /**
      * @Apidoc\Title("解绑桌台")
      * @Apidoc\Desc("解绑桌台")

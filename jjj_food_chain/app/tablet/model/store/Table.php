@@ -33,7 +33,10 @@ class Table extends TableModel
     public function unbindTable($shop_supplier_id, $table_id)
     {
         $table = $this->where('shop_supplier_id', $shop_supplier_id)->where('table_id', $table_id)->find();
-        return $table->save(['is_bind' => 0]);
+        if ($table) {
+            return $table->save(['is_bind' => 0]);
+        }
+        return true;
     }
 
     // 开台
