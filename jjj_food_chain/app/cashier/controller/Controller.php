@@ -23,9 +23,12 @@ class Controller extends JjjController
     /** @var string $route 当前路由uri */
     protected $routeUri = '';
 
-    /** @var array $allowAllAction 登录验证白名单 */
+    /** @var array $allowAllAction 验证全局白名单 */
     protected $allowAllAction = [
         '/index/bind', // 绑定设备
+    ];
+    /** @var array $allowCashierAction 收银机验证白名单 */
+    protected $allowCashierAction = [
         '/passport/login', // 登录页面
         '/index/base', // 登录信息
     ];
@@ -37,8 +40,8 @@ class Controller extends JjjController
     {
         // 当前路由信息
         $this->getRouteInfo();
-        //  验证登录状态
-        $this->checkLogin();
+        // 验证状态
+        $this->checkAuth();
     }
 
     /**
@@ -58,12 +61,27 @@ class Controller extends JjjController
     /**
      * 验证登录状态
      */
-    private function checkLogin()
+    private function checkAuth()
     {
         // 验证当前请求是否在白名单
         if (in_array($this->routeUri, $this->allowAllAction)) {
             return true;
         }
+
+        $appid = Request()->header('appid');
+        if (!$appid) {
+            throw new BaseException(['msg' => '缺少必要的参数：Appid', 'code' => -1]);
+        }
+        $sid = Request()->header('sid');
+        if (!$sid) {
+            throw new BaseException(['msg' => '缺少必要的参数：Sid', 'code' => -1]);
+        }
+
+        // 验证当前请求是否在白名单
+        if (in_array($this->routeUri, $this->allowCashierAction)) {
+            return true;
+        }
+
         $token = Request()->header('token');
         if (!$token) {
             throw new BaseException(['msg' => '缺少必要的参数：token', 'code' => -1]);
