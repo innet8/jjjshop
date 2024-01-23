@@ -17,7 +17,7 @@ class PayType extends Controller
     /**
      * @Apidoc\Title("列表")
      * @Apidoc\Method ("POST")
-     * @Apidoc\Url("/index.php/cashier/store.paytype/index")
+     * @Apidoc\Url("/index.php/cashier/store.PayType/index")
      * @Apidoc\Returned("", type="array", ref="app\common\model\store\PayType\lists", desc="列表")
      */
     public function index()
