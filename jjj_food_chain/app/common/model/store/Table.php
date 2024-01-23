@@ -42,11 +42,8 @@ class Table extends BaseModel
     public static function isOpen($table_id)
     {
         $tableStatus = static::where('table_id', '=', $table_id)->value('status');
-
         return $tableStatus == 30;
     }
-
-
 
     // 获取桌台分类
     public static function getAreaType($shop_supplier_id)

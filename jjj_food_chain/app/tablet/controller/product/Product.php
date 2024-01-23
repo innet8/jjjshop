@@ -18,15 +18,14 @@ class Product extends Controller
      * @Apidoc\Url ("/index.php/tablet/product.product/index")
      * @Apidoc\Param("category_id", type="int", require=true, desc="商品分类ID")
      * @Apidoc\Param("search", type="string", require=false, default="", desc="搜索关键字")
-     * @Apidoc\Param("shop_supplier_id", type="int", require=true, default="0", desc="门店id")
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("list",type="array",ref="app\cashier\model\product\Product\list")
      */
-    public function index($shop_supplier_id)
+    public function index()
     {
         // 获取全部商品列表
         $model = new ProductModel;
-        $list = $model->list(array_merge(['shop_supplier_id' => $shop_supplier_id], $this->postData()));
+        $list = $model->list(array_merge(['shop_supplier_id' => $this->table['shop_supplier_id']], $this->postData()));
         return $this->renderSuccess('', compact('list'));
     }
 
