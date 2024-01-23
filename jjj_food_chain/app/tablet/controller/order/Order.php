@@ -83,6 +83,7 @@ class Order extends Controller
         $detail = $model->getUnSendKitchen($table_id);
         if ($detail) {
             $detail['unSendKitchenProductTotalPrice'] = helper::getArrayColumnSum($detail['unSendKitchenProduct'], 'total_price');
+            $detail['unSendKitchenProductTotalNum'] = helper::getArrayColumnSum($detail['unSendKitchenProduct'], 'total_num');
         }
         return $this->renderSuccess('', compact('detail'));
     }
