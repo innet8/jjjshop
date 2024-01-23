@@ -161,7 +161,7 @@ class OrderPrinterService
         *
         */
         if ($printer == PrinterTypeEnum::SUNMI_LAN || $printer['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
-            $printer = new SunmiCloudPrinter(580);
+            $printer = new SunmiCloudPrinter(567);
             $printer->lineFeed();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
             $printer->appendText("*".__("店铺名称")."({$order['supplier']['name']})*\n");
@@ -193,7 +193,7 @@ class OrderPrinterService
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->setupColumns(
-                [320, SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [300, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [96, SunmiCloudPrinter::ALIGN_CENTER, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0]
             );
