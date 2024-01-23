@@ -11,8 +11,7 @@
                     <el-input v-model="form.attribute_name[item.key]" :placeholder="$t('如：温度')" :maxlength="50" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('属性值')" class="attribute-value" :rules=" form.attribute_value.length < 1 ? [] : [{ required: true, message: $t('请输入属性值') }]">
-                    <!-- {{ items }} -->
-                    <el-form-item v-for="(items, indexs) in form.attribute_value" :key='indexs'  :prop="`form.attribute_value.${[items.key]}`" 
+                    <el-form-item v-for="(items, k) in form.attribute_value" :key='k' :prop="`form.attribute_value.${jjjj}.${item.key}`"
                         :rules="[{ required: true, message: $t('请输入属性值') }]"
                     >
                         <el-input v-model="items[item.key]"  :placeholder="$t('请输入')" :maxlength="50" autocomplete="off"></el-input>
@@ -133,6 +132,7 @@ export default {
 
 .attribute-value :deep(.el-form-item__content) {
     gap: 12px;
+    align-items: start;
 }
 
 .attribute-value :deep(.el-form-item__content) .add-button {
@@ -140,6 +140,7 @@ export default {
     font-size: 24px;
 }
 .btn-warp{
+    margin-top: 4px;
     .add-button {
         margin-right: 8px;
     }
