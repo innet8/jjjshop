@@ -940,7 +940,9 @@ class Cart extends CartModel
         }
         $total_consumption_tax_money = $consume_fee;    // 总消费税
 
-        return compact('user', 'total_product_price', 'total_product_pay_price', 'total_user_discount_money', 'total_service_money', 'total_consumption_tax_money');
+        $total_pay_price = $total_consumption_tax_money + $total_product_pay_price + $total_service_money;    // 应收
+
+        return compact('user', 'total_product_price', 'total_product_pay_price', 'total_user_discount_money', 'total_service_money', 'total_consumption_tax_money', 'total_pay_price');
 
     }
 

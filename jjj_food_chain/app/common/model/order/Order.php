@@ -1146,9 +1146,11 @@ class Order extends BaseModel
         // 消费税计算
         $consumeFee = SettingModel::getSupplierItem(SettingEnum::TAX_RATE, $order['supplier']['shop_supplier_id']);
         $consume_fee = 0;
+        $original_consume_fee = 0;
         if ($consumeFee['is_open']) {
             $consume_rate = helper::bcdiv($consumeFee['tax_rate'], 100);
             $consume_fee = helper::bcmul($total_price, $consume_rate);
+            $original_consume_fee = helper::bcmul($order_price, $consume_rate); // 原消费税
         }
         // 会员优惠金额
         $updateOrderArr = [
@@ -1156,6 +1158,7 @@ class Order extends BaseModel
             'discount_money' => 0,  // 折扣优惠重置
             'total_price' => $total_price,
             'order_price' => $order_price + $service_money + $service_fee + $consume_fee, // 订单总额 = 商品原始总价 + 原服务费 + 新服务费用 + 消费税
+            'original_price' => $order_price + $service_money + $service_fee + $original_consume_fee, // 订单总额 = 商品原始总价 + 原服务费 + 新服务费用 + 消费税
             'pay_price' => $total_price + $service_money + $service_fee + $consume_fee, // 应付金额 = 商品折扣总价（会员折扣） + 原服务费 + 新服务费用 + 消费税
             'points_bonus' => $points_bonus,
             'service_money' => $service_money,

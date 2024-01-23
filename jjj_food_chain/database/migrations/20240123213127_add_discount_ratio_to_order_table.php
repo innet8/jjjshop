@@ -3,7 +3,7 @@
 use think\migration\Migrator;
 use think\migration\db\Column;
 
-class AddIsStayToOrderTable extends Migrator
+class AddDiscountRatioToOrderTable extends Migrator
 {
     /**
      * Change Method.
@@ -29,8 +29,8 @@ class AddIsStayToOrderTable extends Migrator
     public function change()
     {
         $table = $this->table('order');
-        $table->addColumn(Column::integer('is_stay')->setNull(false)->setDefault(0)->setComment('挂单状态 0-否 1-是')->setAfter('order_price'));
-        $table->addColumn(Column::integer('stay_time')->setNull(false)->setDefault(0)->setComment('挂单时间')->setAfter('order_price'));
+        $table->addColumn(Column::integer('discount_ratio')->setNull(false)->setDefault(0)->setComment('优惠折扣比例 如：50-百分之五十')->setAfter('discount_money'));
+        $table->addColumn(Column::decimal('original_price')->setNull(false)->setDefault(0)->setComment('订单原始价格')->setAfter('pay_price'));
         $table->update();
     }
 }
