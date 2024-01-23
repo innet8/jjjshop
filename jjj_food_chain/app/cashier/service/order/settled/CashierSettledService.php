@@ -154,37 +154,38 @@ abstract class CashierSettledService extends BaseService
         if (isset($this->params['table_id']) && ($this->params['table_id'] > 0)) {
             $table = TableModel::detail($this->params['table_id']);
             $table_no = $table['table_no'];
-        }else{
-            $table_no = getTableNumber();
         }
+
         return [
             // 支付方式
             'pay_type' => isset($this->params['pay_type']) ? $this->params['pay_type'] : 40,
-            //包装费
+            // 包装费
             'order_bag_price' => 0,
-            //门店信息
+            // 门店信息
             'supplier' => $supplier,
-            //桌号id
+            // 桌号id
             'table_id' => isset($this->params['table_id']) && ($this->params['table_id']) ? $this->params['table_id'] : 0,
-            //桌号信息
+            // 桌号信息
             'table_no' => $table_no,
-            //订单类型
+            // 订单类型
             'order_type' => 1,
-            //备注
+            // 备注
             'remark' => isset($this->params['remark']) ? $this->params['remark'] : '',
-            //就餐人数
+            // 就餐人数
             'meal_num' => isset($this->params['meal_num']) ? $this->params['meal_num'] : 0,
-            //服务费
+            // 服务费
             'service_money' => 0,
-            //服务费类型
+            // 服务费类型
             'serviceType' => 0,
-            //结算模式
+            // 结算模式
             'settle_type' => 0,
-            //优惠金额
+            // 优惠金额
             'discount_money' => isset($this->productList[0]) ? $this->productList[0]['discount_money'] : 0,
-            //用餐方式
+            // 用餐方式
             'delivery' => isset($this->params['delivery']) ? $this->params['delivery'] : 40,
             'user_id' => isset($this->params['user_id']) ? $this->params['user_id'] : 0,
+            // 取单号
+            'callNo' => $table_no == '' ? getTableNumber() : '',
         ];
     }
 
