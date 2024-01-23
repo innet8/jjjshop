@@ -29,8 +29,6 @@ class Call extends BaseModel
             'app_id' => $appId,
             'shop_supplier_id' => $shopSupplierId,
             'status' => 0, // 设置初始状态为未处理
-            'create_time' => time(),
-            'update_time' => time()
         ]);
     }
 

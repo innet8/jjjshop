@@ -60,8 +60,8 @@ class UserShiftLog extends BaseModel
     {
         $username = $params['user_name'] ?? '';
         $userId = $params['user_id'] ?? 0;
-        $startTime = isset($params['date'][0]) ? strtotime($params['date'][0]) : 0;
-        $endTime = isset($params['date'][1]) ? strtotime($params['date'][1]) : 0;
+        $startTime = isset($params['create_time'][0]) ? strtotime($params['create_time'][0]) : 0;
+        $endTime = isset($params['create_time'][1]) ? strtotime($params['create_time'][1]) : 0;
         $model = $this;
         $model = $model->alias('a')->leftJoin('shop_user su','a.shift_user_id = su.shop_user_id');
 
@@ -82,12 +82,13 @@ class UserShiftLog extends BaseModel
 
         $orderSort = ['a.create_time' => 'desc'];
         $list = $model->with('user')
+            ->field("a.*")
             ->order($orderSort)
             ->paginate($params);
-        foreach ($list as &$item) {
+        foreach ($list as $key => $item) {
             // 时间处理
-            $item['shift_start_time'] = $item['shift_start_time'] ? format_time_his($item['shift_start_time']) : '-';
-            $item['shift_end_time'] = $item['shift_end_time'] ? format_time_his($item['shift_end_time']) : '-';
+            $list[$key]['shift_start_time'] = $item['shift_start_time'] ? format_time_his($item['shift_start_time']) : '-';
+            $list[$key]['shift_end_time'] = $item['shift_end_time'] ? format_time_his($item['shift_end_time']) : '-';
         }
         return $list;
     }
@@ -98,6 +99,10 @@ class UserShiftLog extends BaseModel
     public function detail($id)
     {
         $detail = $this->with('user')->find($id);
+        // 
+        $detail['shift_start_time'] = $detail['shift_start_time'] ? format_time_his($detail['shift_start_time']) : '-';
+        $detail['shift_end_time'] = $detail['shift_end_time'] ? format_time_his($detail['shift_end_time']) : '-';
+        // 
         return $detail;
     }
 
@@ -280,8 +285,6 @@ class UserShiftLog extends BaseModel
                 'shop_supplier_id' => $params['shop_supplier_id'] ?? 0,
                 'shift_start_time' => $shopUser->cashier_login_time,
                 'shift_end_time' => time(),
-                'create_time' => time(),
-                'update_time' => time()
             ];
             $this->save($data);
             // 更新收银员在线状态

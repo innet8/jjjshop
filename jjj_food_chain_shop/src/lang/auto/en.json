@@ -715,5 +715,11 @@
     "公众号，H5网页": "Official account, H5 web page",
     "请输入最少人数": "Please enter the minimum number of people",
     "请输入1-100之间的数": "Please enter a number between 1-100",
-    "请输入最大人数": "Please enter the maximum number of people"
+    "请输入最大人数": "Please enter the maximum number of people",
+    "请输入属性": "Please enter attributes",
+    "接近0，排序等级越高": "Close to 0, the higher the sorting level",
+    "请输入限购数量": "Please enter the purchase limit quantity",
+    "每单/每桌购买的最大数量，0为不限购": "The maximum quantity purchased per order/table, 0 means no purchase limit",
+    "仅需支付": "Just pay",
+    "仅需支付：用户购买此商品仅需支付的金额或比例": "Pay only: The amount or proportion that users only need to pay to purchase this product"
 }
