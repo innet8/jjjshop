@@ -5,9 +5,19 @@
     <div class="product-list">
         <!--添加规格-->
         <div class="common-level-rail">
-            <el-button size="small" type="primary" icon="Plus" v-auth="'/product/expand/spec/add'" @click="addClick">
+            <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
+                <el-form-item>
+                    <el-input size="small" v-model="searchForm.name" :placeholder="$t('规格名称')"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button size="small" type="primary" icon="Search" @click="getData">{{ $t('查询') }}</el-button>
+                </el-form-item>
+            </el-form>
+            <div>
+                <el-button size="small" type="primary" icon="Plus" v-auth="'/product/expand/spec/add'" @click="addClick">
                 {{$t('添加规格')}}</el-button>
-            <el-button size="small" v-auth="'/product/expand/spec/batch_delete'" @click="deleteBatch">{{$t('批量删除')}}</el-button>
+                <el-button size="small" v-auth="'/product/expand/spec/batch_delete'" @click="deleteBatch">{{$t('批量删除')}}</el-button>
+            </div>
         </div>
         <!--内容-->
         <div class="product-content">
@@ -76,8 +86,11 @@ export default {
             open_add: false,
             /*列表数据*/
             tableData: [],
-            multipleSelection: []
-
+            multipleSelection: [],
+            // 
+            searchForm: {
+                name: ""
+            }
         };
     },
     created() {
@@ -112,6 +125,7 @@ export default {
             let Params = {};
             Params.page = self.curPage;
             Params.list_rows = self.pageSize;
+            Params.spec_name = self.searchForm.name;
             self.loading = true;
             PorductApi.SpecList(Params, true)
                 .then(data => {
@@ -193,4 +207,11 @@ export default {
 };
 </script>
 
+<style scoped>
+    .common-level-rail {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0;
+    }
+</style>
 

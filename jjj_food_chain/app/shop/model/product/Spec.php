@@ -16,7 +16,7 @@ class Spec extends SpecModel
     {
         $model = $this;
         if (isset($data['spec_name']) && !empty($data['spec_name'])) {
-            $model = $model->where('spec_name', 'like', '%' . trim($data['spec_name']) . '%');
+            $model = $model->like('spec_name', $data['spec_name']);
         }
         return $model->where('shop_supplier_id', '=', $shop_supplier_id)
             ->order(['sort' => 'asc', 'create_time' => 'desc'])
