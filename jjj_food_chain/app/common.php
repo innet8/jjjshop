@@ -275,7 +275,11 @@ function format_time($value)
  */
 function format_time_his($value)
 {
-    return date('Y-m-d H:i:s', $value);
+    try {
+        return date('Y-m-d H:i:s', $value);
+    } catch (\Throwable $th) {
+        return $value;
+    }
 }
 
 
