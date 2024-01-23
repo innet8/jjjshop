@@ -24,12 +24,20 @@
                         </el-icon>
                     </template>
                     <el-form class="product-attr">
-                        <el-form-item v-for="(items, indexs) in languageList" :key="indexs">
+                        <el-form-item v-for="(items, indexs) in languageList" :key="indexs"
+                        :prop="`item.feed_name[items.key]`" :rules="[{
+                            validator: () => {
+                                return item.feed_name[items.key] ? true : false;
+                            },
+                            message: $t('请输入属性')
+                        }]">
                             <template #label>
                                 {{ $t('加料名称：') }}<span class="product-tips">{{ items.label }}</span>
                             </template>
-                            <el-input class="inline-input" v-model="item.feed_name[items.key]" maxlength="128"
-                                :placeholder="$t('如:杯型')"></el-input>
+                            <el-autocomplete :fetch-suggestions="(e, h) => querySearch(e, h, items.key)"
+                                @select="(e) => selectChange(e, index)" class="inline-input"
+                                v-model="item.feed_name[items.key]" maxlength="128"
+                                :placeholder="$t('如:杯型')"></el-autocomplete>
                         </el-form-item>
                         <el-form-item :label="$t('价格：')">
                             <el-input class="inline-input" type="number" size="small" v-model="item.price" placeholder="">
@@ -52,8 +60,12 @@ const languageList = languageStore().languageList;
 export default {
     data() {
         return {
-            languageList:languageList,
+            languageList: languageList,
             restaurants: [],
+            restaurants_zh: [],
+            restaurants_zhtw: [],
+            restaurants_en: [],
+            restaurants_th: [],
             formData: {
                 feed: []
             },
@@ -64,11 +76,45 @@ export default {
             default: () => { }
         },
     },
+    watch: {
+        'form': {
+            handler(val) {
+                this.restaurants_zh = [];
+                this.restaurants_zhtw = [];
+                this.restaurants_en = [];
+                this.restaurants_th = [];
+                val.feed.map((item, index) => {
+                    this.restaurants_zh.push({
+                        value: JSON.parse(item.feed_name).zh,
+                        index: index,
+                        price: item.price,
+                    })
+                    this.restaurants_zhtw.push({
+                        value: JSON.parse(item.feed_name).zhtw,
+                        index: index,
+                        price: item.price,
+                    })
+                    this.restaurants_en.push({
+                        value: JSON.parse(item.feed_name).en,
+                        index: index,
+                        price: item.price,
+                    })
+                    this.restaurants_th.push({
+                        value: JSON.parse(item.feed_name).th,
+                        index: index,
+                        price: item.price,
+                    })
+                })
+            },
+            deep: true,
+            immediate: true,
+        }
+    },
     methods: {
         addIngredients() {
             this.form.model.product_feed.push(
                 {
-                    feed_name:JSON.parse(languageData),
+                    feed_name: JSON.parse(languageData),
                     price: ''
                 }
             )
@@ -76,7 +122,51 @@ export default {
         handleDelete(index) {
             this.form.model.product_feed.splice(index, 1);
         },
+        querySearch(queryString, cb, key) {
+            let restaurants = [];
+            if (key == 'th') {
+                restaurants = this.restaurants_th
+            }
+            if (key == 'zh') {
+                restaurants = this.restaurants_zh
+            }
+            if (key == 'zhtw') {
+                restaurants = this.restaurants_zhtw
+            }
+            if (key == 'en') {
+                restaurants = this.restaurants_en
+            }
+            let results = queryString ? restaurants.filter(this.createFilter(queryString, key)) : restaurants;
+            // 调用 callback 返回建议列表的数据
+            cb(results);
+        },
 
+        createFilter(queryString, key) {
+            var restaurants = [];
+            if (key == 'th') {
+                restaurants = this.restaurants_th
+            }
+            if (key == 'zh') {
+                restaurants = this.restaurants_zh
+            }
+            if (key == 'zhtw') {
+                restaurants = this.restaurants_zhtw
+            }
+            if (key == 'en') {
+                restaurants = this.restaurants_en
+            }
+            return (restaurants) => {
+                return (restaurants.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+            };
+        },
+
+        selectChange(e, index) {
+            this.form.model.product_feed[index].price = e.price
+            this.form.model.product_feed[index].feed_name.zh = this.restaurants_zh[e.index].value
+            this.form.model.product_feed[index].feed_name.th = this.restaurants_th[e.index].value
+            this.form.model.product_feed[index].feed_name.en = this.restaurants_en[e.index].value
+            this.form.model.product_feed[index].feed_name.zhtw = this.restaurants_zhtw[e.index].value
+        },
     }
 };
 </script>
@@ -96,7 +186,10 @@ export default {
     margin-bottom: 12px;
 }
 
+:deep(.inline-input) {
+    width: 100%;
+}
+
 .product-box {
     display: flex;
-}
-</style>
+}</style>

@@ -12,45 +12,61 @@
                     <el-table-column :label="$t('规格名称')" width="400">
                         <template #default="scope">
                             <div label="" class="spec-name" style="margin-bottom: 0;">
-                                <template v-for="(item, index) in languageList" :key="index">
-                                    <el-input size="small" prop="spec_name" v-model="scope.row.spec_name[item.key]"
-                                        :placeholder="$t('请输入') + `(${item.label})`"></el-input>
-                                </template>
-
+                                <el-form-item v-for="(item, index) in languageList" :key="index"
+                                    :prop="`scope.row.spec_name[${item.key}]`" :rules="[{
+                                        validator: () => {
+                                            return scope.row.spec_name[item.key] ? true : false;
+                                        },
+                                        message: $t('请输入规格名称')
+                                    }]">
+                                    <el-autocomplete size="small" @select="(e) => selectChange(e, scope.$index)"
+                                        :fetch-suggestions="(e, h) => querySearch(e, h, item.key)"
+                                        v-model="scope.row.spec_name[item.key]"
+                                        :placeholder="$t('请输入') + `(${item.label})`"></el-autocomplete>
+                                </el-form-item>
                             </div>
                         </template>
                     </el-table-column>
                     <el-table-column :label="$t('价格')">
                         <template #default="scope">
-                            <el-form-item label="" style="margin-bottom: 0;">
-                                <el-input type="number" size="small" prop="product_price"
+                            <el-form-item label="" style="margin-bottom: 0;" :prop="`scope.row.product_price`" :rules="[{
+                                validator: () => {
+                                    return scope.row.product_price ? true : false;
+                                },
+                                message: $t('请输入规格名称')
+                            }]">
+                                <el-input type="number" size="small" 
                                     v-model="scope.row.product_price"></el-input>
                             </el-form-item>
                         </template>
                     </el-table-column>
                     <el-table-column :label="$t('包装费')">
                         <template #default="scope">
-                            <el-form-item label="" style="margin-bottom: 0;">
-                                <el-input type="number" size="small" prop="bag_price"
+                            <el-form-item label="" style="margin-bottom: 0;" :prop="`scope.row.bag_price`" :rules="[{
+                                validator: () => {
+                                    return scope.row.bag_price ? true : false;
+                                },
+                                message: $t('请输入规格名称')
+                            }]">
+                                <el-input type="number" size="small" 
                                     v-model="scope.row.bag_price"></el-input>
                             </el-form-item>
                         </template>
                     </el-table-column>
                     <el-table-column :label="$t('库存')">
                         <template #default="scope">
-                            <el-form-item label="" style="margin-bottom: 0;">
-                                <el-input type="number" size="small" prop="stock_num"
+                            <el-form-item label="" style="margin-bottom: 0;" :prop="`scope.row.stock_num`" :rules="[{
+                                validator: () => {
+                                    return scope.row.stock_num ? true : false;
+                                },
+                                message: $t('请输入规格名称')
+                            }]">
+                                <el-input type="number" size="small"
                                     v-model="scope.row.stock_num"></el-input>
                             </el-form-item>
                         </template>
                     </el-table-column>
-                    <!--          <el-table-column label="成本价格">
-            <template slot-scope="scope">
-              <el-form-item label="" style="margin-bottom: 0;">
-                <el-input type="number" size="small" prop="cost_price" v-model="scope.row.cost_price"></el-input>
-              </el-form-item>
-            </template>
-          </el-table-column> -->
+
                     <el-table-column label="">
                         <template #default="scope">
                             <el-form-item label="" style="margin-bottom: 0;">
@@ -76,7 +92,10 @@ export default {
         return {
             languageList: languageList,
             restaurants: [],
-            formData: {},
+            restaurants_zh: [],
+            restaurants_zhtw: [],
+            restaurants_en: [],
+            restaurants_th: [],
             /*批量设置sku属性*/
             batchData: {
                 product_price: '',
@@ -92,7 +111,24 @@ export default {
     },
     inject: ['form'],
     created() {
-        this.formData = this.form;
+        this.form.spec.map((item, index) => {
+            this.restaurants_zh.push({
+                value: JSON.parse(item.spec_name).zh,
+                index: index,
+            })
+            this.restaurants_zhtw.push({
+                value: JSON.parse(item.spec_name).zhtw,
+                index: index,
+            })
+            this.restaurants_en.push({
+                value: JSON.parse(item.spec_name).en,
+                index: index,
+            })
+            this.restaurants_th.push({
+                value: JSON.parse(item.spec_name).th,
+                index: index,
+            })
+        })
     },
     mounted() {
 
@@ -101,6 +137,51 @@ export default {
     methods: {
         deleteAttr(i) {
             this.form.model.sku.splice(i, 1)
+        },
+
+        querySearch(queryString, cb, key) {
+            let restaurants = [];
+            if (key == 'th') {
+                restaurants = this.restaurants_th
+            }
+            if (key == 'zh') {
+                restaurants = this.restaurants_zh
+            }
+            if (key == 'zhtw') {
+                restaurants = this.restaurants_zhtw
+            }
+            if (key == 'en') {
+                restaurants = this.restaurants_en
+            }
+            let results = queryString ? restaurants.filter(this.createFilter(queryString, key)) : restaurants;
+            // 调用 callback 返回建议列表的数据
+            cb(results);
+        },
+
+        createFilter(queryString, key) {
+            var restaurants = [];
+            if (key == 'th') {
+                restaurants = this.restaurants_th
+            }
+            if (key == 'zh') {
+                restaurants = this.restaurants_zh
+            }
+            if (key == 'zhtw') {
+                restaurants = this.restaurants_zhtw
+            }
+            if (key == 'en') {
+                restaurants = this.restaurants_en
+            }
+            return (restaurants) => {
+                return (restaurants.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+            };
+        },
+
+        selectChange(e, index) {
+            this.form.model.sku[index].spec_name.zh = this.restaurants_zh[e.index].value
+            this.form.model.sku[index].spec_name.th = this.restaurants_th[e.index].value
+            this.form.model.sku[index].spec_name.en = this.restaurants_en[e.index].value
+            this.form.model.sku[index].spec_name.zhtw = this.restaurants_zhtw[e.index].value
         },
 
     }

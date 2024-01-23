@@ -10,19 +10,13 @@
         <template v-for="(item, index) in languageList" :key="index">
             <el-form-item :label="$t('商品名称：') + `(${item.label})`" :prop="`model.product_name.${item.key}`"
                 :rules="[{ required: true, message: $t('请填写商品名称') }]">
-                <el-input v-model="form.model.product_name[item.key]" class="max-w460"></el-input>
+                <el-input v-model="form.model.product_name[item.key]" :placeholder="$t('请填写商品名称')" class="max-w460"></el-input>
             </el-form-item>
         </template>
 
         <el-form-item :label="$t('所属分类：')" :rules="[{ required: true, message: $t('请选择所属分类') }]" prop="model.category_id">
-            <el-select v-model="form.model.category_id">
-                <template v-for="cat in form.category" :key="cat.category_id">
-                    <el-option :value="cat.category_id" :label="cat.name_text"></el-option>
-                    <template v-for="cat_c in cat.child" :key="cat_c.category_id">
-                        <el-option :value="cat_c.category_id" :label="cat_c.name_text">|—{{ cat_c.name_text }}</el-option>
-                    </template>
-                </template>
-            </el-select>
+            <el-cascader :options="options" v-model="form.model.category_id" clearable
+                :props="{ checkStrictly: true }"></el-cascader>
         </el-form-item>
 
         <el-form-item :label="$t('特色分类：')">
@@ -56,7 +50,7 @@
             </div>
         </el-form-item>
         <el-form-item :label="$t('商品卖点：')">
-            <el-input type="textarea" v-model="form.model.selling_point" class="max-w460"></el-input>
+            <el-input type="textarea" v-model="form.model.selling_point" show-word-limit :maxlength="50" class="max-w460"></el-input>
         </el-form-item>
 
         <!--商品图片组件-->
@@ -80,9 +74,32 @@ export default {
             formData: {},
             isProductUpload: false,
             languageList: languageList,
+            options: [],
         };
     },
     inject: ['form'],
+    watch: {
+        'form': {
+            handler(val) {
+                this.options = [];
+                val.category.map((item, index) => {
+                    this.options.push({
+                        value: item.category_id,
+                        label: item.name_text,
+                        children: [],
+                    })
+                    item.child.map((items, indexs) => {
+                        this.options[index].children.push({
+                            value: items.category_id,
+                            label: items.name_text,
+                        })
+                    })
+                })
+            },
+            deep: true,
+            immediate: true,
+        }
+    },
     created() {
         this.formData = this.form;
         // this['formData'] = this.form;
