@@ -279,7 +279,7 @@ class OrderPrinterService
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
             $printer->appendText("*".__("店铺名称")."({$order['supplier']['name']})*\n");
             $printer->lineFeed();
-            $printer->setLineSpacing(80);
+            $printer->setLineSpacing(60);
             $printer->setPrintModes(true, true, false);
             if ($order['table_no']) {
                 $printer->appendText(__("桌号")."：{$order['table_no']}");
