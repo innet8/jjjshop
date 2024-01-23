@@ -279,15 +279,13 @@ class OrderPrinterService
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
             $printer->appendText("*".__("店铺名称")."({$order['supplier']['name']})*\n");
             $printer->lineFeed();
-            $printer->setLineSpacing(60);
+            $printer->setLineSpacing(80);
             $printer->setPrintModes(true, true, false);
             if ($order['table_no']) {
-                $printer->appendText(__("桌号")."：{$order['table_no']}");
-                $printer->lineFeed();
+                $printer->appendText(__("桌号")."：{$order['table_no']}\n");
             }
             if ($order['callNo']) {
-                $printer->appendText(__("取单号")."：{$order['callNo']}");
-                $printer->lineFeed();
+                $printer->appendText(__("取单号")."：{$order['callNo']}\n");
             }
             if ($printers != PrinterTypeEnum::SUNMI_LAN) {
                 $printer->lineFeed();
