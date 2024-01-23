@@ -86,6 +86,7 @@ class Controller extends JjjController
         if (!$appid) {
             throw new BaseException(['msg' => '缺少必要的参数：Appid', 'code' => -1]);
         }
+        $tid = Request()->header('tid');
         $this->table = [
             'shop_supplier_id' => $sid ?? 0,
             'table_id' => $tid ?? 0,
