@@ -50,7 +50,7 @@
                     <el-radio v-model="form.cashier_open" :label="'0'">{{ $t('关闭') }}</el-radio>
                 </div>
             </el-form-item>
-            <el-form-item :label="$t('选择打印机四')" v-if="form.cashier_open == 1" class="cashier-item">
+            <el-form-item :label="$t('选择打印机')" v-if="form.cashier_open == 1" class="cashier-item">
                 <el-select v-model="form.cashier_printer_id" :placeholder="$t('请选择')">
                     <el-option :label="$t('收银打印机 自带')" :value="'0'">
                         <span style="float: left">{{ $t('收银打印机') }}</span>

@@ -193,9 +193,9 @@ class OrderPrinterService
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->setupColumns(
-                [200, SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [320, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [96, SunmiCloudPrinter::ALIGN_CENTER, 0],
-                [0, SunmiCloudPrinter::ALIGN_RIGHT, 0]
+                [150, SunmiCloudPrinter::ALIGN_RIGHT, 0]
             );
             $printer->printInColumns(__("商品"), __("数量"), __("金额"));
             $printer->appendText("------------------------------------------------\n");
