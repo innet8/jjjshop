@@ -22,6 +22,11 @@ class Product extends ProductModel
         $data['content'] = isset($data['content']) ? $data['content'] : '';
         $data['alone_grade_equity'] = isset($data['alone_grade_equity']) ? json_decode($data['alone_grade_equity'], true) : '';
         $data['app_id'] = self::$app_id;
+
+        $data = $this->sanitizeProductData($data);
+        foreach ($data['product_feed'] as &$item) {
+            $item = $this->sanitizeProductData($item);
+        }
         // 开启事务
         $this->startTrans();
         try {
@@ -44,6 +49,20 @@ class Product extends ProductModel
             $this->rollback();
             return false;
         }
+    }
+
+    /**
+     * 处理数据为负数时，自动转换为0
+     */
+    private function sanitizeProductData($data) {
+        $keys = ['price', 'product_price', 'sales_initial', 'product_sort', 'line_price', 'supplier_price', 'bag_price', 'cost_price', 'min_buy', 'limit_num', 'first_money', 'second_money', 'third_money'];
+
+        foreach ($keys as $key) {
+            if (array_key_exists($key, $data)) {
+                $data[$key] = max(0, $data[$key]);
+            }
+        }
+        return $data;
     }
 
     /**
@@ -74,6 +93,11 @@ class Product extends ProductModel
         $data['content'] = isset($data['content']) ? $data['content'] : '';
         $data['alone_grade_equity'] = isset($data['alone_grade_equity']) ? json_decode($data['alone_grade_equity'], true) : '';
         $productSkuIdList = helper::getArrayColumn(($this['sku']), 'product_sku_id');
+
+        $data = $this->sanitizeProductData($data);
+        foreach ($data['product_feed'] as &$item) {
+            $item = $this->sanitizeProductData($item);
+        }
         return $this->transaction(function () use ($data, $productSkuIdList) {
             $this->save($data);
             // 商品规格
@@ -101,6 +125,10 @@ class Product extends ProductModel
         $product_price = 0;//价格
         $cost_price = 0;
         $bag_price = 0;
+
+        foreach ($data['sku'] as &$item) {
+            $item = $this->sanitizeProductData($item);
+        }
         // 添加规格数据
         if ($data['spec_type'] == '10') {
             $sku = $data['sku'][0];
