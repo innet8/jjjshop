@@ -13,7 +13,7 @@
                 </el-form-item>
             </template>
             <el-form-item :label="$t('规格排序')" prop="sort">
-                <el-input v-model.number="form.sort" autocomplete="off"></el-input>
+                <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('请输入规格排序')" v-model.number="form.sort" autocomplete="off"></el-input-number>
             </el-form-item>
 
         </el-form>
@@ -41,20 +41,20 @@ export default {
             languageList: languageList,
             form: {
                 spec_name: JSON.parse(languageData),
-                sort: 100,
+                sort: null,
             },
             formRules: {
                 spec_name: [{
                     required: true,
-                    message: '请输入规格名称',
+                    message: $t('请输入规格名称'),
                     trigger: 'blur'
                 }],
                 sort: [{
                     required: true,
-                    message: '排序不能为空'
+                    message: $t('排序不能为空')
                 }, {
                     type: 'number',
-                    message: '排序必须为数字'
+                    message: $t('排序必须为数字')
                 }]
             },
             /*左边长度*/

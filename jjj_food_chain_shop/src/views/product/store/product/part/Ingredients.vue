@@ -13,7 +13,7 @@
                 <!-- <el-form-item label="属性明细："> -->
 
                 <el-form-item :label="$t('商品加料：')">
-                    <el-button type="primary" @click="addIngredients">{{ $t('添加属性') }}+</el-button>
+                    <el-button type="primary" @click="addIngredients">{{ $t('添加加料') }}+</el-button>
                 </el-form-item>
                 <!--多规格表格-->
                 <el-form-item class="product-box mb18" v-for="(item, index) in form.model.product_feed" :key="index"

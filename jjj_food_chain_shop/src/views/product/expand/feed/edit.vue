@@ -12,7 +12,7 @@
                 </el-form-item>
             </template>
             <el-form-item :label="$t('加料排序')" prop="sort">
-                <el-input type="text" v-model.number="form.sort"></el-input>
+                <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('请输入加料排序')" v-model.number="form.sort"></el-input-number>
             </el-form-item>
             <el-form-item :label="$t('价格')" prop="price">
                 <el-input type="number" v-model="form.price"></el-input>
@@ -43,7 +43,7 @@ export default {
             form: {
                 feed_id: '',
                 feed_name:  JSON.parse(languageData),
-                sort: 100,
+                sort: null,
                 price: '',
                 feed_value: []
             },

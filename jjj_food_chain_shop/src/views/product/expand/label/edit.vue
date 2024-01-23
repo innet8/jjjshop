@@ -13,7 +13,7 @@
                 </el-form-item>
             </template>
             <el-form-item :label="$t('标签排序')" prop="sort">
-                <el-input v-model.number="form.sort" autocomplete="off"></el-input>
+                <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('请输入标签排序')" v-model.number="form.sort" autocomplete="off"></el-input-number>
             </el-form-item>
         </el-form>
         <template #footer>
@@ -41,7 +41,7 @@ export default {
             form: {
                 unit_id: '',
                 unit_name: JSON.parse(languageData),
-                sort: 100,
+                sort: null,
             },
             formRules: {
                 sort: [{
@@ -66,7 +66,6 @@ export default {
       
         this.dialogVisible = this.open_edit;
         this.form.label_id = this.editform.label_id;
-        console.log(111);
         this.form.label_name = JSON.parse(this.editform.label_name);
         this.form.sort = this.editform.sort;
     },

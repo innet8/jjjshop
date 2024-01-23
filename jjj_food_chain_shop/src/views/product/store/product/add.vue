@@ -102,7 +102,7 @@ export default {
                     /*初始销量*/
                     sales_initial: 0,
                     /*商品排序，默认100*/
-                    product_sort: 100,
+                    product_sort: null,
                     /*限购数量*/
                     limit_num: 0,
                     special_id: '',

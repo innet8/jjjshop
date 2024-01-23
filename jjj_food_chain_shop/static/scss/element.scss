@@ -185,3 +185,10 @@
 .el-tabs__item ,.el-message-box__title,.el-dialog__title,.el-radio__label{
     text-transform: capitalize;
 }
+
+.el-input-number .el-input__inner{
+    text-align: left !important;
+}
+.el-input-number--small{
+    width: 100% !important;
+}

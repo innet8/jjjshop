@@ -7,13 +7,14 @@
     <div class="basic-setting-content">
         <!--基本信息-->
         <div class="common-form">{{ $t('基本信息') }}</div>
-        <template v-for="(item,index) in languageList" :key="index">
-            <el-form-item :label="$t('商品名称：') + `(${item.label})`" :prop="`model.product_name.${item.key}`" :rules="[{ required: true, message: $t('请填写商品名称') }]">
+        <template v-for="(item, index) in languageList" :key="index">
+            <el-form-item :label="$t('商品名称：') + `(${item.label})`" :prop="`model.product_name.${item.key}`"
+                :rules="[{ required: true, message: $t('请填写商品名称') }]">
                 <el-input v-model="form.model.product_name[item.key]" class="max-w460"></el-input>
             </el-form-item>
         </template>
 
-        <el-form-item :label="$t('所属分类：')" :rules="[{ required: true, message: $t('你选择商品分类') }]" prop="model.category_id">
+        <el-form-item :label="$t('所属分类：')" :rules="[{ required: true, message: $t('请选择所属分类') }]" prop="model.category_id">
             <el-select v-model="form.model.category_id">
                 <template v-for="cat in form.category" :key="cat.category_id">
                     <el-option :value="cat.category_id" :label="cat.name_text"></el-option>
@@ -24,7 +25,7 @@
             </el-select>
         </el-form-item>
 
-        <el-form-item :label="$t('特色分类：')" >
+        <el-form-item :label="$t('特色分类：')">
             <el-select v-model="form.model.special_id">
                 <template v-for="cat in form.special" :key="cat.category_id">
                     <el-option :value="cat.category_id" :label="cat.name_text"></el-option>
@@ -78,7 +79,7 @@ export default {
         return {
             formData: {},
             isProductUpload: false,
-            languageList:languageList,
+            languageList: languageList,
         };
     },
     inject: ['form'],
@@ -109,6 +110,7 @@ export default {
     }
 };
 </script>
+
   
 
   
