@@ -16,6 +16,7 @@ use app\common\enum\order\OrderPayStatusEnum;
 use app\common\model\order\OrderProductReturn;
 use app\common\model\order\Order as OrderModel;
 use app\cashier\model\store\Table as TableModel;
+use app\common\model\user\User as UserModel;
 use app\common\model\order\OrderProduct as OrderProductModel;
 use app\common\service\order\OrderRefundService;
 use app\common\service\order\OrderCompleteService;

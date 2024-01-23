@@ -366,13 +366,24 @@ class Order extends Controller
      * @Apidoc\Tag("使用会员")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url("/index.php/cashier/order.order/useMember")
-     * @Apidoc\Param("order_id", type="int",require=true, default=0, desc="订单ID")
      * @Apidoc\Param("user_id", type="int",require=true, default=0, desc="会员ID")
+     * @Apidoc\Param("order_id", type="int",require=false, default=0, desc="订单ID")
+     * @Apidoc\Param("table_id", type="int",require=false, default=0, desc="订单ID")
      */
-    public function useMember($order_id, $user_id)
+    public function useMember($user_id, $order_id = 0, $table_id = 0)
     {
-        $detail = OrderModel::detail($order_id);
-        if (!$detail || $detail['order_status']['value'] != 10) {
+        if ($order_id > 0) {
+            $detail = OrderModel::detail([
+                ['order_id', '=', $order_id],
+                ['order_status', '=', OrderStatusEnum::NORMAL]
+            ]);
+        } else if ($table_id > 0) {
+            $detail = OrderModel::getTableUnderwayOrder($table_id);
+        } else {
+            return $this->renderError('订单不存在');
+        }
+
+        if (!$detail) {
             return $this->renderError('订单不存在');
         }
         if ($detail?->useMember($user_id)) {
