@@ -34,12 +34,13 @@ class Controller extends JjjController
     ];
 
     protected array $allowTableAction = [
-        '/base/base/bind', // 绑定设备
+        '/base/base/bind',
         '/base/base/getInfo',
         '/table/table/bind',
         '/table/table/index',
         '/table/table/getInfo',
-        '/order/order/tableBuy'
+        '/order/order/tableBuy',
+        '/base/base/verifyPassword'
     ];
 
     /**
@@ -81,10 +82,14 @@ class Controller extends JjjController
         if (!$sid) {
             throw new BaseException(['msg' => '缺少必要的参数：Sid', 'code' => -1]);
         }
-        $tid = Request()->header('tid');
+        $appid = Request()->header('appid');
+        if (!$appid) {
+            throw new BaseException(['msg' => '缺少必要的参数：Appid', 'code' => -1]);
+        }
         $this->table = [
             'shop_supplier_id' => $sid ?? 0,
             'table_id' => $tid ?? 0,
+            'app_id' => $appid ?? 0,
             'cashier_id' => 0,
         ];
         return true;
