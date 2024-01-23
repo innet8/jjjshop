@@ -58,7 +58,7 @@ class OrderBusinessPrinterService
     /**
      * 构建订单打印的内容
      */
-    private function getPrintContent($printer,$data)
+    private function getPrintContent($printers,$data)
     {
         $startTime = date('Y-m-d H:i:s', $data['times'][0]);
         $endTime = $data['times'][1] ? date('Y-m-d H:i:s', $data['times'][1]) : date('Y/m/d H:i:s');
@@ -68,7 +68,7 @@ class OrderBusinessPrinterService
         *商米打印机
         *
         */
-        if (is_array($printer) && $printer['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
+        if (!is_string($printers) && $printers['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
             $printer = new SunmiCloudPrinter(567);
             $printer->lineFeed();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
@@ -141,7 +141,7 @@ class OrderBusinessPrinterService
         *芯烨打印机 
         *
         */
-        if ($printer == PrinterTypeEnum::SUNMI_LAN || $printer['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
+        if ($printers == PrinterTypeEnum::SUNMI_LAN || $printers['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
             $width = 48;
             $printer = new SunmiCloudPrinter(567);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
@@ -151,7 +151,9 @@ class OrderBusinessPrinterService
             $printer->setPrintModes(true, true, false);
             $printer->appendText(__("营业数据"));
             $printer->lineFeed();
-            $printer->lineFeed(); 
+            if ($printers != PrinterTypeEnum::SUNMI_LAN) {
+                $printer->lineFeed();
+            }
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);

@@ -149,7 +149,7 @@ class OrderPrinterService
     /**
      * 构建结账订单打印的内容
      */
-    private function getPrintContent($order, $printer = null)
+    private function getPrintContent($order, $printers = null)
     {
         $currency = SettingModel::getSupplierItem(SettingEnum::CURRENCY, $order['shop_supplier_id'], $order['app_id']);
         if ($currency['unit'] ?? '') {
@@ -160,7 +160,7 @@ class OrderPrinterService
         *商米打印机 
         *
         */
-        if (is_array($printer) && $printer['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
+        if (!is_string($printers) && $printers['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
             $printer = new SunmiCloudPrinter(567);
             $printer->lineFeed();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
@@ -271,7 +271,7 @@ class OrderPrinterService
         *芯烨打印机 
         *
         */
-        if ($printer == PrinterTypeEnum::SUNMI_LAN || $printer['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
+        if ($printers == PrinterTypeEnum::SUNMI_LAN || $printers['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
             $width = 48;
             $leftWidth = 32;
             $printer = new SunmiCloudPrinter(567);
@@ -284,11 +284,12 @@ class OrderPrinterService
             if ($order['table_no']) {
                 $printer->appendText(__("桌号")."：{$order['table_no']}");
                 $printer->lineFeed();
-                $printer->lineFeed();
             }
             if ($order['callNo']) {
                 $printer->appendText(__("取单号")."：{$order['callNo']}");
                 $printer->lineFeed();
+            }
+            if ($printers != PrinterTypeEnum::SUNMI_LAN) {
                 $printer->lineFeed();
             }
             // 
