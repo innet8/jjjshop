@@ -8,11 +8,8 @@
                 <el-form-item>
                     <el-button size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
                 </el-form-item>
-                <el-form-item>
-                    <el-button size="small" type="primary" @click="addClick" icon="Plus"
-                        v-auth="'/product/store/category/add'">{{ $t('添加分类') }}</el-button>
-                </el-form-item>
             </el-form>
+            <el-button size="small" type="primary" @click="addClick" icon="Plus" v-auth="'/product/store/category/add'">{{ $t('添加分类') }}</el-button>
         </div>
         <!--内容-->
         <div class="product-content">
@@ -116,7 +113,9 @@ export default {
         getData() {
             let self = this;
             self.loading = true;
-            PorductApi.storeCatList({}, true)
+            PorductApi.storeCatList({
+                name: self.searchForm.name
+            }, true)
                 .then(data => {
                     self.loading = false;
                     self.tableData = data.data.list;
@@ -188,4 +187,10 @@ export default {
 };
 </script>
 
-
+<style scoped>
+    .common-seach-wrap {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0;
+    }
+</style>

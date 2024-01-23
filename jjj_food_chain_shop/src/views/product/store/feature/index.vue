@@ -125,3 +125,9 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+.common-level-rail{
+    text-align: right;
+}
+</style>

@@ -516,10 +516,26 @@ class OrderPrinterService
                             $content && $PrinterDriver->printTicket($content);
                         }
                     } else { 
-                        // 获取订单打印内容
-                        $content = $this->getPrintProductContent($item, $order, $printer);
-                        //执行打印请求
-                        $content && $PrinterDriver->printTicket($content);
+                        $isPrinter = false; 
+                        foreach ($order['product'] as $key => $product) {
+                            $prodcutDetail = ProductModel::detail($product['product_id']);
+                            if ($item['print_method'] == 20) {
+                                if ($item['category_id'] && !in_array($prodcutDetail['special_id'], $item['category_id']) && !in_array($prodcutDetail['category_id'], $item['category_id'])) {
+                                    continue;
+                                }
+                            } elseif ($item['print_method'] == 30) {
+                                if ($item['label_id'] && !in_array($prodcutDetail['label_id'], $item['label_id'])) {
+                                    continue;
+                                }
+                            }
+                            $isPrinter = true;
+                        }
+                        if ($isPrinter) {
+                            // 获取订单打印内容
+                            $content = $this->getPrintProductContent($item, $order, $printer);
+                            //执行打印请求
+                            $content && $PrinterDriver->printTicket($content);
+                        }
                     }
                 } else {
                     // 获取订单打印内容

@@ -74,7 +74,7 @@ class Category extends BaseModel
                 ->order(['sort' => 'asc', 'create_time' => 'asc'])
                 ->where('shop_supplier_id', '=', $shop_supplier_id)
                 ->when($name, function($q) use($name) {
-                    $q->where('name', 'like', '%' . trim($name) . '%');
+                    $q->like('name', $name);
                 })
                 ->select();
             $all = !empty($data) ? $data->toArray() : [];
@@ -84,7 +84,7 @@ class Category extends BaseModel
                     ->where('type', '=', $type)
                     ->where('is_special', '=', $is_special)
                     ->when($name, function($q) use($name) {
-                        $q->where('name', 'like', '%' . trim($name) . '%');
+                        $q->like('name', $name);
                     })
                     ->order(['sort' => 'asc', 'create_time' => 'asc'])
                     ->where('shop_supplier_id', '=', $shop_supplier_id)

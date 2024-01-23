@@ -40,12 +40,9 @@
                 <el-form-item>
                     <el-button size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
                 </el-form-item>
-                <el-form-item>
-                    <el-button size="small" type="primary" icon="Plus" v-auth="'/product/store/product/add'"
-                        @click="addClick">{{ $t('添加产品') }}</el-button>
-                </el-form-item>
-
             </el-form>
+            <el-button size="small" type="primary" icon="Plus" v-auth="'/product/store/product/add'"
+                        @click="addClick">{{ $t('添加产品') }}</el-button>
         </div>
         <!--添加产品-->
         <!--内容-->
@@ -257,4 +254,10 @@ export default {
 };
 </script>
 
-
+<style scoped>
+    .common-seach-wrap {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0;
+    }
+</style>

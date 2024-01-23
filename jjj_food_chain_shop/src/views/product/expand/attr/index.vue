@@ -130,7 +130,7 @@ export default {
             let Params = {};
             Params.page = self.curPage;
             Params.list_rows = self.pageSize;
-            Params.attr_name = self.searchForm.name;
+            Params.attribute_name = self.searchForm.name;
             self.loading = true;
             PorductApi.AttributeList(Params, true)
                 .then(data => {

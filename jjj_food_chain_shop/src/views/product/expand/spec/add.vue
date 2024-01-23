@@ -7,13 +7,13 @@
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
 
             <template v-for="(item, index) in languageList" :key="index">
-                <el-form-item :label="$t('规格名称') + `(${item.label})`" prop="spec_name.th">
+                <el-form-item :label="$t('规格名称') + `(${item.label})`" :prop="`spec_name.${item.key}`">
                     <el-input v-model="form.spec_name[item.key]" :placeholder="$t('请输入规格名称')" :maxlength="50"
                         autocomplete="off"></el-input>
                 </el-form-item>
             </template>
-            <el-form-item :label="$t('规格排序')" prop="sort">
-                <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('请输入规格排序')" v-model.number="form.sort" autocomplete="off"></el-input-number>
+            <el-form-item :label="$t('排序')" prop="sort">
+                <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('请输入排序')" v-model.number="form.sort" autocomplete="off"></el-input-number>
             </el-form-item>
 
         </el-form>
@@ -37,6 +37,10 @@ export default {
         Upload
     },
     data() {
+        const specnameRules = {}
+        for (let key in JSON.parse(languageData)) {
+            specnameRules[key] = [{ required: true, message: $t('请输入规格名称'), trigger: 'blur'}]
+        }
         return {
             languageList: languageList,
             form: {
@@ -44,11 +48,7 @@ export default {
                 sort: null,
             },
             formRules: {
-                spec_name: [{
-                    required: true,
-                    message: $t('请输入规格名称'),
-                    trigger: 'blur'
-                }],
+                spec_name: specnameRules,
                 sort: [{
                     required: true,
                     message: $t('排序不能为空')

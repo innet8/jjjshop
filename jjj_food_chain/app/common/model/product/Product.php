@@ -182,10 +182,10 @@ class Product extends BaseModel
             $model = $model->where('product.special_id', '=', $params['special_id']);
         }
         if (!empty($params['product_name'])) {
-            $model = $model->where('product_name', 'like', '%' . trim($params['product_name']) . '%');
+            $model = $model->like('product_name', $params['product_name']);
         }
         if (!empty($params['search'])) {
-            $model = $model->where('product_name', 'like', '%' . trim($params['search']) . '%');
+            $model = $model->where('product_name', $params['search']);
         }
         // 排序规则
         $sort = [];
