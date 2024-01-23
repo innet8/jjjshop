@@ -28,7 +28,7 @@ class Controller extends JjjController
 
     /** @var array $allowAllAction 登录验证白名单 */
     protected array $allowAllAction = [
-        // '/base/base/getInfo'
+        '/base/base/bind', // 绑定设备
     ];
 
     /**

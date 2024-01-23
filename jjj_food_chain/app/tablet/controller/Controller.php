@@ -34,6 +34,7 @@ class Controller extends JjjController
     ];
 
     protected array $allowTableAction = [
+        '/base/base/bind', // 绑定设备
         '/base/base/getInfo',
         '/table/table/bind',
         '/table/table/index',
@@ -47,7 +48,7 @@ class Controller extends JjjController
     public function initialize()
     {
         // 当前路由信息
-        $this->getRouteinfo();
+        $this->getRouteInfo();
         $this->checkBind();
         $this->checkTable();
 
@@ -56,7 +57,7 @@ class Controller extends JjjController
     /**
      * 解析当前路由参数 （分组名称、控制器名称、方法名）
      */
-    protected function getRouteinfo()
+    protected function getRouteInfo()
     {
         // 控制器名称
         $this->controller = strtolower($this->request->controller());

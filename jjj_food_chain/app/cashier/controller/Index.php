@@ -5,7 +5,9 @@ namespace app\cashier\controller;
 use think\facade\Cache;
 use hg\apidoc\annotation as Apidoc;
 use app\common\enum\settings\SettingEnum;
+use app\shop\model\auth\User as UserModel;
 use app\common\model\settings\Setting as SettingModel;
+use app\common\model\shop\BindRecord as BindRecordModel;
 
 /**
  * 基础信息
@@ -14,6 +16,36 @@ use app\common\model\settings\Setting as SettingModel;
  */
 class Index extends Controller
 {
+    /**
+     * @Apidoc\Title("绑定")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/cashier/index/bind")
+     * @Apidoc\Param("key", type="string", require=true, desc="唯一设备标识")
+     * @Apidoc\Param("address", type="string", require=true, desc="绑定地址")
+     * @Apidoc\Param("port", type="string", require=true, desc="绑定端口")
+     * @Apidoc\Returned("shop", type="object", desc="门店信息", children={
+     *   @Apidoc\Param ("app_id",type="string",desc="商户id"),
+     *   @Apidoc\Param ("shop_supplier_id",type="string",desc="商户门店id"),
+     * })
+     */
+    public function bind()
+    {
+        $data = $this->postData();
+        if (empty($data['key']) || empty($data['address']) || empty($data['port'])) {
+            return $this->renderError('参数错误');
+        }
+        $shop = UserModel::getShopInfo();
+        $data = array_merge($data, [
+            'source' => BindRecordModel::SOURCE_CASHIER,
+            'app_id' => $shop['app_id'],
+            'shop_supplier_id' => $shop['shop_supplier_id'],
+        ]);
+        if (BindRecordModel::add($data)) {
+            return $this->renderError('绑定失败');
+        }
+        return $this->renderSuccess('', compact('shop'));
+    }
+
     /**
      * @Apidoc\Title("基础信息")
      * @Apidoc\Method ("POST")
@@ -139,7 +171,7 @@ class Index extends Controller
     }
 
     /**
-     * @Apidoc\Title("设置服务连接地址")
+     * @Apidoc\Title("设置服务连接地址（废除）")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/cashier/index/setServer")
      * @Apidoc\Param("ip", type="string", require=true, desc="ip地址")

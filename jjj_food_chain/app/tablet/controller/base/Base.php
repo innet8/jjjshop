@@ -6,6 +6,8 @@ use app\tablet\controller\Controller;
 use app\common\model\supplier\Supplier as SupplierModel;
 use app\common\model\settings\Setting as SettingModel;
 use app\common\enum\settings\SettingEnum;
+use app\shop\model\auth\User as UserModel;
+use app\common\model\shop\BindRecord as BindRecordModel;
 use hg\apidoc\annotation as Apidoc;
 
 
@@ -14,6 +16,36 @@ use hg\apidoc\annotation as Apidoc;
  */
 class Base extends Controller
 {
+    /**
+     * @Apidoc\Title("绑定")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/tablet/base.base/bind")
+     * @Apidoc\Param("key", type="string", require=true, desc="唯一设备标识")
+     * @Apidoc\Param("address", type="string", require=true, desc="绑定地址")
+     * @Apidoc\Param("port", type="string", require=true, desc="绑定端口")
+     * @Apidoc\Returned("shop", type="object", desc="门店信息", children={
+     *   @Apidoc\Param ("app_id",type="string",desc="商户id"),
+     *   @Apidoc\Param ("shop_supplier_id",type="string",desc="商户门店id"),
+     * })
+     */
+    public function bind()
+    {
+        $data = $this->postData();
+        if (empty($data['key']) || empty($data['address']) || empty($data['port'])) {
+            return $this->renderError('参数错误');
+        }
+        $shop = UserModel::getShopInfo();
+        $data = array_merge($data, [
+            'source' => BindRecordModel::SOURCE_TABLET,
+            'app_id' => $shop['app_id'],
+            'shop_supplier_id' => $shop['shop_supplier_id'],
+        ]);
+        if (BindRecordModel::add($data)) {
+            return $this->renderError('绑定失败');
+        }
+        return $this->renderSuccess('', compact('shop'));
+    }
+
     /**
      * @Apidoc\Title("基础信息")
      * @Apidoc\Desc("基础信息")
@@ -108,7 +140,7 @@ class Base extends Controller
     }
 
     /**
-     * @Apidoc\Title("设置服务连接地址")
+     * @Apidoc\Title("设置服务连接地址（废弃）")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/tablet/base.base/setServer")
      * @Apidoc\Param("ip", type="string", require=true, desc="ip地址")

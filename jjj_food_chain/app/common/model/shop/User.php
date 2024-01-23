@@ -85,4 +85,16 @@ class User extends BaseModel
         );
         session('jjjshop_store', $session);
     }
+
+    /**
+     * 获取店铺信息
+     */
+    public static function getShopInfo()
+    {
+        $userModel = new static;
+        $info = $userModel->where('app_id', '>', 0)->find();
+        $app_id = $info?->app_id ?: 0;
+        $shop_supplier_id = $info?->shop_supplier_id ?: 0;
+        return compact('shop_supplier_id', 'app_id');
+    }
 }
