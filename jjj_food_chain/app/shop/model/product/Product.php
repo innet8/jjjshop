@@ -27,7 +27,6 @@ class Product extends ProductModel
         foreach ($data['product_feed'] as &$item) {
             $item = $this->sanitizeProductData($item);
         }
-        unset($item);
         // 开启事务
         $this->startTrans();
         try {
@@ -99,7 +98,6 @@ class Product extends ProductModel
         foreach ($data['product_feed'] as &$item) {
             $item = $this->sanitizeProductData($item);
         }
-        unset($item);
         return $this->transaction(function () use ($data, $productSkuIdList) {
             $this->save($data);
             // 商品规格
@@ -127,9 +125,13 @@ class Product extends ProductModel
         $product_price = 0;//价格
         $cost_price = 0;
         $bag_price = 0;
+
+        foreach ($data['sku'] as &$item) {
+            $item = $this->sanitizeProductData($item);
+        }
         // 添加规格数据
         if ($data['spec_type'] == '10') {
-            $sku = $this->sanitizeProductData($data['sku'][0]);
+            $sku = $data['sku'][0];
             // 单规格
             $sku['app_id'] = self::$app_id;
             $sku['line_price'] = $sku['product_price'];
@@ -140,10 +142,6 @@ class Product extends ProductModel
             $bag_price = $sku['bag_price'] ?? 0;
         } else if ($data['spec_type'] == '20') {
             //更新规格
-            foreach ($data['sku'] as &$item) {
-                $item = $this->sanitizeProductData($item);
-            }
-            unset($item);
             (new Spec)->updateSpec($data['sku']);
             // 添加商品sku
             $model->addSkuList($this['product_id'], $data['sku'], $productSkuIdList);
