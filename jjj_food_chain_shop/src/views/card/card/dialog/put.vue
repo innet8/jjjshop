@@ -18,7 +18,7 @@
                   <span v-if="form.expire>0">{{form.expire}}{{ $t('月') }}</span>
                   <span v-else>{{ $t('永久有效') }}</span>
                 </div>
-                <div>{{ $t('折扣: ') }} <span v-if="form.is_discount>0">{{form.discount}}{{ $t('折') }}</span>
+                <div>{{ $t('折扣: ') }} <span v-if="form.is_discount>0">{{Number(form.discount)}}{{ $t('折') }}</span>
                   <span v-else>{{ $t('无') }}</span>
                 </div>
               </div>

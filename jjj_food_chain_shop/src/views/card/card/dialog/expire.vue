@@ -4,7 +4,7 @@
       时间：2019-10-25
       描述：会员-用户列表-会员等级
   -->
-    <el-dialog title="会员等级" v-model="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
+    <el-dialog :title="$t('调整有效期')" v-model="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
         :close-on-press-escape="false" :modal-append-to-body="false" width='600px'>
         <el-form size="small" :model="form" label-position="top">
             <el-form-item>
@@ -21,12 +21,12 @@
                         <div class="d-b-s">
                             <div class="fb mr10">{{ $t('会员卡信息') }}</div>
                             <div class="text item">
-                                <div> {{ $t('卡ID:') }}{{ form.card.card_id }}</div>
-                                <div>{{ $t('有效期') }}:
+                                <div> {{ $t('卡ID:') }} {{ form.card.card_id }}</div>
+                                <div>{{ $t('有效期至') }}:
                                     <span v-if="form.expire_time > 0">{{ form.expire_time_text }}</span>
                                     <span v-else>{{ $t('永久有效') }}</span>
                                 </div>
-                                <div>{{ $t('折扣:') }} <span v-if="form.card.is_discount > 0">{{ form.card.discount }}{{ $t('折')
+                                <div>{{ $t('折扣:') }} <span v-if="form.card.is_discount > 0">{{ Number(form.card.discount || 0) }}{{ $t('折')
                                 }}</span>
                                     <span v-else>{{ $t('无') }}</span>
                                 </div>

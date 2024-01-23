@@ -49,10 +49,10 @@ class CardRecord extends CardRecordModel
             return false;
         }
         $update['expire_time'] = strtotime($data['expire_time']);
-        if ($update['expire_time'] < $this['expire_time']) {
-            $this->error = "延期日期不能小于当前有效期";
-            return false;
-        }
+        // if ($update['expire_time'] < $this['expire_time']) {
+        //     $this->error = "延期日期不能小于当前有效期";
+        //     return false;
+        // }
         return $this->save($update);
     }
 
