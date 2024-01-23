@@ -114,6 +114,12 @@ class Controller extends JjjController
         if (!$user = UserModel::getUser($data['data'])) {
             throw new BaseException(['msg' => '没有找到用户信息', 'code' => -1]);
         }
+        if ($user->is_delete == 1) {
+            throw new BaseException(['msg' => '账号被删除，请联系管理员', 'code' => -1]);
+        }
+        if ($user->is_status == 1) {
+            throw new BaseException(['msg' => '账号被禁用，请联系管理员', 'code' => -1]);
+        }
         // 保存登录状态
         $this->store = [
             'user' => [
