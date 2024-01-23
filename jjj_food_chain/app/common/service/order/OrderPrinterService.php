@@ -193,7 +193,7 @@ class OrderPrinterService
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->setupColumns(
-                [320, SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [300, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [96, SunmiCloudPrinter::ALIGN_CENTER, 0],
                 [150, SunmiCloudPrinter::ALIGN_RIGHT, 0]
             );
