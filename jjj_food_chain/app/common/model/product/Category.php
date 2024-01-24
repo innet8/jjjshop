@@ -286,7 +286,7 @@ class Category extends BaseModel
     }
 
     //获取所有分类
-    public function getAllCategory($type, $shop_supplier_id)
+    public function getAllCategory($type, $shop_supplier_id, $isSpecial='')
     {
         $supplier = SupplierModel::detail($shop_supplier_id);
         if ($supplier['is_main'] == 0 && $supplier['category_set'] == 10) {
@@ -294,6 +294,9 @@ class Category extends BaseModel
             $shop_supplier_id = $detail['shop_supplier_id'];
         }
         $list = $this->where('type', '=', $type)
+            ->when($isSpecial !== '',function($q) use($isSpecial) {
+                $q->where('is_special', '=', $isSpecial);
+            })
             ->where('shop_supplier_id', '=', $shop_supplier_id)
             ->order('is_special desc,sort asc')
             ->select();
