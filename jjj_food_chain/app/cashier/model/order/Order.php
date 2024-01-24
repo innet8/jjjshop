@@ -285,6 +285,7 @@ class Order extends OrderModel
                         return false;
                     }
                     if ($detail['pay_price'] > 0) {
+                        $detail['pay_price'] = $detail['order_price'];
                         $discount_money = round($detail['pay_price'] * $data['rate'] / 100, 2);
                     }
                     $discount_ratio =  $data['rate'];
