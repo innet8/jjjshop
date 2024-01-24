@@ -18,7 +18,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
-                    <el-table-column prop="sort" :label="$t('分类排序')"></el-table-column>
+                    <el-table-column prop="sort" :label="$t('排序')"></el-table-column>
                     <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"

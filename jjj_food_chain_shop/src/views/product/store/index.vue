@@ -45,12 +45,12 @@ export default defineComponent({
             },
             {
                 key: 'categoryindex',
-                value: $t('分类管理'),
+                value: $t('普通分类'),
                 path: '/product/store/category/index'
             },
             {
                 key: 'featureindex',
-                value: $t('特色管理'),
+                value: $t('特色分类'),
                 path: '/product/store/feature/index'
             },
             ],

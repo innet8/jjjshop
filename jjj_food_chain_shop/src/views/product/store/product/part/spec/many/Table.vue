@@ -33,14 +33,14 @@
                                 validator: () => {
                                     return scope.row.product_price ? true : false;
                                 },
-                                message: $t('请输入规格名称')
+                                message: $t('请输入价格')
                             }]">
                                 <el-input type="number" size="small" 
                                     v-model="scope.row.product_price"></el-input>
                             </el-form-item>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="$t('包装费')">
+                    <!-- <el-table-column :label="$t('包装费')">
                         <template #default="scope">
                             <el-form-item label="" style="margin-bottom: 0;" :prop="`scope.row.bag_price`" :rules="[{
                                 validator: () => {
@@ -52,14 +52,14 @@
                                     v-model="scope.row.bag_price"></el-input>
                             </el-form-item>
                         </template>
-                    </el-table-column>
+                    </el-table-column> -->
                     <el-table-column :label="$t('库存')">
                         <template #default="scope">
                             <el-form-item label="" style="margin-bottom: 0;" :prop="`scope.row.stock_num`" :rules="[{
                                 validator: () => {
                                     return scope.row.stock_num ? true : false;
                                 },
-                                message: $t('请输入规格名称')
+                                message: $t('请输入库存')
                             }]">
                                 <el-input type="number" size="small"
                                     v-model="scope.row.stock_num"></el-input>

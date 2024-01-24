@@ -29,7 +29,7 @@
                             message: $t('请输入属性名称')
                         }]">
                             <template #label>
-                                {{ $t('属性名称：') }}<span class="product-tips">{{ items.label }}</span>
+                                {{ $t('属性名称：') }}<span class="product-tips">（{{ items.label }}）</span>
                             </template>
                             <el-autocomplete :fetch-suggestions="(e, h) => querySearch(e, h, items.key)"
                                 @select="(e) => selectChange(e, index)" class="inline-input"

@@ -1,5 +1,4 @@
 function createdAuth(list, obj) {
-	console.log(list)
 	if(list && list.length > 0){
 		for (let i = 0; i < list.length; i++) {
 			let item = list[i];

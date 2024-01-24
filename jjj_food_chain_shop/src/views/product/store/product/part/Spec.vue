@@ -32,7 +32,7 @@
             </el-form-item>
         </template>
 
-        <el-form-item :label="$t('产品规格：')">
+        <el-form-item :label="$t('商品规格：')">
             <el-radio-group v-model="form.model.spec_type" @change="changeSpec">
                 <el-radio :label="10" v-if="!form.isSpecLocked || (form.isSpecLocked && form.model.spec_type == 10)">{{
                     $t('单规格') }}</el-radio>

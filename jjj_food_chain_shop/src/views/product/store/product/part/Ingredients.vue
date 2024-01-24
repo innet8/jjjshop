@@ -40,7 +40,7 @@
                                 :placeholder="$t('如:杯型')"></el-autocomplete>
                         </el-form-item>
                         <el-form-item :label="$t('价格：')">
-                            <el-input class="inline-input" type="number" size="small" v-model="item.price" placeholder="">
+                            <el-input class="inline-input" :placeholder="$t('价格')" type="number" size="small" v-model="item.price" placeholder="">
                             </el-input>
                         </el-form-item>
                     </el-form>

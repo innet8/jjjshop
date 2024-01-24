@@ -42,7 +42,7 @@
                 </el-form-item>
             </el-form>
             <el-button size="small" type="primary" icon="Plus" v-auth="'/product/store/product/add'"
-                        @click="addClick">{{ $t('添加产品') }}</el-button>
+                        @click="addClick">{{ $t('添加商品') }}</el-button>
         </div>
         <!--添加产品-->
         <!--内容-->

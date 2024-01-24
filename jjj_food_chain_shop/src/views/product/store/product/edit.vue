@@ -247,6 +247,9 @@
             params.product_feed.map((item,index)=>{
                 params.product_feed[index].feed_name = JSON.stringify(item.feed_name)
             })
+            if (typeof params.category_id == 'object' ){
+                params.category_id = Number(params.category_id[params.category_id.length - 1])
+            }
             self.save_loading = true;
             PorductApi.storeEditProduct({
                 product_id: self.product_id,
