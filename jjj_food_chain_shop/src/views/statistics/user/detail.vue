@@ -18,6 +18,11 @@
             <el-col :span="12">
                 <p class="text">{{ $t('营业收入') }}:<span>{{ detail.total_income }}</span></p>
             </el-col>
+
+            <el-col :span="12" v-if="!detail.incomes.find(h=>h.pay_type == 40)">
+                <p class="text">{{ $t('现金支付') }}:<span>0.00</span></p>
+            </el-col>
+
             <template v-for="item in detail.incomes">
                 <el-col :span="12">
                     <p class="text">{{ item.pay_type_name }}:<span>{{ item.price }}</span></p>
