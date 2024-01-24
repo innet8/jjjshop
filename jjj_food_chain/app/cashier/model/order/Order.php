@@ -54,6 +54,9 @@ class Order extends OrderModel
         if (isset($params['order_type']) && $params['order_type']) {
             $model = $model->where('order_type', '=', $params['eat_type']);
         }
+        if (isset($params['order_type']) && $params['order_type']) {
+            $model = $model->where('order_type', '=', $params['eat_type']);
+        }
 
 
         $startTime = 0;
@@ -111,6 +114,15 @@ class Order extends OrderModel
             ->order(['create_time' => 'desc'])
             ->field("*,FROM_UNIXTIME(pay_time,'%Y-%m-%d %H:%i:%s') as pay_time_text ")
             ->paginate($params);
+    }
+
+    // 订单统计信息
+    public function getInfo()
+    {
+        $pendingNum = (new self)->where('order_status', '=', OrderStatusEnum::NORMAL)->count();
+        $cancelNum = (new self)->where('order_status', '=', OrderStatusEnum::CANCELLED)->count();
+        $completeNum = (new self)->where('order_status', '=', OrderStatusEnum::COMPLETED)->count();
+        return compact('pendingNum', 'cancelNum', 'completeNum');
     }
 
     /**

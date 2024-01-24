@@ -39,7 +39,8 @@ class Order extends Controller
         $data = $this->postData();
         $data['shop_supplier_id'] = $this->cashier['user']['shop_supplier_id'];
         $list = (new OrderModel)->getList($data);
-        return $this->renderSuccess('', compact('list'));
+        $info = (new OrderModel)->getInfo();
+        return $this->renderSuccess('', compact('list', 'info'));
     }
 
     /**
