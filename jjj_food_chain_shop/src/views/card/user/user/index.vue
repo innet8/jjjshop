@@ -6,7 +6,7 @@
       -->
     <div class="user">
         <!--搜索表单-->
-        <div class="common-seach-wrap">
+        <div class="common-seach-wrap flex">
             <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
       
                 <el-form-item :label="$t('会员等级')">

@@ -82,4 +82,21 @@ onUnmounted(() => {
     margin: 0;
     padding: 0;
 }
+
+.common-level-rail {
+    text-align: right;
+    &.flex{
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0;
+    }
+}
+
+.common-seach-wrap {
+    &.flex {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0;
+    }
+}
 </style>

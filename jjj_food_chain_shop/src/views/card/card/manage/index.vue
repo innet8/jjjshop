@@ -5,13 +5,9 @@
           描述：会员-等级管理
       -->
     <div class="user">
-        <!--添加等级-->
-        <div class="common-level-rail">
-            <el-button size="small" type="primary" @click="addClick" icon="Plus" v-auth="'/card/card/add'">{{ $t('添加会员卡') }}
-            </el-button>
-        </div>
+       
         <!--搜索表单-->
-        <div class="common-seach-wrap">
+        <div class="common-seach-wrap flex">
             <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
                 <el-form-item :label="$t('状态')">
                     <el-select v-model="formInline.status" :placeholder="$t('请选择')">
@@ -28,6 +24,11 @@
                     <el-button type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
                 </el-form-item>
             </el-form>
+            <!--添加等级-->
+            <div class="common-level-rail">
+                <el-button size="small" type="primary" @click="addClick" icon="Plus" v-auth="'/card/card/add'">{{ $t('添加会员卡') }}
+                </el-button>
+            </div>
         </div>
         <!--内容-->
         <div class="product-content">

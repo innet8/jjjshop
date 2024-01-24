@@ -5,7 +5,7 @@
         <el-form size="small" ref="form" :model="form" label-position="top">
             <!--添加门店-->
             <el-form-item :label="$t('打印机名称')" prop="printer_name" :rules="[{ required: true, message: ' ' }]">
-                <el-input v-model="form.printer_name"></el-input>
+                <el-input v-model="form.printer_name" :placeholder="$t('请输入打印机名称')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('打印机类型')">
                 <el-select v-model="form.printer_type" placeholder="请选择" style="width: 100%;">
@@ -86,12 +86,12 @@
             </div>
 
             <el-form-item :label="$t('打印联数')" prop="print_times" :rules="[{ required: true, message: ' ' }]">
-                <el-input v-model="form.print_times" type="number"></el-input>
+                <el-input v-model="form.print_times" type="number" :placeholder="$t('请输入打印联数')"></el-input>
                 <div class="tips">{{ $t('同一订单，打印的次数') }}</div>
             </el-form-item>
 
             <el-form-item :label="$t('排序')">
-                <el-input v-model="form.sort" type="number"></el-input>
+                <el-input v-model="form.sort" type="number" :placeholder="$t('接近0，排序等級越高')"></el-input>
                 <div class="tips">{{ $t('数字越小越靠前') }}</div>
             </el-form-item>
 

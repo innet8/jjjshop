@@ -5,10 +5,11 @@
     	描述：产品分类管理
     -->
     <div class="product">
-        <div>
+        <!--添加产品分类-->
+        <div class="common-level-rail flex">
             <el-form size="small" :inline="true" :model="form" class="demo-form-inline d-s-c">
                 <el-form-item :label="$t('编号')">
-                    <el-input v-model="form.search" autocomplete="off"></el-input>
+                    <el-input v-model="form.search" autocomplete="off" :placeholder="$t('请输入编号')"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('选择区域')">
                     <el-select size="small" v-model="form.area_id" :placeholder="$t('请选择')">
@@ -30,9 +31,6 @@
                     <el-button type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
                 </el-form-item>
             </el-form>
-        </div>
-        <!--添加产品分类-->
-        <div class="common-level-rail">
             <el-button size="small" type="primary" @click="addClick" icon="Plus" v-auth="'/supplier/table/table/add'">
                 {{ $t('添加桌位') }}</el-button>
         </div>
@@ -224,5 +222,4 @@ export default {
     }
 };
 </script>
-
 

@@ -8,7 +8,7 @@
         :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
             <el-form-item :label="$t('桌位名称')" prop="table_no" :label-width="formLabelWidth">
-                <el-input v-model="form.table_no" autocomplete="off"></el-input>
+                <el-input v-model="form.table_no" autocomplete="off" :placeholder="$t('请输入桌位名称')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('所属类型')" prop="type_id" :label-width="formLabelWidth">
                 <el-select v-model="form.type_id" :placeholder="$t('所属类型')">
@@ -23,7 +23,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item :label="$t('分类排序')" prop="sort" :label-width="formLabelWidth">
-                <el-input v-model.number="form.sort" autocomplete="off"></el-input>
+                <el-input v-model.number="form.sort" autocomplete="off" :placeholder="$t('接近0，排序等級越高')"></el-input>
             </el-form-item>
         </el-form>
         <template #footer>

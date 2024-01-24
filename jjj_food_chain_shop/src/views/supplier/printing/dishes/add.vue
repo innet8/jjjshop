@@ -5,7 +5,7 @@
         <el-form size="small" ref="form" :model="form" label-position="top">
             <!--添加门店-->
             <el-form-item :label="$t('名称')" prop="name" :rules="[{ required: true, message: ' ' }]"><el-input
-                    v-model="form.name"></el-input></el-form-item>
+                    v-model="form.name" :placeholder="$t('请输入名称')" ></el-input></el-form-item>
             <el-form-item :label="$t('是否开启')">
                 <div>
                     <el-radio v-model="form.is_open" :label="1">{{ $t('开启') }}</el-radio>

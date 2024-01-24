@@ -8,16 +8,16 @@
         :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
             <el-form-item :label="$t('类型名称')" prop="type_name" :label-width="formLabelWidth">
-                <el-input v-model="form.type_name" autocomplete="off"></el-input>
+                <el-input v-model="form.type_name" autocomplete="off" :placeholder="$t('请输入类型名称')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('最少人数')" prop="min_num" type="number" :label-width="formLabelWidth">
-                <el-input v-model.number="form.min_num" autocomplete="off" type="number"></el-input>
+                <el-input v-model.number="form.min_num" autocomplete="off" type="number" :placeholder="$t('请输入最少人数')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('最多人数')" prop="max_num" type="number" :label-width="formLabelWidth">
-                <el-input v-model.number="form.max_num" autocomplete="off" type="number"></el-input>
+                <el-input v-model.number="form.max_num" autocomplete="off" type="number" :placeholder="$t('请输入最多人数')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('排序')" prop="sort" :label-width="formLabelWidth">
-                <el-input v-model.number="form.sort" autocomplete="off" :min="0"></el-input>
+                <el-input v-model.number="form.sort" autocomplete="off" :min="0" :placeholder="$t('接近0，排序等級越高')"></el-input>
             </el-form-item>
         </el-form>
         <template #footer>
