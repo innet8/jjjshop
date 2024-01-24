@@ -739,5 +739,17 @@
     "接近0，排序等級越高": "Close to 0, the higher the sorting level",
     "请输入桌位名称": "Please enter the table name",
     "请输入编号": "Please enter number",
-    "请输入最多人数": "Please enter the maximum number of people"
+    "请输入最多人数": "Please enter the maximum number of people",
+    "请输入确认新密码": "Please enter to confirm new password",
+    "请输入原始密码": "Please enter original password",
+    "请输入新密码": "Please enter a new password",
+    "取消信息": "Cancellation information",
+    "商家备注": "Merchant Remarks",
+    "返回": "return",
+    "昨天": "yesterday",
+    "今天": "today",
+    "一周": "week",
+    "收银订单": "Cashier order",
+    "桌台订单": "Table order",
+    "编辑桌位": "Edit table"
 }
