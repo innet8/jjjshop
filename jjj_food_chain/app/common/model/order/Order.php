@@ -1058,7 +1058,7 @@ class Order extends BaseModel
             // 会员折扣的总额差
             $grade_total_money = 0;
             $user = null;
-            if ($product->product['is_enable_grade'] && $product['total_price'] > 0) {
+            if ($product['product']['is_enable_grade'] && $product['total_price'] > 0) {
                 $user = $order['user'];
 //                trace($user);
                 if ($user) {
@@ -1098,7 +1098,7 @@ class Order extends BaseModel
                 if ($discountRatio <= 1) {
                     if ($alone_grade_type == 20) {
                         // 固定金额
-                        $grade_product_price = $product['alone_grade_equity'][$user['grade_id']];
+                        $grade_product_price = $product['product']['alone_grade_equity'][$user['grade_id']];
                         $discount && $grade_product_price = round($grade_product_price * $discount, 2);
                     } else {
                         // 商品会员折扣后单价
