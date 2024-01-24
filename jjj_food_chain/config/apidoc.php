@@ -106,8 +106,8 @@ return [
         'header'=>[
             // name=字段名，type=字段类型，require=是否必须，default=默认值，desc=字段描述
             ['name'=>'Token','type'=>'string','require'=>true,'desc'=>'身份令牌Token（平板、厨显不需要）'],
-            ['name'=>'Appid','type'=>'string','require'=>true, 'desc'=>'应用Appid'],
-            ['name'=>'Sid','type'=>'string','require'=>true, 'desc'=>'门店Sid'],
+            ['name'=>'Appid','type'=>'string','require'=>true, 'desc'=>'应用Appid - app_id'],
+            ['name'=>'Sid','type'=>'string','require'=>true, 'desc'=>'门店Sid - shop_supplier_id'],
         ],
         // （选配）全局的请求Query
         'query'=>[
