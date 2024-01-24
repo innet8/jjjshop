@@ -1040,23 +1040,23 @@ class Order extends BaseModel
                 }
                 $alone_grade_type = 10;
                 // 商品单独设置了会员折扣
-                if ($product['product']['is_alone_grade'] && isset($product['product']['alone_grade_equity'][$user['grade_id']])) {
-                    if ($product['product']['alone_grade_type'] == 10) {
-                        // 折扣比例
-                        $discountRatio = helper::bcdiv($product['product']['alone_grade_equity'][$user['grade_id']], 100);
+                if ($user) {
+                    if ($product['product']['is_alone_grade'] && isset($product['product']['alone_grade_equity'][$user['grade_id']])) {
+                        if ($product['product']['alone_grade_type'] == 10) {
+                            // 折扣比例
+                            $discountRatio = helper::bcdiv($product['product']['alone_grade_equity'][$user['grade_id']], 100);
+                        } else {
+                            $alone_grade_type = 20;
+                            $discountRatio = helper::bcdiv($product['product']['alone_grade_equity'][$user['grade_id']], $product['product_price'], 2);
+                        }
                     } else {
-                        $alone_grade_type = 20;
-                        $discountRatio = helper::bcdiv($product['product']['alone_grade_equity'][$user['grade_id']], $product['product_price'], 2);
+                        // 折扣比例
+                        $discountRatio = helper::bcdiv($user['grade']['equity'], 100);
                     }
                 } else {
-                    // 折扣比例
-                    if ($user) {
-                        $discountRatio = helper::bcdiv($user['grade']['equity'], 100);
-                    } else {
-                        $discountRatio = 1;
-                    }
-
+                    $discountRatio = 1;
                 }
+
                 // 计算最终折扣
                 if ($discount && $discountRatio) {
                     // 会员等级 * 会员卡
