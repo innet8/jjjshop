@@ -74,8 +74,10 @@ class UserShiftLog extends Controller
      */
     public function export()
     {
+        $data = $this->postData();
+        $data['list_rows'] = 1000;
         $model = new UserShiftLogModel;
-        $list = $model->getList($this->postData());
+        $list = $model->getList($data);
         (new UserShiftLogService())->userShiftLogListExport($list);
         return $this->renderSuccess('');
     }

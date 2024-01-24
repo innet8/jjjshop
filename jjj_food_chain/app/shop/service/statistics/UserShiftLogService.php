@@ -40,7 +40,7 @@ class UserShiftLogService
         //填充数据
         $index = 0;
         foreach ($list as $item) {
-            $totalMoney = helper::bcsub( $item['total_money'], $item['refund_amount']);
+            $totalMoney = helper::bcsub($item['total_money'] ?? 0, $item['refund_amount'] ?? 0);
             $sheet->setCellValue('A' . ($index + 2), "\t" . $item['shift_no'] . "\t");
             $sheet->setCellValue('B' . ($index + 2), $item['user']['real_name'] ?? '');
             $sheet->setCellValue('C' . ($index + 2), $item['shift_start_time'] . __('至') . $item['shift_end_time']);
