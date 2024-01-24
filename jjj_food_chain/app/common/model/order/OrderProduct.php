@@ -286,6 +286,11 @@ class OrderProduct extends BaseModel
         ProductFactory::getFactory($order['order_source'])->updateOrderProductStock($order['unSendKitchenProduct']);
         // 菜品打印
         $order['product'] = $order->product()->where('is_send_kitchen', 0)->select();
+        // 送厨更新取单号
+        if ($order->table_id == 0){
+            $order->callNo = getTableNumber();
+            $order->save();
+        }
         (new OrderPrinterService)->printProductTicket($order, 30);
         //
         return $this->where('order_id', '=', $order_id)->where('is_send_kitchen', '=', 0)->update(['is_send_kitchen' => 1, 'send_kitchen_time' => time()]);

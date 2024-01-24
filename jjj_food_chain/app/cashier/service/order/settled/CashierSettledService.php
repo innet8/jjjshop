@@ -184,8 +184,6 @@ abstract class CashierSettledService extends BaseService
             // 用餐方式
             'delivery' => isset($this->params['delivery']) ? $this->params['delivery'] : 40,
             'user_id' => isset($this->params['user_id']) ? $this->params['user_id'] : 0,
-            // 取单号
-            'callNo' => $table_no == '' ? getTableNumber() : '',
         ];
     }
 
@@ -339,7 +337,6 @@ abstract class CashierSettledService extends BaseService
             'table_id' => $order['table_id'],
             'is_agent' => $this->settledRule['is_agent'] ? 1 : 0,
             'cashier_id' => $this->user['cashier_id'],
-            'callNo' => $order['callNo'],
             'eat_type' => $this->orderSource['eat_type'],
             'meal_num' => $order['meal_num'],
             'service_money' => $order['service_money'],
