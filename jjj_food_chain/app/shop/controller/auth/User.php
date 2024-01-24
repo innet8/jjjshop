@@ -62,26 +62,28 @@ class User extends Controller
     {
         $data = $this->postData();
         $model = new UserModel();
+        $username = $data['user_name'] ?? '';
+        $password = $data['password'] ?? '';
         // 用户名是否为4-16位纯数字
-        if (!validateNumber($data['user_name'])) {
+        if (!validateNumber($username)) {
             return $this->renderError('用户名必须为4-16位纯数字');
         }
         // 密码是否为4-16位纯数字
-        if (!validateNumber($data['password'])) {
+        if (!validateNumber($password)) {
             return $this->renderError('密码必须为4-16位纯数字');
         }
         // 姓名
         if (empty($data['real_name'])) {
             return $this->renderError('请输入姓名');
         }
-        $num = $model->getUserName(['user_name' => $data['user_name']]);
+        $num = $model->getUserName(['user_name' => $username]);
         if ($num > 0) {
             return $this->renderError('用户名已存在');
         }
         if (!isset($data['role_id']) || empty($data['role_id'])) {
             return $this->renderError('请选择所属角色');
         }
-        if ($data['confirm_password'] != $data['password']) {
+        if ($data['confirm_password'] != $password) {
             return $this->renderError('确认密码和登录密码不一致');
         }
         $model = new UserModel();
@@ -126,37 +128,38 @@ class User extends Controller
         if ($this->request->isGet()) {
             return $this->editInfo($shop_user_id);
         }
-
+        $username = $data['user_name'] ?? '';
+        $password = $data['password'] ?? '';
         $model = new UserModel();
         // 用户名是否为4-16位纯数字
-        if (!validateNumber($data['user_name'])) {
+        if (!validateNumber($username)) {
             return $this->renderError('用户名必须为4-16位纯数字');
         }
         // 密码是否为4-16位纯数字
-        if (!empty($data['password']) && !validateNumber($data['password'])) {
+        if (!empty($password) && !validateNumber($password)) {
             return $this->renderError('密码必须为4-16位纯数字');
         }
         // 姓名
         if (empty($data['real_name'])) {
             return $this->renderError('请输入姓名');
         }
-        $num = $model->getUserName(['user_name' => $data['user_name']], $data['shop_user_id']);
+        $num = $model->getUserName(['user_name' => $username], $data['shop_user_id']);
         if ($num > 0) {
             return $this->renderError('用户名已存在');
         }
         if (!isset($data['role_id'])) {
             return $this->renderError('请选择所属角色');
         }
-        if (isset($data['password']) && !empty($data['password'])) {
+        if (isset($password) && !empty($password)) {
             if (!isset($data['confirm_password'])) {
                 return $this->renderError('请输入确认密码');
             } else {
-                if ($data['confirm_password'] != $data['password']) {
+                if ($data['confirm_password'] != $password) {
                     return $this->renderError('确认密码和登录密码不一致');
                 }
             }
         }
-        if (empty($data['password'])) {
+        if (empty($password)) {
             if (isset($data['confirm_password']) && !empty($data['confirm_password'])) {
                 return $this->renderError('请输入登录密码');
             }

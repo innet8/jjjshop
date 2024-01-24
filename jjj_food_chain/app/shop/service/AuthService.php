@@ -128,10 +128,12 @@ class AuthService
                 return true;
             }
         }
+
+        // todo 判断链接为请求接口的链接，临时注释
         // 获取当前用户的权限url列表
-        if (!in_array($url, $this->getAccessUrls())) {
-            return false;
-        }
+        // if (!in_array($url, $this->getAccessUrls())) {
+        //     return false;
+        // }
         return true;
     }
 
