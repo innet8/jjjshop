@@ -497,7 +497,7 @@ class OrderPrinterService
     public function printProductTicket($order, $print_type)
     {
         //打印列表
-        $list = (new PrintingModel())->getList($print_type, $order['shop_supplier_id'], $order['order_type']);
+        $list = (new PrintingModel)->getList($print_type, $order['shop_supplier_id'], $order['order_type']);
         if (count($list) > 0) {
             foreach ($list as $item) {
                 // 获取当前的打印机

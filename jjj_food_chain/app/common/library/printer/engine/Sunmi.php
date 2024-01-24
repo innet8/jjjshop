@@ -22,7 +22,7 @@ class Sunmi extends Basics
     {
         $config = json_decode($this->config, true);
         $url = 'http://' . $config['IP'] . self::PATH . "?sn={$config['SN']}&copies={$this->times}";
-        return HttpHelp::postRequest($url, $content ,['Content-Type: text/plain; charset=uft-8']);
+        return HttpHelp::postRequest($url, $content ,['Content-Type: text/plain; charset=uft-8'], 3);
     }
 
 

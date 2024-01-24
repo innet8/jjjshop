@@ -19,7 +19,7 @@
                     <el-table-column prop="printer.printer_name" :label="$t('打印机')"></el-table-column>
                     <el-table-column prop="product_type" :label="$t('打印模式')">
                         <template #default="scope">
-                            <div>{{ scope.row.type == 10 ? $t('付款打印') : $t('送厨打印') }}</div>
+                            <div>{{ scope.row.print_type == 10 ? $t('付款打印') : $t('送厨打印') }}</div>
                         </template>
                     </el-table-column>
                     <el-table-column prop="print_method" :label="$t('打印方式')">
