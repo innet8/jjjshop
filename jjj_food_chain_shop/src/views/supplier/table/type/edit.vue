@@ -55,7 +55,7 @@ export default {
                     { type: 'number', min: 0, max: 100, message: $t('请输入1-100之间的数'), trigger: 'blur' },
                 ],
                 max_num: [
-                    { required: true, message: $t('请输入最大人数'), trigger: 'blur'},
+                    { required: true, message: $t('请输入最多人数'), trigger: 'blur'},
                     { type: 'number', min: 0, max: 100, message: $t('请输入1-100之间的数'), trigger: 'blur' },
                 ],
                 sort: [

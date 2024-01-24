@@ -122,6 +122,19 @@ export default {
                 });
             });
         },
+
+        // 状态设置
+        statusSet(e, id) {
+            PorductApi.storeCatSet({
+                category_id: id,
+                status: e
+            }).then(data => {
+                ElMessage({
+                    message: data.msg,
+                    type: 'success'
+                });
+            });
+        },
     },
 }
 </script>

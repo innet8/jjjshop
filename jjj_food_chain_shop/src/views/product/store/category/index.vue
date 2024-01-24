@@ -138,8 +138,8 @@ export default {
             this.open_edit = true;
         },
 
+        // 状态设置
         statusSet(e, id) {
-            let self = this;
             PorductApi.storeCatSet({
                 category_id: id,
                 status: e
