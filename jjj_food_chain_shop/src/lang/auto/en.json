@@ -753,5 +753,10 @@
     "桌台订单": "Table order",
     "编辑桌位": "Edit table",
     "货币管理": "currency management",
-    "管理员": "administrator"
+    "管理员": "administrator",
+    "请选择打印机": "Please select a printer",
+    "请选择商品分类": "Please select a product category",
+    "恭喜你，修改成功": "Congratulations, the modification was successful",
+    "添加打印机": "Add printer",
+    "编辑打印机": "Edit printer"
 }
