@@ -204,6 +204,7 @@ class OrderProduct extends BaseModel
         try {
             $model = $this->where('order_product_id', '=', $order_product_id)->find();
             $order_id = $model['order_id'];
+            trace($order_id);
             if (!$model) {
                 $this->error = '记录不存在';
                 return false;
@@ -218,9 +219,12 @@ class OrderProduct extends BaseModel
                 $order = OrderModel::where('order_id', '=', $order_id)->find();
                 if ($order['table_id'] == 0) {
                     $order->force()->delete();
+                } else {
+                    (new OrderModel)->reloadPrice($order_id);
                 }
+            } else {
+                (new OrderModel)->reloadPrice($order_id);
             }
-            (new OrderModel)->reloadPrice($order_id);
             $this->commit();
             return true;
         } catch (\Exception $e) {
