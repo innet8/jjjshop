@@ -875,6 +875,10 @@ class Cart extends CartModel
     // 预计算 购物车 + 订单 价格
     public function preOrderCartPrice($shop_supplier_id, $mobile, $table_id, $order_id)
     {
+        if (empty($mobile)) {
+            $this->error = "用户不存在";
+            return false;
+        }
         // 用户信息
         $user = (new UserModel)->where('mobile', $mobile)->with(['grade', 'card'])->find();
         if (!$user) {
