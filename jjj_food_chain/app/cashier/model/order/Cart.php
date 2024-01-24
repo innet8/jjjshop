@@ -822,6 +822,7 @@ class Cart extends CartModel
             $order_consumption_tax_money = $order['consumption_tax_money'];
             $order_user_discount_money = $order['user_discount_money'];
             $order_pay_price = $order['pay_price'];
+            $order_original_price = $order['original_price'];
         } else {
             $order_total_num = 0;
             $order_total_price = 0;
@@ -831,6 +832,7 @@ class Cart extends CartModel
             $order_consumption_tax_money = 0;
             $order_user_discount_money = 0;
             $order_pay_price = 0;
+            $order_original_price = 0;
         }
         // 订单 + 购物车 统计
         $total_num = helper::bcadd($order_total_num, $cart_total_num, 0);                                     // 商品总数量
@@ -841,8 +843,14 @@ class Cart extends CartModel
         $total_user_discount_money = helper::bcadd($order_user_discount_money, $cart_user_discount_money); // 會員折扣
         $total_pay_price = helper::bcadd($order_pay_price, $cart_pay_price);                               // 应收
 
+        // 用户信息
+        $userInfo = [];
+        if ($order) {
+            $userInfo = UserModel::detail($order['user_id']);
+        }
         return [
             'orderInfo' => $order ?? [],
+            'userInfo' => $userInfo,
 //            'cartInfo' => [
 //                'list' => $cartList,
 //                'cart_product_price' => $cart_product_price,                                 // 购物车商品原价
@@ -859,6 +867,7 @@ class Cart extends CartModel
                 'total_consumption_tax_money' => $total_consumption_tax_money,      // 消费税
                 'total_user_discount_money' => $total_user_discount_money,          // 會員折扣
                 'total_pay_price' => $total_pay_price,                              // 应收
+                'total_original_price' => $order_original_price,                    // 订单原价应收
             ],
         ];
     }
@@ -872,6 +881,7 @@ class Cart extends CartModel
             $this->error = "用户不存在";
             return false;
         }
+        trace($user);
 
         // 桌台
         $table_service_money = 0;
@@ -965,22 +975,21 @@ class Cart extends CartModel
                     }
                     $alone_grade_type = 10;
                     // 商品单独设置了会员折扣
-                    if ($product['product']['is_alone_grade'] && isset($product['product']['alone_grade_equity'][$user['grade_id']])) {
-                        if ($product['product']['alone_grade_type'] == 10) {
-                            // 折扣比例
-                            $discountRatio = helper::bcdiv($product['product']['alone_grade_equity'][$user['grade_id']], 100);
+                    if ($user) {
+                        if ($product['product']['is_alone_grade'] && isset($product['product']['alone_grade_equity'][$user['grade_id']])) {
+                            if ($product['product']['alone_grade_type'] == 10) {
+                                // 折扣比例
+                                $discountRatio = helper::bcdiv($product['product']['alone_grade_equity'][$user['grade_id']], 100);
+                            } else {
+                                $alone_grade_type = 20;
+                                $discountRatio = helper::bcdiv($product['product']['alone_grade_equity'][$user['grade_id']], $product['product_price'], 2);
+                            }
                         } else {
-                            $alone_grade_type = 20;
-                            $discountRatio = helper::bcdiv($product['product']['alone_grade_equity'][$user['grade_id']], $product['product_price'], 2);
+                            // 折扣比例
+                            $discountRatio = helper::bcdiv($user['grade']['equity'], 100);
                         }
                     } else {
-                        // 折扣比例
-                        if ($user) {
-                            $discountRatio = helper::bcdiv($user['grade']['equity'], 100);
-                        } else {
-                            $discountRatio = 1;
-                        }
-
+                        $discountRatio = 1;
                     }
                     // 计算最终折扣
                     if ($discount && $discountRatio) {
