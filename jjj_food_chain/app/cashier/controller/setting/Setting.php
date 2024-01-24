@@ -25,27 +25,26 @@ class Setting extends Controller
      */
     public function index()
     {
-        $vars['values'] = SettingModel::getSupplierItem(SettingEnum::TABLET, $this->cashier['user']['shop_supplier_id']);
+        $shop_supplier_id = $this->cashier['user']['shop_supplier_id'];
+        $cashier = SettingModel::getSupplierItem(SettingEnum::TABLET, $shop_supplier_id);
+        $tablet = SettingModel::getSupplierItem(SettingEnum::CASHIER, $shop_supplier_id);
         if($this->request->isGet()){
-            unset($vars['values']['cashier_password']);
-            unset($vars['values']['advanced_password']);
-            unset($vars['values']['language_list']);
+            $vars['values']['is_show_sold_out'] = $tablet['is_show_sold_out'];
+            $vars['values']['default_language'] = $cashier['default_language'];
             return $this->renderSuccess('', compact('vars'));
         }
         $model = new SettingModel;
         $data = $this->request->param();
         //
-        if(!in_array($data['default_language'], $vars['values']['language'])){
+        if(!in_array($data['default_language'], $cashier['language'])){
             return $this->renderError('不在支持语言列表中');
         }
 
-        $arr = $vars['values'];
-        $arr['is_show_sold_out'] = $data['is_show_sold_out'] ?? 0;
-        $arr['default_language'] = $data['default_language'] ?? 'en';
-        if (SettingModel::updateSetting(SettingEnum::TABLET, $arr)) {
+        $tablet['is_show_sold_out'] = $data['is_show_sold_out'] ?? 0;
+        $cashier['default_language'] = $data['default_language'] ?? 'en';
+        if (SettingModel::updateSetting(SettingEnum::TABLET, $tablet, $shop_supplier_id) && SettingModel::updateSetting(SettingEnum::CASHIER, $cashier, $shop_supplier_id)) {
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model->getError() ?: '操作失败');
     }
-
 }

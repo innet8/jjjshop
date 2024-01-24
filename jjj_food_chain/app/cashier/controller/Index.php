@@ -89,6 +89,9 @@ class Index extends Controller
         unset($cashier['advanced_password']);
         unset($cashier['language_list']);
         $user['cashier'] = $cashier;
+        // 平板端设置
+        $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
+        $user['tablet']['is_show_sold_out'] = $tablet['is_show_sold_out'];
         return $this->renderSuccess('', compact('user'));
     }
 
