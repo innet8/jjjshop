@@ -86,7 +86,7 @@ class MasterPaySuccessService extends BaseService
      */
     private function updatePayStatus($payType)
     {
-        if (!in_array($payType,array_column(PayType::getEnableListAll(),'value'))) {
+        if (!in_array($payType,array_column(PayType::getEnableListAll($this->model['shop_supplier_id'], $this->model['app_id']),'value'))) {
             $this->error = "不允许的支付方式";
             return false;
         }
