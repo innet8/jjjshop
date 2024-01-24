@@ -1,6 +1,6 @@
 <template>
     <el-dialog class="product-add" @close="handleClose" v-model="dialogVisible" :close-on-click-modal="false"
-        :close-on-press-escape="false" :title="$t('新增小票打印机')">
+        :close-on-press-escape="false" :title="$t('添加打印机')">
         <!--form表单-->
         <el-form size="small" ref="form" :model="form" label-position="top">
             <!--添加门店-->
