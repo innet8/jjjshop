@@ -2,6 +2,7 @@
 
 namespace app\cashier\service\order\paysuccess\type;
 
+use app\common\enum\order\OrderStatusEnum;
 use app\common\model\store\PayType;
 use app\common\service\BaseService;
 use app\common\enum\order\OrderTypeEnum;
@@ -69,7 +70,7 @@ class MasterPaySuccessService extends BaseService
                         'delivery_time' => time(),
                         'receipt_status' => 20,
                         'receipt_time' => time(),
-                        'order_status' => 30
+                        'order_status' => OrderStatusEnum::COMPLETED
                     ]);
                     // 执行订单完成后的操作
                     $OrderCompleteService = new OrderCompleteService(OrderTypeEnum::MASTER);
