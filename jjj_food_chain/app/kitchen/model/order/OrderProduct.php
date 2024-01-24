@@ -15,24 +15,30 @@ class OrderProduct extends OrderProductModel
     public function listByOrder($params)
     {
         $shop_supplier_id = $params['shop_supplier_id'];
-        $model = $this;
+
+        $query = $this->alias('op')
+            ->join('order o', 'op.order_id = o.order_id', 'left')
+            ->where('op.is_send_kitchen', '=', 1)
+            ->order(['op.send_kitchen_time' => 'asc']); // 按照送厨时间排序
+
         if ($shop_supplier_id > 0) {
-            $model = $model->where('order.shop_supplier_id', '=', $shop_supplier_id);
+            $query = $query->where('o.shop_supplier_id', '=', $shop_supplier_id);
         }
-        $model = $model->alias('order_product')
-            ->join('order order', 'order_product.order_id = order.order_id', 'left');
 
-        $model = $model->where('order_product.is_send_kitchen', '=', 1);
-        $model = $model->order(['order_product.send_kitchen_time' => 'asc']);
-        $list = $model->paginate($params);
+        $list = $query->field('o.table_no, o.callNo, op.product_name, op.order_id, op.is_send_kitchen, op.send_kitchen_time')
+            ->group('o.order_id')
+            ->paginate($params);
 
-        $groupedList = [];
         foreach ($list as $item) {
-            $groupKey = $item['table_no'] ? $item['table_no'] : $item['callNo'];
-            $groupedList[$groupKey][] = $item;
+            $item['serial_no'] = $item['callNo'] ? $item['callNo'] : $item['table_no']; // 流水号
+            $orderProducts = $this->where('order_id', '=', $item['order_id'])
+                ->field(['order_product_id', 'order_id', 'product_id', 'product_name', 'is_send_kitchen', 'send_kitchen_time', 'finish_num', 'total_num', 'product_attr', 'remark'])
+                ->order('send_kitchen_time', 'asc')
+                ->select();
+            $item['order_product'] = $orderProducts;
         }
 
-        return $groupedList;
+        return $list;
     }
 
     /**
@@ -42,25 +48,35 @@ class OrderProduct extends OrderProductModel
     {
         $shop_supplier_id = $params['shop_supplier_id'];
         $category_id = $params['category_id'] ?? 0;
-        $model = $this;
+
+        $query = $this->alias('op')
+            ->join('product p', 'op.product_id = p.product_id', 'left')
+            ->join('category c', 'p.category_id = c.category_id', 'left')
+            ->where('op.is_send_kitchen', '=', 1)
+            ->where('c.parent_id', '=', 0) // 只查询一级分类
+            ->order(['c.sort' => 'asc', 'c.create_time' => 'asc']); // 按照分类排序号和创建时间排序
+
         if ($shop_supplier_id > 0) {
-            $model = $model->where('product.shop_supplier_id', '=', $shop_supplier_id);
+            $query = $query->where('p.shop_supplier_id', '=', $shop_supplier_id);
         }
-        $model = $model->alias('order_product')
-            ->join('product product', 'order_product.product_id = product.product_id', 'left');
 
         if ($category_id > 0) {
-            $model = $model->where('product.category_id', '=', $category_id);
+            $query = $query->where('p.category_id', '=', $category_id);
         }
-        $model = $model->where('order_product.is_send_kitchen', '=', 1);
-        $model = $model->order(['product.category_id' => 'asc', 'order_product.send_kitchen_time' => 'asc']);
-        $list = $model->paginate($params);
 
-        $groupedList = [];
+        $list = $query->field('p.product_id, p.product_name, p.category_id, c.name as category_name, c.parent_id, c.sort as category_sort, op.product_id, op.is_send_kitchen, op.send_kitchen_time')
+            ->group('p.category_id')
+            ->paginate($params);
+
         foreach ($list as $item) {
-            $groupedList[$item['product_name_text']][] = $item;
+            $item['category_name'] = extractLanguage($item['category_name']); // 分类名称翻译
+            $orderProducts = $this->where('product_id', '=', $item['product_id'])
+                ->field(['order_product_id', 'order_id', 'product_id', 'product_name', 'is_send_kitchen', 'send_kitchen_time', 'finish_num', 'total_num', 'product_attr', 'remark'])
+                ->order('send_kitchen_time', 'asc')
+                ->select();
+            $item['order_product'] = $orderProducts;
         }
 
-        return $groupedList;
+        return $list;
     }
 }
