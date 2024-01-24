@@ -52,7 +52,10 @@ class Attribute extends BaseModel
         return $res;
     }
 
-    //更新属性库
+    /**
+     * 更新属性库
+     *
+     */
     public function updateAttr($data, $shop_supplier_id)
     {
         if ($data) {
@@ -62,9 +65,13 @@ class Attribute extends BaseModel
                     ->where('shop_supplier_id', '=', $shop_supplier_id)
                     ->count();
                 if ($isExit == 0) {
+                    $attribute_value = $item['attribute_value'];
+                    if (is_array($attribute_value)) {
+                        $attribute_value = array_map('json_decode', $attribute_value);
+                    }
                     $addData[] = [
                         'attribute_name' => $item['attribute_name'],
-                        'attribute_value' => $item['attribute_value'],
+                        'attribute_value' => $attribute_value,
                         'shop_supplier_id' => $shop_supplier_id,
                         'app_id' => self::$app_id
                     ];
