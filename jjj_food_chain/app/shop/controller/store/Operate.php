@@ -82,4 +82,23 @@ class Operate extends Controller
         }
         return $this->renderError($model->getError() ?: '操作失败');
     }
+
+    /**
+     * @Apidoc\Title("删除")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/store.operate/delete")
+     * @Apidoc\Param("order_id", type="int", require=true, default="", desc="订单id")
+     * @Apidoc\Returned()
+     */
+    public function delete($order_id)
+    {
+        $model = OrderModel::detail($order_id);
+        if (!$model) {
+            return $this->renderError('订单不存在');
+        }
+        if ($model->orderDelete()) {
+            return $this->renderSuccess('删除成功');
+        }
+        return $this->renderError($model->getError() ?: '删除失败');
+    }
 }

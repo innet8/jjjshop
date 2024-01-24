@@ -996,6 +996,34 @@ class Order extends BaseModel
     }
 
     /**
+     * 删除订单
+     */
+    public function orderDelete()
+    {
+        if ($this->pay_status['value'] == 20) {
+            $this->error = "订单已付款，不允许删除";
+            return false;
+        }
+        if ($this->order_status['value'] != 20) {
+            $this->error = "订单状态错误，不允许取消";
+            return false;
+        }
+        $this->startTrans();
+        try {
+            $this->is_delete = 1;
+            $this->save();
+            $this->delete();
+            $this->product()->delete();  // 删除订单商品
+            $this->commit();
+            return true;
+        } catch (\Exception $e) {
+            $this->rollback();
+            $this->error = $e->getMessage();
+            return false;
+        }
+    }
+
+    /**
      * 重新计算订单价格信息（服务费+消费税+会员折扣）（折扣抹零计算重置)
      * @param $order_id     // 订单ID
      * @param $re_order_no  // 是否重新生成订单号（用于加菜打印后）
