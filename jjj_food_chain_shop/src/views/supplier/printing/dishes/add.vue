@@ -4,8 +4,8 @@
         <!--form表单-->
         <el-form size="small" ref="form" :model="form" label-position="top">
             <!--添加门店-->
-            <el-form-item :label="$t('名称')" prop="name" :rules="[{ required: true, message: ' ' }]"><el-input
-                    v-model="form.name" :placeholder="$t('请输入名称')" ></el-input></el-form-item>
+            <el-form-item :label="$t('名称')" prop="name" :rules="[{ required: true, message: $t('请输入名称') }]"><el-input
+                    v-model="form.name" :placeholder="$t('请输入名称')" :maxlength="50"></el-input></el-form-item>
             <el-form-item :label="$t('是否开启')">
                 <div>
                     <el-radio v-model="form.is_open" :label="1">{{ $t('开启') }}</el-radio>
@@ -41,27 +41,32 @@
                     <el-radio v-model="form.print_method" :label="40">{{ $t('按一菜一单打印') }}</el-radio>
                 </div>
             </el-form-item>
-            <el-form-item v-if="form.type == 10" :label="$t('打印机') " prop="printer_id" :rules="[{ required: true, message: ' ' }]">
+            <el-form-item v-if="form.type == 10" :label="$t('打印机') " prop="printer_id" :rules="[{ required: true, message: $t('请选择打印机') }]">
                 <el-select v-model="form.printer_id" :placeholder="$t('请选择')">
                     <el-option v-for="(item, index) in type" :key="index" :label="item.printer_name"
                         :value="item.printer_id"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item v-if="form.type == 20" :label="$t('打印机') " prop="printer_id" :rules="[{ required: true, message: ' ' }]">
+            <el-form-item v-if="form.type == 20" :label="$t('打印机') " prop="printer_id" :rules="[{ required: true, message: $t('请选择打印机') }]">
                 <el-select v-model="form.printer_id" :placeholder="$t('请选择')">
                     <el-option v-for="(item, index) in typeTag" :key="index" :label="item.printer_name"
                         :value="item.printer_id"></el-option>
                 </el-select>
+
             </el-form-item>
             <el-form-item v-if="form.product_type == 0 && form.print_method == 20" :label="$t('商品分类')" prop="category_id"
-                :rules="[{ required: true, message: ' ' }]">
-                <el-select v-model="form.category_id" multiple :placeholder="$t('请选择')">
-                    <el-option v-for="item in takeList" :key="item.category_id" :label="item.name_text"
-                        :value="item.category_id + ''"></el-option>
-                </el-select>
+                :rules="[{
+                    required: true,
+                    validator: () => {
+                        return form.category_id.length > 0 ? true : false;
+                    },
+                    message: $t('请选择商品分类')
+                }]"
+            >
+                <el-cascader :options="options" v-model="categoryIds" clearable :placeholder="$t('请选择')" :multiple="true" style="width: 100%;" :props="{ multiple: true }"></el-cascader>
             </el-form-item>
             <el-form-item v-if="form.product_type == 1 && form.print_method == 20" :label="$t('商品分类')" prop="category_id"
-                :rules="[{ required: true, message: ' ' }]">
+                :rules="[{ required: true, message: $t('请选择商品分类') }]">
                 <el-select v-model="form.category_id" multiple :placeholder="$t('请选择')">
                     <el-option v-for="item in storeList" :key="item.category_id" :label="item.name_text"
                         :value="item.category_id + ''"></el-option>
@@ -114,6 +119,9 @@ export default {
             storeList: [],
             takeList: [],
             labelList: [],
+            // 
+            options: [],
+            categoryIds: []
         };
     },
     props: ['open_add'],
@@ -121,7 +129,22 @@ export default {
         this.dialogVisible = this.open_add
         this.getData();
     },
-
+    watch: {
+        'categoryIds': {
+            handler(val) {
+                this.form.category_id = [];
+                this.categoryIds.map(h=>{
+                    if (h[1]) {
+                        this.form.category_id.push(h[1])
+                    }
+                })
+                // 
+                this.$refs?.form?.validate(_=>{})
+            },
+            deep: true,
+            immediate: true,
+        }
+    },
     methods: {
         getData() {
             SupplierApi.getPrinting({}, true)
@@ -131,6 +154,27 @@ export default {
                     this.type = data.data.printerList;
                     this.typeTag = data.data.printerTagList;
                     this.labelList = data.data.labelList;
+                    // 
+                    this.options = [];
+                    this.storeList?.map((item) => {
+                        if (item.parent_id == 0) {
+                            let children = [];
+                            this.storeList?.map((val) => {
+                                if (item.category_id == val.parent_id) {
+                                    children.push({
+                                        value: val.category_id,
+                                        label: val.name_text,
+                                        children: [],
+                                    })
+                                }
+                            })
+                            this.options.push({
+                                value: item.category_id,
+                                label: item.name_text,
+                                children: children,
+                            })
+                        }
+                    })
                 })
                 .catch(error => { });
         },
@@ -138,21 +182,23 @@ export default {
         onSubmit() {
             let self = this;
             let form = self.form;
+            // 
+            if (!form.print_method == 20) {
+                form.category_id = [];
+            } 
             self.$refs.form.validate(valid => {
                 if (valid) {
                     self.loading = true;
-                    SupplierApi.addPrinting(form, true)
-                        .then(data => {
-                            self.loading = false;
-                            ElMessage({
-                                message: '恭喜你，添加成功',
-                                type: 'success'
-                            });
-                            this.$emit('close', 1)
-                        })
-                        .catch(error => {
-                            self.loading = false;
+                    SupplierApi.addPrinting(form, true).then(data => {
+                        self.loading = false;
+                        ElMessage({
+                            message: '恭喜你，添加成功',
+                            type: 'success'
                         });
+                        this.$emit('close', 1)
+                    }).catch(error => {
+                        self.loading = false;
+                    });
                 }
             });
         },

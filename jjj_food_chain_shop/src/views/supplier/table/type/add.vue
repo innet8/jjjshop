@@ -82,7 +82,7 @@ export default {
             self.$refs.form.validate((valid) => {
                 if (valid) {
                     self.loading = true;
-                    StoreApi.addType(params).then(data => {
+                    StoreApi.addType(params,true).then(data => {
                         self.loading = false;
                         ElMessage({
                             message: $t('添加成功'),
