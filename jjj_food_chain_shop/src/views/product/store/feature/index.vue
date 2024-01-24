@@ -135,6 +135,19 @@ export default {
                 });
             });
         },
+
+        statusSet(e, id) {
+            let self = this;
+            PorductApi.storeCatSet({
+                category_id: id,
+                status: e
+            }).then(data => {
+                ElMessage({
+                    message: data.msg,
+                    type: 'success'
+                });
+            });
+        },
     },
 }
 </script>

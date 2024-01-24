@@ -8,6 +8,21 @@
         <!--搜索表单-->
         <div class="common-seach-wrap">
             <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
+                <el-form-item label="">
+                    <el-radio-group v-model="searchForm.time_type" class="radio-search">
+                        <el-radio-button label="2">{{ $t('昨天') }}</el-radio-button>
+                        <el-radio-button label="1">{{ $t('今天') }}</el-radio-button>
+                        <el-radio-button label="3">{{ $t('一周') }}</el-radio-button>
+                        <el-radio-button label="0">{{ $t('全部') }}</el-radio-button>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item :label="$t('订单类型')">
+                    <el-select size="small" v-model="searchForm.order_source" :placeholder="$t('请选择')">
+                        <el-option :label="$t('全部')" :value="0"></el-option>
+                        <el-option :label="$t('收银订单')" :value="20"></el-option>
+                        <el-option :label="$t('桌台订单')" :value="10"></el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item :label="$t('订单号')">
                     <el-input size="small" v-model="searchForm.order_no" :placeholder="$t('请输入订单号')"></el-input>
                 </el-form-item>
@@ -30,14 +45,15 @@
                     <el-button size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-button v-auth="'/store/operate/export'" size="small" type="success" @click="onExport">{{ $t('导出') }}</el-button>
+                    <el-button v-auth="'/store/operate/export'" size="small" type="success" @click="onExport">{{ $t('导出')
+                    }}</el-button>
                 </el-form-item>
             </el-form>
         </div>
         <!--内容-->
         <div class="product-content">
             <div class="table-wrap">
-                <el-tabs v-model="activeName" @tab-change="handleClick">
+                <el-tabs size="small" v-model="activeName" @tab-change="handleClick">
                     <el-tab-pane :label="$t('全部订单')" name="all">
                         <template #label>
                             <span>{{ $t('全部订单') }} <el-tag size="">{{ order_count.all }}</el-tag></span>
@@ -64,48 +80,23 @@
                         </template>
                     </el-tab-pane>
                 </el-tabs>
-                <el-table size="small" :data="tableData.data"  border style="width: 100%"
-                    v-loading="loading">
-                    <!-- <el-table-column prop="order_no" :label="$t('订单信息')" width="400">
-                        <template #default="scope">
-                            <div class="order-code" v-if="scope.row.is_top_row">
-                                <span class="state-text" :class="{ 'state-text-red': scope.row.order_source != 10 }">{{
-                                    scope.row.order_source_text }}</span>
-                                <span class="c_main">{{ $t('订单号：') }}{{ scope.row.order_no }}</span>
-                                <span class="c_main">{{ $t('桌号/序号：') }}{{ scope.row.table_no }}</span>
-                                <span class="">{{ $t('下单时间：') }}{{ scope.row.create_time }}</span>
-                            
-                                <span class="" v-if="scope.row.order_status == 21">
-                                    <el-tag effect="dark" size="">{{ $t('取消申请中') }}</el-tag>
-                                </span>
-                            </div>
-                            <template v-else>
-                                <div class="product-info" v-for="(item, index) in scope.row.product" :key="index">
-                                    <div class="pic"><img v-img-url="item.image.file_path" alt="" /></div>
-                                    <div class="info">
-                                        <div class="name gray3 product-name">
-                                            <span>{{ item.product_name_text }}</span>
-                                        </div>
-                                        <div class="gray9" v-if="item.product_attr">{{ item.product_attr }}</div>
-                                        <div class="orange" v-if="item.refund">{{ item.refund.type.text }}-{{
-                                            item.refund.status.text }}
-                                        </div>
-                                    </div>
-                                    <div class="d-c-c d-c">
-                                        <div class="orange">￥ {{ item.product_price }}</div>
-                                        <div class="gray3">x{{ item.total_num }}</div>
-                                    </div>
-                                </div>
-                            </template>
-                        </template>
-                    </el-table-column> -->
+                <el-table size="small" :data="tableData.data" border style="width: 100%" v-loading="loading">
                     <el-table-column prop="order_source_text" :label="$t('订单类型')"></el-table-column>
-                    <el-table-column prop="table_no" :label="$t('桌号/序号')"></el-table-column>
-                    <el-table-column prop="order_no" :label="$t('订单号')"></el-table-column>
-                    <el-table-column prop="state_text" :label="$t('状态')">
+                    <el-table-column prop="table_no" :label="$t('桌号/序号')">
                         <template #default="scope">
-                            <div v-if="!scope.row.is_top_row">
-                                {{ scope.row.state_text }}
+                            <div>
+                                {{ scope.row.table_no || "-" }}
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="order_no" :label="$t('订单号')"></el-table-column>
+                    <el-table-column prop="order_status" :label="$t('状态')">
+                        <template #default="scope">
+                            <div>
+                                {{
+                                    scope.row.order_status.value == 10 ? $t('待付款') :
+                                    scope.row.order_status.value == 20 ? $t('已取消') : $t('已完成')
+                                }}
                             </div>
                         </template>
                     </el-table-column>
@@ -118,12 +109,12 @@
                     </el-table-column>
                     <el-table-column prop="pay_price" :label="$t('实付款')">
                         <template #default="scope">
-                            <div v-if="!scope.row.is_top_row">
+                            <div>
                                 <div class="orange">{{ currency.unit }}{{ scope.row.pay_price }}</div>
-                                <p class="gray9" v-if="scope.row.service_money > 0">({{ $t('含服务费：') }}{{
-                                    scope.row.service_money }})</p>
-                                <p class="gray9" v-if="scope.row.bag_price > 0">({{ $t('含包装费：') }}{{ scope.row.bag_price }})
-                                </p>
+                                <p class="gray9" v-if="scope.row.setting_service_money > 0">({{ $t('服务费') }}：{{
+                                    scope.row.setting_service_money }})</p>
+                                <p class="gray9" v-if="scope.row.consumption_tax_money > 0">({{ $t('消费税') }}：{{
+                                    scope.row.consumption_tax_money }})</p>
                                 <p class="gray9" v-if="scope.row.refund_money > 0">({{ $t('退款金额：') }}{{
                                     scope.row.refund_money }})
                                 </p>
@@ -132,7 +123,7 @@
                     </el-table-column>
                     <el-table-column prop="" :label="$t('买家')">
                         <template #default="scope">
-                            <div v-if="!scope.row.is_top_row && scope.row.user">
+                            <div v-if="scope.row.user">
                                 <div>{{ scope.row.user.nickName }}</div>
                                 <div class="gray9">ID：({{ scope.row.user.user_id }})</div>
                             </div>
@@ -143,7 +134,7 @@
 
                     <el-table-column prop="pay_type.text" :label="$t('支付方式')">
                         <template #default="scope">
-                            <div v-if="!scope.row.is_top_row">
+                            <div>
                                 <span class="gray9">{{ scope.row.pay_type.text }}</span>
                             </div>
                         </template>
@@ -157,21 +148,18 @@
                     </el-table-column> -->
                     <el-table-column fixed="right" :label="$t('操作')" width="160">
                         <template #default="scope">
-                            <div v-if="!scope.row.is_top_row">
+                            <div>
                                 <el-button @click="addClick(scope.row)" type="primary" link size="small"
                                     v-auth="'/store/order/detail'">{{ $t('详情') }}
                                 </el-button>
-                                <el-button
-                                    v-if="scope.row.order_status.value == 10 && scope.row.pay_status.value == 20 && scope.row.refund_money == 0"
-                                    @click="refundClick(scope.row)" type="primary" link size="small"
-                                    v-auth="'/store/operate/refund'">{{ $t('退款') }}</el-button>
-                                <el-button v-if="scope.row.order_status.value == 10 && scope.row.pay_status.value == 20"
-                                    @click="cancelClick(scope.row)" type="primary" link size="small"
-                                    v-auth="'/store/operate/order_cancel'">{{ $t('取消') }}
+                                <el-button v-if="scope.row.order_status.value == 30" @click="refundClick(scope.row)"
+                                    type="danger" link size="small" v-auth="'/store/operate/refund'">{{ $t('退款')
+                                    }}</el-button>
+                                <el-button v-if="scope.row.order_status.value == 10" @click="cancelClick(scope.row)"
+                                    type="danger" link size="small" v-auth="'/store/operate/order_cancel'">{{ $t('取消') }}
                                 </el-button>
-                                <el-button v-if="scope.row.order_status.value == 10 && scope.row.pay_status.value == 20"
-                                    @click="cancelClick(scope.row)" type="primary" link size="small"
-                                    v-auth="'/store/order/delete'">{{ $t('删除') }}
+                                <el-button v-if="scope.row.order_status.value == 20" @click="delClick(scope.row)"
+                                    type="danger" link size="small" v-auth="'/store/order/delete'">{{ $t('删除') }}
                                 </el-button>
                                 <!-- <el-button v-if="scope.row.order_status.value == 10 && scope.row.pay_status.value == 20"
                                     @click="verifyClick(scope.row)" type="primary" link size="small"
@@ -234,7 +222,9 @@ export default {
             searchForm: {
                 order_no: '',
                 style_id: '',
-                create_time: ''
+                create_time: '',
+                time_type: '',
+                order_source: 0,
             },
             /*配送方式*/
             exStyle: [],
@@ -414,6 +404,24 @@ export default {
             this.order_id = item.order_id;
             this.open_refund = true;
         },
+
+        delClick(item) {
+            let self = this;
+            ElMessageBox.confirm($t('删除后不可恢复，确认删除吗?'), $t('提示'), {
+                type: 'warning'
+            })
+                .then(() => {
+                    OrderApi.storedelete({
+                        order_id: item.order_id
+                    }).then(data => {
+                        ElMessage({
+                            message: $t('删除成功'),
+                            type: 'success'
+                        });
+                        self.getData();
+                    });
+                });
+        },
         /*关闭弹窗*/
         closeDialogFunc(e, f) {
             if (f == 'edit') {
@@ -467,5 +475,19 @@ export default {
 
 .table-wrap .el-table__body tbody .el-table__row:nth-child(odd) {
     background: #f5f7fa;
+}
+
+.radio-search {
+    :deep(.el-radio-button) {
+        margin-right: -1px;
+        margin-bottom: 0;
+
+        .el-radio-button__inner {
+            padding: 8px 11px !important;
+        }
+
+    }
+
+
 }
 </style>

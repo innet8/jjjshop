@@ -71,12 +71,19 @@
                     <el-table-column prop="name" :label="$t('折扣')">
                         <template #default="scope">
                             <div class="d-s-c">
-                                <el-input-number v-model="scope.row.product_equity"
-                                    :min="form.model.alone_grade_type == 10 ? 1 : 0" 
-                                    :max="form.model.alone_grade_type == 10 ? 100 : Infinity" 
-                                    :controls="false"
-                                    :placeholder="$t('请输入折扣')"></el-input-number>
-                                <span class="ml10">{{ form.model.alone_grade_type == 10 ? grade_unit : currency.unit }}</span>
+                                <el-form-item class="product-equity" :rules="[{
+                                    validator: () => {
+                                        return scope.row.product_equity ? true : false;
+                                    },
+                                    message: $t('请输入折扣')
+                                }]" prop="model.image">
+                                    <el-input-number v-model="scope.row.product_equity"
+                                        :min="form.model.alone_grade_type == 10 ? 1 : 0"
+                                        :max="form.model.alone_grade_type == 10 ? 100 : minPrice" :controls="false"
+                                        :placeholder="$t('请输入折扣')"></el-input-number>
+                                    <span class="ml10">{{ form.model.alone_grade_type == 10 ? grade_unit : currency.unit
+                                    }}</span>
+                                </el-form-item>
                             </div>
                         </template>
                     </el-table-column>
@@ -99,12 +106,12 @@
                     <el-radio :label="1">单独规则</el-radio>
                 </el-radio-group>
                 <div class="gray9">平台规则：层级({{ form.basicSetting.level }}级)
-                    <span v-if="form.basicSetting.level >= 1"
-                        style="padding-left: 10px;">1级佣金({{ form.agentSetting.first_money }}%)</span>
-                    <span v-if="form.basicSetting.level >= 2"
-                        style="padding-left: 10px;">2级佣金({{ form.agentSetting.second_money }}%)</span>
-                    <span v-if="form.basicSetting.level >= 3"
-                        style="padding-left: 10px;">3级佣金({{ form.agentSetting.third_money }}%)</span>
+                    <span v-if="form.basicSetting.level >= 1" style="padding-left: 10px;">1级佣金({{
+                        form.agentSetting.first_money }}%)</span>
+                    <span v-if="form.basicSetting.level >= 2" style="padding-left: 10px;">2级佣金({{
+                        form.agentSetting.second_money }}%)</span>
+                    <span v-if="form.basicSetting.level >= 3" style="padding-left: 10px;">3级佣金({{
+                        form.agentSetting.third_money }}%)</span>
                 </div>
             </el-form-item>
             <template v-if="form.model.is_ind_agent === 1 && form.basicSetting.is_open == 1">
@@ -152,13 +159,14 @@
 
 <script>
 import { useUserStore } from '@/store';
-const {  currency } = useUserStore();
+const { currency } = useUserStore();
 export default {
     data() {
         return {
             unit: '%',
             grade_unit: '%',
-            currency:currency,
+            currency: currency,
+            minPrice: 0,
         };
     },
     created() {
@@ -170,6 +178,19 @@ export default {
         }
     },
     inject: ['form'],
+    watch: {
+        'form': {
+            handler(val) {
+                let price = []
+                val.model.sku.map((item) => {
+                    price.push(item.product_price)
+                })
+                this.minPrice = Math.min(...price);
+            },
+            immediate: true,
+            deep: true,
+        },
+    },
     methods: {
         /*换算单位*/
         changeMoneyType: function (val) {
@@ -181,8 +202,8 @@ export default {
         },
         /*换算单位*/
         changeGradeType: function (val) {
-          
-            this.form.gradeList.map((item,index)=>{
+
+            this.form.gradeList.map((item, index) => {
                 this.form.gradeList[index].product_equity = null
             })
             if (val == '10') {
@@ -198,5 +219,17 @@ export default {
 :deep(.el-input__wrapper) {
     padding-left: 7px !important;
     padding-right: 7px !important;
-}</style>
+}
+
+.product-equity {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: 16px;
+
+    :deep(.el-form-item__content) {
+        flex-wrap: nowrap;
+    }
+}
+</style>
 

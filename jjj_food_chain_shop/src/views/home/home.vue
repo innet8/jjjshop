@@ -93,7 +93,7 @@
                     <div class="matters-wrap" style="width: 100%;">
                         <Transaction></Transaction>
                     </div>
-         
+
             </div>
             <div class="matters-wrap flex-1">
                 <Ranking v-if="!loading"></Ranking>
@@ -118,7 +118,7 @@ export default {
     },
     data() {
         return {
-          
+
             /*是否加载完成*/
             loading: true,
             /*统计信息*/
@@ -181,7 +181,7 @@ export default {
         },
 
         lockStock(){
-            this.$router.push({ path:'product/store/index' })
+            this.$router.push({ path:'product/store/index',query:{ inventory:10 } })
         },
     }
 };

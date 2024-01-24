@@ -10,13 +10,14 @@
         <template v-for="(item, index) in languageList" :key="index">
             <el-form-item :label="$t('商品名称：') + `(${item.label})`" :prop="`model.product_name.${item.key}`"
                 :rules="[{ required: true, message: $t('请填写商品名称') }]">
-                <el-input v-model="form.model.product_name[item.key]" :placeholder="$t('请输入商品名称')" class="max-w460"></el-input>
+                <el-input v-model="form.model.product_name[item.key]" :placeholder="$t('请输入商品名称')"
+                    class="max-w460"></el-input>
             </el-form-item>
         </template>
 
         <el-form-item :label="$t('所属分类：')" :rules="[{ required: true, message: $t('请选择所属分类') }]" prop="model.category_id">
             <el-cascader :options="options" v-model="form.model.category_id" clearable
-                :props="{ checkStrictly: true }" :placeholder="$t('请选择分类')"></el-cascader>
+                :placeholder="$t('请选择分类')"></el-cascader>
         </el-form-item>
 
         <el-form-item :label="$t('特色分类：')">
@@ -30,11 +31,17 @@
             </el-select>
         </el-form-item>
 
-        <el-form-item :label="$t('商品图片：')" :rules="[{ required: true, message: $t('请上传商品图片') }]" prop="model.image">
+        <el-form-item :label="$t('商品图片：')" :rules="[{
+            validator: () => {
+                return form.model.image.length > 0 ? true : false;
+            },
+            message: $t('请上传商品图片')
+        }]" prop="model.image">
             <div class="draggable-list">
                 <draggable class="wrapper" v-model="form.model.image">
                     <transition-group>
                         <div class="item" v-for="(item, index) in form.model.image" :key="item.file_path">
+
                             <img v-img-url="item.file_path" />
                             <a href="javascript:void(0);" class="delete-btn" @click.stop="deleteImg(index)"><el-icon>
                                     <Close />
@@ -51,7 +58,8 @@
             <div class="gray9">{{ $t('支持JPG、JPEG、PNG格式，小于15MB，尺寸：48*48px') }}</div>
         </el-form-item>
         <el-form-item :label="$t('商品卖点：')">
-            <el-input type="textarea" :placeholder="$t('请输入商品卖点')"  v-model="form.model.selling_point" show-word-limit :maxlength="50" class="max-w460"></el-input>
+            <el-input type="textarea" :placeholder="$t('请输入商品卖点')" v-model="form.model.selling_point" show-word-limit
+                :maxlength="50" class="max-w460"></el-input>
         </el-form-item>
 
         <!--商品图片组件-->
@@ -59,7 +67,7 @@
             @returnImgs="returnProductImgsFunc">{{ $t('上传图片') }}</Upload>
     </div>
 </template>
-  
+
 <script>
 import Upload from '@/components/file/Upload.vue';
 // import draggable from 'vuedraggable';
@@ -119,6 +127,8 @@ export default {
                 this.form.model['image'] = imgs;
             }
             this.isProductUpload = false;
+            this.$emit('validateField','model.image')
+
         },
 
         /*删除商品图片*/
@@ -129,6 +139,5 @@ export default {
 };
 </script>
 
-  
 
-  
+

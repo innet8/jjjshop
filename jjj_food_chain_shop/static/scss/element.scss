@@ -1,4 +1,4 @@
-:root{  
+:root{
     --el-color-primary:#FFBE00;
     --el-color-primary-light-3:#100A05 !important;
     --el-component-size-small: 32px !important;
@@ -79,6 +79,10 @@
     line-height: 32px !important;
     font-size: 14px !important;
     text-transform: capitalize;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
 }
 .el-table thead{
     color: var(--el-color-tips) !important;

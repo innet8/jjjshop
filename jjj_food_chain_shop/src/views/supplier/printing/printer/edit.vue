@@ -84,14 +84,13 @@
                     <el-input v-model="form.XPRINTER_LAN.PORT"></el-input>
                 </el-form-item>
             </div>
-
-            <el-form-item :label="$t('打印联数')" prop="print_times" :rules="[{ required: true, message: ' ' }]">
-                <el-input v-model="form.print_times" type="number" :placeholder="$t('请输入打印联数')"></el-input>
+            <el-form-item :label="$t('打印联数')" prop="print_times" :rules="[{ required: true, message: $t('请输入打印联数') }]">
+                <el-input-number :controls="false" :min="0" :max="10" :placeholder="$t('请输入打印联数')" v-model.number="form.print_times" autocomplete="off"></el-input-number>
                 <div class="tips">{{ $t('同一订单，打印的次数') }}</div>
             </el-form-item>
 
-            <el-form-item :label="$t('排序')">
-                <el-input v-model="form.sort" type="number" :placeholder="$t('接近0，排序等級越高')"></el-input>
+            <el-form-item :label="$t('排序')" prop="sort" :rules="[{ required: true, message: $t('请输入排序') }]">
+                <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('接近0，排序等級越高')" v-model.number="form.sort" autocomplete="off"></el-input-number>
                 <div class="tips">{{ $t('数字越小越靠前') }}</div>
             </el-form-item>
 

@@ -38,14 +38,15 @@
                         </el-form-item>
                         <el-form-item class="product-attr-item">
                             <template #label>
-                                {{ $t('属性：') }}<span class="product-tips">{{ items.label }}</span>
+                                {{ $t('属性：') }}<span class="product-tips">({{ items.label }})</span>
                             </template>
-                            <el-form-item v-for="(aitem, aindex) in item.much" :key="aindex" :prop="`item.attribute_value[aindex][items.key]`" :rules="[{
-                            validator: () => {
-                                return item.attribute_value[aindex][items.key] ? true : false;
-                            },
-                            message: $t('请输入属性')
-                        }]">
+                            <el-form-item v-for="(aitem, aindex) in item.much" :key="aindex"
+                                :prop="`item.attribute_value[aindex][items.key]`" :rules="[{
+                                    validator: () => {
+                                        return item.attribute_value[aindex][items.key] ? true : false;
+                                    },
+                                    message: $t('请输入属性')
+                                }]">
                                 <el-input style="width: 100px; margin-right: 16px;" :maxlength="50"
                                     v-model="item.attribute_value[aindex][items.key]" :placeholder="$t('请输入')">
                                 </el-input>
@@ -179,7 +180,6 @@ export default {
         },
 
         selectChange(e, index) {
-            console.log(e);
             this.form.model.product_attr[index].attribute_name.zh = this.restaurants_zh[e.index].value
             this.form.model.product_attr[index].attribute_name.th = this.restaurants_th[e.index].value
             this.form.model.product_attr[index].attribute_name.en = this.restaurants_en[e.index].value
@@ -228,8 +228,8 @@ export default {
     display: flex;
 }
 
-:deep(.product-attr-item){
-    .el-form-item__content{
+:deep(.product-attr-item) {
+    .el-form-item__content {
         align-items: flex-start !important;
     }
 }

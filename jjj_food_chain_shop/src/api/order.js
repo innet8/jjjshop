@@ -18,6 +18,10 @@ let OrderApi = {
     storeConfirm(data, errorback) {
         return request._post('/shop/store.Operate/orderCancel', data, errorback);
     },
+    /*删除*/
+    storedelete(data, errorback) {
+        return request._post('/shop/store.operate/delete', data, errorback);
+    },
     takeConfirm(data, errorback) {
         return request._post('/shop/takeout.Operate/orderCancel', data, errorback);
     },

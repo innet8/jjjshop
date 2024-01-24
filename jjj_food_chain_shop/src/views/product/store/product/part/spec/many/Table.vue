@@ -31,12 +31,12 @@
                         <template #default="scope">
                             <el-form-item label="" style="margin-bottom: 0;" :prop="`scope.row.product_price`" :rules="[{
                                 validator: () => {
-                                    return scope.row.product_price ? true : false;
+                                    return typeof scope.row.product_price == 'number' && scope.row.product_price >= 0 ? true : false;
                                 },
                                 message: $t('请输入价格')
                             }]">
-                                <el-input type="number" size="small" 
-                                    v-model="scope.row.product_price"></el-input>
+                                <el-input-number type="number" size="small" :min="0" :controls="false"
+                                    v-model="scope.row.product_price"></el-input-number>
                             </el-form-item>
                         </template>
                     </el-table-column>
@@ -48,7 +48,7 @@
                                 },
                                 message: $t('请输入规格名称')
                             }]">
-                                <el-input type="number" size="small" 
+                                <el-input type="number" size="small"
                                     v-model="scope.row.bag_price"></el-input>
                             </el-form-item>
                         </template>
@@ -57,12 +57,12 @@
                         <template #default="scope">
                             <el-form-item label="" style="margin-bottom: 0;" :prop="`scope.row.stock_num`" :rules="[{
                                 validator: () => {
-                                    return scope.row.stock_num ? true : false;
+                                    return typeof scope.row.stock_num == 'number' && scope.row.stock_num >= 0 ? true : false;
                                 },
                                 message: $t('请输入库存')
                             }]">
-                                <el-input type="number" size="small"
-                                    v-model="scope.row.stock_num"></el-input>
+                                <el-input-number type="number" size="small" :min="0" :controls="false"
+                                    v-model="scope.row.stock_num"></el-input-number>
                             </el-form-item>
                         </template>
                     </el-table-column>
