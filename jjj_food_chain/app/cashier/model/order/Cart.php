@@ -881,7 +881,6 @@ class Cart extends CartModel
             $this->error = "用户不存在";
             return false;
         }
-        trace($user);
 
         // 桌台
         $table_service_money = 0;
@@ -950,7 +949,14 @@ class Cart extends CartModel
         }
         $total_consumption_tax_money = $consume_fee;    // 总消费税
 
-        $total_pay_price = $total_consumption_tax_money + $total_product_pay_price + $total_service_money;    // 应收
+        // 应付
+        $pay_price = $total_consumption_tax_money + $total_product_pay_price + $total_service_money;
+        // 优惠折扣
+        if (isset($order['discount_ratio']) && $order['discount_ratio'] > 0) {
+            $pay_price = round($pay_price * (100 - $order['discount_ratio']) / 100, 2);
+        }
+
+        $total_pay_price = $pay_price;    // 应收
 
         return compact('user', 'total_product_price', 'total_product_pay_price', 'total_user_discount_money', 'total_service_money', 'total_consumption_tax_money', 'total_pay_price');
 

@@ -1180,14 +1180,23 @@ class Order extends BaseModel
             $consume_fee = helper::bcmul($total_price, $consume_rate);
             $original_consume_fee = helper::bcmul($order_price, $consume_rate); // 原消费税
         }
+        // 应付
+        $pay_price = $total_price + $service_money + $service_fee + $consume_fee; // 应付金额 = 商品折扣总价（会员折扣） + 原服务费 + 新服务费用 + 消费税
+        // 优惠折扣
+        $discount_money = 0;
+        if ($order['discount_ratio'] > 0) {
+            $discount_money = round($pay_price * $order['discount_ratio'] / 100, 2);;
+            $pay_price = round($pay_price * (100 - $order['discount_ratio']) / 100, 2);
+        }
+
         // 会员优惠金额
         $updateOrderArr = [
             'order_no' => $re_order_no ? $this->orderNo() : $order['order_no'],
-            'discount_money' => 0,  // 折扣优惠重置
+            'discount_money' => $discount_money,  // 折扣优惠重置
             'total_price' => $total_price,
             'order_price' => $order_price + $service_money + $service_fee + $consume_fee, // 订单总额 = 商品原始总价 + 原服务费 + 新服务费用 + 消费税
             'original_price' => $order_price + $service_money + $service_fee + $original_consume_fee, // 订单总额 = 商品原始总价 + 原服务费 + 新服务费用 + 消费税
-            'pay_price' => $total_price + $service_money + $service_fee + $consume_fee, // 应付金额 = 商品折扣总价（会员折扣） + 原服务费 + 新服务费用 + 消费税
+            'pay_price' => $pay_price,  // 应付
             'points_bonus' => $points_bonus,
             'service_money' => $service_money,
             'meal_num' => $meal_num,

@@ -263,6 +263,7 @@ class Order extends OrderModel
         $this->startTrans();
         try {
             $discount_money = 0;
+            $discount_ratio = 0;
             switch ($data['type']) {
                 case '1'://改价
                     if ($data['money'] > $detail['order_price']) {
@@ -272,13 +273,21 @@ class Order extends OrderModel
                     $discount_money = round($detail['order_price'] - $data['money'], 2);
                     break;
                 case '2'://折扣
-                    if ($data['rate'] > 10) {
+//                    if ($data['rate'] > 10) {
+//                        $this->error = "请输入合理的折扣";
+//                        return false;
+//                    }
+//                    if ($detail['pay_price'] > 0) {
+//                        $discount_money = round($detail['order_price'] * (10 - $data['rate']) / 10, 2);
+//                    }
+                    if ($data['rate'] < 0 || $data['rate'] > 100) {
                         $this->error = "请输入合理的折扣";
                         return false;
                     }
                     if ($detail['pay_price'] > 0) {
-                        $discount_money = round($detail['order_price'] * (10 - $data['rate']) / 10, 2);
+                        $discount_money = round($detail['pay_price'] * $data['rate'] / 100, 2);
                     }
+                    $discount_ratio =  $data['rate'];
                     break;
                 case '3'://抹零
                     trace($detail['order_price']);
@@ -294,11 +303,15 @@ class Order extends OrderModel
                     break;
             }
             if ($discount_money >= 0) {
-                $pay_price = round($detail['order_price'] - $discount_money, 2);
+                if ($data['type'] == 2) {
+                    $pay_price = round($detail['pay_price'] - $discount_money, 2);
+                } else {
+                    $pay_price = round($detail['order_price'] - $discount_money, 2);
+                }
                 if ($pay_price <= 0) {
                     $pay_price = 0;
                 }
-                $detail->save(['discount_money' => $discount_money, 'pay_price' => $pay_price]);
+                $detail->save(['discount_money' => $discount_money, 'pay_price' => $pay_price, 'discount_ratio' => $discount_ratio]);
             }
             $this->commit();
             return true;
