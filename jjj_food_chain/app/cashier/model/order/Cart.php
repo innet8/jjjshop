@@ -881,6 +881,9 @@ class Cart extends CartModel
             $this->error = "用户不存在";
             return false;
         }
+        trace('===用户信息===');
+        trace($user);
+        trace('======');
 
         // 桌台
         $table_service_money = 0;
@@ -904,6 +907,9 @@ class Cart extends CartModel
             $cart_arr = self::prePriceByCart($cartList, $user);
         } else if ($order_id > 0) {
             $order = OrderModel::detail($order_id);
+            trace('===订单信息===');
+            trace($order);
+            trace('======');
             $order_arr = self::prePriceByOrder($order, $user);
             // 计算购物车会员优惠后价格
             $cartList = (new static())->with('product')
@@ -969,7 +975,7 @@ class Cart extends CartModel
         $order_price = 0;
         $user_discount_money = 0;
 
-        if ($order) {
+        if ($order && isset($order['product'])) {
             foreach ($order['product'] as $product) {
                 // 会员折扣的总额差
                 $grade_total_money = 0;
