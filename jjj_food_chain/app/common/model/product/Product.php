@@ -41,7 +41,7 @@ class Product extends BaseModel
             $datas[$key]['attribute_name_text'] = extractLanguage($datas[$key]['attribute_name']);
             if(isset($datas[$key]['attribute_value'])){
                 foreach($datas[$key]['attribute_value'] as $k=>$v){
-                    $datas[$key]['attribute_value'][$k] = extractLanguage($v);
+                    $datas[$key]['attribute_value_text'][$k] = extractLanguage($v);
                 }
             }
         }
