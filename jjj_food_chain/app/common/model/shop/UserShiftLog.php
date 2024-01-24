@@ -39,7 +39,7 @@ class UserShiftLog extends BaseModel
         $value= $value ? json_decode($value,true) : [];
         if ($value) {
             foreach ($value as $key => $v) {
-                $value[$key]['pay_type_name'] = OrderPayTypeEnum::data($v['pay_type'])['name'];
+                $value[$key]['pay_type_name'] = OrderPayTypeEnum::data($v['pay_type'], 2)['name'];
             }
         }
         return $value;
@@ -179,7 +179,7 @@ class UserShiftLog extends BaseModel
                 $totalIncome = helper::bcadd($totalIncome, $value);
                 $incomes[] = [
                     'pay_type' => $payType['value'],
-                    'pay_type_name' => OrderPayTypeEnum::data($payType['value'])['name'],
+                    'pay_type_name' => OrderPayTypeEnum::data($payType['value'],2)['name'],
                     'price' => $value,
                 ];
             }

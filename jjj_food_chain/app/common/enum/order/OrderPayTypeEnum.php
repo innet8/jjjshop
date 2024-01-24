@@ -57,7 +57,7 @@ class OrderPayTypeEnum extends Enum
     /**
      * 获取枚举数据
      */
-    public static function data($key=0)
+    public static function data($key=0, $type=1)
     {
         $arr = [
             self::QRPROMPTPAY => [
@@ -132,35 +132,35 @@ class OrderPayTypeEnum extends Enum
             ],
             // 
             self::BALANCE => [
-                'name' => __('余额支付'),
+                'name' => $type == 1 ? __('余额支付') : __('余额收入'),
                 'value' => self::BALANCE,
                 'status' => 1,
                 'sort' => 0,
                 'img' => ''
             ],
             self::CASH => [
-                'name' => __('现金支付'),
+                'name' => $type == 1 ? __('现金支付') : __('现金收入'),
                 'value' => self::CASH,
                 'status' => 1,
                 'sort' => 12,
                 'img' => ''
             ],
             self::WECHAT => [
-                'name' => __('微信支付'),
+                'name' => $type == 1 ? __('微信支付') : __('微信收入'),
                 'value' => self::WECHAT,
                 'status' => 0,
                 'sort' => 10,
                 'img' => '/image/pay/wechat_pay.png'
             ],
             self::ALIPAY => [
-                'name' => __('支付宝支付'),
+                'name' => $type == 1 ? __('支付宝支付') : __('支付宝收入'),
                 'value' => self::ALIPAY,
                 'status' => 0,
                 'sort' => 11,
                 'img' => '/image/pay/alipay.png'
             ],
             self::POS => [
-                'name' => __('POS刷卡支付'),
+                'name' => $type == 1 ? __('POS刷卡支付') : __('POS刷卡收入'),
                 'value' => self::POS,
                 'status' => 0,
                 'sort' => 13,
