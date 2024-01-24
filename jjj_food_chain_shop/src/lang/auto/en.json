@@ -721,5 +721,16 @@
     "请输入限购数量": "Please enter the purchase limit quantity",
     "每单/每桌购买的最大数量，0为不限购": "The maximum quantity purchased per order/table, 0 means no purchase limit",
     "仅需支付": "Just pay",
-    "仅需支付：用户购买此商品仅需支付的金额或比例": "Pay only: The amount or proportion that users only need to pay to purchase this product"
+    "仅需支付：用户购买此商品仅需支付的金额或比例": "Pay only: The amount or proportion that users only need to pay to purchase this product",
+    "普通分类": "General classification",
+    "特色分类": "Featured categories",
+    "请选择分类": "please select a type",
+    "请选择特色分类": "Please select a featured category",
+    "支持JPG、JPEG、PNG格式，小于15MB，尺寸：48*48px": "Support JPG, JPEG, PNG format, less than 15MB, size: 48*48px",
+    "请输入商品卖点": "Please enter the selling point of the product",
+    "请选择打印标签": "Please select print label",
+    "商品规格：": "Product specifications:",
+    "商品价格：": "Product price:",
+    "请填写商品价格": "Please fill in the product price",
+    "请输入库存": "Please enter inventory"
 }
