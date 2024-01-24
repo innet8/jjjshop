@@ -13,8 +13,10 @@
                 <p class="text">
                     {{ $t('当班时间') }}:<span>{{ detail.shift_start_time }}</span>
                     {{ $t('至') }}<span>{{ detail.shift_end_time }}</span>
-
                 </p>
+            </el-col>
+            <el-col :span="12">
+                <p class="text">{{ $t('营业收入') }}:<span>{{ detail.total_income }}</span></p>
             </el-col>
             <template v-for="item in detail.incomes">
                 <el-col :span="12">
@@ -34,7 +36,7 @@
         <div class="common-form">{{ $t('销售信息') }}</div>
 
         <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-            <el-table-column prop="name" :label="$t('分类')"></el-table-column>
+            <el-table-column prop="name_text" :label="$t('分类')"></el-table-column>
             <el-table-column prop="sales" :label="$t('销售数量')"></el-table-column>
             <el-table-column prop="prices" :label="$t('销售金额')"></el-table-column>
         </el-table>

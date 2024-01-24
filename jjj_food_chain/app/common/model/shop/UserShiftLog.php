@@ -61,7 +61,7 @@ class UserShiftLog extends BaseModel
         $username = $params['user_name'] ?? '';
         $userId = $params['user_id'] ?? 0;
         $startTime = isset($params['create_time'][0]) ? strtotime($params['create_time'][0]) : 0;
-        $endTime = isset($params['create_time'][1]) ? strtotime($params['create_time'][1]) : 0;
+        $endTime = isset($params['create_time'][1]) ? strtotime($params['create_time'][1] . ' 23:59:59') : 0;
         $model = $this;
         $model = $model->alias('a')->leftJoin('shop_user su','a.shift_user_id = su.shop_user_id');
 
@@ -120,7 +120,7 @@ class UserShiftLog extends BaseModel
             ->where('a.eat_type', '<>', 0)
             ->where('a.shop_supplier_id', '=', $shop_user_id)
             ->where('a.cashier_id', '=', $shift_user_id)
-            ->where('a.create_time', 'between', [$startTime, $endTime])
+            ->where('a.create_time', 'between', [strtotime($startTime), strtotime($endTime)])
             ->group("c.category_id")
             ->field("c.name, count(a.order_id) as sales, sum(a.pay_price - a.refund_money) as prices")
             ->select()
