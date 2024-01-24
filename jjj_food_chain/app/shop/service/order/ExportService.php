@@ -239,7 +239,7 @@ class ExportService
     {
         $content = '';
         foreach ($order['product'] as $key => $product) {
-            $content .= ($key + 1) . ".".__("商品名称")."：{$product['product_name']}\n";
+            $content .= ($key + 1) . ".".__("商品名称")."：{$product['product_name_text']}\n";
             !empty($product['product_attr']) && $content .= "　".__("商品规格")."：{$product['product_attr']}\n";
             $content .= "　".__("购买数量")."：{$product['total_num']}\n";
             $content .= "　".__("商品总价")."：{$product['total_price']}元\n\n";
