@@ -187,7 +187,7 @@ class Order extends BaseModel
         }
         // 发货状态
         if ($data['delivery_status'] == 20) {
-            $deliverStatus = [1 => __('待接单'), 2 => __('待取货'), 3 => __('配送中'), 4 => __('已完成')];
+            $deliverStatus = [0 => __('待接单'), 1 => __('待接单'), 2 => __('待取货'), 3 => __('配送中'), 4 => __('已完成')];
             return $deliverStatus[$data['deliver_status']];
         }
         return $value;
