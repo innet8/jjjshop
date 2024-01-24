@@ -3,6 +3,7 @@
 namespace app\kitchen\model\order;
 
 use app\common\model\order\OrderProduct as OrderProductModel;
+use app\kitchen\model\order\Order as OrderModel;
 
 /**
  * 订单记录
@@ -29,10 +30,10 @@ class OrderProduct extends OrderProductModel
             ->group('o.order_id')
             ->paginate($params);
 
-        foreach ($list as $item) {
+        foreach ($list as &$item) {
             $item['serial_no'] = $item['callNo'] ? $item['callNo'] : $item['table_no']; // 流水号
             $orderProducts = $this->where('order_id', '=', $item['order_id'])
-                ->field(['order_product_id', 'order_id', 'product_id', 'product_name', 'is_send_kitchen', 'send_kitchen_time', 'finish_num', 'total_num', 'product_attr', 'remark'])
+                ->field(['order_product_id', 'order_id', 'product_id', 'product_name', 'is_send_kitchen', 'send_kitchen_time', 'finish_num', 'finish_time', 'total_num', 'product_attr', 'remark'])
                 ->order('send_kitchen_time', 'asc')
                 ->select();
             $item['order_product'] = $orderProducts;
@@ -64,19 +65,134 @@ class OrderProduct extends OrderProductModel
             $query = $query->where('p.category_id', '=', $category_id);
         }
 
-        $list = $query->field('p.product_id, p.product_name, p.category_id, c.name as category_name, c.parent_id, c.sort as category_sort, op.product_id, op.is_send_kitchen, op.send_kitchen_time')
+        $list = $query->field('p.product_id, p.product_name, p.category_id, c.name as category_name, c.name as category_name_text, c.parent_id, c.sort as category_sort, op.product_id, op.is_send_kitchen, op.send_kitchen_time')
             ->group('p.category_id')
             ->paginate($params);
 
-        foreach ($list as $item) {
-            $item['category_name'] = extractLanguage($item['category_name']); // 分类名称翻译
+        foreach ($list as &$item) {
+            // 分类名称翻译
+            $item['category_name_text'] = extractLanguage($item['category_name_text']);
             $orderProducts = $this->where('product_id', '=', $item['product_id'])
-                ->field(['order_product_id', 'order_id', 'product_id', 'product_name', 'is_send_kitchen', 'send_kitchen_time', 'finish_num', 'total_num', 'product_attr', 'remark'])
+                ->field(['order_product_id', 'order_id', 'product_id', 'product_name', 'is_send_kitchen', 'send_kitchen_time', 'finish_num', 'finish_time', 'total_num', 'product_attr', 'remark'])
                 ->order('send_kitchen_time', 'asc')
                 ->select();
+            // 流水号
+            foreach ($orderProducts as &$orderProduct) {
+                $order = OrderModel::field('table_no, callNo')->where('order_id', '=', $orderProduct['order_id'])->find();
+                $orderProduct['serial_no'] = $order['callNo'] ? $order['callNo'] : $order['table_no'];
+            }
             $item['order_product'] = $orderProducts;
         }
 
         return $list;
+    }
+
+    /**
+     * 上菜历史
+     */
+    public function history($params)
+    {
+        $shop_supplier_id = $params['shop_supplier_id'];
+
+        $query = $this->alias('op')
+            ->join('order o', 'op.order_id = o.order_id', 'left')
+            ->where('op.is_send_kitchen', '=', 1)
+            ->where('op.finish_num', '>', 0)
+            ->order(['op.finish_time' => 'desc']); // 按照厨房完成时间倒序
+
+        if ($shop_supplier_id > 0) {
+            $query = $query->where('o.shop_supplier_id', '=', $shop_supplier_id);
+        }
+
+        $list = $query->field('o.table_no, o.callNo, op.product_name, op.order_id, op.is_send_kitchen, op.send_kitchen_time')
+            ->group('o.order_id')
+            ->paginate($params);
+
+        foreach ($list as &$item) {
+            $item['serial_no'] = $item['callNo'] ? $item['callNo'] : $item['table_no']; // 流水号
+            $orderProducts = $this->where('order_id', '=', $item['order_id'])
+                ->field(['order_product_id', 'order_id', 'product_id', 'product_name', 'is_send_kitchen', 'send_kitchen_time', 'finish_num', 'finish_time', 'total_num', 'product_attr', 'remark'])
+                ->order('send_kitchen_time', 'asc')
+                ->select();
+            // 处理时间
+            foreach ($orderProducts as &$orderProduct) {
+                $orderProduct['send_kitchen_time'] = format_time_his($orderProduct['send_kitchen_time']);
+                $orderProduct['finish_time'] = format_time_his($orderProduct['finish_time']);
+            }
+            $item['order_product'] = $orderProducts;
+        }
+
+        return $list;
+    }
+
+    /**
+     * 厨房确认
+     */
+    public function kitchenConfirm($params)
+    {
+        $order_product_id = $params['order_product_id'];
+        $orderProduct = $this->where('order_product_id', '=', $order_product_id)->find();
+        if (!$orderProduct) {
+            $this->error = '订单商品不存在';
+            return false;
+        }
+        if ($orderProduct['is_send_kitchen'] == 0) {
+            $this->error = '订单商品未送厨';
+            return false;
+        }
+        if ($orderProduct['finish_num'] > 0) {
+            $this->error = '订单商品已完成';
+            return false;
+        }
+        $orderProduct->finish_num = $orderProduct['total_num'];
+        $orderProduct->finish_time = time();
+        $orderProduct->save();
+        return true;
+    }
+
+    /**
+     * 厨房恢复
+     */
+    public function kitchenRecover($params)
+    {
+        $order_product_id = $params['order_product_id'];
+        $orderProduct = $this->where('order_product_id', '=', $order_product_id)->find();
+        if (!$orderProduct) {
+            $this->error = '订单商品不存在';
+            return false;
+        }
+        if ($orderProduct['is_send_kitchen'] == 0) {
+            $this->error = '订单商品未送厨';
+            return false;
+        }
+        if ($orderProduct['finish_num'] == 0) {
+            $this->error = '订单商品未完成';
+            return false;
+        }
+        $orderProduct->finish_num = 0;
+        $orderProduct->finish_time = 0;
+        $orderProduct->save();
+        return true;
+    }
+
+    /**
+     * 底部显示已完成订单商品
+     */
+    public function getFinishOrderProduct($shop_supplier_id, $num = 5)
+    {
+        $query = $this->alias('op')
+            ->join('order o', 'op.order_id = o.order_id', 'left')
+            ->where('op.is_send_kitchen', '=', 1)
+            ->where('op.finish_num', '>', 0)
+            ->order(['op.finish_time' => 'desc']); // 按照厨房完成时间倒序
+
+        if ($shop_supplier_id > 0) {
+            $query = $query->where('o.shop_supplier_id', '=', $shop_supplier_id);
+        }
+
+        $list = $query->field(['op.order_product_id', 'op.product_name', 'op.finish_num', 'op.finish_time', 'op.total_num', 'op.product_attr', 'op.remark'])
+            ->limit($num)
+            ->select();
+        return $list ? $list->toArray() : [];
     }
 }
