@@ -199,7 +199,6 @@ export default {
                     })
 
                     self.form.model.product_attr.map((item, index) => {
-                        console.log(item);
                         self.form.model.product_attr[index].attribute_name = JSON.parse(item.attribute_name)
                         item.attribute_value.map((items, indexs) => {
                             self.form.model.product_attr[index].attribute_value[indexs] = JSON.parse(items)
@@ -225,38 +224,38 @@ export default {
             });
             return JSON.stringify(obj);
         },
-        validateField(e){
+        validateField(e) {
             this.$refs.form.validateField(e);
         },
         /*提交*/
         onSubmit: function () {
             let self = this;
-            let params = formatModel(self.model, self.form.model);
-            params.scene = self.scene;
-            params.image = self.ImgKeepId(params.image);
-            params.product_id = self.product_id;
-            params.sku = self.form.model.sku;
-            params.alone_grade_equity = self.convertJson(self.form.gradeList);
-            //处理数据
-            params.product_name = JSON.stringify(params.product_name)
-            params.product_unit = JSON.stringify(params.product_unit)
-            params.sku.map((item, index) => {
-                params.sku[index].spec_name = JSON.stringify(item.spec_name)
-            })
-            params.product_attr.map((item, index) => {
-                params.product_attr[index].attribute_name = JSON.stringify(item.attribute_name)
-                item.attribute_value.map((items, indexs) => {
-                    params.product_attr[index].attribute_value[indexs] = JSON.stringify(items)
-                })
-            })
-            params.product_feed.map((item, index) => {
-                params.product_feed[index].feed_name = JSON.stringify(item.feed_name)
-            })
-            if (typeof params.category_id == 'object' && params.category_id) {
-                params.category_id = Number(params.category_id[params.category_id.length - 1])
-            }
             self.$refs.form.validate(valid => {
                 if (valid) {
+                    let params = formatModel(self.model, self.form.model);
+                    params.scene = self.scene;
+                    params.image = self.ImgKeepId(params.image);
+                    params.product_id = self.product_id;
+                    params.sku = self.form.model.sku;
+                    params.alone_grade_equity = self.convertJson(self.form.gradeList);
+                    //处理数据
+                    params.product_name = JSON.stringify(params.product_name)
+                    params.product_unit = JSON.stringify(params.product_unit)
+                    params.sku.map((item, index) => {
+                        params.sku[index].spec_name = JSON.stringify(item.spec_name)
+                    })
+                    params.product_attr.map((item, index) => {
+                        params.product_attr[index].attribute_name = JSON.stringify(item.attribute_name)
+                        item.attribute_value.map((items, indexs) => {
+                            params.product_attr[index].attribute_value[indexs] = JSON.stringify(items)
+                        })
+                    })
+                    params.product_feed.map((item, index) => {
+                        params.product_feed[index].feed_name = JSON.stringify(item.feed_name)
+                    })
+                    if (typeof params.category_id == 'object' && params.category_id) {
+                        params.category_id = Number(params.category_id[params.category_id.length - 1])
+                    }
                     self.save_loading = true;
                     PorductApi.storeEditProduct({
                         product_id: self.product_id,
