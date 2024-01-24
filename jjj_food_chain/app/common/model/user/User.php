@@ -233,7 +233,6 @@ class User extends BaseModel
      */
     public function recharge($storeUserName, $source, $data)
     {
-        trace($source);
         if ($source == 0) {
             return $this->rechargeToBalance($storeUserName, $data);
         } elseif ($source == 1) {
@@ -282,21 +281,21 @@ class User extends BaseModel
      */
     private function rechargeToPoints($storeUserName, $data)
     {
-        if (!isset($data['value']) || $data['value'] === '' || $data['value'] < 0) {
+        if (!isset($data['recharge_value']) || $data['recharge_value'] === '' || $data['recharge_value'] < 0) {
             $this->error = '请输入正确的积分数量';
             return false;
         }
         $points = 0;
         // 判断充值方式，计算最终积分
         if ($data['mode'] === 'inc') {
-            $diffMoney = $this['points'] + $data['value'];
-            $points = $data['value'];
+            $diffMoney = $this['points'] + $data['recharge_value'];
+            $points = $data['recharge_value'];
         } elseif ($data['mode'] === 'dec') {
-            $diffMoney = $this['points'] - $data['value'] <= 0 ? 0 : $this['points'] - $data['value'];
-            $points = -$data['value'];
+            $diffMoney = $this['points'] - $data['recharge_value'] <= 0 ? 0 : $this['points'] - $data['recharge_value'];
+            $points = -$data['recharge_value'];
         } else {
-            $diffMoney = $data['value'];
-            $points = $data['value'] - $this['points'];
+            $diffMoney = $data['recharge_value'];
+            $points = $data['recharge_value'] - $this['points'];
         }
         // 更新记录
         $this->transaction(function () use ($storeUserName, $data, $diffMoney, $points) {
@@ -309,7 +308,7 @@ class User extends BaseModel
             // 新增积分变动记录
             PointsLogModel::add([
                 'user_id' => $this['user_id'],
-                'value' => $points,
+                'recharge_value' => $points,
                 'describe' => "后台管理员 [{$storeUserName}] 操作",
                 'remark' => $data['remark']??'',
             ]);
