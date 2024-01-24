@@ -55,14 +55,14 @@ class MasterPaySuccessService extends BaseService
      * 订单支付成功业务处理
      */
     public function paySuccess($payType)
-    {
+    {   
         // 更新付款状态
         $status = $this->updatePayStatus($payType);
         // 订单支付成功行为
         if ($status == true) {
             $detail = OrderModel::detail($this->model['order_id']);
             //判断是否清台
-            if ($detail['eat_type'] == 10 && (($detail['settle_type'] == 10 && $detail['auto_close'] == 1) || $detail['settle_type'] == 20)) {
+            if ($detail['eat_type'] == 10 && ($detail['settle_type'] == 10 || $detail['settle_type'] == 20)) {
                 $detail->transaction(function () use ($detail) {
                     // 更新订单状态：已发货、已收货
                     $detail->save([

@@ -546,7 +546,7 @@ class Order extends BaseModel
                 'delivery_time' => time(),
                 'receipt_status' => 20,
                 'receipt_time' => time(),
-                'order_status' => 30
+                'order_status' => OrderStatusEnum::COMPLETED
             ]);
             // 执行订单完成后的操作
             $OrderCompleteService = new OrderCompleteService(OrderTypeEnum::MASTER);
