@@ -4,11 +4,11 @@
     	时间：2019-10-26
     	描述：区域-修改
     -->
-    <el-dialog title="添加类型" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
+    <el-dialog :title="$t('编辑桌位')" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
         :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
             <el-form-item :label="$t('桌位名称')" prop="table_no" :label-width="formLabelWidth">
-                <el-input v-model="form.table_no" autocomplete="off" :placeholder="$t('请输入桌位名称')"></el-input>
+                <el-input :maxlength="50" v-model="form.table_no" autocomplete="off" :placeholder="$t('请输入桌位名称')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('所属类型')" prop="type_id" :label-width="formLabelWidth">
                 <el-select v-model="form.type_id" :placeholder="$t('所属类型')">
@@ -22,8 +22,8 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$t('分类排序')" prop="sort" :label-width="formLabelWidth">
-                <el-input v-model.number="form.sort" autocomplete="off" :placeholder="$t('接近0，排序等級越高')"></el-input>
+            <el-form-item :label="$t('排序')" prop="sort" :label-width="formLabelWidth">
+                <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('接近0，排序等級越高')" v-model.number="form.sort"></el-input-number>
             </el-form-item>
         </el-form>
         <template #footer>
@@ -53,7 +53,7 @@ export default {
             formRules: {
                 table_no: [{
                     required: true,
-                    message: '请输入桌位编号',
+                    message: $t('请输入桌位名称'),
                     trigger: 'blur'
                 }],
                 area_id: [{

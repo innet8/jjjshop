@@ -8,10 +8,10 @@
         :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
             <el-form-item :label="$t('区域名称')" prop="area_name" :label-width="formLabelWidth">
-                <el-input v-model="form.area_name" autocomplete="off" :placeholder="$t('请输入区域名称')"></el-input>
+                <el-input :maxlength="50" v-model="form.area_name" autocomplete="off" :placeholder="$t('请输入区域名称')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('分类排序')" prop="sort" :label-width="formLabelWidth">
-                <el-input v-model.number="form.sort" autocomplete="off" :placeholder="$t('接近0，排序等級越高')"></el-input>
+                <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('接近0，排序等級越高')" v-model.number="form.sort"></el-input-number>
             </el-form-item>
         </el-form>
         <template #footer>

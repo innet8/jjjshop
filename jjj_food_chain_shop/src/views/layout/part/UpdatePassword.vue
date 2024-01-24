@@ -1,17 +1,17 @@
 <template>
 	<el-dialog :title="$t('修改密码')" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
 		:close-on-press-escape="false" width="30%">
-		<el-form size="small" :model="form" label-position="top" ref="form">
+		<el-form size="small" :model="form" label-position="top" ref="form" :rules="rules">
 			<el-form-item :label="$t('原始密码')" :label-width="formLabelWidth" prop="oldpass"
-				:rules="[{required: true,message: ' '}]">
+				>
 				<el-input type="password" v-model="form.oldpass" autocomplete="off"></el-input>
 			</el-form-item>
 			<el-form-item :label="$t('新密码')" :label-width="formLabelWidth" prop="password"
-				:rules="[{required: true,message: ' '}]">
+				>
 				<el-input type="password" v-model="form.password" autocomplete="off"></el-input>
 			</el-form-item>
 			<el-form-item :label="$t('确认新密码')" :label-width="formLabelWidth" prop="confirmPass"
-				:rules="[{required: true,message: ' '}]">
+				>
 				<el-input type="password" v-model="form.confirmPass" autocomplete="off"></el-input>
 			</el-form-item>
 		</el-form>
@@ -25,7 +25,17 @@
 <script>
 import UserApi from '@/api/user.js';
 export default {
+
 	data() {
+        let validatePass2 = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error($t('请输入确认新密码')))
+            } else if (value !== this.form.password) {
+                callback(new Error($t('两次密码不一致！')))
+            } else {
+                callback()
+            }
+        }
 		return {
 			loading: false,
 			/*左边长度*/
@@ -35,7 +45,20 @@ export default {
 			/*表单*/
 			form: {
 
-			}
+			},
+            rules: {
+                oldpass: [{
+                    required: true,
+                    message: $t('请输入原始密码'),
+                    trigger: 'blur'
+                }],
+                password: [{
+                    required: true,
+                    message: $t('请输入新密码'),
+                    trigger: 'blur'
+                }],
+                confirmPass: [{ validator: validatePass2, trigger: 'blur' }],
+            },
 		};
 	},
 	props: [],

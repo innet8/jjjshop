@@ -8,8 +8,8 @@
         <!--添加产品分类-->
         <div class="common-level-rail flex">
             <el-form size="small" :inline="true" :model="form" class="demo-form-inline d-s-c">
-                <el-form-item :label="$t('编号')">
-                    <el-input v-model="form.search" autocomplete="off" :placeholder="$t('请输入编号')"></el-input>
+                <el-form-item :label="$t('桌位名称')">
+                    <el-input v-model="form.search" autocomplete="off" :placeholder="$t('桌位名称')"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('选择区域')">
                     <el-select size="small" v-model="form.area_id" :placeholder="$t('请选择')">
@@ -57,7 +57,7 @@
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
                                 v-auth="'/supplier/table/table/edit'">{{ $t('编辑') }}
                             </el-button>
-                            <el-button @click="deleteClick(scope.row)" type="primary" link size="small"
+                            <el-button @click="deleteClick(scope.row)" type="primary" :disabled="scope.row.status == 30" link size="small"
                                 v-auth="'/supplier/table/table/delete'">
                                 {{ $t('删除') }}</el-button>
                         </template>

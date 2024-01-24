@@ -115,6 +115,9 @@
     .dialog-footer{
         float: right;
     }
+    .el-select{
+        width: 100%;
+    }
 }
 .el-dialog__headerbtn{
     .el-icon svg{
@@ -195,4 +198,10 @@
 }
 .el-input-number--small{
     width: 100% !important;
+}
+.el-button--primary.is-link.is-disabled{
+    color: var(--el-color-tips);
+}
+.el-button--primary.is-link.is-disabled:hover{
+    color: var(--el-color-tips);
 }
