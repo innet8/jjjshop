@@ -1225,6 +1225,12 @@ class Order extends BaseModel
             $this->error = '商品库存不足';
             return false;
         }
+        // 判断限购
+        $limitNum = ProductModel::getProductLimitNum($data['product_id']);
+        if ($limitNum && $data['product_num'] > $limitNum) {
+            $this->error = '超过限购数量';
+            return false;
+        }
 
         $this->startTrans();
         try {

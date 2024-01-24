@@ -491,4 +491,14 @@ class Product extends BaseModel
         }
         return $list;
     }
+
+
+    //判断商品每单限购
+    public static function getProductLimitNum($product_id)
+    {
+        return (new self)->where('product_id', '=', $product_id)
+            ->where('product_status', '=', 10)
+            ->where('is_delete', '=', 0)
+            ->value('limit_num');
+    }
 }

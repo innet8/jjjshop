@@ -185,12 +185,27 @@ class OrderProduct extends BaseModel
             $this->error = '商品已下架';
             return false;
         }
-
         $stockStatus = $this->getStockState($this['product_id'], $this['product_sku_id'], $param['product_num']);
         if (!$stockStatus) {
             $this->error = '商品库存不足';
             return false;
         }
+        // 判断限购
+        $limitNum = ProductModel::getProductLimitNum($this['product_id']);
+        if ($limitNum && $param['product_num'] > $limitNum) {
+            $this->error = '超过限购数量';
+            return false;
+        }
+        // 判断当前订单
+        $curNum = (new self)->where([
+            'order_id' => $this['order_id'],
+            'product_id' => $this['product_id'],
+        ])->sum('total_num');
+        if (($param['product_num'] - $this['total_num'] + $curNum) > $limitNum) {
+            $this->error = '超过限购数量';
+            return false;
+        }
+
         if ($param['product_num'] <= 0) {
             return $this->delete();
         }

@@ -885,9 +885,6 @@ class Cart extends CartModel
             $this->error = "用户不存在";
             return false;
         }
-        trace('===用户信息===');
-        trace($user);
-        trace('======');
 
         // 桌台
         $table_service_money = 0;
@@ -911,9 +908,6 @@ class Cart extends CartModel
             $cart_arr = self::prePriceByCart($cartList, $user);
         } else if ($order_id > 0) {
             $order = OrderModel::detail($order_id);
-            trace('===订单信息===');
-            trace($order);
-            trace('======');
             $order_arr = self::prePriceByOrder($order, $user);
             // 计算购物车会员优惠后价格
             $cartList = (new static())->with('product')
