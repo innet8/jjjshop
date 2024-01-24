@@ -36,11 +36,11 @@ class Product extends ProductModel
             $this->addProductSpec($data);
             // 商品图片
             $this->addProductImages($data['image']);
-            //更新属性
+            // 更新属性
             (new Attribute)->updateAttr($data['product_attr'], $data['shop_supplier_id']);
-            //更新加料
+            // 更新加料
             (new Feed)->updateFeed($data['product_feed'], $data['shop_supplier_id']);
-            //更新单位
+            // 更新单位
             (new Unit)->updateUnit($data['product_unit'], $data['shop_supplier_id']);
             $this->commit();
             return true;
@@ -104,11 +104,11 @@ class Product extends ProductModel
             $this->addProductSpec($data, $productSkuIdList);
             // 商品图片
             $this->addProductImages($data['image']);
-            //更新属性
+            // 更新属性
             (new Attribute)->updateAttr($data['product_attr'], $this['shop_supplier_id']);
-            //更新加料
+            // 更新加料
             (new Feed)->updateFeed($data['product_feed'], $this['shop_supplier_id']);
-            //更新单位
+            // 更新单位
             (new Unit)->updateUnit($data['product_unit'], $this['shop_supplier_id']);
             return true;
         });
