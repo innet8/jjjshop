@@ -7,7 +7,7 @@
         <div class="common-level-rail">
             <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
                 <el-form-item>
-                    <el-input size="small" v-model="searchForm.name" :placeholder="$t('加料名称')"></el-input>
+                    <el-input size="small" v-model="searchForm.name" :placeholder="$t('标签名称')"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button size="small" type="primary" icon="Search" @click="getData">{{ $t('查询') }}</el-button>

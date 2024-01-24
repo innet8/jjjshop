@@ -5,13 +5,17 @@
     <el-dialog :title="$t('编辑标签')" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
         :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
-  
-            <template v-for="(item, index) in languageList" :key="index">
+            <el-form-item :label="$t('标签名称')" :prop="`label_name`"
+                :rules="[{ required: true, message: $t('请输入标签名称') }]">
+                <el-input v-model="form.label_name" :placeholder="$t('请输入标签名称')" :maxlength="50" autocomplete="off"></el-input>
+            </el-form-item>
+
+            <!-- <template v-for="(item, index) in languageList" :key="index">
                 <el-form-item :label="$t('标签名称') + `(${item.label})`" :prop="`label_name.${item.key}`"
                     :rules="[{ required: true, message: $t('请输入标签名称') }]">
                     <el-input v-model="form.label_name[item.key]" :placeholder="$t('请输入标签名称')" :maxlength="50" autocomplete="off"></el-input>
                 </el-form-item>
-            </template>
+            </template> -->
             <el-form-item :label="$t('标签排序')" prop="sort">
                 <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('请输入标签排序')" v-model.number="form.sort" autocomplete="off"></el-input-number>
             </el-form-item>
@@ -63,17 +67,16 @@ export default {
     },
     props: ['open_edit', 'editform'],
     created() {
-      
         this.dialogVisible = this.open_edit;
         this.form.label_id = this.editform.label_id;
-        this.form.label_name = JSON.parse(this.editform.label_name);
+        this.form.label_name = this.editform.label_name;
         this.form.sort = this.editform.sort;
     },
     methods: {
         submit() {
             let self = this;
             let params = JSON.parse(JSON.stringify(self.form));
-            params.label_name = JSON.stringify(params.label_name)
+            params.label_name = params.label_name
             self.$refs.form.validate((valid) => {
                 if (valid) {
                     self.loading = true;
