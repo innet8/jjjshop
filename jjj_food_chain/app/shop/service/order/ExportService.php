@@ -88,7 +88,7 @@ class ExportService
 
         //保存文件
         $writer = new Xlsx($spreadsheet);
-        $filename = iconv("UTF-8", "GB2312//IGNORE", __('订单')) . '-' . date('YmdHis') . '.xlsx';
+        $filename = __('订单') . '-' . date('YmdHis') . '.xlsx';
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
@@ -148,7 +148,7 @@ class ExportService
 
         //保存文件
         $writer = new Xlsx($spreadsheet);
-        $filename = iconv("UTF-8", "GB2312//IGNORE", __('订单配送信息')) . '-' . date('YmdHis') . '.xlsx';
+        $filename = __('订单配送信息') . '-' . date('YmdHis') . '.xlsx';
 
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
@@ -223,7 +223,7 @@ class ExportService
 
         //保存文件
         $writer = new Xlsx($spreadsheet);
-        $filename = iconv("UTF-8", "GB2312//IGNORE", __('积分订单')) . '-' . date('YmdHis') . '.xlsx';
+        $filename = __('积分订单') . '-' . date('YmdHis') . '.xlsx';
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
@@ -285,7 +285,7 @@ class ExportService
         }
         //保存文件
         $writer = new Xlsx($spreadsheet);
-        $filename = iconv("UTF-8", "GB2312//IGNORE", __('订单')) . '-' . date('YmdHis') . '.xlsx';
+        $filename = __('订单') . '-' . date('YmdHis') . '.xlsx';
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
@@ -338,7 +338,7 @@ class ExportService
         }
         //保存文件
         $writer = new Xlsx($spreadsheet);
-        $filename = iconv("UTF-8", "GB2312//IGNORE", __('订单')) . '-' . date('YmdHis') . '.xlsx';
+        $filename =  __('订单') . '-' . date('YmdHis') . '.xlsx';
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
@@ -380,7 +380,7 @@ class ExportService
         }
         //保存文件
         $writer = new Xlsx($spreadsheet);
-        $filename = iconv("UTF-8", "GB2312//IGNORE", __('订单')) . '-' . date('YmdHis') . '.xlsx';
+        $filename = __('订单') . '-' . date('YmdHis') . '.xlsx';
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
@@ -444,7 +444,7 @@ class ExportService
         }
         //保存文件
         $writer = new Xlsx($spreadsheet);
-        $filename = iconv("UTF-8", "GB2312//IGNORE", __('团购订单明细')) . '-' . date('YmdHis') . '.xlsx';
+        $filename = __('团购订单明细') . '-' . date('YmdHis') . '.xlsx';
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
@@ -497,7 +497,7 @@ class ExportService
             $index++;
         }
         //保存文件
-        $filename = iconv("UTF-8", "GB2312//IGNORE", __('余额提现明细')) . '-' . date('YmdHis') . '.xlsx';
+        $filename = __('余额提现明细') . '-' . date('YmdHis') . '.xlsx';
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
