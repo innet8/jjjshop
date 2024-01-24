@@ -733,5 +733,11 @@
     "商品价格：": "Product price:",
     "请填写商品价格": "Please fill in the product price",
     "请输入库存": "Please enter inventory",
-    "现金支付": "cash payment"
+    "现金支付": "cash payment",
+    "请输入打印机名称": "Please enter printer name",
+    "请输入打印联数": "Please enter the printing number",
+    "接近0，排序等級越高": "Close to 0, the higher the sorting level",
+    "请输入桌位名称": "Please enter the table name",
+    "请输入编号": "Please enter number",
+    "请输入最多人数": "Please enter the maximum number of people"
 }
