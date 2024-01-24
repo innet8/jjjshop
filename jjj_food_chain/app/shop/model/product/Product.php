@@ -196,7 +196,7 @@ class Product extends ProductModel
         if ($shop_supplier_id) {
             $model = $model->where('shop_supplier_id', '=', $shop_supplier_id);
         }
-        return $model->where('is_delete', '=', 0)->where('product_stock', '<', 20)->count();
+        return $model->where('is_delete', '=', 0)->where('product_stock', '<', 10)->count();
     }
 
     public function getProductId($search)
