@@ -197,13 +197,14 @@ class Order extends OrderModel
      */
     public function orderCancel($data)
     {
-        // 判断订单是否有效
-        if ($this['delivery_status']['value'] == 20 || $this['order_status']['value'] != 10 || $this['pay_status']['value'] != 20) {
+        // 待付款状态才可以取消订单
+        if ($this['order_status']['value'] != 10 || $this['pay_status']['value'] != 10) {
             $this->error = "订单不允许取消";
             return false;
         }
-        // 订单取消事件
-        $status = $this->transaction(function () use ($data) {
+
+        $this->startTrans();
+        try {
             // 执行退款操作
             $this['pay_type']['value'] < 40 && (new OrderRefundService)->execute($this);
             // 回退商品库存
@@ -211,14 +212,14 @@ class Order extends OrderModel
             // 回退用户优惠券
             $this['coupon_id'] > 0 && UserCouponModel::setIsUse($this['coupon_id'], false);
             // 更新订单状态
-            return $this->save(['order_status' => 20, 'cancel_remark' => $data['cancel_remark']]);
-        });
-        if ($status) {
-            $Service = new MessageService;
-            // 发送消息通知
-            $Service->cancel($this, $data['cancel_remark']);
+            $this->save(['order_status' => 20, 'cancel_remark' => $data['cancel_remark']]);
+            $this->commit();
+            return true;
+        } catch (\Exception $e) {
+            $this->rollback();
+            $this->error = $e->getMessage();
+            return false;
         }
-        return $status;
     }
 
     /**
