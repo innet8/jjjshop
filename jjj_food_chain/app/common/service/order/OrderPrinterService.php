@@ -39,7 +39,9 @@ class OrderPrinterService
         if (($printerConfig['cashier_printer_id'] ?? '0') == '0') {
             $content = $this->getPrintContent($order, PrinterTypeEnum::SUNMI_LAN);
             $content = hex2bin($content);
-            $content = iconv("UTF-8","GBK//IGNORE",$content);
+            if (!preg_match('/[\x{0E00}-\x{0E7F}]/u', $content) ) {
+                $content = iconv("UTF-8", "GBK//IGNORE" ,$content);
+            } 
             $content = bin2hex($content);
             Cache::set("printer_data_cache", array_unique(array_merge(Cache::get("printer_data_cache",[]),[$content])), 60 * 60 * 24);
             return true;

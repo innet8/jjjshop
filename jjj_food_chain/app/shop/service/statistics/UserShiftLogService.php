@@ -54,7 +54,7 @@ class UserShiftLogService
 
         //保存文件
         $writer = new Xlsx($spreadsheet);
-        $filename = iconv("UTF-8", "GB2312//IGNORE", __('用户交班记录')) . '-' . date('YmdHis') . '.xlsx';
+        $filename = __('用户交班记录') . '-' . date('YmdHis') . '.xlsx';
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
