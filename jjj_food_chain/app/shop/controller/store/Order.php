@@ -18,6 +18,8 @@ class Order extends Controller
      * @Apidoc\Title("订单列表")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/shop/store.order/index")
+     * @Apidoc\Param("time_type", type="int", require=false, default="", desc="时间类型 0-全都 1-今天 2-昨天 3-周")
+     * @Apidoc\Param("order_source", type="int", require=false, default="", desc="订单来源 0-全都 10-桌台 20-收银")
      * @Apidoc\Param("order_no", type="string", require=false, default="", desc="订单号")
      * @Apidoc\Param("style_id", type="int", require=false, default="", desc="配送方式")
      * @Apidoc\Param("date", type="array", require=false, default="", desc="起始日期")

@@ -84,23 +84,49 @@ class Order extends OrderModel
      */
     private function setWhere($model, $data)
     {
-        //搜索订单号
+        // 时间类型 0-全都 1-今天 2-昨天 3-周
+        if (isset($data['time_type']) && $data['time_type']) {
+            $startTime = 0;
+            $endTime = 0;
+            switch ($data['time_type'] ?? 1) {
+                case '1'://今天
+                    $startTime = strtotime(date('Y-m-d'));
+                    $endTime = $startTime + 86399;
+                    break;
+                case '2'://昨天
+                    $startTime = strtotime("-1 days", strtotime(date('Y-m-d')));
+                    $endTime = $startTime + 86399;
+                    break;
+                case '3'://一周
+                    $startTime = strtotime("-7 days", strtotime(date('Y-m-d')));
+                    $endTime = time();
+                    break;
+            }
+            if ($startTime && $endTime) {
+                $model = $model->where('create_time', 'between', [$startTime, $endTime]);
+            }
+        }
+        // 收银类型 0-全都 10-桌台 20-收银
+        if (isset($data['order_source']) && $data['order_source']) {
+            $model = $model->where('order_source', '=', $data['order_source']);
+        }
+        // 搜索订单号
         if (isset($data['order_no']) && $data['order_no'] != '') {
             $model = $model->where('order_no', 'like', '%' . trim($data['order_no']) . '%');
         }
-        //搜索配送方式
+        // 搜索配送方式
         if (isset($data['style_id']) && $data['style_id'] != '') {
             $model = $model->where('delivery_type', '=', $data['style_id']);
         }
-        //搜索配送方式
+        // 搜索配送方式
         if (isset($data['order_type'])) {
             $model = $model->where('order_type', '=', $data['order_type']);
         }
-        //搜索配送方式
+        // 搜索配送方式
         if (isset($data['shop_supplier_id']) && $data['shop_supplier_id']) {
             $model = $model->where('shop_supplier_id', '=', $data['shop_supplier_id']);
         }
-        //搜索时间段
+        // 搜索时间段
         if (isset($data['date']) && is_array($data['date']) && isset($data['date'][0]) && isset($data['date'][1])) {
             $model = $model->where('create_time', 'between', [strtotime($data['date'][0]), strtotime($data['date'][1]) + 86399]);
         }
