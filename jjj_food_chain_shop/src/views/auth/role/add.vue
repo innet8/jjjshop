@@ -11,7 +11,7 @@
             <div class="common-form">{{ $t('添加角色') }}</div>
 
             <el-form-item :label="$t('角色名称：')" prop="role_name" :rules="[{ required: true, message: ' ' }]">
-                <el-input v-model="form.role_name" :placeholder="$t('请输入角色名称')" class="max-w460"></el-input>
+                <el-input v-model="form.role_name" :placeholder="$t('请输入角色名称')" :maxlength="50" class="max-w460"></el-input>
             </el-form-item>
 
             <el-form-item :label="$t('权限列表：')" v-model="form.access_id">

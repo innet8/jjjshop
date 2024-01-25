@@ -6,7 +6,7 @@
   -->
     <el-dialog :title="$t('调整有效期')" v-model="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
         :close-on-press-escape="false" :modal-append-to-body="false" width='600px'>
-        <el-form size="small" :model="form" label-position="top">
+        <el-form size="small" :model="form" label-position="top" >
             <el-form-item>
                 <div class="d-c-s">
                     <el-card class="box-card mr10">
@@ -36,13 +36,14 @@
                 </div>
 
             </el-form-item>
-            <el-form-item class="d-c-c">
+            <el-form-item class="d-c-c" >
                 <div class="d-c-c">
                     {{ $t('选择日期：') }}
                     <el-date-picker v-model="expire_time" type="date" :placeholder="$t('选择日期')"
                         :picker-options="pickerOptions" format="YYYY-MM-DD" value-format="YYYY-MM-DD">
                     </el-date-picker>
                 </div>
+                <div class="tips">{{ $t('不选择时间则永久有效') }}</div>
             </el-form-item>
         </el-form>
         <template #footer>

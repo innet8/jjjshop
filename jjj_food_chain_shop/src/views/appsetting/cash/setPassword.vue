@@ -9,6 +9,7 @@
             <el-form-item :label="have ? $t('新密码') : $t('密码')" prop="new_cashier_password"
                 :rules="[{ required: true, message: $t('请输入密码') }]">
                 <el-input v-model="form.new_cashier_password" type="password"></el-input>
+                <div class="tips">{{ $t('密码必须是4-8位的数字') }}</div>
             </el-form-item>
             <el-form-item :label="$t('确认密码')" prop="confirm_cashier_password">
                 <el-input v-model="form.confirm_cashier_password" type="password"></el-input>
@@ -31,10 +32,19 @@ export default {
         this.have = this.cashierPassword;
     },
     data() {
+        let validatePass1 = (rule, value, callback) => {
+            if (!value) {
+                callback(new Error($t('请输入密码')))
+            } else if (value.length < 4 ||  value.length > 8|| !(/^\d+$/.test(value))) {
+                callback(new Error($t('密码必须是4-8位的数字')))
+            } else {
+                callback()
+            }
+        }
         let validatePass2 = (rule, value, callback) => {
-            if (value === '') {
+            if (!value) {
                 callback(new Error($t('请输入确认密码')))
-            } else if (value !== this.form.new_cashier_password) {
+            } else if (value !== this.form.new_advanced_password) {
                 callback(new Error($t('两次密码不一致！')))
             } else {
                 callback()
@@ -51,7 +61,8 @@ export default {
             },
             have: false,
             rules: {
-                confirm_cashier_password: [{ validator: validatePass2, trigger: 'blur' }],
+                new_cashier_password: [{  required: true,validator: validatePass1, trigger: 'blur' }],
+                confirm_cashier_password: [{  required: true,validator: validatePass2, trigger: 'blur' }],
             },
         }
     },

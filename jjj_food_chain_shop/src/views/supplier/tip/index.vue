@@ -9,7 +9,7 @@
             </el-form-item>
             <el-form-item v-if="form.is_open == '1'" :label="$t('金额')" prop="service_charge">
                 <el-input class="max-w460" v-model="form.service_charge" :placeholder="$t('请输入')" maxLength="50">
-                    <template #append>{{ $t('元') }}</template>
+                    <template #append>{{ currency.unit }}</template>
                 </el-input>
             </el-form-item>
         </el-form>
@@ -23,9 +23,12 @@
 </template>
 <script>
 import SettingApi from '@/api/setting.js';
+import { useUserStore } from '@/store';
+const {  currency } = useUserStore();
 export default {
     data() {
         return {
+            currency:currency,
             loading: false,
             form: {
                 is_open: '1',
@@ -47,7 +50,7 @@ export default {
             },
         }
     },
-    created(){
+    created() {
         this.getData();
     },
     methods: {
@@ -58,7 +61,7 @@ export default {
                 .then(data => {
                     self.loading = false;
                     self.form = data.data.vars.values;
-                    self.form.is_open =  data.data.vars.values.is_open.toString()
+                    self.form.is_open = data.data.vars.values.is_open.toString()
                 })
                 .catch(error => {
 
@@ -67,17 +70,23 @@ export default {
         onSubmit() {
             let self = this;
             let params = JSON.parse(JSON.stringify(self.form));
-            self.loading = true;
-            SettingApi.setServiceCharge(params, true).then(data => {
-                self.loading = false;
-                ElMessage({
-                    message: $t('保存成功'),
-                    type: 'success'
-                });
-                self.dialogFormVisible(true);
-            }).catch(error => {
-                self.loading = false;
+            self.$refs.form.validate((valid) => {
+                if (valid) {
+                    self.loading = true;
+                    SettingApi.setServiceCharge(params, true).then(data => {
+                        self.loading = false;
+                        ElMessage({
+                            message: $t('保存成功'),
+                            type: 'success'
+                        });
+                        self.dialogFormVisible(true);
+                    }).catch(error => {
+                        self.loading = false;
+                    });
+                }
             });
+
+
         },
     },
 }

@@ -3,7 +3,8 @@
         <el-form size="small" ref="form" :model="form" label-position="top">
             <el-form-item :label="$t('轮播内容')" prop="carousel" :rules="[{ required: true, message: '' }]">
                 <div class="draggable-list">
-                    <flieUpload @upLoad="upLoad"></flieUpload>
+                    <flieUpload @upLoad="upLoad" :tips1="$t('图片：支持JPG、JPEG、PNG格式，小于15MB，尺寸：1024*600px')"
+                        :tips2="$t('视频：支持AVI、MPEG、MOV、MP4格式，小于30MB，尺寸：1024*600px')"></flieUpload>
                     <el-table size="small" :data="form.carousel" border style="width: 100%" v-loading="loading">
                         <el-table-column prop="real_name" :label="$t('图片名称')"></el-table-column>
                         <el-table-column prop="sort" :label="$t('排序')">
@@ -33,7 +34,7 @@
                 <p>:</p>
                 <el-input style="width: 100px;" disabled v-model="form.server.port"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('收银结账自动送厨房：')"  prop="is_auto_send" :rules="[{ required: true, message: $t('') }]">
+            <el-form-item :label="$t('收银结账自动送厨房：')" prop="is_auto_send" :rules="[{ required: true, message: $t('') }]">
                 <el-radio-group v-model="form.is_auto_send">
                     <el-radio label="1">{{ $t('开') }}</el-radio>
                     <el-radio label="0">{{ $t('关') }}</el-radio>
@@ -192,7 +193,7 @@ export default {
             });
         },
         upLoad(data) {
- 
+
             this.form.carousel.push(
                 {
                     real_name: data.real_name,
@@ -207,7 +208,7 @@ export default {
                 return a.sort - b.sort;
             });
         },
-        sortOne(){
+        sortOne() {
             this.form.carousel.sort((a, b) => {
                 return a.sort - b.sort;
             });

@@ -7,11 +7,11 @@
   <div class="basic-setting-content pl16 pr16">
     <div class="common-form">{{$t('领取设置')}}</div>
     <el-form-item :label="$t('有效期：')" :rules="[{ required: true, message:  $t('请填写有效期') }]" prop="model.expire">
-      <el-input v-model="form.model.expire" class="max-w460" type="number"></el-input>
+      <el-input-number :controls="false" :min="0" :max="999" class="max-w460" :placeholder="$t('请填写有效期')" v-model.number="form.model.expire"></el-input-number>
       <div class="gray9">{{ $t('有效期限（月），0为永久有效') }}</div>
     </el-form-item>
     <el-form-item :label="$t('价格：')" :rules="[{ required: true, message:  $t('请填写价格') }]" prop="model.money">
-      <el-input v-model="form.model.money" class="max-w460" type="number"></el-input>
+      <el-input-number :controls="false" :min="0"  class="max-w460" :placeholder="$t('请填写价格')" v-model.number="form.model.money"></el-input-number>
       <div class="gray9">{{ $t('用户购买会员卡需要支付的金额，0为用户免费领取') }}</div>
     </el-form-item>
 <!--    <el-form-item label="库存：" :rules="[{ required: true, message: '请填写库存' }]" prop="model.stock">

@@ -19,7 +19,7 @@
             <el-option v-for="(item, index) in sex" :key="index" :label="item" :value="index"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('微信昵称')"><el-input :placeholder="$t('请输入微信昵称')" v-model="formInline.nick_name"></el-input></el-form-item>
+        <el-form-item :label="$t('昵称/手机号/ID')"><el-input :placeholder="$t('昵称/手机号/ID')" v-model="formInline.nick_name"></el-input></el-form-item>
         <el-form-item>
           <el-button icon="el-icon-search" @click="search">{{ $t('查询') }}</el-button>
         </el-form-item>
@@ -29,6 +29,7 @@
     <!--内容-->
     <div class="product-content">
       <div class="table-wrap">
+        <div class="tips">{{ $t('注：如选择已有会员卡用户，将会根据最新操作更换其会员卡') }}</div>
         <el-table :data="tableData" size="small" border style="width: 100%" v-loading="loading" @selection-change="handleSelectionChange">
           <!-- <el-table-column prop="" label="微信头像" width="70">
             <template #default="scope">

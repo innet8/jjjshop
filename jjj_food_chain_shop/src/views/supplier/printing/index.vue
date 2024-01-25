@@ -11,6 +11,8 @@
         <preview v-if="activeName == 'preview'"></preview>
         <!--打印设置-->
         <dishes v-if="activeName == 'dishes'"></dishes>
+        <!--打印设置-->
+        <setMenu v-if="activeName == 'setting'"></setMenu>
     </div>
 </template>
 <script>
@@ -21,13 +23,14 @@ import printer from './printer/index.vue';
 import dishes from './dishes/index.vue';
 import printing from './printing/index.vue';
 import preview from './preview/index.vue';
-
+import setMenu from './setting/index.vue';
 export default defineComponent({
     components: {
         printer,
         dishes,
         printing,
         preview,
+        setMenu,
     },
     setup() {
 
@@ -61,8 +64,13 @@ export default defineComponent({
             },
             {
                 key: 'printing',
-                value: $t('打印设置'),
+                value: $t('收银打印设置'),
                 path: '/supplier/printing/printing/index'
+            },
+            {
+                key: 'setting',
+                value: $t('打印设置'),
+                path: '/supplier/printing/setting/index'
             },
             ],
             /*权限筛选后的数据*/
