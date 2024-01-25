@@ -21,7 +21,7 @@ class Category extends Controller
     public function index()
     {
         $model = new CategoryModel;
-        $list = $model->getCashierALL(1, 0, $this->table['shop_supplier_id']);
+        $list = $model->getCashierALL(1, $this->table['shop_supplier_id']);
         return $this->renderSuccess('', compact('list'));
     }
 }
