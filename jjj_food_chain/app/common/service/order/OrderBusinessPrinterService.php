@@ -77,7 +77,7 @@ class OrderBusinessPrinterService
             $printer = new SunmiCloudPrinter(567);
             $printer->lineFeed();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
-            $printer->appendText("*".__("店铺名称")."({$data['supplier']['name']})*\n");
+            $printer->appendText("***{$data['supplier']['name']}***\n");
             $printer->lineFeed();
             $printer->setLineSpacing(80);
             $printer->setPrintModes(true, true, false);
@@ -221,7 +221,7 @@ class OrderBusinessPrinterService
         */
         $width = 32;
         $leftWidth = 16;
-        $content = "<C>*" . __('店铺名称') . "({$data['supplier']['name']})*</C><BR>";
+        $content = "<C>***{$user['supplier']['name']}***</C><BR>";
         $content .= "<CB>" . __('营业数据') . "</CB><BR>";
         $content .= __('时间') . "：{$startTime}" . __('至') . "{$endTime}<BR><BR>";
         $content .= printText(__('分类'), __('数量'),  __('金额'), $width, $leftWidth);

@@ -58,7 +58,9 @@ class OrderHandoverPrinterService
             // 获取订单打印内容
             $content = $this->getPrintContent($printer, $data);
             // 执行打印请求
-            return $printerDriver->printTicket($content);
+            $user = User::where('shop_user_id',$data['shift_user_id'])->find();
+            // 
+            return $printerDriver->printTicket($content, $user['supplier']['name']);
         }
     }
 
@@ -74,6 +76,7 @@ class OrderHandoverPrinterService
         $cashTakenOut = number_format($data['cash_taken_out'], 2);
         $cashLeft = number_format($data['cash_left'], 2);
         $user = User::where('shop_user_id',$data['shift_user_id'])->find();
+        $isThai =  preg_match('/[\p{Thai}]/u', __("金额"));
         $categorys = Order::alias('a')
             ->leftJoin('order_product rp','a.order_id = rp.order_id')
             ->leftJoin('product p','p.product_id = rp.product_id')
@@ -97,7 +100,7 @@ class OrderHandoverPrinterService
             $printer = new SunmiCloudPrinter(567);
             $printer->lineFeed();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
-            $printer->appendText("*" . __("店铺名称") . "({$user['supplier']['name']})*\n");
+            $printer->appendText("***{$user['supplier']['name']}***\n");
             $printer->lineFeed();
             $printer->setLineSpacing(80);
             $printer->setPrintModes(true, true, false);
@@ -170,12 +173,10 @@ class OrderHandoverPrinterService
         *
         */
         if ($printers == PrinterTypeEnum::SUNMI_LAN || $printers['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
-            $width = 48;
-            $leftWidth = 30;
+            $width = 48 - ($isThai ? 2 : 0);
+            $leftWidth = 32;
             $printer = new SunmiCloudPrinter(567);
-            $printer->restoreDefaultSettings();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
-            $printer->appendText("*" . __("店铺名称") . "({$user['supplier']['name']})*\n");
             $printer->lineFeed();
             $printer->setLineSpacing(80);
             $printer->setPrintModes(true, true, false);
@@ -188,8 +189,11 @@ class OrderHandoverPrinterService
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->appendText(printText(__("交班编号"), '', $data['shift_no'], $width));
+            $printer->lineFeed();
             $printer->appendText(printText(__("交班人"), '', $user->real_name, $width));
-            $printer->appendText(printText(__("当班时间"), '      ', date('Y-m-d H:i:s', $startTime) . " " . __("至") . " " . date('Y-m-d H:i:s', $endTime), $width));
+            $printer->lineFeed();
+            $printer->appendText(printText(__("当班时间"), '  ', date('Y-m-d H:i:s', $startTime) . " " . __("至") . " " . date('Y-m-d H:i:s', $endTime), $width));
+            $printer->lineFeed();
             $printer->lineFeed();
             //
             $printer->restoreDefaultLineSpacing();
@@ -211,20 +215,25 @@ class OrderHandoverPrinterService
             //
             if ($sales > 0) {
                 $printer->appendText(printText(__("销售笔数"), '', "{$sales}", $width));
+                $printer->lineFeed();
             }
             foreach ($data['incomes'] as $key => $income) {
                 $printer->appendText(printText($income['pay_type_name'], '', $this->currencyUnit . "{$income['price']}", $width));
+                $printer->lineFeed();
             }
             if ($data['refund_amount'] > 0) {
                 $printer->appendText(printText(__("退款金额"), '', $this->currencyUnit . "{$data['refund_amount']}", $width));
+                $printer->lineFeed();
             }
             //
             $printer->lineFeed();
-            $printer->lineFeed();
             $printer->appendText("------------------------------------------------\n");
             $printer->appendText(printText(__("本班营业总额"), '',  $this->currencyUnit . "{$totalIncome}", $width, $leftWidth));
+            $printer->lineFeed();
             $printer->appendText(printText(__("上一班遗留备用金"), '', $this->currencyUnit . "{$previousShiftCash}", $width, $leftWidth));
+            $printer->lineFeed();
             $printer->appendText(printText(__("本班取出现金"), '', $this->currencyUnit . "{$cashTakenOut}", $width, $leftWidth));
+            $printer->lineFeed();
             $printer->appendText(printText(__("本班遗留备用金"), '', $this->currencyUnit . "{$cashLeft}", $width, $leftWidth));
             //
             $printer->lineFeed(4);
@@ -242,7 +251,7 @@ class OrderHandoverPrinterService
         */
         $width = 32;
         $leftWidth = 16;
-        $content = "<C>*" . __('店铺名称') . "({$user['supplier']['name']})*</C><BR>";
+        $content = "<C>***{$user['supplier']['name']}***</C><BR>";
         $content .= "<CB>" . __('交班单') . "</CB><BR>";
         $content .= printText(__('交班编号'), ' ', $data['shift_no'], $width) . "<BR>";
         $content .= printText(__('交班人'), ' ', $user->real_name, $width) . "<BR>";
