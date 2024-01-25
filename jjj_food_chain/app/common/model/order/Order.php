@@ -739,7 +739,7 @@ class Order extends BaseModel
             $model = $model->where('p.shop_supplier_id', '=', $shop_supplier_id);
         }
         if ($start_time && $end_time) {
-            $model = $model->where('o.create_time', 'between', [strtotime($start_time), strtotime($end_time)]);
+            $model = $model->where('o.create_time', 'between', [strtotime($start_time), strtotime($end_time) + 86399]);
         }
         $list = $model->alias('op')
             ->where('o.pay_status', '=', 20)
