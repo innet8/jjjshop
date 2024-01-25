@@ -36,9 +36,9 @@ class Driver
     /**
      * 执行打印请求
      */
-    public function printTicket($content)
+    public function printTicket($content, $name = '')
     {
-        return $this->engine->printTicket($content);
+        return $this->engine->printTicket($content, $name);
     }
 
     /**

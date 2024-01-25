@@ -36,10 +36,10 @@ class OrderBusinessPrinterService
         if (($printerConfig['cashier_printer_id'] ?? '0') == '0') {
             $content = $this->getPrintContent(PrinterTypeEnum::SUNMI_LAN, $data);
             $content = hex2bin($content);
-            if (!preg_match('/[\p{Thai}]/u', $content)) {
-                $content = iconv("UTF-8", "GBK//IGNORE", $content);
+            if (preg_match('/[\p{Thai}]/u', $content)) {
+                $content = iconv("UTF-8", "CP874//IGNORE", $content);
             } else {
-                $content = iconv("UTF-8", "UTF-8//IGNORE", $content);
+                $content = iconv("UTF-8", "GBK//IGNORE", $content);
             }
             $content = bin2hex($content);
             Cache::set("printer_data_cache", array_unique(array_merge(Cache::get("printer_data_cache",[]),[$content])), 60 * 60 * 24);
@@ -53,19 +53,20 @@ class OrderBusinessPrinterService
             // 实例化打印机驱动
             $printerDriver = new PrinterDriver($printer);
             // 获取订单打印内容
-            $content = $this->getPrintContent($printer,$data);
+            $content = $this->getPrintContent($printer, $data);
             // 执行打印请求
-            return $printerDriver->printTicket($content);
+            return $printerDriver->printTicket($content, $data['supplier']['name']);
         }
     }
 
     /**
      * 构建订单打印的内容
      */
-    private function getPrintContent($printers,$data)
+    private function getPrintContent($printers, $data)
     {
         $startTime = date('Y-m-d H:i:s', $data['times'][0]);
-        $endTime = $data['times'][1] ? date('Y-m-d H:i:s', $data['times'][1]) : date('Y/m/d H:i:s');
+        $endTime = $data['times'][1] ? date('Y-m-d H:i:s', $data['times'][1]) : date('Y-m-d H:i:s');
+        $isThai =  preg_match('/[\p{Thai}]/u', __("金额"));
 
         /* *
         *
@@ -146,10 +147,9 @@ class OrderBusinessPrinterService
         *
         */
         if ($printers == PrinterTypeEnum::SUNMI_LAN || $printers['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
-            $width = 48;
+            $width = 48 - ($isThai ? 1 : 0);
             $printer = new SunmiCloudPrinter(567);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
-            $printer->appendText("*".__("店铺名称")."({$data['supplier']['name']})*\n");
             $printer->lineFeed();
             $printer->setLineSpacing(80);
             $printer->setPrintModes(true, true, false);
@@ -165,14 +165,14 @@ class OrderBusinessPrinterService
                 [60, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
             );
-            $printer->printInColumns(__("时间"), $startTime." ". __("至")." " . $endTime);
+            $printer->printInColumns(__("时间"), $startTime."". __("至")."" . $endTime);
             $printer->lineFeed();
             // 
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             // 
-            $printer->appendText(printText(__("分类"), __("数量"), __("金额"), $width, 29));
+            $printer->appendText(printText(__("分类"), __("数量"), __("金额"), $width + ($isThai ? 4 : 0) , 29));
             $printer->appendText("------------------------------------------------\n");
             $printer->lineFeed();
             foreach ($data['categorys'] as $key => $category) {
@@ -189,8 +189,12 @@ class OrderBusinessPrinterService
                 $printer->lineFeed();
             }
             // 
+            if ($isThai) {
+                $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
+            }
             foreach ($data['incomes'] as $key => $income) {
-                $printer->appendText(printText($income['pay_type_name'],'', $this->currencyUnit . "{$income['price']}",$width));
+                // $printer->appendText(printText($income['pay_type_name'],'', $this->currencyUnit . "1.00", $width, $isThai ? 41 : 0));
+                $printer->appendText(printText($income['pay_type_name'],'', $this->currencyUnit . "{$income['price']}", $width, $isThai ? 41 : 0));
                 $printer->lineFeed();
                 $printer->lineFeed();
             }
@@ -223,7 +227,7 @@ class OrderBusinessPrinterService
         $leftWidth = 16;
         $content = "<C>*" . __('店铺名称') . "({$data['supplier']['name']})*</C><BR>";
         $content .= "<CB>" . __('营业数据') . "</CB><BR>";
-        $content .= __('时间') . "：{$startTime} " . __('至') . " {$endTime}<BR><BR>";
+        $content .= __('时间') . "：{$startTime}" . __('至') . "{$endTime}<BR><BR>";
         $content .= printText(__('分类'), __('数量'),  __('金额'), $width, $leftWidth);
         $content .= "--------------------------------<BR>";
         foreach ($data['categorys'] as $key => $category) {

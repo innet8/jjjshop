@@ -28,6 +28,7 @@ class SunmiCloudPrinter
     private $asciiCharWidth = 12;
     private $cjkCharWidth = 24;
     public $orderData = "";
+    public $strs = "";
     private $columnSettings = array();
 
     public function __construct($dots_per_line = 384)
@@ -258,10 +259,18 @@ class SunmiCloudPrinter
     }
 
     // Append text.
-    function appendText($text)
+    function appendText($text, $isReturn=false)
     {
-        for ($i = 0; $i < strlen($text); $i++)
-            $this->orderData .= sprintf("%02x", ord($text[$i]));
+        if ($isReturn) {
+            $this->strs = '';
+            for ($i = 0; $i < strlen($text); $i++){
+                $this->strs .= sprintf("%02x", ord($text[$i]));
+            }
+            return $this->strs;
+        } else {
+            for ($i = 0; $i < strlen($text); $i++)
+                $this->orderData .= sprintf("%02x", ord($text[$i]));
+        }
     }
 
     // [LF] Print data in the buffer and feed lines.
@@ -379,6 +388,13 @@ class SunmiCloudPrinter
     {
         if ($n >= 0 && $n <= 255)
             $this->orderData .= sprintf("1d56%02x%02x", ($full_cut) ? 97 : 98, $n);
+    }
+
+    // [ESC a] Set alignment.
+    function setOrderData($n)
+    {
+        if ($n >= 0 && $n <= 2)
+            $this->orderData .= sprintf("1b61%02x", $n);
     }
 
     //////////////////////////////////////////////////
