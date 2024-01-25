@@ -49,8 +49,7 @@ class OrderProduct extends Controller
         $shop_supplier_id = $this->kitchen['shop_supplier_id'];
         // $list = $model->listByOrder(array_merge(['shop_supplier_id' => $shop_supplier_id], $this->postData()));
         $list = '';
-        // $bottom_finish = $model->getFinishOrderProduct($shop_supplier_id, 5);
-        $bottom_finish = '';
+        $bottom_finish = $model->getFinishOrderProduct($shop_supplier_id, 5);
         $service_time = time();
         return $this->renderSuccess('', compact('list', 'bottom_finish', 'service_time'));
     }
