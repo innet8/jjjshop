@@ -195,11 +195,17 @@ class Product extends ProductModel
      */
     public function getProductStockTotal($shop_supplier_id = 0)
     {
-        $model = $this;
-        if ($shop_supplier_id) {
-            $model = $model->where('shop_supplier_id', '=', $shop_supplier_id);
+        $query = $this->alias('product')
+        ->join('product_sku sku', 'sku.product_id = product.product_id')
+        ->where('sku.stock_num', '<', 10)
+        ->where('product.is_delete', '=', 0)
+        ->group('product.product_id');
+
+        if ($shop_supplier_id > 0) {
+            $query = $query->where('product.shop_supplier_id', $shop_supplier_id);
         }
-        return $model->where('is_delete', '=', 0)->hasWhere('sku', ProductSku::withoutGlobalScope()->where('stock_num', '<', 10))->count();
+
+        return $query->count();
     }
 
     public function getProductId($search)
