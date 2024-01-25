@@ -328,7 +328,7 @@ class OrderProduct extends BaseModel
             // 获取未送厨产品
             $order['product'] = $order->product()->where('is_send_kitchen', 0)->select();
             // 
-            // $this->where('order_id', '=', $order_id)->where('is_send_kitchen', '=', 0)->update(['is_send_kitchen' => 1, 'send_kitchen_time' => time()]);
+            $this->where('order_id', '=', $order_id)->where('is_send_kitchen', '=', 0)->update(['is_send_kitchen' => 1, 'send_kitchen_time' => time()]);
             $this->commit();
             // 
         } catch (\Exception $e) {
