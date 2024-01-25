@@ -92,8 +92,7 @@ class User extends BaseModel
     public static function getShopInfo()
     {
         $userModel = new static;
-        // 基础model层定义全局查询header中app_id，所以这里为or
-        $info = $userModel->whereOr('app_id', '>', 0)->find();
+        $info = $userModel->withoutGlobalScope()->where('app_id', '>', 0)->find();
         $app_id = $info?->app_id ?: 0;
         $shop_supplier_id = $info?->shop_supplier_id ?: 0;
         return compact('shop_supplier_id', 'app_id');
