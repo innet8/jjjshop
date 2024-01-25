@@ -113,6 +113,9 @@ server {
     location /cashier {
         index index.html;
     }
+    location /kitchen {
+        index index.html;
+    }
 
     location / {
         rewrite ^/index.php/(.*)$ /index.php?s=/\$1 last;
