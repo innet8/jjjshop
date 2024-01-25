@@ -1070,7 +1070,7 @@ class Order extends BaseModel
                     $discount = 0;
                 }
                 $alone_grade_type = 10;
-                // 商品单独设置了会员折扣
+                // 商品单独设置了会员折扣  （折扣类型 alone_grade_type 10-百分比 20-固定金额）
                 if ($user) {
                     if ($product['product']['is_alone_grade'] && isset($product['product']['alone_grade_equity'][$user['grade_id']])) {
                         if ($product['product']['alone_grade_type'] == 10) {

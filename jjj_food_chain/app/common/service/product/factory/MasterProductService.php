@@ -195,10 +195,8 @@ class MasterProductService extends ProductService
 
         try {
             // 更新商品销量
-            trace($productData);
             !empty($productData) && $this->updateProduct($productData);
             // 更新商品sku库存
-            trace($productSkuData);
             !empty($productSkuData) && $this->updateProductSku($productSkuData);
         } catch (\Exception $e) {
             log_write('master updateProductStock' . $e->getMessage());
