@@ -20,7 +20,7 @@ class CashierOrderSettledService extends CashierSettledService
         parent::__construct($user, $productList, $params);
         //订单来源
         $this->orderSource = [
-            'source' => OrderSourceEnum::CASHIER,
+            'source' => isset($params['order_source']) ? $params['order_source'] : 20,
             'eat_type' => $params['eat_type']
         ];
         //自身构造,差异化规则
