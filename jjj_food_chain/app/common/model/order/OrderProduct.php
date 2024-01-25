@@ -202,7 +202,7 @@ class OrderProduct extends BaseModel
             'order_id' => $this['order_id'],
             'product_id' => $this['product_id'],
         ])->sum('total_num');
-        if (($param['product_num'] - $this['total_num'] + $curNum) > $limitNum) {
+        if ($limitNum && (($param['product_num'] - $this['total_num'] + $curNum) > $limitNum)) {
             $this->error = '超过限购数量';
             return false;
         }

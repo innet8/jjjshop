@@ -300,11 +300,12 @@ class Order extends OrderModel
             $discount_ratio = 0;
             switch ($data['type']) {
                 case '1'://改价
-                    if ($data['money'] > $detail['order_price']) {
-                        $this->error = "修改价应小于原价";
-                        return false;
-                    }
+//                    if ($data['money'] > $detail['order_price']) {
+//                        $this->error = "修改价应小于原价";
+//                        return false;
+//                    }
                     $discount_money = round($detail['order_price'] - $data['money'], 2);
+                    $discount_money = max($discount_money, 0);
                     break;
                 case '2'://折扣
 //                    if ($data['rate'] > 10) {
@@ -338,10 +339,15 @@ class Order extends OrderModel
                     $detail->save(['discount_ratio' => $discount_ratio]);
                     (new OrderModel())->reloadPrice($detail['order_id']);
                 } else {
-                    $pay_price = round($detail['order_price'] - $discount_money, 2);
+                    if ($data['money'] > $detail['order_price']) {
+                        $pay_price = $data['money'];
+                    } else {
+                        $pay_price = round($detail['order_price'] - $discount_money, 2);
+                    }
                     if ($pay_price <= 0) {
                         $pay_price = 0;
                     }
+
                     $detail->save(['discount_money' => $discount_money, 'pay_price' => $pay_price]);
                 }
             }
