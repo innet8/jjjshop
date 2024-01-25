@@ -319,10 +319,14 @@ class Order extends OrderModel
                         $this->error = "请输入合理的折扣";
                         return false;
                     }
-                    $discount_ratio =  $data['rate'];
+                    if ($data['rate'] < 1) {
+                        $discount_ratio = -1;
+                    } else {
+                        $discount_ratio = $data['rate'];
+                    }
+
                     break;
                 case '3'://抹零
-                    trace($detail['order_price']);
                     if ($data['discountType'] == 1) {//抹分
                         $discount_money = round($detail['order_price'] - intval($detail['pay_price'] * 10) / 10, 2);
                     } elseif ($data['discountType'] == 2) {//抹角
@@ -334,23 +338,39 @@ class Order extends OrderModel
                     }
                     break;
             }
-            if ($discount_money >= 0) {
-                if ($data['type'] == 2) {
-                    $detail->save(['discount_ratio' => $discount_ratio]);
-                    (new OrderModel())->reloadPrice($detail['order_id']);
-                } else {
-                    if ($data['money'] > $detail['order_price']) {
-                        $pay_price = $data['money'];
-                    } else {
-                        $pay_price = round($detail['order_price'] - $discount_money, 2);
-                    }
-                    if ($pay_price <= 0) {
-                        $pay_price = 0;
-                    }
 
-                    $detail->save(['discount_money' => $discount_money, 'pay_price' => $pay_price]);
+            if ($data['type'] == 2) {
+                $detail->save(['discount_ratio' => $discount_ratio]);
+                (new OrderModel())->reloadPrice($detail['order_id']);
+            } else {
+                if ($data['money'] > $detail['order_price']) {
+                    $pay_price = $data['money'];
+                } else {
+                    $pay_price = round($detail['order_price'] - $discount_money, 2);
                 }
+                if ($pay_price <= 0) {
+                    $pay_price = 0;
+                }
+
+                $detail->save(['discount_money' => $discount_money, 'pay_price' => $pay_price]);
             }
+//            if ($discount_money >= 0) {
+//                if ($data['type'] == 2) {
+//                    $detail->save(['discount_ratio' => $discount_ratio]);
+//                    (new OrderModel())->reloadPrice($detail['order_id']);
+//                } else {
+//                    if ($data['money'] > $detail['order_price']) {
+//                        $pay_price = $data['money'];
+//                    } else {
+//                        $pay_price = round($detail['order_price'] - $discount_money, 2);
+//                    }
+//                    if ($pay_price <= 0) {
+//                        $pay_price = 0;
+//                    }
+//
+//                    $detail->save(['discount_money' => $discount_money, 'pay_price' => $pay_price]);
+//                }
+//            }
             $this->commit();
             return true;
         } catch (\Exception $e) {

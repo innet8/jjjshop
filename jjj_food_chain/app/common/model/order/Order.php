@@ -1190,6 +1190,9 @@ class Order extends BaseModel
         if ($order['discount_ratio'] > 0) {
             $pay_price = round($pay_price * $order['discount_ratio'] / 100, 2);;
             $discount_money = round($pay_price * (100 - $order['discount_ratio']) / 100, 2);
+        } else if ($order['discount_ratio'] == -1){
+            $discount_money = $pay_price;
+            $pay_price = 0;
         }
 
         // 会员优惠金额
