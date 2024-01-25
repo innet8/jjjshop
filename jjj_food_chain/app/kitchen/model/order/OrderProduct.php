@@ -20,6 +20,7 @@ class OrderProduct extends OrderProductModel
         $query = $this->alias('op')
             ->join('order o', 'op.order_id = o.order_id', 'left')
             ->where('op.is_send_kitchen', '=', 1)
+            ->where('op.finish_num', '=', 0)
             ->order(['op.send_kitchen_time' => 'asc']); // 按照送厨时间排序
 
         if ($shop_supplier_id > 0) {
@@ -54,6 +55,7 @@ class OrderProduct extends OrderProductModel
             ->join('product p', 'op.product_id = p.product_id', 'left')
             ->join('category c', 'p.category_id = c.category_id', 'left')
             ->where('op.is_send_kitchen', '=', 1)
+            ->where('op.finish_num', '=', 0)
             ->where('c.parent_id', '=', 0) // 只查询一级分类
             ->order(['c.sort' => 'asc', 'c.create_time' => 'asc']); // 按照分类排序号和创建时间排序
 

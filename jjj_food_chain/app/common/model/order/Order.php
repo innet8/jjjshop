@@ -1237,6 +1237,16 @@ class Order extends BaseModel
 
             // 已存在order_id，直接添加到订单
             if (isset($data['order_id']) && $data['order_id'] > 0) {
+                // 检查订单状态
+                $detail = self::detail([
+                    ['order_id', '=', $data['order_id']],
+                    ['order_status', '=', OrderStatusEnum::NORMAL]
+                ]);
+                if (!$detail) {
+                    $this->error = '订单不存在';
+                    return false;
+                }
+
                 $orderProduct = new OrderProductModel;
 //                $order_product_id = $orderProduct->isExist($data);
                 $order_product_id = 0;
@@ -1268,12 +1278,15 @@ class Order extends BaseModel
                 $return_order = $data['order_id'];
 
             } else if(isset($data['table_id']) && $data['table_id'] > 0) {
-
-
+                // 检查订单状态
                 $detail = self::detail([
                     ['table_id', '=', $data['table_id']],
                     ['order_status', '=', OrderStatusEnum::NORMAL]
                 ]);
+                if (!$detail) {
+                    $this->error = '订单不存在';
+                    return false;
+                }
                 $order_id = $detail['order_id'];
                 $data['order_id'] = $order_id;
 

@@ -101,7 +101,6 @@ class OrderProduct extends Controller
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/kitchen/order.OrderProduct/kitchenConfirm")
      * @Apidoc\Param("order_product_id", type="int", require=true, default="", desc="订单商品id")
-     * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned()
      */
     public function kitchenConfirm()
@@ -147,7 +146,6 @@ class OrderProduct extends Controller
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/kitchen/order.OrderProduct/kitchenRecover")
      * @Apidoc\Param("order_product_id", type="int", require=true, default="", desc="订单商品id")
-     * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned()
      */
     public function kitchenRecover()
