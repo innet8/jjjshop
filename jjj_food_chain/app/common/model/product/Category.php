@@ -163,7 +163,7 @@ class Category extends BaseModel
     /**
      * 获取收银台分类
      */
-    public static function getCashierALL($type, $is_special, $shop_supplier_id)
+    public static function getCashierALL($type, $shop_supplier_id)
     {
         $model = new static;
         $supplier = SupplierModel::detail($shop_supplier_id);
@@ -176,7 +176,6 @@ class Category extends BaseModel
             ->where('parent_id', '=', 0)
             ->where('type', '=', $type)
             ->where('status', '=', 1)
-            ->where('is_special', '=', $is_special)
             ->order(['sort' => 'asc', 'create_time' => 'asc'])
             ->where('shop_supplier_id', '=', $shop_supplier_id)
             ->select();
