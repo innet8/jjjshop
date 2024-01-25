@@ -5,6 +5,7 @@ namespace app\cashier\controller\order;
 use app\cashier\controller\Controller;
 use app\cashier\model\order\Cart as CartModel;
 use app\cashier\model\order\Order as OrderModel;
+use app\common\enum\order\OrderStatusEnum;
 use app\common\model\order\OrderProduct;
 use hg\apidoc\annotation as Apidoc;
 
@@ -125,12 +126,6 @@ class Cart extends Controller
      */
     public function delStay($order_id)
     {
-//        $model = new CartModel();
-//        if ($model->delStay($cart_no)) {
-//            return $this->renderSuccess('取消成功');
-//        };
-//        return $this->renderError($model->getError() ?: '取消失败');
-
         $model = new OrderModel();
         if ($model->delStay($order_id)) {
             return $this->renderSuccess('取消成功');
@@ -185,21 +180,21 @@ class Cart extends Controller
         return $this->renderError($model->getError() ?: '取单失败');
     }
 
-    /**
-     * @Apidoc\Title("删掉挂单")
-     * @Apidoc\Method("POST")
-     * @Apidoc\Url ("/index.php/cashier/order.cart/delCart")
-     * @Apidoc\Param("cart_no", type="string", require=true, desc="挂起单号")
-     * @Apidoc\Returned()
-     */
-    public function delCart($cart_no)
-    {
-        $model = new CartModel();
-        if ($model->delCart($cart_no)) {
-            return $this->renderSuccess('删除成功');
-        };
-        return $this->renderError($model->getError() ?: '删除失败');
-    }
+//    /**
+//     * @Apidoc\Title("删掉挂单（购物车）")
+//     * @Apidoc\Method("POST")
+//     * @Apidoc\Url ("/index.php/cashier/order.cart/delCart")
+//     * @Apidoc\Param("cart_no", type="string", require=true, desc="挂起单号")
+//     * @Apidoc\Returned()
+//     */
+//    public function delCart($cart_no)
+//    {
+//        $model = new CartModel();
+//        if ($model->delCart($cart_no)) {
+//            return $this->renderSuccess('删除成功');
+//        };
+//        return $this->renderError($model->getError() ?: '删除失败');
+//    }
 
     /**
      * @Apidoc\Title("折扣抹零")
@@ -309,7 +304,14 @@ class Cart extends Controller
      */
     public function moveProduct($order_id, $order_product_id, $num, $return_reason = '')
     {
-        $detail = OrderModel::detail($order_id);
+        // 检查订单状态
+        $detail = OrderModel::detail([
+            ['order_id', '=', $order_id],
+            ['order_status', '=', OrderStatusEnum::NORMAL]
+        ]);
+        if (!$detail) {
+            return $this->renderError('当前状态不可操作');
+        }
         if ($detail?->moveProduct($order_product_id, $num, $return_reason)) {
             return $this->renderSuccess('退菜成功');
         }

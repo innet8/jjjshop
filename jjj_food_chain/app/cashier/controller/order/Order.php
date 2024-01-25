@@ -180,7 +180,7 @@ class Order extends Controller
     {
         $detail = OrderModel::getTableUnderwayOrder($table_id);
         if (!$detail) {
-            return $this->renderError('记录不存在');
+            return $this->renderError('当前状态不可操作');
         }
         if ($detail->updateMealNum($meal_num)) {
             return $this->renderSuccess('修改就餐人数成功');

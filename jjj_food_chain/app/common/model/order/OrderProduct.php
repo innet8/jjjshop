@@ -220,9 +220,17 @@ class OrderProduct extends BaseModel
         try {
             $model = $this->where('order_product_id', '=', $order_product_id)->find();
             $order_id = $model['order_id'];
-            trace($order_id);
             if (!$model) {
                 $this->error = '记录不存在';
+                return false;
+            }
+            // 检查订单状态
+            $detail = OrderModel::detail([
+                ['order_id', '=', $order_id],
+                ['order_status', '=', OrderStatusEnum::NORMAL]
+            ]);
+            if (!$detail) {
+                $this->error = '当前订单不可修改';
                 return false;
             }
             if ($model->is_send_kitchen == 1) {

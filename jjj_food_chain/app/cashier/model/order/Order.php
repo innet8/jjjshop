@@ -263,9 +263,20 @@ class Order extends OrderModel
     public function changeMoney($user, $data)
     {
         if (isset($data['order_id']) && $data['order_id'] > 0) {
-            $detail = self::detail($data['order_id']);
+            $detail = OrderModel::detail([
+                ['order_id', '=', $data['order_id']],
+                ['order_status', '=', OrderStatusEnum::NORMAL]
+            ]);
         } else if (isset($data['table_id']) && $data['table_id'] > 0) {
             $detail = self::getTableUnderwayOrder($data['table_id']);
+        } else {
+            $detail = null;
+        }
+
+        // 检查订单状态
+        if (!$detail) {
+            $this->error = '当前状态不可操作';
+            return false;
         }
 
         if ($detail['pay_status']['value'] != 10) {
@@ -657,6 +668,15 @@ class Order extends OrderModel
     // 整单取消
     public function delStay($order_id)
     {
+        // 检查订单状态
+        $detail = OrderModel::detail([
+            ['order_id', '=', $order_id],
+            ['order_status', '=', OrderStatusEnum::NORMAL]
+        ]);
+        if (!$detail) {
+            $this->error = '当前状态不可操作';
+            return false;
+        }
         $this->startTrans();
         try {
             // 把送厨的订单删除
@@ -678,18 +698,36 @@ class Order extends OrderModel
     // 挂单列表
     public function getStayList()
     {
-        return $this->with(['product'])->where('is_stay', '=', 1)->where('order_status', '=', 10)->select();
+        return $this->with(['product'])->where('is_stay', '=', 1)->where('order_status', '=', OrderStatusEnum::NORMAL)->select();
     }
 
     // 订单挂单
     public function stayOrder($order_id)
     {
+        // 检查订单状态
+        $detail = OrderModel::detail([
+            ['order_id', '=', $order_id],
+            ['order_status', '=', OrderStatusEnum::NORMAL]
+        ]);
+        if (!$detail) {
+            $this->error = '当前状态不可操作';
+            return false;
+        }
         return $this->where('order_id', '=', $order_id)->update(['is_stay' => 1, 'stay_time' => time()]);
     }
 
     // 订单取单
     public function pickOrder($order_id)
     {
+        // 检查订单状态
+        $detail = OrderModel::detail([
+            ['order_id', '=', $order_id],
+            ['order_status', '=', OrderStatusEnum::NORMAL]
+        ]);
+        if (!$detail) {
+            $this->error = '当前状态不可操作';
+            return false;
+        }
         return $this->where('order_id', '=', $order_id)->update(['is_stay' => 0]);
     }
 

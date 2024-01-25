@@ -230,7 +230,7 @@ class HallCart extends Controller
     {
         $detail = OrderModel::getTableUnderwayOrder($table_id);
         if (!$detail) {
-            return $this->renderError('订单不存在');
+            return $this->renderError('当前状态不可操作');
         }
         if ($detail?->moveProduct($order_product_id, $num, $return_reason)) {
             return $this->renderSuccess('退菜成功');
