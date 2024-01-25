@@ -212,9 +212,10 @@ class Product extends BaseModel
                 $model = $model->where('product_status', '=', 10);
             }
         }
-        //
+        // 产品需求，如果sku规格库中数量少于传输的库存数量，就要显示
         if (isset($params['stock']) && $params['stock'] > 0) {
-            $model = $model->where('product_stock', '<' , $params['stock']);
+            $stock = (int)$params['stock'];
+            $model = $model->hasWhere('sku', ProductSku::withoutGlobalScope()->where('stock_num', '<', $stock));
         }
         //
         if (isset($params['shop_supplier_id']) && $params['shop_supplier_id']) {

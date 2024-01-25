@@ -27,6 +27,7 @@ class Product extends ProductModel
         foreach ($data['product_feed'] as &$item) {
             $item = $this->sanitizeProductData($item);
         }
+        unset($item);
         // 开启事务
         $this->startTrans();
         try {
@@ -98,6 +99,7 @@ class Product extends ProductModel
         foreach ($data['product_feed'] as &$item) {
             $item = $this->sanitizeProductData($item);
         }
+        unset($item);
         return $this->transaction(function () use ($data, $productSkuIdList) {
             $this->save($data);
             // 商品规格
@@ -129,6 +131,7 @@ class Product extends ProductModel
         foreach ($data['sku'] as &$item) {
             $item = $this->sanitizeProductData($item);
         }
+        unset($item);
         // 添加规格数据
         if ($data['spec_type'] == '10') {
             $sku = $data['sku'][0];
@@ -196,7 +199,7 @@ class Product extends ProductModel
         if ($shop_supplier_id) {
             $model = $model->where('shop_supplier_id', '=', $shop_supplier_id);
         }
-        return $model->where('is_delete', '=', 0)->where('product_stock', '<', 10)->count();
+        return $model->where('is_delete', '=', 0)->hasWhere('sku', ProductSku::withoutGlobalScope()->where('stock_num', '<', 10))->count();
     }
 
     public function getProductId($search)
