@@ -17,7 +17,7 @@ class OrderProduct extends OrderProductModel
     public function listByOrder($params)
     {
         Db::connect()->execute("SET SESSION sql_mode = ''");
-        // 
+        //
         $shop_supplier_id = $params['shop_supplier_id'];
 
         $query = $this->alias('op')
@@ -51,6 +51,8 @@ class OrderProduct extends OrderProductModel
      */
     public function listByCategory($params)
     {
+        Db::connect()->execute("SET SESSION sql_mode = ''");
+        //
         $shop_supplier_id = $params['shop_supplier_id'];
         $category_id = $params['category_id'] ?? 0;
 
@@ -97,6 +99,8 @@ class OrderProduct extends OrderProductModel
      */
     public function history($params)
     {
+        Db::connect()->execute("SET SESSION sql_mode = ''");
+        //
         $shop_supplier_id = $params['shop_supplier_id'];
 
         $query = $this->alias('op')
