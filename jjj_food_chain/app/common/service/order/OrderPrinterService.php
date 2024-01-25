@@ -42,7 +42,7 @@ class OrderPrinterService
             if (!preg_match('/[\p{Thai}]/u', $content) ) {
                 $content = iconv("UTF-8", "GBK//IGNORE", $content);
             } else {
-                $content = iconv("UTF-8", "UTF-8//IGNORE", $content);
+                $content = iconv("UTF-8", "TIS-620//IGNORE", $content);
             }
             $content = bin2hex($content);
             Cache::set("printer_data_cache", array_unique(array_merge(Cache::get("printer_data_cache",[]),[$content])), 60 * 60 * 24);

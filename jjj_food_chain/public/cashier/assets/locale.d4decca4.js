@@ -1,1 +1,0 @@
-import{aB as a,c as e,aC as o,aD as l}from"./index-966932e2.js";function c(){const c=a();return{currentLocale:e((()=>c.locale.value)),changeLocale:a=>{c.locale.value!==a&&(c.locale.value=a,o(l,a),setTimeout((()=>{location.reload()}),300))}}}export{c as u};
