@@ -198,14 +198,13 @@ class Product extends ProductModel
         $query = $this->alias('product')
         ->join('product_sku sku', 'sku.product_id = product.product_id')
         ->where('sku.stock_num', '<', 10)
-        ->where('product.is_delete', '=', 0)
-        ->group('product.product_id');
+        ->where('product.is_delete', '=', 0);
 
         if ($shop_supplier_id > 0) {
             $query = $query->where('product.shop_supplier_id', $shop_supplier_id);
         }
 
-        return $query->count();
+        return count($query->distinct(true)->column('product.product_id'));
     }
 
     public function getProductId($search)
