@@ -327,6 +327,8 @@ class OrderProduct extends BaseModel
             }
             // 获取未送厨产品
             $order['product'] = $order->product()->where('is_send_kitchen', 0)->select();
+            // 更新前打印数据
+            $printOrder = $order;
             // 
             $this->where('order_id', '=', $order_id)->where('is_send_kitchen', '=', 0)->update(['is_send_kitchen' => 1, 'send_kitchen_time' => time()]);
             $this->commit();
@@ -338,7 +340,7 @@ class OrderProduct extends BaseModel
             return false;
         }
         // 菜品打印
-        (new OrderPrinterService)->printProductTicket($order, 30);
+        (new OrderPrinterService)->printProductTicket($printOrder, 30);
         // 
         return true;
     }
