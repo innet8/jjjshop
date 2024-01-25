@@ -298,17 +298,28 @@ class OrderProduct extends BaseModel
             $this->error = "订单不存在";
             return false;
         }
-        ProductFactory::getFactory($order['order_source'])->updateOrderProductStock($order['unSendKitchenProduct']);
-        // 送厨更新取单号
-        if ($order->table_id == 0){
-            $order->callNo = getTableNumber();
-            $order->save();
+        $this->startTrans();
+        try {
+            $order->where('order_id', $order_id)->inc('extra_times', 1)->update();
+            ProductFactory::getFactory($order['order_source'])->updateOrderProductStock($order['unSendKitchenProduct']);
+            // 送厨更新取单号
+            if ($order->table_id == 0){
+                $order->callNo = getTableNumber();
+                $order->save();
+            }
+            $this->where('order_id', '=', $order_id)->where('is_send_kitchen', '=', 0)->update(['is_send_kitchen' => 1, 'send_kitchen_time' => time()]);
+            $this->commit();
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
+            $this->error = $e->getMessage();
+            $this->rollback();
+            return false;
         }
+
         // 菜品打印
         $order['product'] = $order->product()->where('is_send_kitchen', 0)->select();
         (new OrderPrinterService)->printProductTicket($order, 30);
-        //
-        return $this->where('order_id', '=', $order_id)->where('is_send_kitchen', '=', 0)->update(['is_send_kitchen' => 1, 'send_kitchen_time' => time()]);
+        return true;
     }
 
     // 订单送厨商品按送厨时间分组
