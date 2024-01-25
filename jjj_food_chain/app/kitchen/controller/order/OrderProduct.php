@@ -48,9 +48,6 @@ class OrderProduct extends Controller
         $model = new OrderProductModel;
         $shop_supplier_id = $this->kitchen['shop_supplier_id'];
 
-        dump(array_merge(['shop_supplier_id' => $shop_supplier_id], $this->postData()));
-        die;
-
         $list = $model->listByOrder(array_merge(['shop_supplier_id' => $shop_supplier_id], $this->postData()));
         $bottom_finish = $model->getFinishOrderProduct($shop_supplier_id, 5);
         $service_time = time();
