@@ -36,9 +36,11 @@ class OrderBusinessPrinterService
         if (($printerConfig['cashier_printer_id'] ?? '0') == '0') {
             $content = $this->getPrintContent(PrinterTypeEnum::SUNMI_LAN, $data);
             $content = hex2bin($content);
-            if (!preg_match('/[\x{0E00}-\x{0E7F}]/u', $content) ) {
-                $content = iconv("UTF-8", "GBK//IGNORE" ,$content);
-            } 
+            if (!preg_match('/[\p{Thai}]/u', $content)) {
+                $content = iconv("UTF-8", "GBK//IGNORE", $content);
+            } else {
+                $content = iconv("UTF-8", "UTF-8//IGNORE", $content);
+            }
             $content = bin2hex($content);
             Cache::set("printer_data_cache", array_unique(array_merge(Cache::get("printer_data_cache",[]),[$content])), 60 * 60 * 24);
             return true;
@@ -70,7 +72,7 @@ class OrderBusinessPrinterService
         *商米打印机
         *
         */
-        if (!is_string($printers) && $printers['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
+        if (0 && !is_string($printers) && $printers['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
             $printer = new SunmiCloudPrinter(567);
             $printer->lineFeed();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
@@ -143,7 +145,7 @@ class OrderBusinessPrinterService
         *芯烨打印机 
         *
         */
-        if ($printers == PrinterTypeEnum::SUNMI_LAN || $printers['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
+        if (1 || $printers == PrinterTypeEnum::SUNMI_LAN || $printers['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
             $width = 48;
             $printer = new SunmiCloudPrinter(567);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);

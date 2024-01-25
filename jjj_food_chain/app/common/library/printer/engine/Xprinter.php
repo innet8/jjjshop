@@ -27,9 +27,11 @@ class Xprinter extends Basics
             trace("连接打印机出错");
             return false;
         }
-        if (!preg_match('/[\x{0E00}-\x{0E7F}]/u', $content) ) {
-            $content = iconv("UTF-8", "GBK//IGNORE" ,$content);
-        } 
+        if (!preg_match('/[\p{Thai}]/u', $content)) {
+            $content = iconv("UTF-8", "GBK//IGNORE", $content);
+        } else {
+            $content = iconv("UTF-8", "UTF-8//IGNORE", $content);
+        }
         fwrite($fp, $content);
         //关闭打印机连接
         fclose($fp);
