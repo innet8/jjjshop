@@ -300,10 +300,10 @@ class Order extends OrderModel
             $discount_ratio = 0;
             switch ($data['type']) {
                 case '1'://改价
-//                    if ($data['money'] > $detail['order_price']) {
-//                        $this->error = "修改价应小于原价";
-//                        return false;
-//                    }
+                    if ($data['money'] > 100000000 || $data['money'] < 0) {
+                        $this->error = "价格范围错误";
+                        return false;
+                    }
                     $discount_money = round($detail['order_price'] - $data['money'], 2);
                     $discount_money = max($discount_money, 0);
                     break;
