@@ -119,6 +119,10 @@ export default {
 
         /*关闭弹窗*/
         dialogFormVisible(e) {
+            this.form = {
+                user_name: '',
+                access_id: []
+            }
             if (e) {
                 this.$emit('close', {
                     type: 'success',

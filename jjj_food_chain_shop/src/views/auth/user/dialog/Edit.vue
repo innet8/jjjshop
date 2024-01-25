@@ -116,6 +116,7 @@ export default {
                 obj.access_id = res.data.role_arr;
                 obj.password = '';
                 self.form = obj;
+                self.form.role_id = res.data.role_arr;
             })
                 .catch(error => {
                     self.loading = false;
@@ -143,6 +144,10 @@ export default {
 
         /*关闭弹窗*/
         dialogFormVisible(e) {
+            this.form = {
+                user_name: '',
+                access_id: []
+            }
             if (e) {
                 this.$emit('close', {
                     type: 'success',

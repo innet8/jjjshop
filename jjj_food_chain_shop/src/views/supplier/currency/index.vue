@@ -2,7 +2,7 @@
     <div class="supplier">
         <el-form size="small" ref="form" :model="form" label-position="top" :rules="formRules">
             <el-form-item :label="$t('主货币单位')" prop="unit">
-                <el-input class="max-w460" v-model="form.unit" placeholder="请输入"></el-input>
+                <el-input class="max-w460" v-model="form.unit" :maxlength="50" placeholder="请输入"></el-input>
             </el-form-item>
             <el-form-item :label="$t('副货币单位')" prop="is_open">
                 <div>
@@ -73,7 +73,7 @@ export default {
                 .then(data => {
                     self.loading = false;
                     self.form = data.data.vars.values;
-                    self.form.is_open =  data.data.vars.values.is_open.toString()
+                    self.form.is_open = data.data.vars.values.is_open.toString()
                 })
                 .catch(error => {
 
@@ -82,17 +82,22 @@ export default {
         onSubmit() {
             let self = this;
             let params = JSON.parse(JSON.stringify(self.form));
-            self.loading = true;
-            SettingApi.setCurrencyUnit(params, true).then(data => {
-                self.loading = false;
-                ElMessage({
-                    message: $t('保存成功'),
-                    type: 'success'
-                });
-                self.dialogFormVisible(true);
-            }).catch(error => {
-                self.loading = false;
-            });
+            self.$refs.form.validate((valid) => {
+                if (valid) {
+                    self.loading = true;
+                    SettingApi.setCurrencyUnit(params, true).then(data => {
+                        self.loading = false;
+                        ElMessage({
+                            message: $t('保存成功'),
+                            type: 'success'
+                        });
+                        self.dialogFormVisible(true);
+                    }).catch(error => {
+                        self.loading = false;
+                    });
+                }
+            })
+
         },
     },
 }
