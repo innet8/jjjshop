@@ -107,17 +107,17 @@
                             <p>{{ currency.unit }}{{ scope.row.order_price }}</p>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="pay_price" :label="$t('实付款')">
+                    <el-table-column prop="pay_price" :label="$t('实付金额')">
                         <template #default="scope">
                             <div>
                                 <div class="orange">{{ currency.unit }}{{ scope.row.pay_price }}</div>
-                                <p class="gray9" v-if="scope.row.setting_service_money > 0">({{ $t('服务费') }}：{{
+                                <!-- <p class="gray9" v-if="scope.row.setting_service_money > 0">({{ $t('服务费') }}：{{
                                     scope.row.setting_service_money }})</p>
                                 <p class="gray9" v-if="scope.row.consumption_tax_money > 0">({{ $t('消费税') }}：{{
                                     scope.row.consumption_tax_money }})</p>
                                 <p class="gray9" v-if="scope.row.refund_money > 0">({{ $t('退款金额：') }}{{
                                     scope.row.refund_money }})
-                                </p>
+                                </p> -->
                             </div>
                         </template>
                     </el-table-column>

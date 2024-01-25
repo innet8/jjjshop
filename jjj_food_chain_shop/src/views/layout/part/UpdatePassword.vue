@@ -24,11 +24,13 @@
 
 <script>
 import UserApi from '@/api/user.js';
+import { useUserStore } from "@/store";
+const { afterLogout } = useUserStore();
 export default {
 
 	data() {
         let validatePass2 = (rule, value, callback) => {
-            if (value === '') {
+            if (!value) {
                 callback(new Error($t('请输入确认新密码')))
             } else if (value !== this.form.password) {
                 callback(new Error($t('两次密码不一致！')))
@@ -57,7 +59,7 @@ export default {
                     message: $t('请输入新密码'),
                     trigger: 'blur'
                 }],
-                confirmPass: [{ validator: validatePass2, trigger: 'blur' }],
+                confirmPass: [{ required: true,validator: validatePass2, trigger: 'blur' }],
             },
 		};
 	},
@@ -79,6 +81,10 @@ export default {
 								type: 'success'
 							});
 							self.dialogFormVisible(true);
+                            setTimeout(()=>{
+                                this.logout();
+                            },2000)
+                           
 						} else {
 							self.loading = false;
 						}
@@ -89,6 +95,11 @@ export default {
 				}
 			});
 		},
+
+        async logout() {
+            await afterLogout();
+            this.$router.push("/login");
+        },
 
 		/*关闭弹窗*/
 		dialogFormVisible() {

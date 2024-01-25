@@ -9,7 +9,7 @@
     <!--搜索表单-->
     <div class="common-seach-wrap">
       <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
-        <el-form-item><el-input size="small" v-model="searchForm.search" :placeholder="$t('请输入用户名和真实姓名')"></el-input></el-form-item>
+        <el-form-item><el-input size="small" v-model="searchForm.search" :placeholder="$t('用户名')"></el-input></el-form-item>
         <el-form-item>
           <el-button size="small" type="primary" icon="Search" @click="searchSubmit">{{$t('查询')}}</el-button>
         </el-form-item>
@@ -24,7 +24,7 @@
           <el-table-column prop="ip" label="IP"></el-table-column>
           <el-table-column prop="result" :label="$t('登录状态')"></el-table-column>
           <el-table-column prop="username" :label="$t('用户名')"></el-table-column>
-          <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
+          <el-table-column prop="create_time" :label="$t('操作时间')"></el-table-column>
         </el-table>
       </div>
 

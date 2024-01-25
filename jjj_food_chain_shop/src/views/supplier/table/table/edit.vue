@@ -58,13 +58,13 @@ export default {
                 }],
                 area_id: [{
                     required: true,
-                    message: $t('请选择类型名称'),
-                    trigger: 'blur'
+                    message: $t('请选择所属区域'),
+                    trigger: 'change'
                 }],
                 type_id: [{
                     required: true,
-                    message: $t('请选择所属区域'),
-                    trigger: 'blur'
+                    message: $t('请选择类型名称'),
+                    trigger: 'change'
                 }],
                 sort: [
                     { required: true,  message: $t('排序不能为空') },

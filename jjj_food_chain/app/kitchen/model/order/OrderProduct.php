@@ -2,8 +2,9 @@
 
 namespace app\kitchen\model\order;
 
-use app\common\model\order\OrderProduct as OrderProductModel;
+use think\facade\Db;
 use app\kitchen\model\order\Order as OrderModel;
+use app\common\model\order\OrderProduct as OrderProductModel;
 
 /**
  * 订单记录
@@ -15,6 +16,8 @@ class OrderProduct extends OrderProductModel
      */
     public function listByOrder($params)
     {
+        Db::connect()->execute("SET SESSION sql_mode = ''");
+        // 
         $shop_supplier_id = $params['shop_supplier_id'];
 
         $query = $this->alias('op')
@@ -39,7 +42,7 @@ class OrderProduct extends OrderProductModel
                 ->select();
             $item['order_product'] = $orderProducts;
         }
-
+        unset($item);
         return $list;
     }
 
@@ -85,7 +88,7 @@ class OrderProduct extends OrderProductModel
             }
             $item['order_product'] = $orderProducts;
         }
-
+        unset($item);
         return $list;
     }
 
@@ -123,7 +126,7 @@ class OrderProduct extends OrderProductModel
             }
             $item['order_product'] = $orderProducts;
         }
-
+        unset($item);
         return $list;
     }
 
