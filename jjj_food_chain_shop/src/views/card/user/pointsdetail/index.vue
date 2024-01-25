@@ -9,11 +9,10 @@
         <div class="common-seach-wrap">
             <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
                 <el-form-item :label="$t('变更场景')">
-                    <el-select v-model="formInline.map" :placeholder="$t('全部场景')">
-                        <el-option :label="$t('全部场景')" value=""></el-option>
-                        <el-option :label="$t('购物赠送')" value="1"></el-option>
-                        <el-option :label="$t('退款扣除')" value="2"></el-option>
-                        <el-option :label="$t('管理员操作')" value="3"></el-option>
+                    <el-select v-model="formInline.scene" :placeholder="$t('请选择')">
+                        <el-option :label="$t('全部')" value="0"></el-option>
+                        <el-option v-for="(item, index) in Scene" :key="index" :label="item.name"
+                            :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
 
@@ -86,7 +85,10 @@ export default {
                 search: '',
                 value1: '',
                 map: '',
+                scene:'',
             },
+            /*场景*/
+            Scene: [],
         };
     },
     created() {
@@ -120,6 +122,7 @@ export default {
                 self.loading = false;
                 self.tableData = data.data.list.data;
                 self.totalDataNumber = data.data.list.total;
+                self.Scene = data.data.attributes.scene;
             }).catch(error => {
 
             });
