@@ -2,6 +2,7 @@
 
 namespace app\common\model\order;
 
+use app\common\enum\order\OrderStatusEnum;
 use think\facade\Log;
 use app\common\library\helper;
 use app\common\model\BaseModel;
@@ -269,6 +270,15 @@ class OrderProduct extends BaseModel
             $p = OrderProduct::where('order_product_id', '=', $order_product_id)->find();
             if (!$p) {
                 $this->error = "商品不存在";
+                return false;
+            }
+            // 检查订单状态
+            $detail = OrderModel::detail([
+                ['order_id', '=', $p['order_id']],
+                ['order_status', '=', OrderStatusEnum::NORMAL]
+            ]);
+            if (!$detail) {
+                $this->error = '当前订单不可修改';
                 return false;
             }
             $p->product_price = $money;

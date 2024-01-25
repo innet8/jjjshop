@@ -755,8 +755,11 @@ class Cart extends CartModel
     public function getOrderCartDetail($cashier, $table_id, $order_id = 0)
     {
         if ($order_id > 0) {
+            $order = OrderModel::detail([
+                ['order_id', '=', $order_id],
+                ['order_status', '=', OrderStatusEnum::NORMAL]
+            ]);
             // 购物车商品列表
-            $order = OrderModel::detail($order_id);
             $cartList = (new static())->with('product')
                 ->where('cashier_id', '=', $cashier['cashier_id'])
                 ->where('order_id', '=', $order_id)
