@@ -71,7 +71,7 @@ class Attribute extends BaseModel
                     }
                     $addData[] = [
                         'attribute_name' => $item['attribute_name'],
-                        'attribute_value' => $attribute_value,
+                        'attribute_value' => json_encode($attribute_value, JSON_UNESCAPED_UNICODE),
                         'shop_supplier_id' => $shop_supplier_id,
                         'app_id' => self::$app_id
                     ];
