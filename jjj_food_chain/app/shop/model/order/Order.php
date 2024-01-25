@@ -130,6 +130,8 @@ class Order extends OrderModel
         if (isset($data['date']) && is_array($data['date']) && isset($data['date'][0]) && isset($data['date'][1])) {
             $model = $model->where('create_time', 'between', [strtotime($data['date'][0]), strtotime($data['date'][1]) + 86399]);
         }
+        // 已送厨
+        $model = $model->where('extra_times', '>', 0);
         return $model;
     }
 
