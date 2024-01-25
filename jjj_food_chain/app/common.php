@@ -553,26 +553,25 @@ function printText($leftText, $centerText="", $rightText="", $total = 32, $leftN
         }
     }
     if (preg_match('/[\p{Thai}]/u', $leftText) ) {
-        preg_match_all('/[\p{Thai}]+/u', $leftText, $matches);
-        $leftWidth = grapheme_strlen($matches[0][0]);
-        // $leftWidth += strlen(iconv("UTF-8", "GBK//IGNORE", $leftText));
+        $leftWidth = strlen(iconv("UTF-8", "CP874//IGNORE", $leftText));
+        // $leftWidth = ceil(($leftWidth / 1.1));
     } else {
         $leftWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $leftText));
     }
     $leftPadding = $leftNum - $leftWidth > 0 ? str_repeat(" ", intval($leftNum - $leftWidth)) : "";
     if (preg_match('/[\p{Thai}]/u', $leftPadding) ) {
-        $leftPaddingWidth = grapheme_strlen($leftPadding);
+        $leftPaddingWidth = strlen(iconv("UTF-8", "CP874//IGNORE", $leftPadding));
     } else {
         $leftPaddingWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $leftPadding));
     }
     //
     if (preg_match('/[\p{Thai}]/u', $centerText) ) {
-        $centerWidth = grapheme_strlen($centerText);
+        $centerWidth = strlen(iconv("UTF-8", "CP874//IGNORE", $centerText));
     } else {
         $centerWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $centerText));
     }
     if (preg_match('/[\p{Thai}]/u', $rightText) ) {
-        $rightWidth = grapheme_strlen($rightText);
+        $rightWidth = strlen(iconv("UTF-8", "CP874//IGNORE", $rightText));
     } else {
         $rightWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $rightText));
     }
