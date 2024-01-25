@@ -883,7 +883,7 @@ class Cart extends CartModel
             return false;
         }
         // 用户信息
-        $user = (new UserModel)->where('mobile', $mobile)->with(['grade', 'card'])->find();
+        $user = (new UserModel)->where(['mobile' => $mobile, 'is_delete' => 0])->with(['grade', 'card'])->find();
         if (!$user) {
             $this->error = "用户不存在";
             return false;
