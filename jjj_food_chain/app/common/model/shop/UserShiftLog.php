@@ -99,10 +99,10 @@ class UserShiftLog extends BaseModel
     public function detail($id)
     {
         $detail = $this->with('user')->find($id);
-        // 
+        //
         $detail['shift_start_time'] = $detail['shift_start_time'] ? format_time_his($detail['shift_start_time']) : '-';
         $detail['shift_end_time'] = $detail['shift_end_time'] ? format_time_his($detail['shift_end_time']) : '-';
-        // 
+        //
         return $detail;
     }
 
@@ -118,6 +118,7 @@ class UserShiftLog extends BaseModel
             ->where('a.pay_status', '=',  OrderPayStatusEnum::SUCCESS)
             ->where('a.order_status', '=', OrderStatusEnum::COMPLETED)
             ->where('a.eat_type', '<>', 0)
+            ->where('a.extra_times', '>', 0) // 已送厨
             ->where('a.shop_supplier_id', '=', $shop_user_id)
             ->where('a.cashier_id', '=', $shift_user_id)
             ->where('a.create_time', 'between', [strtotime($startTime), strtotime($endTime)])
