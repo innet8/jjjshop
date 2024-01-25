@@ -146,6 +146,10 @@ class OrderBusinessPrinterService
         *芯烨打印机 
         *
         */
+        // ข้อมูลการขาย                               ฿1.00
+        // ข้อมูลการขาย                               ฿1.00
+        dump(printText(__("现金收入"),'', $this->currencyUnit . "1.00", 47));
+        die;
         if ($printers == PrinterTypeEnum::SUNMI_LAN || $printers['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
             $width = 48 - ($isThai ? 1 : 0);
             $printer = new SunmiCloudPrinter(567);
@@ -193,7 +197,9 @@ class OrderBusinessPrinterService
                 $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             }
             foreach ($data['incomes'] as $key => $income) {
-                // $printer->appendText(printText($income['pay_type_name'],'', $this->currencyUnit . "1.00", $width, $isThai ? 41 : 0));
+                $printer->appendText(printText($income['pay_type_name'],'', $this->currencyUnit . "1.00", $width, $isThai ? 41 : 0));
+                $printer->lineFeed();
+                $printer->lineFeed();
                 $printer->appendText(printText($income['pay_type_name'],'', $this->currencyUnit . "{$income['price']}", $width, $isThai ? 41 : 0));
                 $printer->lineFeed();
                 $printer->lineFeed();
