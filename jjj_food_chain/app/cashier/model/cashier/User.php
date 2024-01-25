@@ -17,11 +17,18 @@ class User extends UserModel
     {
         $where['user_name'] = $user['user_name'];
         $where['password'] = $user['password'];
-        $where['is_delete'] = 0;
         // 
         $user = $this->where($where)->with(['app', 'supplier'])->find();
         if (!$user = $this->where($where)->with(['app', 'supplier'])->find()) {
             $this->error = '账号或密码错误，请重新输入';
+            return false;
+        }
+        if ($user['is_delete'] == 1) {
+            $this->error = '账号被删除，请联系管理员';
+            return false;
+        }
+        if ($user['is_status'] == 1) {
+            $this->error = '账号被禁用，请联系管理员';
             return false;
         }
         if (empty($user['app'])) {
@@ -30,10 +37,6 @@ class User extends UserModel
         }
         if ($user['app']['is_delete']) {
             $this->error = '登录失败, 当前应用已删除';
-            return false;
-        }
-        if ($user['is_status'] == 1) {
-            $this->error = '账号被禁用，请联系管理员';
             return false;
         }
         // DOTO 先注释掉让测试人员测试
