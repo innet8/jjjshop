@@ -192,7 +192,7 @@ class CardRecord extends CardRecordModel
             })
             ->order('r.discount asc')
             ->value('r.discount');
-        return $discount ? round($discount / 10, 2) : 0;
+        return $discount ? round($discount / 100, 2) : 0;
     }
 
     /**

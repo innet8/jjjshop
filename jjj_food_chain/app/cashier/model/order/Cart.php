@@ -1021,7 +1021,7 @@ class Cart extends CartModel
                             $discount && $grade_product_price = round($grade_product_price * $discount, 2);
                         } else {
                             // 商品会员折扣后单价
-                            $grade_product_price = helper::number2(helper::bcmul($product['product_price'], $discountRatio), true);
+                            $grade_product_price = helper::number2(helper::bcmul($product['product_price'], $discountRatio, 3), true);
                             trace('商品会员折扣后单价');
                             trace($grade_product_price);
                         }
@@ -1044,7 +1044,7 @@ class Cart extends CartModel
                         trace('原商品总价');
                         trace($product['total_price']);
                         trace($product['product_price']);
-                        $grade_total_money = helper::number2(helper::bcsub($product['product_price'] * $product['total_num'], $gradeTotalPrice));
+                        $grade_total_money = helper::number2(helper::bcsub($product['product_price'] * $product['total_num'], $gradeTotalPrice, 3));
                         trace('优惠后与原商品差价');
                         trace($grade_total_money);
                         $product['total_price'] = $gradeTotalPrice;
@@ -1058,7 +1058,7 @@ class Cart extends CartModel
             }
         }
 
-        $total_price = $pay_money; // 订单商品总价（不是商品原价总价、是商品折扣后(如果有)的总价）
+        $total_price = round($pay_money, 2); // 订单商品总价（不是商品原价总价、是商品折扣后(如果有)的总价）
 
         return [
             'order_total_product_price' => $order_price,                             // 订单商品原价
