@@ -644,6 +644,7 @@ class OrderPrinterService
         *
         */
         $width = 32;
+        $content = '';
         if ($order['table_no']) {
             $content = "<CB>".__('桌号')."：{$order['table_no']}</CB><BR>";
         }

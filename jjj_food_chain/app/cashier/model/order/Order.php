@@ -133,10 +133,21 @@ class Order extends OrderModel
         // 获取订单详情
         $PaySuccess = new MasterPaySuccessService($orderNo);
         // 发起余额支付
-        $status = $PaySuccess->onPaySuccess($pay_type);
-        if (!$status) {
-            $this->error = $PaySuccess->getError();
+        $this->startTrans();
+        try {
+            $status = $PaySuccess->onPaySuccess($pay_type);
+            if (!$status) {
+                $this->error = $PaySuccess->getError();
+                return false;
+            }
+            $this->commit();
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
+            $this->error = $e->getMessage();
+            $this->rollback();
+            return false;
         }
+
         // 订单商品送厨
         (new OrderProductModel())->sendKitchen($this['order_id']);
 
@@ -309,7 +320,7 @@ class Order extends OrderModel
                     }
                     if ($detail['pay_price'] > 0) {
                         $detail['pay_price'] = $detail['order_price'];
-                        $discount_money = round($detail['pay_price'] * $data['rate'] / 100, 2);
+                        $discount_money = round($detail['pay_price'] * (100 - $data['rate']) / 100, 2);
                     }
                     $discount_ratio =  $data['rate'];
                     break;

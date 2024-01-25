@@ -130,7 +130,7 @@ class Cart extends Controller
         if ($model->delStay($order_id)) {
             return $this->renderSuccess('取消成功');
         };
-        return $this->renderError($model->getError() ?: '取消失败');
+        return $this->renderSuccess($model->getError() ?: '取消失败');
     }
 
     /**

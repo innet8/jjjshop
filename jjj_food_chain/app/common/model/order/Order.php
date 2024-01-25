@@ -124,12 +124,15 @@ class Order extends BaseModel
     // 访问器：获取订单生成时间长度
     public function getElapsedTimeAttr($value, $data)
     {
-        // 获取当前时间
-        $currentTime = time();
-        // 获取订单生成时间
-        $generateTime = $data['create_time'];
-        // 返回时间长度
-        return $currentTime - $generateTime;
+        if (isset($data['create_time'])) {
+            // 获取当前时间
+            $currentTime = time();
+            // 获取订单生成时间
+            $generateTime = $data['create_time'];
+            // 返回时间长度
+            return $currentTime - $generateTime;
+        }
+        return 0;
     }
 
     // 支付时间格式化
@@ -1185,8 +1188,8 @@ class Order extends BaseModel
         // 优惠折扣
         $discount_money = 0;
         if ($order['discount_ratio'] > 0) {
-            $discount_money = round($pay_price * $order['discount_ratio'] / 100, 2);;
-            $pay_price = round($pay_price * (100 - $order['discount_ratio']) / 100, 2);
+            $pay_price = round($pay_price * $order['discount_ratio'] / 100, 2);;
+            $discount_money = round($pay_price * (100 - $order['discount_ratio']) / 100, 2);
         }
 
         // 会员优惠金额
