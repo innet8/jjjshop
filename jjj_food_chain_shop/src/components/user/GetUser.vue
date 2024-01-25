@@ -21,7 +21,7 @@
         </el-form-item>
         <el-form-item :label="$t('昵称/手机号/ID')"><el-input :placeholder="$t('昵称/手机号/ID')" v-model="formInline.nick_name"></el-input></el-form-item>
         <el-form-item>
-          <el-button icon="el-icon-search" @click="search">{{ $t('查询') }}</el-button>
+          <el-button  type="primary" icon="Search" @click="search">{{ $t('查询') }}</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -42,6 +42,12 @@
               <span class="orange">￥{{ scope.row.balance }}</span>
             </template>
           </el-table-column>
+          <el-table-column prop="" :label="$t('会员卡')">
+                        <template #default="scope">
+                            <span v-if="scope.row.card_id == 0">-</span>
+                            <span v-else>{{ scope.row.card?.card_name }}</span>
+                        </template>
+                    </el-table-column>
           <el-table-column prop="grade.name" :label="$t('会员等级')"></el-table-column>
           <el-table-column prop="pay_money" :label="$t('累积消费金额')"></el-table-column>
           <el-table-column prop="gender" :label="$t('性别')" width="50">

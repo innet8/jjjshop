@@ -55,6 +55,7 @@ class Points extends Controller
     {
         $model = new PointsLogModel;
         $list = $model->getList($this->request->param());
-        return $this->renderSuccess('', compact('list'));
+        $attributes = $model::getAttributes();
+        return $this->renderSuccess('', compact('list', 'attributes'));
     }
 }
