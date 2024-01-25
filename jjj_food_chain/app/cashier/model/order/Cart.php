@@ -960,7 +960,7 @@ class Cart extends CartModel
         $pay_price = $total_consumption_tax_money + $total_product_pay_price + $total_service_money;
         // 优惠折扣
         if (isset($order['discount_ratio']) && $order['discount_ratio'] > 0) {
-            $pay_price = round($pay_price * (100 - $order['discount_ratio']) / 100, 2);
+            $pay_price = round($pay_price * $order['discount_ratio'] / 100, 2);
         }
 
         $total_pay_price = $pay_price;    // 应收

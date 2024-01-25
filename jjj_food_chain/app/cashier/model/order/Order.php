@@ -318,10 +318,6 @@ class Order extends OrderModel
                         $this->error = "请输入合理的折扣";
                         return false;
                     }
-                    if ($detail['pay_price'] > 0) {
-                        $detail['pay_price'] = $detail['order_price'];
-                        $discount_money = round($detail['pay_price'] * (100 - $data['rate']) / 100, 2);
-                    }
                     $discount_ratio =  $data['rate'];
                     break;
                 case '3'://抹零
@@ -339,14 +335,15 @@ class Order extends OrderModel
             }
             if ($discount_money >= 0) {
                 if ($data['type'] == 2) {
-                    $pay_price = round($detail['pay_price'] - $discount_money, 2);
+                    $detail->save(['discount_ratio' => $discount_ratio]);
+                    (new OrderModel())->reloadPrice($detail['order_id']);
                 } else {
                     $pay_price = round($detail['order_price'] - $discount_money, 2);
+                    if ($pay_price <= 0) {
+                        $pay_price = 0;
+                    }
+                    $detail->save(['discount_money' => $discount_money, 'pay_price' => $pay_price]);
                 }
-                if ($pay_price <= 0) {
-                    $pay_price = 0;
-                }
-                $detail->save(['discount_money' => $discount_money, 'pay_price' => $pay_price, 'discount_ratio' => $discount_ratio]);
             }
             $this->commit();
             return true;

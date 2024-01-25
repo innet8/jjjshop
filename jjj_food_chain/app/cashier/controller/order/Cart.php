@@ -209,11 +209,6 @@ class Cart extends Controller
      */
     public function changeMoney()
     {
-//        $model = new CartModel();
-//        if ($model->changeMoney($this->cashier['user'], $this->postData())) {
-//            return $this->renderSuccess('成功');
-//        };
-//        return $this->renderError($model->getError() ?: '失败');
         $model = new OrderModel();
         if ($model->changeMoney($this->cashier['user'], $this->postData())) {
             return $this->renderSuccess('改价成功');
