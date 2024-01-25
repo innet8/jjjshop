@@ -29,10 +29,12 @@ class Xprinter extends Basics
         }
         if (preg_match('/[\p{Thai}]/u', $content)) {
             // 
-            if (!preg_match('/[\p{Thai}]/u', $shopName)) {
-                fwrite($fp, "\x1C\x26");
+            if ($shopName) {
+                if (!preg_match('/[\p{Thai}]/u', $shopName)) {
+                    fwrite($fp, "\x1C\x26");
+                }
+                fwrite($fp, iconv("UTF-8", "GBK//IGNORE", $shopName));
             }
-            fwrite($fp, iconv("UTF-8", "GBK//IGNORE", $shopName));
             // 
             fwrite($fp, "\x1C\x2E");
             $content = iconv("UTF-8", "CP874//IGNORE", $content);
