@@ -16,9 +16,9 @@ class Product extends ProductModel
     {
         // 筛选条件
         $model = $this;
-        if ($params['is_spec'] > 0) {
+        if (isset($params['is_spec']) && $params['is_spec'] > 0) {
             $model = $model->where('product.special_id', '=', $params['category_id']);
-        } else if ($params['category_id'] > 0) {
+        } else if (isset($params['category_id']) && $params['category_id'] > 0) {
             $categoryIds = Category::where('category_id', '=', $params['category_id'])
                 ->whereOr('parent_id', '=', $params['category_id'])
                 ->column('category_id');
