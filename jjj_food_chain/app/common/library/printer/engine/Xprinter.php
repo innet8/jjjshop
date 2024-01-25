@@ -19,26 +19,27 @@ class Xprinter extends Basics
      */
     public function printTicket($content, $shopName='')
     {
+
         $config = json_decode($this->config, true);
         $content = hex2bin($content);
-        $fp=@fsockopen( $config['IP'] ?? self::PRINTER_IP, $config['PORT'] ??  self::PRINTER_PORT, $errno, $errstr, 3);
-        if($fp===false){ //连接打印机出错
+        $fp = @fsockopen( $config['IP'] ?? self::PRINTER_IP, $config['PORT'] ??  self::PRINTER_PORT, $errno, $errstr, 3);
+        if($fp===false) { //连接打印机出错
             // DOTO 记录日志
             trace("连接打印机出错");
             return false;
         }
-        if (preg_match('/[\p{Thai}]/u', $content)) {
-            // 
-            if ($shopName) {
-                if (!preg_match('/[\p{Thai}]/u', $shopName)) {
-                    fwrite($fp, "\x1C\x26");
-                }
-                fwrite($fp, iconv("UTF-8", "GBK//IGNORE", $shopName));
+        // 
+        if ($shopName) {
+            if (!preg_match('/[\p{Thai}]/u', $shopName)) {
+                fwrite($fp, "\x1C\x26");
             }
+            fwrite($fp, iconv("UTF-8", "GBK//IGNORE", "***". $shopName . "***"));
+        }
+        // 
+        if (preg_match('/[\p{Thai}]/u', $content)) {
             // 
             fwrite($fp, "\x1C\x2E");
             $content = iconv("UTF-8", "CP874//IGNORE", $content);
-            // $content = str_ireplace("***************", iconv("UTF-8", "GBK//IGNORE", "你还") , $content);
         } else {
             fwrite($fp, "\x1C\x26");
             $content = iconv("UTF-8", "GBK//IGNORE", $content);
