@@ -9,9 +9,9 @@ use MyCLabs\Enum\Enum;
  */
 class OrderSourceEnum extends Enum
 {
-    // 普通订单
+    // 桌台下单
     const MASTER = 10;
-    // 收银台订单
+    // 收银订单
     const CASHIER = 20;
     // 扫码点餐
     const SCAN = 30;
@@ -25,11 +25,11 @@ class OrderSourceEnum extends Enum
     {
         $arr = [
             self::MASTER => [
-                'name' => __('用户下单'),
+                'name' => __('桌台下单'),
                 'value' => self::MASTER,
             ],
             self::CASHIER => [
-                'name' => __('收银台下单'),
+                'name' => __('收银下单'),
                 'value' => self::CASHIER,
             ],
             self::SCAN => [

@@ -85,7 +85,7 @@
                     <el-table-column prop="table_no" :label="$t('桌号/序号')">
                         <template #default="scope">
                             <div>
-                                {{ scope.row.table_no || "-" }}
+                                {{ scope.row.table_no ? scope.row.table_no : scope.row.callNo || "-" }}
                             </div>
                         </template>
                     </el-table-column>
