@@ -39,7 +39,7 @@ class OrderProduct extends OrderProductModel
                 ->select();
             $item['order_product'] = $orderProducts;
         }
-
+        unset($item);
         return $list;
     }
 
@@ -85,7 +85,7 @@ class OrderProduct extends OrderProductModel
             }
             $item['order_product'] = $orderProducts;
         }
-
+        unset($item);
         return $list;
     }
 
@@ -123,7 +123,7 @@ class OrderProduct extends OrderProductModel
             }
             $item['order_product'] = $orderProducts;
         }
-
+        unset($item);
         return $list;
     }
 
