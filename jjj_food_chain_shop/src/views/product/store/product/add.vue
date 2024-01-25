@@ -83,8 +83,8 @@ export default {
                             zhtw: "",
                             en: "",
                         },
-                        product_price: '',
-                        stock_num: '',
+                        product_price: null,
+                        stock_num: null,
                         product_weight: '',
                         cost_price: 0,
                     }],
@@ -104,7 +104,7 @@ export default {
                     /*商品排序，默认100*/
                     product_sort: null,
                     /*限购数量*/
-                    limit_num: 0,
+                    limit_num: null,
                     special_id: '',
                     /*是否开启积分赠送,默认1为开启，0为关闭*/
                     is_points_gift: 1,

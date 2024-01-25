@@ -3,7 +3,11 @@
         <el-form size="small" ref="form" :model="form" label-position="top">
             <el-form-item :label="$t('轮播内容')" prop="image" :rules="[{ required: true, message: '' }]">
                 <div class="draggable-list">
-                    <flieUpload  @upLoad="upLoad"></flieUpload>
+                    <flieUpload  @upLoad="upLoad"
+                    :imgSize="2" :videoSize="10"
+                    :tips1="$t('图片：支持JPG、JPEG、PNG格式，小于2MB，尺寸：1160*1104px')"
+                        :tips2="$t('视频：支持AVI、MPEG、MOV、MP4格式，小于10MB，尺寸：1160*1104px')"
+                    ></flieUpload>
                     <el-table size="small" :data="form.carousel" border style="width: 100%" v-loading="loading">
                         <el-table-column prop="real_name" :label="$t('图片名称')"></el-table-column>
                         <el-table-column prop="sort" :label="$t('排序')">
