@@ -15,11 +15,15 @@ class PointsLog extends PointsLogModel
     public function getList($query = [])
     {
         $model = $this;
-        //搜索订单号
+        // 积分变动场景
+        if (!empty($query['scene']) && $query['scene'] > -1) {
+            $model = $model->where('log.scene', '=', (int)$query['scene']);
+        }
+        // 搜索订单号
         if (isset($query['search']) && $query['search'] != '') {
             $model = $model->where('user.nickName', 'like', '%' . trim($query['search']) . '%');
         }
-        //搜索时间段
+        // 搜索时间段
         if (isset($query['date']) && $query['date'] != '') {
             $model = $model->where('log.create_time', 'between', [strtotime($query['date'][0]), strtotime($query['date'][1]) + 86399]);
         }

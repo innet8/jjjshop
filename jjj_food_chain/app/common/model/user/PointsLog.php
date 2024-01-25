@@ -3,12 +3,24 @@
 namespace app\common\model\user;
 
 use app\common\model\BaseModel;
+use app\common\enum\user\pointsLog\PointsLogSceneEnum;
 
 class PointsLog extends BaseModel
 {
     protected $name = 'user_points_log';
     protected $pk = 'log_id';
     protected $updateTime = false;
+
+    /**
+     * 获取当前模型属性
+     */
+    public static function getAttributes()
+    {
+        return [
+            // 充值方式
+            'scene' => PointsLogSceneEnum::data(),
+        ];
+    }
 
     /**
      * 关联会员记录表

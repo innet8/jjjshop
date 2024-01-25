@@ -3,15 +3,16 @@
 namespace app\common\service\order;
 
 use app\common\library\helper;
-use app\common\model\supplier\Capital as SupplierCapitalModel;
-use app\common\model\supplier\Supplier as SupplierModel;
-use app\common\model\user\User as UserModel;
-use app\common\model\user\PointsLog as PointsLogModel;
 use app\common\enum\order\OrderTypeEnum;
-use app\common\model\order\OrderSettled as OrderSettledModel;
-use app\api\model\order\OrderFinance as OrderFinanceModel;
+use app\common\model\user\User as UserModel;
+use app\common\enum\user\pointsLog\PointsLogSceneEnum;
+use app\common\model\user\PointsLog as PointsLogModel;
+use app\common\model\supplier\Supplier as SupplierModel;
 use app\common\model\plus\agent\Order as AgentOrderModel;
 use app\common\model\plus\driver\User as DriverUserModel;
+use app\api\model\order\OrderFinance as OrderFinanceModel;
+use app\common\model\order\OrderSettled as OrderSettledModel;
+use app\common\model\supplier\Capital as SupplierCapitalModel;
 
 /**
  * 已完成订单结算服务类
@@ -165,6 +166,7 @@ class OrderCompleteService
             $userData[$order['user_id']] += $pointsBonus;
             // 整理用户积分变动明细
             $logData[] = [
+                'scene' => PointsLogSceneEnum::CONSUME,
                 'user_id' => $order['user_id'],
                 'value' => $pointsBonus,
                 'describe' => "订单赠送：{$order['order_no']}",

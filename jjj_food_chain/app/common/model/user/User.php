@@ -3,13 +3,14 @@
 
 namespace app\common\model\user;
 
-use app\api\controller\points\Log;
-use app\common\enum\user\balanceLog\BalanceLogSceneEnum as SceneEnum;
 use app\common\model\BaseModel;
-use app\common\model\settings\Setting as SettingModel;
+use app\api\controller\points\Log;
 use app\common\model\user\Grade as GradeModel;
+use app\common\enum\user\pointsLog\PointsLogSceneEnum;
+use app\common\model\settings\Setting as SettingModel;
 use app\common\model\user\PointsLog as PointsLogModel;
 use app\shop\model\user\BalanceLog as BalanceLogModel;
+use app\common\enum\user\balanceLog\BalanceLogSceneEnum as SceneEnum;
 
 /**
  * 用户模型
@@ -162,6 +163,7 @@ class User extends BaseModel
     {
         // 新增积分变动明细
         PointsLogModel::add([
+            'scene' => PointsLogSceneEnum::ADMIN,
             'user_id' => $this['user_id'],
             'value' => $points,
             'describe' => $describe,
@@ -307,6 +309,7 @@ class User extends BaseModel
             ]);
             // 新增积分变动记录
             PointsLogModel::add([
+                'scene' => PointsLogSceneEnum::ADMIN,
                 'user_id' => $this['user_id'],
                 'recharge_value' => $points,
                 'describe' => "后台管理员 [{$storeUserName}] 操作",

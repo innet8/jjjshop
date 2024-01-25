@@ -1,28 +1,26 @@
 <?php
 
-namespace app\common\enum\user\balanceLog;
+namespace app\common\enum\user\pointsLog;
 
 use MyCLabs\Enum\Enum;
 
 /**
- * 余额变动场景枚举类
+ * 积分变动场景枚举类
  */
-class BalanceLogSceneEnum extends Enum
+class PointsLogSceneEnum extends Enum
 {
     // 用户充值
     const RECHARGE = 10;
 
-    // 用户消费
+    // 消费赠送
     const CONSUME = 20;
 
     // 管理员操作
     const ADMIN = 30;
 
-    // 订单退款
+    // 退款扣除
     const REFUND = 40;
 
-    // 余额提现
-    const CASH = 50;
     /**
      * 获取订单类型值
      */
@@ -32,12 +30,12 @@ class BalanceLogSceneEnum extends Enum
             self::RECHARGE => [
                 'name' => __('充值'),
                 'value' => self::RECHARGE,
-                'describe' => __('用户充值：%s'),
+                'describe' => __('充值：%s'),
             ],
             self::CONSUME => [
-                'name' => __('消费'),
+                'name' => __('消费赠送'),
                 'value' => self::CONSUME,
-                'describe' => __('用户消费：%s'),
+                'describe' => __('消费赠送：%s'),
             ],
             self::ADMIN => [
                 'name' => __('管理员操作'),
@@ -45,10 +43,11 @@ class BalanceLogSceneEnum extends Enum
                 'describe' => __('后台管理员 [%s] 操作'),
             ],
             self::REFUND => [
-                'name' => __('退款'),
+                'name' => __('退款扣除'),
                 'value' => self::REFUND,
-                'describe' => __('订单退款：%s'),
+                'describe' => __('退款扣除：%s'),
             ],
         ];
     }
+
 }

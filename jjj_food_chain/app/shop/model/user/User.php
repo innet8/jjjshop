@@ -2,14 +2,15 @@
 
 namespace app\shop\model\user;
 
-use app\shop\model\user\GradeLog as GradeLogModel;
-use app\shop\model\user\BalanceLog as BalanceLogModel;
 use app\common\model\user\User as UserModel;
-use app\common\model\user\Grade as GradeModel;
 use app\common\enum\user\grade\ChangeTypeEnum;
-use app\common\enum\user\balanceLog\BalanceLogSceneEnum as SceneEnum;
+use app\common\model\user\Grade as GradeModel;
+use app\shop\model\user\GradeLog as GradeLogModel;
 use app\shop\model\user\PointsLog as PointsLogModel;
 use app\shop\model\plus\agent\User as AgentUserModel;
+use app\common\enum\user\pointsLog\PointsLogSceneEnum;
+use app\shop\model\user\BalanceLog as BalanceLogModel;
+use app\common\enum\user\balanceLog\BalanceLogSceneEnum as SceneEnum;
 
 /**
  * 用户模型
@@ -279,6 +280,7 @@ class User extends UserModel
             // 新增积分变动记录
             PointsLogModel::add([
                 'user_id' => $this['user_id'],
+                'scene' => PointsLogSceneEnum::ADMIN,
                 'value' => $points,
                 'describe' => "后台管理员 [{$storeUserName}] 操作",
                 'remark' => $data['remark'],
