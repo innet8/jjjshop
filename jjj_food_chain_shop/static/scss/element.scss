@@ -205,3 +205,8 @@
 .el-button--primary.is-link.is-disabled:hover{
     color: var(--el-color-tips);
 }
+.el-button.is-disabled{
+    opacity: 0.8;
+    background: var(--el-color-tips);
+    border-color: var(--el-color-tips);
+}

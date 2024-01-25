@@ -35,7 +35,7 @@
             </div>
           </el-form-item> -->
                     <!--登录-->
-                    <el-button type="primary" style="width:100%;height: 48px;font-size: 18px;margin-top: 6px;"
+                    <el-button type="primary" :disabled="disabledC" style="width:100%;height: 48px;font-size: 18px;margin-top: 6px;"
                         @click.native.prevent="SubmitFunc" :loading="logining">{{ $t('登录') }}
                     </el-button>
                 </div>
@@ -79,7 +79,11 @@ export default {
         sidentify,
         SvgIcon
     },
-
+    computed:{
+        disabledC(){
+            return this.ruleForm.account == '' && this.ruleForm.checkPass ==''
+        }
+    },
     data() {
         // 验证码自定义验证规则
         const validateVerifycode = (rule, value, callback) => {
