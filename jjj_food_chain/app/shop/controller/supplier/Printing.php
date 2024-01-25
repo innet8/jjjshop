@@ -58,7 +58,7 @@ class Printing extends Controller
             // 获取标签打印机列表
             $printerTagList = PrinterModel::getTagAll($this->store['user']['shop_supplier_id']);
             //店内商品分类
-            $storeList = (new CategoryModel)->getAllCategory(1, $this->store['user']['shop_supplier_id'], 0);
+            $storeList = (new CategoryModel)->getAllCategory(1, $this->store['user']['shop_supplier_id'], 0, 0);
             //外卖商品分类
             $takeList = (new CategoryModel)->getAllCategory(0, $this->store['user']['shop_supplier_id']);
             //打印标签
@@ -101,7 +101,7 @@ class Printing extends Controller
             // 获取标签打印机列表
             $printerTagList = PrinterModel::getTagAll($this->store['user']['shop_supplier_id']);
             //店内商品分类
-            $storeList = (new CategoryModel)->getAllCategory(1, $this->store['user']['shop_supplier_id'], 0);
+            $storeList = (new CategoryModel)->getAllCategory(1, $this->store['user']['shop_supplier_id'], 0, 0);
             //外卖商品分类
             $takeList = (new CategoryModel)->getAllCategory(0, $this->store['user']['shop_supplier_id']);
             //打印标签

@@ -524,7 +524,12 @@ class OrderPrinterService
                         foreach ($order['product'] as $key => $product) {
                             $prodcutDetail = ProductModel::detail($product['product_id']);
                             if ($item['print_method'] == 20) {
-                                if ($item['category_id'] && !in_array($prodcutDetail['special_id'], $item['category_id']) && !in_array($prodcutDetail['category_id'], $item['category_id'])) {
+                                if (
+                                    $item['category_id'] 
+                                    && !in_array($prodcutDetail->special_id, $item['category_id']) 
+                                    && !in_array($prodcutDetail->category_id, $item['category_id'])
+                                    && !in_array($prodcutDetail->category?->parent_id ?? 0, $item['category_id'])
+                                ) {
                                     continue;
                                 }
                             } elseif ($item['print_method'] == 30) {
@@ -605,7 +610,12 @@ class OrderPrinterService
             foreach ($order['product'] as $key => $product) {
                 $prodcutDetail = ProductModel::detail($product['product_id']);
                 if ($data['print_method'] == 20) {
-                    if ($data['category_id'] && !in_array($prodcutDetail['special_id'], $data['category_id']) && !in_array($prodcutDetail['category_id'], $data['category_id'])) {
+                    if (
+                        $data['category_id'] 
+                        && !in_array($prodcutDetail->special_id, $data['category_id']) 
+                        && !in_array($prodcutDetail->category_id, $data['category_id'])
+                        && !in_array($prodcutDetail->category?->parent_id ?? 0, $data['category_id'])
+                    ) {
                         continue;
                     }
                 } elseif ($data['print_method'] == 30) {

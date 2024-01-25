@@ -54,7 +54,7 @@
                 </el-select>
 
             </el-form-item>
-            <el-form-item v-if="form.product_type == 0 && form.print_method == 20" :label="$t('商品分类')" prop="category_id"
+            <!-- <el-form-item v-if="form.product_type == 0 && form.print_method == 20" :label="$t('商品分类')" prop="category_id"
                 :rules="[{
                     required: true,
                     validator: () => {
@@ -64,6 +64,13 @@
                 }]"
             >
                 <el-cascader :options="options" v-model="categoryIds" clearable :placeholder="$t('请选择')" :multiple="true" style="width: 100%;" :props="{ multiple: true }"></el-cascader>
+            </el-form-item> -->
+            <el-form-item v-if="form.product_type == 0 && form.print_method == 20" :label="$t('商品分类')" prop="category_id"
+                :rules="[{ required: true, message: ' ' }]">
+                <el-select v-model="form.category_id" multiple :placeholder="$t('请选择')">
+                    <el-option v-for="item in storeList" :key="item.category_id" :label="item.name_text"
+                        :value="item.category_id + ''"></el-option>
+                </el-select>
             </el-form-item>
             <el-form-item v-if="form.product_type == 1 && form.print_method == 20" :label="$t('商品分类')" prop="category_id"
                 :rules="[{ required: true, message: $t('请选择商品分类') }]">
@@ -129,22 +136,22 @@ export default {
         this.dialogVisible = this.open_add
         this.getData();
     },
-    watch: {
-        'categoryIds': {
-            handler(val) {
-                this.form.category_id = [];
-                this.categoryIds.map(h=>{
-                    if (h[1]) {
-                        this.form.category_id.push(h[1])
-                    }
-                })
-                // 
-                this.$refs?.form?.validate(_=>{})
-            },
-            deep: true,
-            immediate: true,
-        }
-    },
+    // watch: {
+    //     'categoryIds': {
+    //         handler(val) {
+    //             this.form.category_id = [];
+    //             this.categoryIds.map(h=>{
+    //                 if (h[1]) {
+    //                     this.form.category_id.push(h[1])
+    //                 }
+    //             })
+    //             // 
+    //             this.$refs?.form?.validate(_=>{})
+    //         },
+    //         deep: true,
+    //         immediate: true,
+    //     }
+    // },
     methods: {
         getData() {
             SupplierApi.getPrinting({}, true)
