@@ -12,7 +12,13 @@ use app\shop\model\user\User as UserModel;
 class User extends Controller
 {
     /**
-     * 商品列表
+     * @Apidoc\Title("列表")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/data.user/lists")
+     * @Apidoc\Param("keyword", type="string", require=false, default="", desc="昵称/手机号/ID")
+     * @ApiDoc\Param("gender", type="int", require=false, default="", desc="性别 0=女 1=男 2=未知")
+     * @Apidoc\Param(ref="pageParam")
+     * @Apidoc\Returned("list", type="array", ref="app\shop\model\user\User\getList", desc="列表")
      */
     public function lists()
     {
@@ -23,5 +29,4 @@ class User extends Controller
         $grade = $GradeModel->getLists();
         return $this->renderSuccess('', compact('list', 'grade'));
     }
-
 }

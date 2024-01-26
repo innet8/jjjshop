@@ -555,7 +555,7 @@ function printText($leftText, $centerText="", $rightText="", $total = 32, $leftN
     if (preg_match('/[\p{Thai}]/u', $leftText) ) {
         preg_match_all('/[\p{Thai}]+/u', $leftText, $matches);
         $leftWidth = grapheme_strlen($matches[0][0]);
-        $leftWidth += strlen(iconv("UTF-8", "GBK//IGNORE", $leftText));
+        $leftWidth += strlen(iconv("CP874", "GBK//IGNORE", iconv("UTF-8", "CP874//IGNORE", $leftText) ));
     } else {
         $leftWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $leftText));
     }
@@ -563,7 +563,7 @@ function printText($leftText, $centerText="", $rightText="", $total = 32, $leftN
     if (preg_match('/[\p{Thai}]/u', $leftPadding) ) {
         preg_match_all('/[\p{Thai}]+/u', $leftPadding, $matches);
         $leftPaddingWidth = grapheme_strlen($matches[0][0]);
-        $leftPaddingWidth += strlen(iconv("UTF-8", "GBK//IGNORE", $leftPadding));
+        $leftPaddingWidth += strlen(iconv("CP874", "GBK//IGNORE", iconv("UTF-8", "CP874//IGNORE", $leftPadding) ));
     } else {
         $leftPaddingWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $leftPadding));
     }
@@ -571,14 +571,14 @@ function printText($leftText, $centerText="", $rightText="", $total = 32, $leftN
     if (preg_match('/[\p{Thai}]/u', $centerText) ) {
         preg_match_all('/[\p{Thai}]+/u', $centerText, $matches);
         $centerWidth = grapheme_strlen($matches[0][0]);
-        $centerWidth += strlen(iconv("UTF-8", "GBK//IGNORE", $centerText));
+        $centerWidth += strlen(iconv("CP874", "GBK//IGNORE", iconv("UTF-8", "CP874//IGNORE", $centerText) ));
     } else {
         $centerWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $centerText));
     }
     if (preg_match('/[\p{Thai}]/u', $rightText) ) {
         preg_match_all('/[\p{Thai}]+/u', $rightText, $matches);
         $rightWidth = grapheme_strlen($matches[0][0]);
-        $rightWidth += strlen(iconv("UTF-8", "GBK//IGNORE", $rightText));
+        $rightWidth += strlen(iconv("CP874", "GBK//IGNORE", iconv("UTF-8", "CP874//IGNORE", $rightText) ));
     } else {
         $rightWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $rightText));
     }

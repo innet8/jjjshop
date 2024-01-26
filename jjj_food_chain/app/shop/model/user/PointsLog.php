@@ -19,9 +19,12 @@ class PointsLog extends PointsLogModel
         if (!empty($query['scene']) && $query['scene'] > -1) {
             $model = $model->where('log.scene', '=', (int)$query['scene']);
         }
-        // 搜索订单号
-        if (isset($query['search']) && $query['search'] != '') {
-            $model = $model->where('user.nickName', 'like', '%' . trim($query['search']) . '%');
+        // 搜索关键词
+        if (!empty($query['keyword'])) {
+            $keyword = trim($query['keyword']);
+            $model = $model->like('user.nickName', $keyword)
+                ->orLike('user.mobile', $keyword)
+                ->orLike('user.user_id', $keyword);
         }
         // 搜索时间段
         if (isset($query['date']) && $query['date'] != '') {
