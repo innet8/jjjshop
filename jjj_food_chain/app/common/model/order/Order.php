@@ -1091,7 +1091,7 @@ class Order extends BaseModel
                 // 计算最终折扣
                 if ($discount && $discountRatio) {
                     // 会员等级 * 会员卡
-                    $discountRatio = round($discountRatio * $discount, 2);
+                    $discountRatio = round($discountRatio * $discount, 3);
                 } elseif ($discount) {
                     // 会员卡
                     $discountRatio = $discount;

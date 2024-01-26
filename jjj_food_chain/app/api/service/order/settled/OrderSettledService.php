@@ -606,7 +606,7 @@ abstract class OrderSettledService extends BaseService
                 $discountRatio = helper::bcdiv($this->user['grade']['equity'], 100);
             }
             if ($discount && $discountRatio) {
-                $discountRatio = round($discountRatio * $discount, 2);
+                $discountRatio = round($discountRatio * $discount, 3);
             } elseif ($discount) {
                 $discountRatio = $discount;
             }
