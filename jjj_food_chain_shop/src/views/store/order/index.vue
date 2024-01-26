@@ -135,7 +135,7 @@
                     <el-table-column prop="pay_type.text" :label="$t('支付方式')">
                         <template #default="scope">
                             <div>
-                                <span class="gray9">{{ scope.row.pay_type.text }}</span>
+                                <span class="gray9">{{ scope.row.order_status.value == 30 ? scope.row.pay_type.text : '-'}}</span>
                             </div>
                         </template>
                     </el-table-column>

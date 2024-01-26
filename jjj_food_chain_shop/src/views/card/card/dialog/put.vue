@@ -108,7 +108,7 @@
       },
 
       deleteOne(index){
-        this.select_list
+        this.select_list.splice(index, 1)
       },
 
       /*关闭获取用户*/

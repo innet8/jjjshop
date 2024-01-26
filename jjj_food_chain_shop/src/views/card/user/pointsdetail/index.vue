@@ -22,7 +22,7 @@
                 <el-form-item :label="$t('变动时间')">
                     <div class="block">
                         <span class="demonstration"></span>
-                        <el-date-picker v-model="formInline.value1" type="daterange" value-format="YYYY-MM-DD"
+                        <el-date-picker v-model="formInline.date" type="daterange" value-format="YYYY-MM-DD"
                             :range-separator="$t('至')" :start-placeholder="$t('开始日期')" :end-placeholder="$t('结束日期')">
                         </el-date-picker>
                     </div>
@@ -94,7 +94,7 @@ export default {
             /*横向表单数据模型*/
             formInline: {
                 keyword: '',
-                value1: '',
+                date: '',
                 map: '',
                 scene:'',
             },
