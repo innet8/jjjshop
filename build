@@ -24,6 +24,14 @@ build() {
     npm run translate
     npm run build:h5 
     rm -rf ../../jjj_food_chain/public/kitchen && cp -r ./dist/build/h5 ../../jjj_food_chain/public/kitchen
+
+    # 平板
+    cd ../../tmp/flat-panel-side
+    git pull
+    npm i
+    npm run translate
+    npm run build:h5 
+    rm -rf ../../jjj_food_chain/public/tablet && cp -r ./dist/build/h5 ../../jjj_food_chain/public/tablet
 }
 
 build
