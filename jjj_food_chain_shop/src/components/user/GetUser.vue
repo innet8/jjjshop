@@ -117,7 +117,11 @@ export default {
       /*会员列表*/
       tableData: [],
       /*性别列表*/
-      sex: ['女', '男', '未知'],
+      sex: [
+        $t('女'), 
+        $t('男'), 
+        $t('保密')
+    ],
       /*选中的*/
       multipleSelection: [],
       /*是否显示*/
