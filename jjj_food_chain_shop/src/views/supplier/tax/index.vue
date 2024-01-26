@@ -60,6 +60,7 @@ export default {
                     self.form = data.data.vars.values;
                     self.form.tax_rate = Number(self.form.tax_rate)
                     self.form.is_open = data.data.vars.values.is_open.toString()
+                    self.$refs.form.validate()
                 })
                 .catch(error => {
 

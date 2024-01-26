@@ -59,7 +59,7 @@
 
         </div>
         <!--内容-->
-        <div class="product-bottom d-b-c">
+        <div class="product-bottom">
 
             <div class="flex-1">
                 <div class="right-box d-s-s d-c  pr16">
@@ -223,6 +223,8 @@ export default {
 }
 
 .product-bottom {
+    display: flex;
+    align-items: flex-start;
     gap: 16px;
     margin-top: 16px;
 }

@@ -113,7 +113,6 @@ export default {
                         child: item.attribute_value,
                     })
                 })
-                console.log(this.restaurants_zh);
             },
             deep: true,
             immediate: true,

@@ -14,8 +14,8 @@
                 <el-input class="max-w460" v-model="form.vice_unit" :placeholder="$t('请输入')" maxLength="50"></el-input>
             </el-form-item>
             <el-form-item v-if="form.is_open == '1'" :label="$t('副货币汇率')" prop="unit_rate">
-                <el-input class="max-w460" v-model="form.unit_rate" :placeholder="$t('请输入')" type="number"
-                    maxLength="50"></el-input>
+                <el-input-number class="max-w460" :controls="false" :precision="4" :min="0" 
+                    :placeholder="$t('请输入')" v-model.number="form.unit_rate"></el-input-number>
             </el-form-item>
         </el-form>
         <!--提交-->
@@ -28,6 +28,7 @@
 </template>
 <script>
 import SettingApi from '@/api/setting.js';
+import { nextTick } from 'vue';
 export default {
     data() {
         return {
@@ -36,7 +37,7 @@ export default {
                 unit: '',
                 is_open: '1',
                 vice_unit: '',
-                unit_rate: '',
+                unit_rate: null,
             },
             formRules: {
                 unit: [{
@@ -73,7 +74,11 @@ export default {
                 .then(data => {
                     self.loading = false;
                     self.form = data.data.vars.values;
+                    self.form.unit_rate = Number(self.form.unit_rate)
                     self.form.is_open = data.data.vars.values.is_open.toString()
+                    nextTick(() => {
+                        self.$refs.form.validate()
+                    })
                 })
                 .catch(error => {
 

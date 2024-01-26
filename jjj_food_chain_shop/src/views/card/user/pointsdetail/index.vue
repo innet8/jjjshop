@@ -19,7 +19,7 @@
                 <el-form-item :label="$t('昵称/手机号/用户ID')">
                     <el-input v-model="formInline.keyword" :placeholder="$t('昵称/手机号/用户ID')"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('注册时间')">
+                <el-form-item :label="$t('变动时间')">
                     <div class="block">
                         <span class="demonstration"></span>
                         <el-date-picker v-model="formInline.value1" type="daterange" value-format="YYYY-MM-DD"

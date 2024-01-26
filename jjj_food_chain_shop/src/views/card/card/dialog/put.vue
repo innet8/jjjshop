@@ -4,7 +4,7 @@
       时间：2019-10-25
       描述：会员-用户列表-会员等级
   -->
-  <el-dialog :title="$t('会员等级')" v-model="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
+  <el-dialog :title="$t('发卡')" v-model="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
     :close-on-press-escape="false" :modal-append-to-body="false" width='600px'>
     <el-form size="small" :model="form" label-position="top">
       <el-form-item>
@@ -27,15 +27,19 @@
 
       </el-form-item>
       <el-form-item label="" :label-width="formLabelWidth">
-        <div class="d-s-s d-c">
+        <div class="d-s-s d-c w-100" >
           <el-button @click="openGetuser" icon="Plus">{{ $t('选择会员') }}</el-button>
-          <ul class="d-s-s select-user" v-if="select_list.length>0">
-            <li class="mr10 d-c-c d-c p-10-0">
-              <img :src="select_list[0].avatarUrl" class="radius" width="100" height="100" />
-              <p class="lh18 ww100 text-ellipsis tc">{{select_list[0].nickName}}</p>
-            </li>
-          </ul>
+          <div class="select-list" v-if="select_list.length>0">
+                <template v-for="item,index in select_list">
+                    <div class="select-button">
+                        {{item.nickName}}
+                        <el-icon class="select-icon" @click="deleteOne(index)"><CircleCloseFilled /></el-icon> 
+                    </div>
+                </template>
+          
+          </div>
         </div>
+
       </el-form-item>
     </el-form>
     <template #footer>
@@ -102,6 +106,11 @@
       openGetuser() {
         this.open_getuser = true;
       },
+
+      deleteOne(index){
+        this.select_list
+      },
+
       /*关闭获取用户*/
       closeGetuserFunc(e) {
         if (e && e.type != 'error') {
@@ -133,5 +142,29 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
+  }
+  .w-100{
+    width: 100%;
+  }
+  .select-list{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .select-button{
+    border: solid 1px var(--el-color-tips);
+    color:var(--el-color-tips);
+    padding: 0 16px;
+    border-radius: 4px;
+    position: relative;
+    .select-icon{
+        position: absolute;
+        right: -7px;
+        top: -7px;
+        cursor: pointer;
+        color: #c80000;
+    }
   }
 </style>
