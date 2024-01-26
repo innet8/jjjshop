@@ -185,6 +185,7 @@ export default {
     confirmFunc() {
       let params = this.multipleSelection;
       this.emitFunc(params);
+      console.log(params);
     },
 
     /*关闭弹窗*/

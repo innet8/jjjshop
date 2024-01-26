@@ -29,7 +29,7 @@
                 v-model="form.model.product_sort" class="max-w460"></el-input-number>
         </el-form-item>
         <el-form-item :label="$t('限购数量：')" :rules="[{ required: true, message: $t('请输入限购数量') }]" prop="model.limit_num">
-            <el-input-number :controls="false" :min="0" v-model="form.model.limit_num" class="max-w460"></el-input-number>
+            <el-input-number :controls="false" :min="0" :max="999" v-model="form.model.limit_num" class="max-w460"></el-input-number>
             <div class="gray9">{{ $t('每单/每桌购买的最大数量，0为不限购') }}</div>
         </el-form-item>
         <el-form-item :label="$t('打印标签：')" prop="model.label_id" :rules="[{ required: true, message: $t('请选择打印标签') }]">

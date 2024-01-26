@@ -62,6 +62,7 @@ export default {
                     self.form = data.data.vars.values;
                     self.form.service_charge = Number(self.form.service_charge)
                     self.form.is_open = data.data.vars.values.is_open.toString()
+                    self.$refs.form.validate()
                 })
                 .catch(error => {
 
