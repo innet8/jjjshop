@@ -1,29 +1,31 @@
 <template>
     <div class="product-add">
         <!--form表单-->
-        <el-form size="small" ref="form" :model="form" label-position="top" label-width="180px">
+        <el-form size="small" ref="form" class="product-form" :model="form" label-position="top" label-width="180px">
             <!--基础信息-->
-            <Basic @validateField="validateField"></Basic>
-
-            <!--规格设置-->
-            <Spec></Spec>
-
-            <!-- 属性设置-->
-            <Attr></Attr>
-
-            <!-- 加料设置-->
-            <Ingredients></Ingredients>
-
-            <!--商品详情-->
-            <!-- <Content></Content> -->
-
-            <!--高级设置-->
-            <Buyset></Buyset>
+            <div class="product-form-flex">
+                <Basic @validateField="validateField"></Basic>
+    
+                <!--规格设置-->
+                <Spec></Spec>
+    
+                <!-- 属性设置-->
+                <Attr></Attr>
+    
+                <!-- 加料设置-->
+                <Ingredients></Ingredients>
+    
+                <!--商品详情-->
+                <!-- <Content></Content> -->
+    
+                <!--高级设置-->
+                <Buyset></Buyset>
+            </div>
 
             <!--提交-->
             <div class="common-button-wrapper">
-                <el-button size="small" type="info" @click="cancelFunc">取消</el-button>
-                <el-button size="small" type="primary" @click="onSubmit" :loading="loading">发布</el-button>
+                <el-button size="small" type="info" @click="cancelFunc">{{ $t('取消') }}</el-button>
+                <el-button size="small" type="primary" @click="onSubmit" :loading="loading">{{ $t('发布') }}</el-button>
             </div>
         </el-form>
     </div>
@@ -247,5 +249,22 @@ export default {
 <style lang="scss" scoped>
 .basic-setting-content {}
 
-.product-add {}
+.product-add {
+    height: calc(100% - 14px);
+    overflow: hidden;
+}
+.product-form{
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    .product-form-flex{
+        flex: 1 1 auto;
+        overflow-y: auto;
+    }
+    .common-button-wrapper{
+        flex: 0 0 auto;
+        flex-shrink: 0;
+    }
+}
 </style>
