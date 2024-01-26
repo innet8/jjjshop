@@ -31,7 +31,7 @@
             </el-select>
         </el-form-item>
 
-        <el-form-item :label="$t('商品图片：')" :rules="[{
+        <el-form-item :label="$t('商品图片：')" :rules="[ {required: true,
             validator: () => {
                 return form.model.image.length > 0 ? true : false;
             },

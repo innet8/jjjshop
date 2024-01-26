@@ -17,7 +17,7 @@
                 </el-form-item>
 
                 <el-form-item :label="$t('昵称/手机号/用户ID')">
-                    <el-input v-model="formInline.search" :placeholder="$t('昵称/手机号/用户ID')"></el-input>
+                    <el-input v-model="formInline.keyword" :placeholder="$t('昵称/手机号/用户ID')"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('注册时间')">
                     <div class="block">
@@ -46,8 +46,19 @@
                     </el-table-column>
                     <el-table-column prop="user_id" :label="$t('用户ID')" width="80">
                     </el-table-column>
+
                     <el-table-column prop="value" :label="$t('变动数量')"></el-table-column>
-                    <el-table-column prop="describe" :label="$t('变动场景')"></el-table-column>
+                    <el-table-column prop="scene.text" :label="$t('变动场景')">
+                        <template #default="scope">
+                            <span v-if="!scope.row.scene" >-</span>
+                            <span v-if="scope.row.scene == 10" style="color: #409EFF">{{ scope.row.scene.text }}</span>
+                            <span v-if="scope.row.scene == 20" style="color: #67C23A">{{ scope.row.scene.text }}</span>
+                            <span v-if="scope.row.scene == 30" style="color: #F56C6C">{{ scope.row.scene.text }}</span>
+                            <span v-if="scope.row.scene == 40" style="color: #E6A23C">{{ scope.row.scene.text }}</span>
+                            <span v-if="scope.row.scene == 50" style="color: #E63C81">{{ scope.row.scene.text }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="describe" :label="$t('描述/说明')"></el-table-column>
                     <el-table-column prop="create_time" :label="$t('变动时间')"></el-table-column>
                 </el-table>
             </div>
@@ -82,7 +93,7 @@ export default {
             curPage: 1,
             /*横向表单数据模型*/
             formInline: {
-                search: '',
+                keyword: '',
                 value1: '',
                 map: '',
                 scene:'',

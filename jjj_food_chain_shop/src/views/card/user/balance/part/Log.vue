@@ -16,8 +16,8 @@
                             :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item :label="$t('用户昵称')">
-                    <el-input v-model="formInline.search" :placeholder="$t('请输入昵称')"></el-input>
+                <el-form-item :label="$t('昵称/手机号/用户ID')">
+                    <el-input v-model="formInline.keyword" :placeholder="$t('昵称/手机号/用户ID')"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('起始日期')">
                     <div class="block">
@@ -42,6 +42,8 @@
                         <template #default="scope">
                             <span>{{ scope.row.user.nickName }}</span>
                         </template>
+                    </el-table-column>
+                    <el-table-column prop="user.mobile" :label="$t('手机号')" width="160">
                     </el-table-column>
                     <el-table-column prop="user_id" :label="$t('用户ID')" width="80"></el-table-column>
                     <el-table-column prop="money" :label="$t('变动数量')">
@@ -101,7 +103,7 @@ export default {
             curPage: 1,
             /*横向表单数据模型*/
             formInline: {
-                nick_name: '',
+                keyword: '',
                 scene: '',
                 date: ''
             },

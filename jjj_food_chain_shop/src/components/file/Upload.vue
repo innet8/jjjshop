@@ -398,9 +398,7 @@ export default {
                 item.selected = false;
                 this.record--;
             } else {
-                item.selected = true;
-                this.record++;
-                if (this.record > this.this_config.total) {
+                if (this.record >= this.this_config.total) {
                     ElMessage({
                         message: $t("本次最多只能上传 ") + this.this_config.total +$t(" 个文件"),
                         type: "warning",

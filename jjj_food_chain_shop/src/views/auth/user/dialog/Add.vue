@@ -80,7 +80,7 @@ export default {
                     {
                         required: true,
                         message: $t('请选择角色'),
-                        trigger: 'change'
+                        trigger: 'blur'
                     }
                 ],
                 password: [

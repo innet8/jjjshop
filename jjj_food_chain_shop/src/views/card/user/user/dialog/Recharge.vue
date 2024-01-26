@@ -20,7 +20,7 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item :label="$t('变更金额')" :label-width="formLabelWidth">
-            <el-input v-model="recharge.balance.money" autocomplete="off" :placeholder="$t('请输入变更金额')"></el-input>
+            <el-input-number :controls="false" :min="0" :max="100000000" :placeholder="$t('请输入变更金额')" v-model.number="recharge.balance.money"></el-input-number>
           </el-form-item>
           <el-form-item :label="$t('管理员备注')" :label-width="formLabelWidth">
             <el-input type="textarea" v-model="recharge.balance.remark" :placeholder="$t('请输入管理员备注')"></el-input>
@@ -41,7 +41,7 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item :label="$t('变更数量')" :label-width="formLabelWidth">
-            <el-input v-model="recharge.points.value" autocomplete="off" :placeholder="$t('请输入变更数量')"></el-input>
+            <el-input-number :controls="false" :min="0" :max="100000000" :placeholder="$t('请输入变更数量')" v-model.number="recharge.points.value"></el-input-number>
           </el-form-item>
           <el-form-item :label="$t('管理员备注')" :label-width="formLabelWidth">
             <el-input type="textarea" v-model="recharge.points.remark" :placeholder="$t('请输入管理员备注')"></el-input>
