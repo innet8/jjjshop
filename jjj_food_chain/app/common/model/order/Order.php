@@ -121,7 +121,7 @@ class Order extends BaseModel
         return $this->hasMany('app\\common\\model\\order\\OrderProduct', 'order_id', 'order_id')->where('is_send_kitchen', 0)->hidden(['content']);
     }
 
-    // 访问器：获取订单生成时间长度
+    // 订单生成时间长度
     public function getElapsedTimeAttr($value, $data)
     {
         if (isset($data['create_time'])) {
