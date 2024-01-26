@@ -11,6 +11,9 @@ use app\common\model\order\OrderProduct as OrderProductModel;
  */
 class OrderProduct extends OrderProductModel
 {
+    // 底部显示已完成订单商品数量
+    const BOTTOM_FINISH_NUM = 3;
+
     /**
      * 按订单列表
      */

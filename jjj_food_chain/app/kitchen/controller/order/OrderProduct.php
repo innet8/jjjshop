@@ -49,7 +49,7 @@ class OrderProduct extends Controller
         $shop_supplier_id = $this->kitchen['shop_supplier_id'];
 
         $list = $model->listByOrder(array_merge(['shop_supplier_id' => $shop_supplier_id], $this->postData()));
-        $bottom_finish = $model->getFinishOrderProduct($shop_supplier_id, 5);
+        $bottom_finish = $model->getFinishOrderProduct($shop_supplier_id, OrderProductModel::BOTTOM_FINISH_NUM);
         $service_time = time();
         return $this->renderSuccess('', compact('list', 'bottom_finish', 'service_time'));
     }
@@ -92,7 +92,7 @@ class OrderProduct extends Controller
         $model = new OrderProductModel;
         $shop_supplier_id = $this->kitchen['shop_supplier_id'];
         $list = $model->listByCategory(array_merge(['shop_supplier_id' => $shop_supplier_id], $this->postData()));
-        $bottom_finish = $model->getFinishOrderProduct($shop_supplier_id, 5);
+        $bottom_finish = $model->getFinishOrderProduct($shop_supplier_id, OrderProductModel::BOTTOM_FINISH_NUM);
         $service_time = time();
         return $this->renderSuccess('', compact('list', 'bottom_finish', 'service_time'));
     }
