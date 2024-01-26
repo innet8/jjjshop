@@ -108,6 +108,8 @@ return [
             ['name'=>'Token','type'=>'string','require'=>true,'desc'=>'身份令牌Token（平板、厨显不需要）'],
             ['name'=>'Appid','type'=>'string','require'=>true, 'desc'=>'应用Appid - app_id'],
             ['name'=>'Sid','type'=>'string','require'=>true, 'desc'=>'门店Sid - shop_supplier_id'],
+            ['name'=>'Sid','type'=>'string','require'=>true,'default'=>'10001','desc'=>'门店ID'],
+            ['name'=>'Tid','type'=>'string','require'=>true,'default'=>'10001','desc'=>'桌台ID'],
         ],
         // （选配）全局的请求Query
         'query'=>[
