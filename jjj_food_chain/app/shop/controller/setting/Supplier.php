@@ -32,18 +32,22 @@ class Supplier extends Controller
         $model = new SettingModel;
         $data = $this->request->param();
         //
+        $unit_rate = $data['unit_rate'];
         if (empty($data['unit'])) {
             return $this->renderError('主货币单位不能为空');
         }
-        if (!empty($data['is_open']) && (empty($data['vice_unit']) || empty($data['unit_rate']))) {
+        if (!empty($data['is_open']) && (empty($data['vice_unit']) || empty($unit_rate))) {
             return $this->renderError('副货币单位和主副货币转换比例不能为空');
+        }
+        if (!empty($data['is_open']) && !is_numeric($unit_rate)) {
+            return $this->renderError('主副货币转换比例必须为数字');
         }
 
         $arr = [
             'unit' => $data['unit'], // 主货币单位
             'is_open' => $data['is_open'], // 是否开启副货币单位
             'vice_unit' => $data['vice_unit'], // 副货币单位
-            'unit_rate' => $data['unit_rate'], // 主副货币转换比例
+            'unit_rate' => $unit_rate, // 主副货币转换比例
         ];
         $shop_supplier_id = $this->store['user']['shop_supplier_id'];
         if ($model->edit(SettingEnum::CURRENCY, $arr, $shop_supplier_id)) {
@@ -68,12 +72,16 @@ class Supplier extends Controller
         $model = new SettingModel;
         $data = $this->request->param();
         //
-        if (!empty($data['is_open']) && empty($data['tax_rate'])) {
+        $tax_rate = $data['tax_rate'];
+        if (!empty($data['is_open']) && empty($tax_rate)) {
             return $this->renderError('税率不能为空');
+        }
+        if (!empty($data['is_open']) && !is_numeric($tax_rate)) {
+            return $this->renderError('税率必须为数字');
         }
         $arr = [
             'is_open' => $data['is_open'], // 是否开启税率
-            'tax_rate' => $data['tax_rate'], // 税率
+            'tax_rate' => $tax_rate, // 税率
         ];
         $shop_supplier_id = $this->store['user']['shop_supplier_id'];
         if ($model->edit(SettingEnum::TAX_RATE, $arr, $shop_supplier_id)) {
@@ -98,12 +106,16 @@ class Supplier extends Controller
         $model = new SettingModel;
         $data = $this->request->param();
         //
-        if (!empty($data['is_open']) && empty($data['service_charge'])) {
+        $server_charge = $data['service_charge'];
+        if (!empty($data['is_open']) && empty($server_charge)) {
             return $this->renderError('服务费不能为空');
+        }
+        if (!empty($data['is_open']) && !is_numeric($server_charge)) {
+            return $this->renderError('服务费必须为数字');
         }
         $arr = [
             'is_open' => $data['is_open'], // 是否开启服务费
-            'service_charge' => $data['service_charge'], // 服务费
+            'service_charge' => $server_charge, // 服务费
         ];
         $shop_supplier_id = $this->store['user']['shop_supplier_id'];
         if ($model->edit(SettingEnum::SERVICE_CHARGE, $arr, $shop_supplier_id)) {

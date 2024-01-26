@@ -8,7 +8,7 @@
                 </div>
             </el-form-item>
             <el-form-item v-if="form.is_open == '1'" :label="$t('金额')" prop="service_charge">
-                <el-input-number class="max-w460" :controls="false" :precision="2" :min="0" :max="100" :placeholder="$t('请输入')" v-model.number="form.service_charge"></el-input-number>
+                <el-input-number class="max-w460" :controls="false" :precision="2" :min="0"  :placeholder="$t('请输入')" v-model.number="form.service_charge"></el-input-number>
                     <span>{{ currency.unit }}</span>
             </el-form-item>
         </el-form>
