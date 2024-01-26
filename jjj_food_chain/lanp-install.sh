@@ -98,6 +98,8 @@ server {
     root /jjjshop/jjj_food_chain/public;
     server_name localhost;
 
+    client_max_body_size 100m;
+
     location /admin {
         index index.html;
     }
@@ -192,6 +194,7 @@ php-install(){
 
     # 解除禁用的函数
     sudo sed -i 's#disable_functions =.*#disable_functions =#g' /etc/php/8.2/fpm/php.ini
+    sudo sed -i 's#upload_max_filesize = 2M#upload_max_filesize = 100M#g' /etc/php/8.2/fpm/php.ini
     #sudo sed -i 's#;open\_basedir\ \=#open\_basedir\ \='$(pwd)'/jjj_food_chain#g'  /etc/php/8.2/fpm/php.ini 
     systemctl  start  php8.2-fpm.service
     systemctl  enable php8.2-fpm.service
