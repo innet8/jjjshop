@@ -9,16 +9,13 @@
                     </div>
                 </el-form-item>
                 <el-form-item v-if="form.is_open == '1'" :label="$t('税率')" prop="tax_rate">
-                    <el-input class="max-w460" v-model="form.tax_rate" type="number" :placeholder="$t('请输入')" maxLength="50">
-                        <template #append>%</template>
-
-                    </el-input>
-
+                    <el-input-number class="max-w460" :controls="false" :precision="2" :min="0" :max="100" :placeholder="$t('请输入')" v-model.number="form.tax_rate"></el-input-number>
+                    <span>%</span>
                 </el-form-item>
             </el-form>
             <!--提交-->
             <div class="common-button-wrapper">
-                <el-button @click="" :loading="loading">{{ $t('重置') }}</el-button>
+                <el-button @click="getData" :loading="loading">{{ $t('重置') }}</el-button>
                 <el-button type="primary" @click="onSubmit" :loading="loading">{{ $t('保存') }}</el-button>
             </div>
 
@@ -33,7 +30,7 @@ export default {
             loading: false,
             form: {
                 is_open: '1',
-                tax_rate: '',
+                tax_rate: null,
             },
             formRules: {
 
@@ -61,6 +58,7 @@ export default {
                 .then(data => {
                     self.loading = false;
                     self.form = data.data.vars.values;
+                    self.form.tax_rate = Number(self.form.tax_rate)
                     self.form.is_open = data.data.vars.values.is_open.toString()
                 })
                 .catch(error => {
