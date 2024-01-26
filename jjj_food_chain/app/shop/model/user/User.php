@@ -51,20 +51,23 @@ class User extends UserModel
     public static function getList($data)
     {
         $model = new static();
-        //检索：用户名
-        if (!empty($data['nick_name'])) {
-            $model = $model->where('nickName|mobile|user_id', 'like', '%' . $data['nick_name'] . '%');
+        // 搜索关键词
+        if (!empty($data['keyword'])) {
+            $keyword = trim($data['keyword']);
+            $model = $model->like('nickName', $keyword)
+                ->orLike('mobile', $keyword)
+                ->orLike('user_id', $keyword);
         }
         // 检索：会员等级
         if (isset($data['grade_id']) && $data['grade_id'] > 0) {
             $model = $model->where('grade_id', '=', (int)$data['grade_id']);
         }
-        //检索：注册时间
+        // 检索：注册时间
         if (!empty($data['reg_date'][0])) {
             $model = $model->where('create_time', 'between', [strtotime($data['reg_date'][0]), strtotime($data['reg_date'][1]) + 86399]);
         }
         // 检索：性别
-        if (!empty($data['gender']) && $data['gender'] > -1) {
+        if (isset($data['gender']) && $data['gender'] > -1) {
             $model = $model->where('gender', '=', (int)$data['gender']);
         }
         // 获取用户列表

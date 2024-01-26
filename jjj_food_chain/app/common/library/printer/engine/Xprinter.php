@@ -36,7 +36,8 @@ class Xprinter extends Basics
             fwrite($fp, iconv("UTF-8", "GBK//IGNORE", "***". $shopName . "***"));
         }
         // 
-        if (preg_match('/[\p{Thai}]/u', $content)) {
+        $isThai = preg_match('/[\p{Thai}]/u', __("金额"));
+        if ($isThai) {
             fwrite($fp, "\x1C\x2E");
             $content = iconv("UTF-8", "CP874//IGNORE", $content);
         } else {

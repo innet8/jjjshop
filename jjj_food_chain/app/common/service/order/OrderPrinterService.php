@@ -147,7 +147,7 @@ class OrderPrinterService
         // 获取订单打印内容
         $content = $this->getPrintContent($order, $printer);
         // 执行打印请求
-        return $PrinterDriver->printTicket($content);
+        return $PrinterDriver->printTicket($content, $order['supplier']['name']);
     }
 
     /**
@@ -159,6 +159,9 @@ class OrderPrinterService
         if ($currency['unit'] ?? '') {
             $this->currencyUnit = $currency['unit'];
         }
+
+        $isThai =  preg_match('/[\p{Thai}]/u', __("金额"));
+
         /* *
         *
         *商米打印机 
@@ -168,7 +171,7 @@ class OrderPrinterService
             $printer = new SunmiCloudPrinter(567);
             $printer->lineFeed();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
-            $printer->appendText("*".__("店铺名称")."({$order['supplier']['name']})*\n");
+            $printer->appendText("***{$order['supplier']['name']}***\n");
             $printer->lineFeed();
             $printer->setLineSpacing(80);
             $printer->setPrintModes(true, true, false);
@@ -276,12 +279,10 @@ class OrderPrinterService
         *
         */
         if ($printers == PrinterTypeEnum::SUNMI_LAN || $printers['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
-            $width = 48;
+            $width = 48 - ($isThai ? 2 : 0);
             $leftWidth = 32;
             $printer = new SunmiCloudPrinter(567);
-            $printer->restoreDefaultSettings();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
-            $printer->appendText("*".__("店铺名称")."({$order['supplier']['name']})*\n");
             $printer->lineFeed();
             $printer->setLineSpacing(80);
             $printer->setPrintModes(true, true, false);
@@ -394,7 +395,7 @@ class OrderPrinterService
         */
         $width = 32;
         $leftWidth = 16;
-        $content = "<C>*" . __('店铺名称') . "({$order['supplier']['name']})*</C><BR>";
+        $content = "<C>***{$order['supplier']['name']}***</C><BR>";
         if ($order['table_no']) {
             $content .= "<CB>".__('桌号')."：{$order['table_no']}</CB><BR>";
         }
@@ -564,12 +565,14 @@ class OrderPrinterService
     private function getPrintProductContent($data, $order, $printer = null, $products = null)
     {
         $printerType = $printer['printer_type']['value'];
+        $isThai =  preg_match('/[\p{Thai}]/u', __("金额"));
         /* *
         *
         *商米 和 芯烨 打印机 
         *
         */
         if ($printer && ( $printerType == PrinterTypeEnum::SUNMI_LAN || $printerType == PrinterTypeEnum::XPRINTER_LAN)) {
+            $width = 48 - ($isThai ? 2 : 0);
             $printer = new SunmiCloudPrinter(567);
             if($printerType != PrinterTypeEnum::XPRINTER_LAN){
                 $printer->lineFeed();
@@ -587,26 +590,22 @@ class OrderPrinterService
                 $printer->lineFeed();
             }
             // 
-            $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->setupColumns(
-                [160, SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [220, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
             );
             $printer->printInColumns(__("订单号"), $order->order_no);
             $printer->printInColumns(__("时间"), $order->update_time);
             $printer->lineFeed();
             // 
-            $printer->restoreDefaultLineSpacing();
-            $printer->setPrintModes(false, false, false);
-            $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
-            $printer->setupColumns(
-                [400, SunmiCloudPrinter::ALIGN_LEFT, 0],
-                [0, SunmiCloudPrinter::ALIGN_RIGHT, 0]
-            );
-            $printer->printInColumns(__("商品"), __("数量"));
+            $printer->appendText(printText(__("商品"), '',__("数量"), $width));
             $printer->appendText("------------------------------------------------\n");
+            $printer->setupColumns(
+                [220 , SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
+            );
             foreach ($order['product'] as $key => $product) {
                 $prodcutDetail = ProductModel::detail($product['product_id']);
                 if ($data['print_method'] == 20) {

@@ -47,7 +47,7 @@ class Points extends Controller
      * @Apidoc\Title("积分明细")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/shop/user.points/log")
-     * @Apidoc\Param("search", type="string", require=false, default="", desc="搜索关键字")
+     * @Apidoc\Param("keyword", type="string", require=false, default="", desc="搜索关键字")
      * @Apidoc\Param("date", type="array", require=false, desc="起始日期")
      * @Apidoc\Returned("list", type="array", ref="app\shop\model\user\PointsLog\getList", desc="列表")
      */

@@ -7,7 +7,7 @@
     <div>
         <el-form-item :label="$t('商品价格：')" width="80" :rules="[{ required: true, message: $t('请填写商品价格') }]"
             prop="model.sku[0].product_price">
-            <el-input-number :min="0" :controls="false" v-model="form.model.sku[0].product_price"
+            <el-input-number :min="0" :max="100000000" :controls="false" v-model="form.model.sku[0].product_price"
                 :placeholder="$t('请填写商品价格')" class="max-w460"></el-input-number>
         </el-form-item>
         <!-- <el-form-item :label="$t('包装费：')" :rules="[{ required: true, message: $t('请填写包装费') }]" prop="model.sku[0].bag_price">

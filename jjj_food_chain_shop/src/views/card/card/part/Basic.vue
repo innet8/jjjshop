@@ -8,7 +8,7 @@
     <!--基本信息-->
     <div class="common-form">{{ $t('基本信息') }}</div>
     <el-form-item :label="$t('会员卡名称：')" :rules="[{ required: true, message: $t('请填写会员卡名称') }]" prop="model.card_name">
-      <el-input v-model="form.model.card_name" class="max-w460"></el-input>
+      <el-input v-model="form.model.card_name" :maxlength="50" class="max-w460"></el-input>
     </el-form-item>
     <el-form-item :label="$t('卡片类型：')" prop="model.is_default">
       <el-radio-group v-model="form.model.is_default">

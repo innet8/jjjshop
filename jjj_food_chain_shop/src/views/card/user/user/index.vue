@@ -16,7 +16,7 @@
                             :value="item.grade_id"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item :label="$t('昵称/手机号/ID')"><el-input v-model="formInline.nick_name"
+                <el-form-item :label="$t('昵称/手机号/ID')"><el-input v-model="formInline.keyword"
                     :placeholder="$t('请输入昵称/手机号/ID')"></el-input></el-form-item>
                 <el-form-item :label="$t('注册时间')">
                     <div class="block">
@@ -123,7 +123,7 @@ export default {
             curPage: 1,
             /*横向表单数据模型*/
             formInline: {
-                nick_name: '',
+                keyword: '',
                 grade_id: '',
                 reg_date: '',
             },

@@ -35,7 +35,7 @@
                                 },
                                 message: $t('请输入价格')
                             }]">
-                                <el-input-number type="number" :placeholder="$t('请输入价格')" size="small" :min="0" :controls="false"
+                                <el-input-number type="number" :placeholder="$t('请输入价格')" size="small" :min="0" :max="100000000" :controls="false"
                                     v-model="scope.row.product_price"></el-input-number>
                             </el-form-item>
                         </template>

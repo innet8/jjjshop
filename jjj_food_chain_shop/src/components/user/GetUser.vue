@@ -14,12 +14,12 @@
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('性别')">
-          <el-select v-model="formInline.sex" :placeholder="$t('请选择性别')" style="width: 120px;">
+          <el-select v-model="formInline.gender" :placeholder="$t('请选择性别')" style="width: 120px;">
             <el-option :label="$t('全部')" value="-1"></el-option>
             <el-option v-for="(item, index) in sex" :key="index" :label="item" :value="index"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('昵称/手机号/ID')"><el-input :placeholder="$t('昵称/手机号/ID')" v-model="formInline.nick_name"></el-input></el-form-item>
+        <el-form-item :label="$t('昵称/手机号/ID')"><el-input :placeholder="$t('昵称/手机号/ID')" v-model="formInline.keyword"></el-input></el-form-item>
         <el-form-item>
           <el-button  type="primary" icon="Search" @click="search">{{ $t('查询') }}</el-button>
         </el-form-item>
@@ -108,16 +108,20 @@ export default {
         /*等级*/
         grade_id: '',
         /*昵称*/
-        nick_name: '',
+        keyword: '',
         /*性别*/
-        sex: ''
+        gender: ''
       },
       /*会员等级列表*/
       gradeList: [],
       /*会员列表*/
       tableData: [],
       /*性别列表*/
-      sex: ['女', '男', '未知'],
+      sex: [
+        $t('女'), 
+        $t('男'), 
+        $t('保密')
+    ],
       /*选中的*/
       multipleSelection: [],
       /*是否显示*/

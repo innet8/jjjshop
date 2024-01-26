@@ -19,7 +19,7 @@ class Balance extends Controller
      * @Apidoc\Title("余额明细")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/shop/user.balance/log")
-     * @Apidoc\Param("nick_name", type="string", require=false, default="", desc="用户昵称")
+     * @Apidoc\Param("keyword", type="string", require=false, default="", desc="用户昵称")
      * @Apidoc\Param("scene", type="int", require=false, default="", desc="变动场景")
      * @Apidoc\Param("date", type="array", require=false, default="", desc="起始日期")
      * @Apidoc\Param(ref="pageParam")

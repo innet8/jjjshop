@@ -8,14 +8,13 @@
                 </div>
             </el-form-item>
             <el-form-item v-if="form.is_open == '1'" :label="$t('金额')" prop="service_charge">
-                <el-input class="max-w460" v-model="form.service_charge" :placeholder="$t('请输入')" maxLength="50">
-                    <template #append>{{ currency.unit }}</template>
-                </el-input>
+                <el-input-number class="max-w460" :controls="false" :precision="2" :min="0" :max="100" :placeholder="$t('请输入')" v-model.number="form.service_charge"></el-input-number>
+                    <span>{{ currency.unit }}</span>
             </el-form-item>
         </el-form>
         <!--提交-->
         <div class="common-button-wrapper">
-            <el-button @click="" :loading="loading">{{ $t('重置') }}</el-button>
+            <el-button @click="getData" :loading="loading">{{ $t('重置') }}</el-button>
             <el-button type="primary" @click="onSubmit" :loading="loading">{{ $t('保存') }}</el-button>
         </div>
 
@@ -32,7 +31,7 @@ export default {
             loading: false,
             form: {
                 is_open: '1',
-                service_charge: '',
+                service_charge: null,
             },
             formRules: {
 
@@ -61,6 +60,7 @@ export default {
                 .then(data => {
                     self.loading = false;
                     self.form = data.data.vars.values;
+                    self.form.service_charge = Number(self.form.service_charge)
                     self.form.is_open = data.data.vars.values.is_open.toString()
                 })
                 .catch(error => {
