@@ -221,7 +221,7 @@ abstract class CashierSettledService extends BaseService
         $serviceFee = SettingModel::getSupplierItem(SettingEnum::SERVICE_CHARGE, $this->orderData['supplier']['shop_supplier_id']);
         // 订单服务费（非桌台）
         if ($serviceFee['is_open']) {
-            $this->orderData['setting_service_money'] = $serviceFee['service_charge'];
+            $this->orderData['setting_service_money'] = is_numeric($serviceFee['service_charge']) ? $serviceFee['service_charge'] : 0;
         } else {
             $this->orderData['setting_service_money'] = 0;
         }
