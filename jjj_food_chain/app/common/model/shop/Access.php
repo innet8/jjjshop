@@ -100,6 +100,10 @@ class Access extends BaseModel
      */
     public function getRouteMenu(array $menus, string $name): array
     {
+        if (!isset($menus[0]['children'])) {
+            return [];
+        }
+
         $adminMenu = array_filter($menus[0]['children'], function ($val) use($name) {
             return $val['name'] == $name;
         });
