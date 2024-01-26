@@ -63,7 +63,7 @@
         </el-form-item>
 
         <!--商品图片组件-->
-        <Upload v-if="isProductUpload" :config="{ total: 9 }" :isupload="isProductUpload"
+        <Upload v-if="isProductUpload" :config="{ total: 1 }" :isupload="isProductUpload"
             @returnImgs="returnProductImgsFunc">{{ $t('上传图片') }}</Upload>
     </div>
 </template>

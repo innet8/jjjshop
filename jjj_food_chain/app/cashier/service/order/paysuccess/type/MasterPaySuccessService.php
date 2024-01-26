@@ -97,7 +97,7 @@ class MasterPaySuccessService extends BaseService
                 return false;
             }
             if ($this->user['balance'] < $this->model['pay_price']) {
-                $this->error = '用户余额不足，无法使用余额支付';
+                $this->error = '会员余额不足，请先充值';
                 return false;
             }
         }

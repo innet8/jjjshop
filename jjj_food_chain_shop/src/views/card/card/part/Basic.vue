@@ -43,7 +43,8 @@
     </el-form-item>
     <el-form-item :label="$t('折扣：')" :rules="[{ required: true, message: $t('请填写折扣') }]" prop="model.discount"
       v-if="form.model.is_discount==1">
-      <el-input v-model="form.model.discount" type="number" class="max-w460"></el-input>
+      <el-input-number class="max-w460" :controls="false" :precision="0" :min="0" :max="100" :placeholder="$t('请填写折扣')" v-model.number="form.model.discount"></el-input-number>
+      <div> %</div>
     </el-form-item>
     <el-form-item :label="$t('开卡赠送：')">
       <el-checkbox v-model="form.model.open_points" :true-label="1" :false-label='0'> {{ $t('积分') }}</el-checkbox>

@@ -232,12 +232,12 @@ export default {
             let self = this;
             self.$refs.form.validate(valid => {
                 if (valid) {
-                    let params = formatModel(self.model, self.form.model);
-                    params.scene = self.scene;
-                    params.image = self.ImgKeepId(params.image);
-                    params.product_id = self.product_id;
-                    params.sku = self.form.model.sku;
-                    params.alone_grade_equity = self.convertJson(self.form.gradeList);
+                    let params = formatModel(JSON.parse(JSON.stringify(self.model)), JSON.parse(JSON.stringify(self.form.model)));
+                    params.scene = JSON.parse(JSON.stringify(self.scene));
+                    params.image =  JSON.parse(JSON.stringify(self.ImgKeepId(params.image)));
+                    params.product_id = JSON.parse(JSON.stringify(self.product_id));
+                    params.sku = JSON.parse(JSON.stringify(self.form.model.sku));
+                    params.alone_grade_equity =  JSON.parse(JSON.stringify(self.convertJson(self.form.gradeList)));
                     //处理数据
                     params.product_name = JSON.stringify(params.product_name)
                     params.product_unit = JSON.stringify(params.product_unit)
