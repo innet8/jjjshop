@@ -91,6 +91,26 @@ class User extends BaseModel
     /**
      * 获取用户信息
      */
+    public static function cardDetail($where)
+    {
+        $model = new static;
+        $filter = ['is_delete' => 0];
+        if (is_array($where)) {
+            $filter = array_merge($filter, $where);
+        } else {
+            $filter['user_id'] = (int)$where;
+        }
+        //
+        $info = $model->where($filter)->with(['grade', 'card.cardRecord'])->find();
+        if ($info) {
+            $info->password = '';
+        }
+        return $info;
+    }
+
+    /**
+     * 获取用户信息
+     */
     public static function detailByUnionid($unionid)
     {
         $model = new static;

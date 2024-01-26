@@ -22,6 +22,7 @@ class CardRecord extends BaseModel
         'expire_time_text',
         'pay_time_text',
         'pay_type_text',
+        'disabled',
     ];
 
     /**
@@ -56,6 +57,20 @@ class CardRecord extends BaseModel
     {
         $pay_type = [10 => __('余额支付'), 20 => __('微信支付'), 30 => __('支付宝支付'), 40 => __('后台发卡')];
         return $pay_type[$data['pay_type']];
+    }
+
+    /**
+     * 会员卡是否有效
+     * @param $value
+     * @param $data
+     * @return string
+     */
+    public function getDisabledAttr($value, $data)
+    {
+        if (isset($data['expire_time']) && $data['expire_time'] != 0 && $data['expire_time'] < time()) {
+            return 1;
+        }
+        return 0;
     }
 
     /**
