@@ -104,19 +104,19 @@ class Card extends CardModel
                 if ($data['card_id']) {
                     $user->setCardId($data['card_id']);
                 }
-                //赠送积分
+                // 赠送积分
                 if ($detail['open_points'] && $detail['open_points_num']) {
                     $user->setIncPoints($detail['open_points_num'], '发会员卡获取积分');
                 }
-                //赠送优惠券
+                // 赠送优惠券
                 if ($detail['open_coupon'] && $detail['open_coupons']) {
                     (new UserCouponModel)->addUserCardCoupon($detail['open_coupons'], $user, $CardRecordModel['order_id']);
                 }
-                //赠送余额
+                // 赠送余额
                 if ($detail['open_money'] && $detail['open_money_num']) {
                     (new User())->where('user_id', '=', $user['user_id'])
-                        ->inc('balance', $detail['open_money_num'])
-                        ->update();
+                        ->inc('balance', $detail['open_money_num']);
+
                     BalanceLogModel::add(BalanceLogSceneEnum::RECHARGE, [
                         'user_id' => $user['user_id'],
                         'money' => $detail['open_money_num'],
@@ -149,18 +149,18 @@ class Card extends CardModel
         try {
             $detail->save(['is_delete' => 1]);
             $user = (new User)::detail($detail['user_id']);
-            //撤销积分
+            // 撤销积分
             if ($detail['open_points'] && $detail['open_points_num']) {
                 $user->setIncPoints(-$detail['open_points_num'], '撤销会员卡减少积分');
             }
-            //撤销优惠券
+            // 撤销优惠券
             if ($detail['open_coupon'] && $detail['open_coupons']) {
                 (new UserCouponModel)->cancelUserCardCoupon($detail['open_coupons'], $user, $detail['order_id']);
             }
             if ($detail['open_money'] && $detail['open_money_num']) {
                 (new User())->where('user_id', '=', $user['user_id'])
-                    ->dec('balance', $detail['open_money_num'])
-                    ->update();
+                    ->dec('balance', $detail['open_money_num']);
+
                 BalanceLogModel::add(BalanceLogSceneEnum::ADMIN, [
                     'user_id' => $user['user_id'],
                     'money' => -$detail['open_money_num'],

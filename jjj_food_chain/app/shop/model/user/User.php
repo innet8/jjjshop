@@ -54,9 +54,11 @@ class User extends UserModel
         // 搜索关键词
         if (!empty($data['keyword'])) {
             $keyword = trim($data['keyword']);
-            $model = $model->like('nickName', $keyword)
-                ->orLike('mobile', $keyword)
-                ->orLike('user_id', $keyword);
+            $model = $model->where(function ($query) use ($keyword) {
+                $query->like('user.nickName', $keyword)
+                    ->orLike('user.mobile', $keyword)
+                    ->orLike('user.user_id', $keyword);
+            });
         }
         // 检索：会员等级
         if (isset($data['grade_id']) && $data['grade_id'] > 0) {
