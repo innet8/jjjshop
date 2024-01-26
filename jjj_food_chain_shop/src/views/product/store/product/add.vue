@@ -189,7 +189,8 @@ export default {
             let self = this;
             self.$refs.form.validate(valid => {
                 if (valid) {
-                    let params = JSON.parse(JSON.stringify(self.form.model));
+                    let params = {}
+                    params = JSON.parse(JSON.stringify(self.form.model));
                     params.product_name = JSON.stringify(params.product_name)
                     params.product_unit = JSON.stringify(params.product_unit)
                     params.sku.map((item, index) => {

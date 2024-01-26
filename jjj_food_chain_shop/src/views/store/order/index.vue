@@ -121,12 +121,12 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="" :label="$t('买家')">
+                    <el-table-column prop="" :label="$t('买家')" show-overflow-tooltip>
                         <template #default="scope">
-                            <div v-if="scope.row.user">
-                                <div>{{ scope.row.user.nickName }}</div>
-                                <div class="gray9">ID：({{ scope.row.user.user_id }})</div>
-                            </div>
+                            <template v-if="scope.row.user">
+                               <span>{{ scope.row.user.nickName }}</span><br/>
+                                <span class="gray9">ID：({{ scope.row.user.user_id }})</span>
+                            </template>
                             <p v-else>-</p>
                         </template>
                     </el-table-column>
