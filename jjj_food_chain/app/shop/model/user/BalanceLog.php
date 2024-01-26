@@ -25,10 +25,14 @@ class BalanceLog extends BalanceLogModel
         // 合并查询条件
         $data = array_merge($params, $query);
         $model = $this->alias('log')->field('log.*');
-        // 用户昵称
-        $data['search'] = trim($data['search']);
-        !empty($data['search']) && $model = $model->where('user.nickName', 'like', "%{$data['search']}%");
-        //搜索时间段
+        // 搜索关键词
+        if (!empty($query['keyword'])) {
+            $keyword = trim($query['keyword']);
+            $model = $model->like('user.nickName', $keyword)
+                ->orLike('user.mobile', $keyword)
+                ->orLike('user.user_id', $keyword);
+        }
+        // 搜索时间段
         if (isset($data['date']) && $data['date'] != '') {
             $model = $model->where('log.create_time', 'between', [strtotime($data['date'][0]), strtotime($data['date'][1]) + 86399]);
         }

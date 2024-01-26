@@ -23,6 +23,18 @@ class PointsLog extends BaseModel
     }
 
     /**
+     * 积分变动场景
+     */
+    public function getSceneAttr($value)
+    {
+        try {
+            return ['text' => PointsLogSceneEnum::data()[$value]['name'], 'value' => $value];
+        } catch (\Exception $e) {
+            return ['text' => '-', 'value' => $value];
+        }
+    }
+
+    /**
      * 关联会员记录表
      */
     public function user()

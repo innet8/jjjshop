@@ -311,7 +311,7 @@ class User extends BaseModel
             PointsLogModel::add([
                 'scene' => PointsLogSceneEnum::ADMIN,
                 'user_id' => $this['user_id'],
-                'recharge_value' => $points,
+                'value' => $points,
                 'describe' => "后台管理员 [{$storeUserName}] 操作",
                 'remark' => $data['remark']??'',
             ]);
