@@ -3,23 +3,23 @@
         :close-on-press-escape="false">
         <el-form size="small" ref="form" :model="form" label-position="top">
             <!--店员修改-->
-            <el-form-item :label="$t('昵称')" prop="nick_name">
-                <el-input class="percent-w100" v-model="form.nick_name" :placeholder="$t('请输入昵称')"></el-input>
+            <el-form-item :label="$t('昵称')" prop="nick_name" :rules="[{ required: true, message: $t('请输入昵称') }]">
+                <el-input class="percent-w100" v-model="form.nick_name" :maxlength="50" :placeholder="$t('请输入昵称')"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('性别')">
+            <el-form-item :label="$t('性别')"  prop="gender" :rules="[{ required: true, message: $t('请选择性别') }]">
                 <el-radio-group v-model="form.gender">
                     <el-radio :label="1">{{ $t('男') }}</el-radio>
                     <el-radio :label="0">{{ $t('女') }}</el-radio>
                     <el-radio :label="2">{{ $t('保密') }}</el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item :label="$t('等级')">
-                <el-select class="percent-w100" v-model="form.grade_id" :placeholder="$t('请选择等级')">
+            <el-form-item :label="$t('会员')" prop="grade_id" :rules="[{ required: true, message: $t('请选择等级') }]">
+                <el-select class="percent-w100" v-model="form.grade_id" :placeholder="$t('请选择等级')" >
                     <el-option v-for="(item, index) in gradeList" :key="index" :label="item.name"
                         :value="item.grade_id"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$t('手机号')" prop="mobile">
+            <el-form-item :label="$t('手机号')" prop="mobile" :rules="[{ required: true, message: $t('请输入手机号') }]">
                 <el-input class="percent-w100" v-model="form.mobile" :placeholder="$t('请输入手机号')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('密码')" prop="password" >
