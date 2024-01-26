@@ -12,9 +12,15 @@ class Call extends BaseModel
     /**
      * 获取列表记录
      */
-    public function getList(int $status = 0, int $shopSupplierId = 0, $params)
+    public function getList($params, int $status = 0, int $shopSupplierId = 0)
     {
-        return $this->withoutGlobalScope()->where('status', $status)->where('shop_supplier_id', $shopSupplierId)->paginate($params);
+//        return $this->withoutGlobalScope()->where('status', $status)->where('shop_supplier_id', $shopSupplierId)->paginate($params);
+        return $this->withoutGlobalScope()
+            ->alias('t1')
+            ->where('status', $status)->where('shop_supplier_id', $shopSupplierId)
+            ->where('(SELECT MAX(create_time) as max_time FROM jjjfood_call t2  WHERE t2.table_id = t1.table_id) = create_time')
+            ->order('create_time', 'desc')
+            ->paginate($params);
     }
 
     /**
@@ -39,8 +45,7 @@ class Call extends BaseModel
     {
         $call = self::withoutGlobalScope()->where('id', $callId)->where('shop_supplier_id', $shopSupplierId)->find();
         if ($call) {
-            $call->status = 1;
-            $call->save();
+            self::withoutGlobalScope()->where('table_id', $call['table_id'])->update(['status' => 1]);
         }
     }
 
@@ -50,5 +55,15 @@ class Call extends BaseModel
     public function getUnprocessedCount(int $shopSupplierId = 0)
     {
         return $this->withoutGlobalScope()->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->count();
+    }
+
+    /**
+     * 未发送消息列表
+     */
+    public function getUnSendList(int $shopSupplierId = 0)
+    {
+        $unSendList = $this->withoutGlobalScope()->where('is_send', 0)->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->limit(5)->order(['create_time' => 'asc'])->select();
+//        $this->withoutGlobalScope()->where('is_send', 0)->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->limit(5)->order(['create_time' => 'asc'])->update(['is_send' => 1]);
+        return $unSendList;
     }
 }

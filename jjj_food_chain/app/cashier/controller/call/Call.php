@@ -24,7 +24,7 @@ class Call extends Controller
      */
     public function index($status)
     {
-        $list = (new CallModel)->getList($status, $this->cashier['user']['shop_supplier_id'] ?? 0, $this->postData());
+        $list = (new CallModel)->getList($this->postData(), $status, $this->cashier['user']['shop_supplier_id'] ?? 0);
         return $this->renderSuccess('', compact('list'));
     }
 
@@ -45,14 +45,19 @@ class Call extends Controller
 
     /**
      * @Apidoc\Title("未处理数量")
-     * @Apidoc\Desc("已处理")
+     * @Apidoc\Desc("未处理数量")
      * @Apidoc\Method("POST")
      * @Apidoc\Url("/index.php/cashier/call.call/unprocessed")
      * @Apidoc\Returned("count", type="int", desc="未处理数量")
+     * @Apidoc\Returned("list", type="int", desc="推送消息列表")
      */
     public function unprocessed()
     {
+        // 未处理数量
         $count = (new CallModel)->getUnprocessedCount($this->cashier['user']['shop_supplier_id'] ?? 0);
-        return $this->renderSuccess('', compact('count'));
+        // 未发送消息列表
+        $list = (new CallModel)->getUnSendList($this->cashier['user']['shop_supplier_id'] ?? 0);
+
+        return $this->renderSuccess('', compact('count', 'list'));
     }
 }
