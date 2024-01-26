@@ -210,20 +210,20 @@ abstract class CashierSettledService extends BaseService
                 $this->orderData['order_bag_price'] = helper::number2(helper::getArrayColumnSum($this->productList, 'total_bag_price'));
             }
         }
-        if ($this->orderSource['eat_type'] == 10) {
+        if ($this->orderSource['source'] == 10) {
             $this->orderData['settle_type'] = $this->orderData['supplier']['settle_type'];
             $this->orderData['serviceType'] = $this->orderData['supplier']['serviceType'];
             $this->orderData['service_money'] = $this->orderData['supplier']['service_money'];
             if ($this->orderData['serviceType'] == 0) {
                 $this->orderData['service_money'] = round($this->orderData['service_money'] * $this->orderData['meal_num'], 2);
             }
-            $serviceFee = SettingModel::getSupplierItem(SettingEnum::SERVICE_CHARGE, $this->orderData['supplier']['shop_supplier_id']);
-            // 订单服务费（非桌台）
-            if ($serviceFee['is_open']) {
-                $this->orderData['setting_service_money'] = $serviceFee['service_charge'];
-            } else {
-                $this->orderData['setting_service_money'] = 0;
-            }
+        }
+        $serviceFee = SettingModel::getSupplierItem(SettingEnum::SERVICE_CHARGE, $this->orderData['supplier']['shop_supplier_id']);
+        // 订单服务费（非桌台）
+        if ($serviceFee['is_open']) {
+            $this->orderData['setting_service_money'] = is_numeric($serviceFee['service_charge']) ? $serviceFee['service_charge'] : 0;
+        } else {
+            $this->orderData['setting_service_money'] = 0;
         }
     }
 
@@ -239,7 +239,7 @@ abstract class CashierSettledService extends BaseService
         // 订单实付款金额(订单金额 + 服务费)
         $this->orderData['order_pay_price'] = helper::number2(helper::bcadd($this->orderData['order_pay_price'], $this->orderData['service_money']));
         // 订单实付款金额(订单金额 + 服务费2)
-        $this->orderData['order_pay_price'] = helper::number2(helper::bcadd($this->orderData['order_pay_price'], $this->orderData['setting_service_money'] ?? 0));
+        $this->orderData['order_pay_price'] = helper::number2(helper::bcadd($this->orderData['order_pay_price'], isset($this->orderData['setting_service_money']) ? $this->orderData['setting_service_money'] : 0));
         // 订单实付款金额(订单金额 + 消费税)
         $this->orderData['order_pay_price'] = helper::number2(helper::bcadd($this->orderData['order_pay_price'], $this->orderData['consumption_tax_money']));
         // 订单实付款金额(订单金额 - 优惠金额)

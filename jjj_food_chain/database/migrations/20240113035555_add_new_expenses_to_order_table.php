@@ -30,9 +30,9 @@ class AddNewExpensesToOrderTable extends Migrator
     {
         // 订单表
         $table = $this->table('order');
-        $table->addColumn(Column::decimal('setting_service_money', 10, 2)->setNull(false)->setDefault(0)->setComment('门店设定服务费')->setAfter('app_id'));
-        $table->addColumn(Column::decimal('consumption_tax_money', 10, 2)->setNull(false)->setDefault(0)->setComment('门店设定消费税')->setAfter('setting_service_money'));
-        $table->addColumn(Column::decimal('user_discount_money', 10, 2)->setNull(false)->setDefault(0)->setComment('会员折扣金额')->setAfter('consumption_tax_money'));
+        $table->addColumn(Column::decimal('setting_service_money', 11, 2)->setNull(false)->setDefault(0)->setComment('门店设定服务费')->setAfter('app_id'));
+        $table->addColumn(Column::decimal('consumption_tax_money', 11, 2)->setNull(false)->setDefault(0)->setComment('门店设定消费税')->setAfter('setting_service_money'));
+        $table->addColumn(Column::decimal('user_discount_money', 11, 2)->setNull(false)->setDefault(0)->setComment('会员折扣金额')->setAfter('consumption_tax_money'));
         $table->update();
     }
 }
