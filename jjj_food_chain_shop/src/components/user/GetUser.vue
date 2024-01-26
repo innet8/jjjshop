@@ -14,7 +14,7 @@
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('性别')">
-          <el-select v-model="formInline.sex" :placeholder="$t('请选择性别')" style="width: 120px;">
+          <el-select v-model="formInline.gender" :placeholder="$t('请选择性别')" style="width: 120px;">
             <el-option :label="$t('全部')" value="-1"></el-option>
             <el-option v-for="(item, index) in sex" :key="index" :label="item" :value="index"></el-option>
           </el-select>
@@ -110,7 +110,7 @@ export default {
         /*昵称*/
         keyword: '',
         /*性别*/
-        sex: ''
+        gender: ''
       },
       /*会员等级列表*/
       gradeList: [],
