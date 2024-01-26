@@ -1253,6 +1253,16 @@ class Order extends BaseModel
                     return false;
                 }
 
+                // 判断当前订单
+                $curNum = (new OrderProduct())->where([
+                    'order_id' => $data['order_id'],
+                    'product_id' => $data['product_id'],
+                ])->sum('total_num');
+                if ($limitNum && (($param['product_num'] - $this['total_num'] + $curNum) > $limitNum)) {
+                    $this->error = '超过限购数量';
+                    return false;
+                }
+
                 $orderProduct = new OrderProductModel;
 //                $order_product_id = $orderProduct->isExist($data);
                 $order_product_id = 0;
