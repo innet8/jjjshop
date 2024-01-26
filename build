@@ -18,7 +18,7 @@ build() {
     rm -rf ../../jjj_food_chain/public/cashier && cp -r ./dist/build/h5 ../../jjj_food_chain/public/cashier
 
     # 厨显
-    cd ./tmp/KitchenDisplay
+    cd ../../tmp/KitchenDisplay
     git pull
     npm i
     npm run translate
