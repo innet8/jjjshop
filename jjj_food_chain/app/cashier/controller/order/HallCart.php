@@ -179,6 +179,20 @@ class HallCart extends Controller
     }
 
     /**
+     * @Apidoc\Title("桌台已送厨房商品")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/getSendKitchen")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+     * @Apidoc\Returned("list",type="array",ref="app\common\model\order\Order\getSendKitchen")
+     */
+    public function getSendKitchen($table_id)
+    {
+        $model = new OrderModel();
+        $detail = $model->getSendKitchen($table_id);
+        return $this->renderSuccess('', compact('detail'));
+    }
+
+    /**
      * @Apidoc\Title("删除商品")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.HallCart/delProduct")

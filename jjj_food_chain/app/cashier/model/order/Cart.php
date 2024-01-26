@@ -74,8 +74,6 @@ class Cart extends CartModel
     // 重新计算购物车价格信息 1
     public function reloadPrice($cashier, $table_id, $order_id = 0)
     {
-        trace('收银员');
-        trace($cashier);
         if ($order_id > 0) {
             // 购物车商品列表
             $cartList = (new static())->with('product')
@@ -97,8 +95,8 @@ class Cart extends CartModel
             ]);
         }
         $user_id = $order ? $order['user_id'] : 0;
-        trace('会员ID');
-        trace($user_id);
+//        trace('会员ID');
+//        trace($user_id);
 
         $pay_money = 0;
         $order_price = 0;
@@ -154,30 +152,30 @@ class Cart extends CartModel
                     } else {
                         // 商品会员折扣后单价
                         $grade_product_price = helper::number2(helper::bcmul($product['price'], $discountRatio), true);
-                        trace('商品会员折扣后单价');
-                        trace($grade_product_price);
+//                        trace('商品会员折扣后单价');
+//                        trace($grade_product_price);
                     }
                     $productDiscount = DiscountProduct::getDiscount($product['product_id']);
-                    trace('========');
-                    trace($product['product_num']);
-                    trace('========');
+//                    trace('========');
+//                    trace($product['product_num']);
+//                    trace('========');
                     if ($product['product_num'] > 1 && $productDiscount) {
                         $gradeTotalPrice = $grade_product_price * ($product['product_num'] - 1) + round($grade_product_price * $productDiscount['discount'] / 10, 2);
                     } else {
                         $gradeTotalPrice = $grade_product_price * $product['product_num'];
-                        trace('商品会员折扣后单价 * 数量');
-                        trace($gradeTotalPrice);
+//                        trace('商品会员折扣后单价 * 数量');
+//                        trace($gradeTotalPrice);
                     }
 
-                    trace('折扣');
-                    trace($grade_ratio);
+//                    trace('折扣');
+//                    trace($grade_ratio);
                     // 原商品总价 - 折扣后
-                    trace('原商品总价');
-                    trace($product['total_price']);
-                    trace($product['product_price']);
+//                    trace('原商品总价');
+//                    trace($product['total_price']);
+//                    trace($product['product_price']);
                     $grade_total_money = helper::number2(helper::bcsub($product['price'] * $product['product_num'], $gradeTotalPrice));
-                    trace('优惠后与原商品差价');
-                    trace($grade_total_money);
+//                    trace('优惠后与原商品差价');
+//                    trace($grade_total_money);
                     $product['total_price'] = $gradeTotalPrice;
                 }
             }
@@ -849,7 +847,7 @@ class Cart extends CartModel
         // 用户信息
         $userInfo = [];
         if ($order) {
-            $userInfo = UserModel::detail($order['user_id']);
+            $userInfo = UserModel::cardDetail($order['user_id']);
         }
         return [
             'orderInfo' => $order ?? [],
@@ -883,7 +881,7 @@ class Cart extends CartModel
             return false;
         }
         // 用户信息
-        $user = (new UserModel)->where(['mobile' => $mobile, 'is_delete' => 0])->with(['grade', 'card'])->find();
+        $user = (new UserModel)->where(['mobile' => $mobile, 'is_delete' => 0])->with(['grade', 'card.cardRecord'])->find();
         if (!$user) {
             $this->error = "用户不存在";
             return false;

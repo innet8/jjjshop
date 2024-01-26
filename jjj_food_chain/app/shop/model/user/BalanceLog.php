@@ -28,9 +28,11 @@ class BalanceLog extends BalanceLogModel
         // 搜索关键词
         if (!empty($query['keyword'])) {
             $keyword = trim($query['keyword']);
-            $model = $model->like('user.nickName', $keyword)
-                ->orLike('user.mobile', $keyword)
-                ->orLike('user.user_id', $keyword);
+            $model = $model->where(function ($query) use ($keyword) {
+                $query->orLike('user.nickName', $keyword)
+                    ->orLike('user.mobile', $keyword)
+                    ->orLike('user.user_id', $keyword);
+            });
         }
         // 搜索时间段
         if (isset($data['date']) && $data['date'] != '') {

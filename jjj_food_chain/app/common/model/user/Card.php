@@ -22,6 +22,14 @@ class Card extends BaseModel
     ];
 
     /**
+     * 关联会员卡记录表
+     */
+    public function cardRecord()
+    {
+        return $this->hasOne('app\\common\\model\\user\\CardRecord', 'card_id', 'card_id');
+    }
+
+    /**
      * 会员卡有效期
      * @param $value
      * @param $data
