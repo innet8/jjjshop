@@ -62,10 +62,10 @@
                         </template>
                     </el-table-column>
 
-                    <el-table-column prop="remark" :label="$t('描述/说明')">
+                    <el-table-column prop="describe" :label="$t('描述/说明')">
                         <template #default="scope">
-                            <p v-if="scope.row.remark == ''">--</p>
-                            <p v-else>{{ scope.row.remark }}</p>
+                            <p v-if="scope.row.describe == ''">--</p>
+                            <p v-else>{{ scope.row.describe }}</p>
                         </template>
                     </el-table-column>
                     <el-table-column prop="create_time" :label="$t('变动时间')" width="140"></el-table-column>

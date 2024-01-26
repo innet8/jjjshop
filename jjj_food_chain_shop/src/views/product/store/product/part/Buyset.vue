@@ -51,7 +51,7 @@
         <el-form-item :label="$t('会员折扣设置：')" v-if="form.model.is_enable_grade == 1">
             <el-radio-group v-model="form.model.is_alone_grade">
                 <el-radio :label="0">{{ $t('默认折扣') }}</el-radio>
-                <el-radio :label="1">{{ $t('仅需支付') }}</el-radio>
+                <!-- <el-radio :label="1">{{ $t('仅需支付') }}</el-radio> -->
             </el-radio-group>
             <div class="gray9" v-if="form.model.is_alone_grade == 0">{{ $t('默认折扣：默认为用户所属会员等级的折扣率') }}</div>
             <div class="gray9" v-if="form.model.is_alone_grade == 1">{{ $t('仅需支付：用户购买此商品仅需支付的金额或比例') }}</div>

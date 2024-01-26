@@ -23,7 +23,7 @@
           <el-table-column prop="opt_log_id" label="id" width="70"></el-table-column>
           <el-table-column prop="user_name" :label="$t('用户名')"></el-table-column>
           <el-table-column prop="real_name" :label="$t('姓名')"></el-table-column>
-          <el-table-column prop="url" label="Url" width="300">
+          <el-table-column prop="url" label="URL" width="300">
             <template #default="scope">
               <el-input size="small" :placeholder="$t('请输入内容')" v-model="scope.row.url">
                 <template #append>

@@ -64,7 +64,7 @@
                     <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
                     <el-table-column fixed="right" :label="$t('操作')" width="200">
                         <template #default="scope">
-                            <el-button @click="putClick(scope.row)" type="primary" link size="small"
+                            <el-button @click="putClick(scope.row)" type="primary" link size="small" :disabled="scope.row.status != 0"
                                 v-auth="'/card/card/put'" v-if="scope.row.type_id != 3">{{ $t('发卡') }}</el-button>
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
                                 v-auth="'/card/card/edit'">{{ $t('编辑') }}
