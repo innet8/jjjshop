@@ -221,7 +221,7 @@ class OrderBusinessPrinterService
         */
         $width = 32;
         $leftWidth = 16;
-        $content = "<C>***{$user['supplier']['name']}***</C><BR>";
+        $content = "<C>***{$data['supplier']['name']}***</C><BR>";
         $content .= "<CB>" . __('营业数据') . "</CB><BR>";
         $content .= __('时间') . "：{$startTime}" . __('至') . "{$endTime}<BR><BR>";
         $content .= printText(__('分类'), __('数量'),  __('金额'), $width, $leftWidth);
