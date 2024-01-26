@@ -38,7 +38,7 @@ import AuthApi from '@/api/auth.js';
 export default {
     data() {
         let validatePass2 = (rule, value, callback) => {
-            if (value !== this.form.password) {
+            if (value != this.form.password && this.form.password) {
                 callback(new Error($t('两次密码不一致！')))
             } else {
                 callback()
@@ -53,6 +53,7 @@ export default {
             dialogVisible: false,
             /*form表单对象*/
             form: {
+                password: '',
                 confirm_password: '',
                 access_id: []
             },
