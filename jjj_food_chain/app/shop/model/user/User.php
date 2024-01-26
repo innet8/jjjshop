@@ -55,9 +55,9 @@ class User extends UserModel
         if (!empty($data['keyword'])) {
             $keyword = trim($data['keyword']);
             $model = $model->where(function ($query) use ($keyword) {
-                $query->like('user.nickName', $keyword)
-                    ->orLike('user.mobile', $keyword)
-                    ->orLike('user.user_id', $keyword);
+                $query->orLike('nickName', $keyword)
+                    ->orLike('mobile', $keyword)
+                    ->orLike('user_id', $keyword);
             });
         }
         // 检索：会员等级

@@ -23,7 +23,7 @@ class PointsLog extends PointsLogModel
         if (!empty($query['keyword'])) {
             $keyword = trim($query['keyword']);
             $model = $model->where(function ($query) use ($keyword) {
-                $query->like('user.nickName', $keyword)
+                $query->orLike('user.nickName', $keyword)
                     ->orLike('user.mobile', $keyword)
                     ->orLike('user.user_id', $keyword);
             });
