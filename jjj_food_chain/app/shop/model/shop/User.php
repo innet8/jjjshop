@@ -61,6 +61,11 @@ class User extends UserModel
     */
     public function editPass($data, $user)
     {
+        // 校验密码为数字
+        if (!validateNumber($data['oldpass']) || !validateNumber($data['password']) || !validateNumber($data['confirmPass'])){
+            $this->error = '密码为4-16位纯数字';
+            return false;
+        }
         $user_info = User::detail($user['shop_user_id']);
         if ($user_info['password'] != salt_hash($data['oldpass'])) {
             $this->error = '原密码错误';
