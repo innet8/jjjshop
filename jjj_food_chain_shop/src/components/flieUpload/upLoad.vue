@@ -64,9 +64,17 @@ export default {
                 text: "上传中,请等待",
                 background: "rgba(0, 0, 0, 0.7)",
             });
+            let type = ''
+            if(param.file.type.includes('video')){
+                type ='video'
+            }
+            if(param.file.type.includes('image')){
+                type ='image'
+            }
             const formData = new FormData();
             formData.append("iFile", param.file);
-            formData.append("file_type", param.file.file_type);
+            formData.append("file_type", type);
+            console.log(param);
             FileApi.uploadFile(formData)
                 .then((response) => {
                     loading.close();
