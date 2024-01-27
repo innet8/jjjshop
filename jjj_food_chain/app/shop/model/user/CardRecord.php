@@ -15,12 +15,12 @@ class CardRecord extends CardRecordModel
     public function getList($data)
     {
         $model = $this->alias('r')
-            ->where('pay_status', '=', 20)
-            ->where('r.is_delete', '=', 0)
+            ->field('r.*')
             ->with(['card', 'user'])
             ->join('user u', 'u.user_id=r.user_id')
             ->join('user_card c', 'c.card_id=r.card_id')
-            ->field('r.*')
+            ->where('pay_status', '=', 20)
+            ->where('r.is_delete', '=', 0)
             ->order(['r.create_time' => 'desc']);
 
         if (!empty($data['search'])) {

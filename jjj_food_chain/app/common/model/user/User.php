@@ -278,6 +278,10 @@ class User extends BaseModel
             $this->error = '请输入正确的金额';
             return false;
         }
+        if ($data['recharge_value'] > 100000000) {
+            $this->error = '不能大于100000000';
+            return false;
+        }
         // 判断充值方式，计算最终金额
         $money = 0;
         if ($data['mode'] === 'inc') {
@@ -289,6 +293,11 @@ class User extends BaseModel
         } else {
             $diffMoney = $data['recharge_value'];
             $money = $diffMoney - $this['balance'];
+        }
+        $maxLimit = 999999999;
+        if ($diffMoney > $maxLimit) {
+            $this->error = '充值后的余额不能大于' . $maxLimit;
+            return false;
         }
         // 更新记录
         $this->transaction(function () use ($storeUserName, $data, $diffMoney, $money) {
@@ -313,6 +322,10 @@ class User extends BaseModel
             $this->error = '请输入正确的积分数量';
             return false;
         }
+        if ($data['recharge_value'] > 100000000) {
+            $this->error = '不能大于100000000';
+            return false;
+        }
         $points = 0;
         // 判断充值方式，计算最终积分
         if ($data['mode'] === 'inc') {
@@ -324,6 +337,11 @@ class User extends BaseModel
         } else {
             $diffMoney = $data['recharge_value'];
             $points = $data['recharge_value'] - $this['points'];
+        }
+        $maxLimit = 999999999;
+        if ($diffMoney > $maxLimit) {
+            $this->error = '充值后的余额不能大于' . $maxLimit;
+            return false;
         }
         // 更新记录
         $this->transaction(function () use ($storeUserName, $data, $diffMoney, $points) {

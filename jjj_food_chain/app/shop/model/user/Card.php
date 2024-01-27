@@ -181,11 +181,46 @@ class Card extends CardModel
     }
 
     /**
+     * 处理数据超过最大值时，返回提示信息
+     */
+    private function alertCardNumber($data)
+    {
+        $limits = [
+            'open_points_num' => ['limit' => 100000000, 'message' => '积分最大可设置为100000000'],
+            'open_money_num' => ['limit' => 100000000, 'message' => '余额最大可设置为100000000'],
+            'money' => ['limit' => 100000000, 'message' => '价格最大可设置为100000000'],
+            'sort' => ['limit' => 999, 'message' => '排序最大可设置为999'],
+            'expire' => ['limit' => 999, 'message' => '有效期最大可设置为999'],
+        ];
+
+        foreach ($limits as $key => $value) {
+            trace($key);
+            if (array_key_exists($key, $data) && $data[$key] > $value['limit']) {
+                return $value['message'];
+            }
+        }
+        return '';
+    }
+
+    /**
      * 编辑记录
      */
     public function edit($data)
     {
-        $data = json_decode($data, 1);
+        $data = json_decode($data, true);
+        //
+        if(mb_strlen($data['card_name']) > 50){
+            $this->error = '会员卡名称最大长度限制为50个字符';
+            return false;
+        }
+        if ($text = $this->alertCardNumber($data)) {
+            $this->error = $text;
+            return false;
+        }
+        if(mb_strlen($data['content']) > 200){
+            $this->error = '使用须知最大长度限制为200个字符';
+            return false;
+        }
         unset($data['create_time']);
         unset($data['update_time']);
         return $this->save($data);

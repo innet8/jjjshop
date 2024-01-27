@@ -39,7 +39,7 @@ class Upload extends JjjController
         $fileInfo = request()->file('iFile');
 
         // 添加文件库记录
-        $uploadFile = $this->addUploadFile($group_id, $fileName, $fileInfo, 'image', $saveName);
+        $uploadFile = $this->addUploadFile($group_id, $fileName, $fileInfo, request()->param('file_type') ?? 'image', $saveName);
         // 图片上传成功
         return json(['code' => 1, 'msg' => '图片上传成功', 'data' => $uploadFile]);
     }
