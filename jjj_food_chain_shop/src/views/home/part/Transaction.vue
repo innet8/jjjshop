@@ -4,7 +4,7 @@
           时间：2019-10-24
           描述：统计-销售统计-交易统计
       -->
-  <div class="mt30">
+  <div >
     <div class="">
       <div class="Echarts">
         <div id="TransactionChart"></div>
@@ -69,12 +69,13 @@ let myChart = null;
         /*图表数据*/
         option: {
           title: {
-            //text: 'ECharts 入门示例'
+            text:$t('近七日数据')
           },
           grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '6%',
+            left: '0px',
+            right: '0px',
+            bottom: '0px',
+            top: '60px',
             containLabel: true
           },
           tooltip: {
