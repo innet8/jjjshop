@@ -2,6 +2,7 @@
 
 namespace app\tablet\model\product;
 
+use app\common\model\supplier\Supplier;
 use app\common\model\product\Product as ProductModel;
 
 /**
@@ -22,6 +23,15 @@ class Product extends ProductModel
         if (!empty($params['search'])) {
             $model = $model->where('product_name', 'like', '%' . trim($params['search']) . '%');
         }
+        if (!empty($params['search'])) {
+            $model = $model->where('product_name', 'like', '%' . trim($params['search']) . '%');
+        }
+        // 平板售罄开关开关
+        $settingInfo = Supplier::getTabletBaseInfo();
+        if (!(isset($settingInfo['tablet']) && $settingInfo['tablet']['is_show_sold_out'])) {
+            $model = $model->where('product_stock', '>', 0 );
+        }
+
         $model = $model->alias('product')
             ->field(['product.*'])
             ->with(['category', 'image.file', 'sku'])
