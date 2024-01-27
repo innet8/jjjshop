@@ -4,7 +4,7 @@
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="left" label-width="0px"
                 class="demo-ruleForm login-container d-b-c">
                 <div class="flex-1 login-box">
-                    <h3 class="title" style="margin-bottom: 40px;"><img src="/src/assets/logo.svg"/>{{ shop_name }}</h3>
+                    <h3 class="title" style="margin-bottom: 40px;"><img src="/src/assets/logo.svg"/>{{ $t('点餐管理系统') }}</h3>
                     <!--用户名-->
                     <el-form-item prop="account">
                         <div class="left-img-input"><img class="l-img" src="/src/assets/img/user.png">

@@ -125,7 +125,7 @@ class CardRecord extends BaseModel
     public static function checkExistByRecordId($card_id)
     {
         $model = new static;
-        return !!$model->where('card_id', '=', (int)$card_id)->count();
+        return !!$model->where('card_id', '=', (int)$card_id)->where('is_delete', '=', 0)->count();
     }
 
     /**
@@ -143,7 +143,7 @@ class CardRecord extends BaseModel
             ->where(function ($query) {
                 $query->where('expire_time', '=', 0)->whereOr('expire_time', '>', time());
             })
-            ->count();
+            ->findOrEmpty();
     }
 
     /**

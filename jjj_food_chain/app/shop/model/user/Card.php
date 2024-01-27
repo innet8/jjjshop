@@ -69,11 +69,13 @@ class Card extends CardModel
         }
         $userIdsArr = array_unique(explode(',', $userIds));
         foreach ($userIdsArr as $userId) {
-            //是否存在会员卡
             $isExist = (new CardRecord())->checkExistByUserId($userId);
             if ($isExist) {
-                $this->error = "该会员已存在会员卡，勿重复发放";
-                return false;
+                if ($data['card_id'] == $isExist['card_id']) {
+                    continue;
+                }
+                // 删除原有的会员卡
+                (new CardRecord())->where('user_id', $userId)->save(['is_delete' => 1]);
             }
 
             $detail = self::detail($data['card_id']);
@@ -149,6 +151,8 @@ class Card extends CardModel
         try {
             $detail->save(['is_delete' => 1]);
             $user = (new User)::detail($detail['user_id']);
+            // 撤销会员卡id
+            $user->setCardId(0);
             // 撤销积分
             if ($detail['open_points'] && $detail['open_points_num']) {
                 $user->setIncPoints(-$detail['open_points_num'], '撤销会员卡减少积分');
