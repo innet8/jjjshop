@@ -223,12 +223,18 @@ class User extends BaseModel
     */
     public function add($data)
     {
-//        if (empty($data['nick_name'])) {
-//            $this->error = '昵称不能为空';
-//            return false;
-//        }
+        if (!empty($data['nick_name'])) {
+            if (mb_strlen($data['nick_name']) > 50) {
+                $this->error = '昵称不能超过50个字符';
+                return false;
+            }
+        }
         if (empty($data['mobile'])) {
             $this->error = '手机号不能为空';
+            return false;
+        }
+        if (mb_strlen($data['mobile']) > 20) {
+            $this->error = '手机号不能超过20个字符';
             return false;
         }
         $user = $this->where('mobile', '=', $data['mobile'])
