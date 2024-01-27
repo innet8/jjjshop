@@ -777,5 +777,6 @@
     "变更场景": "Change scene",
     "昵称/手机号/用户ID": "Nickname/Mobile phone number/User ID",
     "收银打印设置": "Cashier printing settings",
-    "小票显示的语言将根据选择的语言打印": "The language displayed on the receipt will be printed according to the selected language"
+    "小票显示的语言将根据选择的语言打印": "The language displayed on the receipt will be printed according to the selected language",
+    "发布": "release"
 }

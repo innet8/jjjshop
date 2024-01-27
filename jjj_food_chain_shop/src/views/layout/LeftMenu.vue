@@ -72,7 +72,7 @@ export default defineComponent({
         const state = reactive({
             route,
             /*传到顶部的标题*/
-            munu_name: '首页',
+            munu_name: $t('首页'),
             /*选中的菜单*/
             active_menu: null,
             /*子菜单选择*/
@@ -131,6 +131,7 @@ export default defineComponent({
     mounted() {
         if (this.route.path == '/home') {
             this.$emit('selectMenu', null);
+            document.title = $t('首页');
         }
     },
     watch:{
@@ -149,6 +150,7 @@ export default defineComponent({
     methods: {
         /*点击菜单跳转*/
         choseMenu(type, item, index) {
+            document.title = $t(item.name);
             if (type == 1) {
                 this.active_menu = null;
                 this.active_child = null;
