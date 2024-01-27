@@ -24,7 +24,7 @@ class Role extends RoleModel
      */
     private function getAll()
     {
-        $data = $this->order(['sort' => 'asc', 'create_time' => 'asc'])->select();
+        $data = $this->order(['create_time' => 'desc'])->select();
         return $data ? $data->toArray() : [];
     }
 
