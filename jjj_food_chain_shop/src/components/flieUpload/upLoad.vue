@@ -74,7 +74,6 @@ export default {
             const formData = new FormData();
             formData.append("iFile", param.file);
             formData.append("file_type", type);
-            console.log(param);
             FileApi.uploadFile(formData)
                 .then((response) => {
                     loading.close();

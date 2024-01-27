@@ -193,12 +193,20 @@ export default {
             });
         },
         upLoad(data) {
-
+            var type = ''
+            console.log(data);
+            if(data.file_type.includes('video')){
+                type ='video'
+            }
+            if(data.file_type.includes('image')){
+                type ='image'
+            }
             this.form.carousel.push(
                 {
                     real_name: data.real_name,
                     file_path: data.file_path,
                     sort: 0,
+                    type:type,
                 }
             )
         },
