@@ -23,11 +23,24 @@ class Product extends ProductModel
         $data['alone_grade_equity'] = isset($data['alone_grade_equity']) ? json_decode($data['alone_grade_equity'], true) : '';
         $data['app_id'] = self::$app_id;
 
-        $data = $this->sanitizeProductData($data);
-        foreach ($data['product_feed'] as &$item) {
-            $item = $this->sanitizeProductData($item);
+        //
+        if (isset($data['sku']) && is_array($data['sku'])) {
+            foreach ($data['sku'] as &$info) {
+                if ($text = $this->alertProductData($info)) {
+                    $this->error = $text;
+                    return false;
+                }
+                $info = $this->sanitizeProductData($info);
+            }
+            unset($info);
         }
-        unset($item);
+        $data = $this->sanitizeProductData($data);
+        if (isset($data['product_feed']) && is_array($data['product_feed'])) {
+            foreach ($data['product_feed'] as &$item) {
+                $item = $this->sanitizeProductData($item);
+            }
+            unset($item);
+        }
         // 开启事务
         $this->startTrans();
         try {
@@ -50,6 +63,25 @@ class Product extends ProductModel
             $this->rollback();
             return false;
         }
+    }
+
+    /**
+     * 处理数据超过最大值时，返回提示信息
+     */
+    private function alertProductData($data)
+    {
+        $limits = [
+            'price' => ['limit' => 1000000, 'message' => '价格不能超过1000000'],
+            'product_price' => ['limit' => 1000000, 'message' => '价格不能超过1000000'],
+            'stock_num' => ['limit' => 999, 'message' => '库存不能超过999']
+        ];
+
+        foreach ($limits as $key => $value) {
+            if (array_key_exists($key, $data) && $data[$key] > $value['limit']) {
+                return $value['message'];
+            }
+        }
+        return '';
     }
 
     /**
@@ -95,11 +127,25 @@ class Product extends ProductModel
         $data['alone_grade_equity'] = isset($data['alone_grade_equity']) ? json_decode($data['alone_grade_equity'], true) : '';
         $productSkuIdList = helper::getArrayColumn(($this['sku']), 'product_sku_id');
 
-        $data = $this->sanitizeProductData($data);
-        foreach ($data['product_feed'] as &$item) {
-            $item = $this->sanitizeProductData($item);
+        //
+        if (isset($data['sku']) && is_array($data['sku'])) {
+            foreach ($data['sku'] as &$info) {
+                if ($text = $this->alertProductData($info)) {
+                    $this->error = $text;
+                    return false;
+                }
+                $info = $this->sanitizeProductData($info);
+            }
+            unset($info);
         }
-        unset($item);
+        $data = $this->sanitizeProductData($data);
+        if (isset($data['product_feed']) && is_array($data['product_feed'])) {
+            foreach ($data['product_feed'] as &$item) {
+                $item = $this->sanitizeProductData($item);
+            }
+            unset($item);
+        }
+        //
         return $this->transaction(function () use ($data, $productSkuIdList) {
             $this->save($data);
             // 商品规格
@@ -128,10 +174,6 @@ class Product extends ProductModel
         $cost_price = 0;
         $bag_price = 0;
 
-        foreach ($data['sku'] as &$item) {
-            $item = $this->sanitizeProductData($item);
-        }
-        unset($item);
         // 添加规格数据
         if ($data['spec_type'] == '10') {
             $sku = $data['sku'][0];
