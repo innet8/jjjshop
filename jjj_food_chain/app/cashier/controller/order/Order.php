@@ -43,25 +43,33 @@ class Order extends Controller
         $data['order_type'] = 1;
         $data['shop_supplier_id'] = $this->cashier['user']['shop_supplier_id'];
 
-        $order_status = [
-            1=>'payment',
-            3=>'cancel',
-            2=>'complete',
-        ];
+//        $order_status = [
+//            1=>'payment',
+//            2=>'complete',
+//            3=>'cancel',
+//        ];
+        if ($data['dataType'] == 1) {
+            $dataType = 'payment';
+        } elseif ($data['dataType'] == 2) {
+            $dataType = 'complete';
+        } elseif ($data['dataType'] == 3){
+            $dataType = 'cancel';
+        } else {
+            $dataType = 'all';
+        }
 
         $data = [
             'shop_supplier_id' => $this->cashier['user']['shop_supplier_id'],
-            'order_no' => $data['search'],
+            'order_no' => $data['search'] ?? '',
             'style_id' => '',
-            'create_time' => $data['time'],
+            'order_type' => $data['order_type'],
+            'create_time' => $data['time'] ?? '',
             'time_type' => $data['time_type'],
             'order_source' => $data['eat_type'] ?? 0,
-            'dataType' => $data['dataType'] == 0 ? 'all' : $order_status[$data['dataType']],
+            'dataType' =>  $dataType,
         ];
         trace('2222');
         trace($data);
-        $data['order_type'] = 1;
-        $data['shop_supplier_id'] = $this->cashier['user']['shop_supplier_id'];
         $list = $model->getList($dataType, $data);
         $info = [
                 'all' => $model->getCount('all', $data),

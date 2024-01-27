@@ -143,10 +143,10 @@ class Order extends OrderModel
                 // 只有结束时间
                 $endTime = strtotime($data['create_time'][1]);
                 $model = $model->where('create_time', '<', $endTime);
-            } else if ($startTime && $endTime) {
-                // 没有时间范围才按 time_type 查询
-                $model = $model->where('create_time', 'between', [$startTime, $endTime]);
             }
+        } else if ($startTime && $endTime) {
+            // 没有时间范围才按 time_type 查询
+            $model = $model->where('create_time', 'between', [$startTime, $endTime]);
         }
         // 已送厨
         return $model->where('extra_times', '>', 0);
