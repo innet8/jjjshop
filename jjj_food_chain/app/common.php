@@ -465,7 +465,7 @@ function checkDetect(): string
         return isset($GLOBALS["SHIFT_LANGUAGE"]) ? $GLOBALS["SHIFT_LANGUAGE"] : 'en';
     }
 
-    return '';
+    return 'en';
 }
 
 /**
@@ -513,9 +513,9 @@ function langTrans(string $val, string $language = 'zh'): string
  * @param string $language
  * @return mixed
  */
-function __(string $val): string
+function __(string $val, string $language = 'en'): string
 {
-    return langTrans($val);
+    return langTrans($val, $language);
 }
 
 /**
@@ -684,4 +684,17 @@ function checkMobile($mobile)
         return true;
     }
     return false;
+}
+
+/**
+ * 获取当前设备机器码
+ */
+function getMachineCode()
+{
+    $machineCode = cache('machine_code');
+    if (!$machineCode) {
+        $machineCode = getGuidV4();
+        cache('machine_code', $machineCode, 86400);
+    }
+    return $machineCode;
 }

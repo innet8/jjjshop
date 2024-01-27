@@ -25,7 +25,11 @@ class Store extends Controller
     public function index()
     {
         if ($this->request->isGet()) {
-            return $this->fetchData();
+            $ret = $this->fetchData();
+            $ret['shop']['shop_supplier_id'] = $this->store['user']['shop_supplier_id'];
+            // 获取当前设备机器码
+            $ret['shop']['device_code'] = getMachineCode();
+            return $this->renderSuccess('', $ret);
         }
         $model = new SettingModel;
         $data = $this->request->param();
@@ -57,7 +61,7 @@ class Store extends Controller
     public function fetchData()
     {
         $vars['values'] = SettingModel::getItem(SettingEnum::STORE);
-        return $this->renderSuccess('', compact('vars'));
+        return compact('vars');
     }
 
 }
