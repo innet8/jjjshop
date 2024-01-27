@@ -29,10 +29,22 @@ const { afterLogout } = useUserStore();
 export default {
 
 	data() {
+        let validatePass1 = (rule, value, callback) => {
+            console.log(value);
+            if (!value) {
+                callback(new Error($t('请输入登录密码')))
+            } else if (value.length < 4 ||  value.length > 16  || !(/^\d+$/.test(value))  ) {
+                callback(new Error($t('密码必须是4-16位的数字')))
+            } else {
+                callback()
+            }
+        }
         let validatePass2 = (rule, value, callback) => {
             if (!value) {
                 callback(new Error($t('请输入确认新密码')))
-            } else if (value !== this.form.password) {
+            } 
+            
+            else if (value !== this.form.password) {
                 callback(new Error($t('两次密码不一致！')))
             } else {
                 callback()
@@ -56,7 +68,7 @@ export default {
                 }],
                 password: [{
                     required: true,
-                    message: $t('请输入新密码'),
+                      validator: validatePass1,
                     trigger: 'blur'
                 }],
                 confirmPass: [{ required: true,validator: validatePass2, trigger: 'blur' }],
