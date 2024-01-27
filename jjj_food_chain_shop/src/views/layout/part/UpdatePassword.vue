@@ -30,7 +30,6 @@ export default {
 
 	data() {
         let validatePass1 = (rule, value, callback) => {
-            console.log(value);
             if (!value) {
                 callback(new Error($t('请输入登录密码')))
             } else if (value.length < 4 ||  value.length > 16  || !(/^\d+$/.test(value))  ) {
