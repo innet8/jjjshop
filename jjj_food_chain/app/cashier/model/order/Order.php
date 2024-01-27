@@ -54,9 +54,6 @@ class Order extends OrderModel
         if (isset($params['order_type']) && $params['order_type']) {
             $model = $model->where('order_type', '=', $params['eat_type']);
         }
-        if (isset($params['order_type']) && $params['order_type']) {
-            $model = $model->where('order_type', '=', $params['eat_type']);
-        }
 
 
         $startTime = 0;
@@ -77,7 +74,6 @@ class Order extends OrderModel
                 break;
         }
         if (isset($params['time']) && $params['time']) {
-            trace('123123');
             if ($params['time'][0] && $params['time'][1]) {
                 $startTime = strtotime($params['time'][0]);
                 $endTime = strtotime($params['time'][1]);
@@ -104,7 +100,7 @@ class Order extends OrderModel
                 $model = $model->where('order_status', '=', 10);
                 break;
             case '2'://已完成
-                $model = $model->where('pay_status', '=', 20)->where('order_status', '=', 30);
+                $model = $model->where('order_status', '=', 30);
                 break;
             case '3'://已取消
                 $model = $model->where('order_status', '=', 20);
@@ -115,17 +111,36 @@ class Order extends OrderModel
             ->where('is_delete', '=', 0)
             ->where('delivery_type', 'in', [30, 40])
             ->where('eat_type', '<>', 0)
+            ->where('extra_times', '>', 0)
             ->order(['create_time' => 'desc'])
             ->field("*,FROM_UNIXTIME(pay_time,'%Y-%m-%d %H:%i:%s') as pay_time_text ")
             ->paginate($params);
     }
 
     // 订单统计信息
-    public function getInfo()
+    public function getInfo($params)
     {
-        $pendingNum = (new self)->where('order_status', '=', OrderStatusEnum::NORMAL)->count();
-        $cancelNum = (new self)->where('order_status', '=', OrderStatusEnum::CANCELLED)->count();
-        $completeNum = (new self)->where('order_status', '=', OrderStatusEnum::COMPLETED)->count();
+        $pendingNum = (new self)
+            ->where('extra_times', '>', 0)
+            ->where('is_delete', '=', 0)
+            ->where('delivery_type', 'in', [30, 40])
+            ->where('eat_type', '<>', 0)
+            ->where('order_status', '=', OrderStatusEnum::NORMAL)
+            ->count();
+        $cancelNum = (new self)
+            ->where('extra_times', '>', 0)
+            ->where('is_delete', '=', 0)
+            ->where('delivery_type', 'in', [30, 40])
+            ->where('eat_type', '<>', 0)
+            ->where('order_status', '=', OrderStatusEnum::CANCELLED)
+            ->count();
+        $completeNum = (new self)
+            ->where('extra_times', '>', 0)
+            ->where('is_delete', '=', 0)
+            ->where('delivery_type', 'in', [30, 40])
+            ->where('eat_type', '<>', 0)
+            ->where('order_status', '=', OrderStatusEnum::COMPLETED)
+            ->count();
         return compact('pendingNum', 'cancelNum', 'completeNum');
     }
 
