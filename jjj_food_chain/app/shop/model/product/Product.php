@@ -251,7 +251,7 @@ class Product extends ProductModel
 
     public function getProductId($search)
     {
-        $res = $this->where('product_name', 'like', '%' . $search . '%')->select()->toArray();
+        $res = $this->like('product_name', $search)->select()->toArray();
         return array_column($res, 'product_id');
     }
 

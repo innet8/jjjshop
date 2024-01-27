@@ -72,7 +72,7 @@ class Order extends OrderModel
     {
         //搜索订单号
         if (isset($data['order_no']) && $data['order_no'] != '') {
-            $model = $model->where('order_no', 'like', '%' . trim($data['order_no']) . '%');
+            $model = $model->like('order_no', trim($data['order_no']));
         }
         //搜索配送方式
         if (isset($data['shop_supplier_id']) && $data['shop_supplier_id']) {

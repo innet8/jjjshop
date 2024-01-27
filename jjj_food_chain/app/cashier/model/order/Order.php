@@ -49,7 +49,7 @@ class Order extends OrderModel
             $model = $model->where('eat_type', '=', $params['eat_type']);
         }
         if (isset($params['search']) && $params['search']) {
-            $model = $model->where('order_no', 'like', '%' . $params['search'] . '%');
+            $model = $model->like('order_no', $params['search']);
         }
         if (isset($params['order_type']) && $params['order_type']) {
             $model = $model->where('order_type', '=', $params['eat_type']);

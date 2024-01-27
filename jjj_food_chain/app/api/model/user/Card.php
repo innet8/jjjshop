@@ -16,7 +16,7 @@ class Card extends CardModel
     {
         $model = $this;
         if (isset($data['card_name']) && $data['card_name']) {
-            $model = $model->where('card_name', 'like', '%' . $data['card_name'] . '%');
+            $model = $model->like('card_name', $data['card_name']);
         }
         $list = $model->where('is_delete', '=', 0)
             ->where('status', '=', 0)

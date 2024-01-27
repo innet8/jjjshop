@@ -53,7 +53,7 @@ class Cash extends CashModel
             $model = $model->where('cash.user_id', '=', $param['user_id']);
         }
         if (isset($param['search']) && $param['search']) {
-            $model = $model->where('agent.real_name|agent.mobile', 'like', '%' . $param['search'] . '%');
+            $model = $model->like('agent.real_name|agent.mobile', $param['search']);
         }
         if (isset($param['apply_status']) && $param['apply_status'] > 0) {
             $model = $model->where('cash.apply_status', '=', $param['apply_status']);

@@ -17,7 +17,7 @@ class QueueRecord extends QueueRecordModel
     {
         $model = $this;
         if (!empty($params['search']) && $params['search']) {
-            $model = $model->where('mobile', 'like', '%' . $params['search'] . '%');
+            $model = $model->like('mobile', $params['search']);
         }
         if (!empty($params['status']) && $params['status']) {
             $model = $model->where('status', '=', $params['status']);

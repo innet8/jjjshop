@@ -20,7 +20,7 @@ class QueueTable extends QueueTableModel
     {
         $model = $this;
         if (!empty($params['search']) && $params['search']) {
-            $model = $model->where('table_name', 'like', '%' . $params['search'] . '%');
+            $model = $model->like('table_name',  $params['search']);
         }
         // 查询列表数据
         return $model->where('shop_supplier_id', '=', $shop_supplier_id)

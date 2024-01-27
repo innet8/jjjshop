@@ -55,7 +55,7 @@ class Cash extends CashModel
             $model = $model->where('cash.user_id', '=', $user_id);
         }
         if (!empty($search)) {
-            $model = $model->where('user.nickName|user.mobile', 'like', '%' . $search . '%');
+            $model = $model->like('user.nickName|user.mobile', $search);
         }
         if ($apply_status > 0) {
             $model = $model->where('cash.apply_status', '=', $apply_status);
@@ -212,7 +212,7 @@ class Cash extends CashModel
             $model = $model->where('cash.user_id', '=', $user_id);
         }
         if (!empty($search)) {
-            $model = $model->where('user.nickName|user.mobile', 'like', '%' . $search . '%');
+            $model = $model->like('user.nickName|user.mobile', $search);
         }
         if ($apply_status > 0) {
             $model = $model->where('cash.apply_status', '=', $apply_status);

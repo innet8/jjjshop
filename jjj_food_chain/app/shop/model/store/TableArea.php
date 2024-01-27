@@ -21,7 +21,7 @@ class TableArea extends TableAreaModel
     {
         $model = $this;
         if (!empty($params['search']) && $params['search']) {
-            $model = $model->where('area_name', 'like', '%' . $params['search'] . '%');
+            $model = $model->like('area_name', $params['search']);
         }
         // 查询列表数据
         return $model->where('shop_supplier_id', '=', $shop_supplier_id)

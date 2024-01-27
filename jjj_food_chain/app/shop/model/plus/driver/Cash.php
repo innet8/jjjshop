@@ -51,7 +51,7 @@ class Cash extends CashModel
             $model = $model->where('cash.user_id', '=', $user_id);
         }
         if (!empty($search)) {
-            $model = $model->where('driver.real_name|driver.mobile', 'like', '%' . $search . '%');
+            $model = $model->like('driver.real_name|driver.mobile', $search);
         }
         if ($apply_status > 0) {
             $model = $model->where('cash.apply_status', '=', $apply_status);

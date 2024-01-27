@@ -21,11 +21,9 @@ class Product extends ProductModel
             $model = $model->where('product.category_id', '=', $params['category_id']);
         }
         if (!empty($params['search'])) {
-            $model = $model->where('product_name', 'like', '%' . trim($params['search']) . '%');
+            $model = $model->like('product_name', trim($params['search']));
         }
-        if (!empty($params['search'])) {
-            $model = $model->where('product_name', 'like', '%' . trim($params['search']) . '%');
-        }
+
         // 平板售罄开关开关
         $settingInfo = Supplier::getTabletBaseInfo();
         if (!(isset($settingInfo['tablet']) && $settingInfo['tablet']['is_show_sold_out'])) {

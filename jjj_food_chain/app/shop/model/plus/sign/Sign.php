@@ -37,7 +37,7 @@ class Sign extends SignModel
             }
         }
         if (isset($data['nickName']) && !empty($data['nickName'])) {
-            $model = $model->where('user.nickName', 'like', '%' . trim($data['nickName']) . '%');
+            $model = $model->like('user.nickName', trim($data['nickName']));
         }
 
         return $model->with(['user'])->alias('sign')

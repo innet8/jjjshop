@@ -32,7 +32,7 @@ class Group extends GroupModel
     {
         $model = $this;
         if (isset($param['search']) && $param['search']) {
-            $model = $model->where('group_name', 'like', '%' . $param['search'] . '%');
+            $model = $model->like('group_name', $param['search']);
         }
         $orderSort = ['group_sort' => 'asc', 'create_time' => 'desc'];
         if ($sort) {

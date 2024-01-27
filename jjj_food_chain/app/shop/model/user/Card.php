@@ -21,7 +21,7 @@ class Card extends CardModel
     {
         $model = $this;
         if ($data['card_name']) {
-            $model = $model->where('card_name', 'like', '%' . $data['card_name'] . '%');
+            $model = $model->like('card_name', $data['card_name']);
         }
         if ($data['status'] >= 0) {
             $model = $model->where('status', '=', $data['status']);
@@ -39,7 +39,7 @@ class Card extends CardModel
     {
         $model = $this;
         if ($data['card_name']) {
-            $model = $model->where('card_name', 'like', '%' . $data['card_name'] . '%');
+            $model = $model->like('card_name', $data['card_name']);
         }
         $list = $model->where('is_delete', '=', 1)
             ->order(['sort' => 'asc', 'create_time' => 'asc'])

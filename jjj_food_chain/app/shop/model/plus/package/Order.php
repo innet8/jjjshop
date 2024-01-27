@@ -19,7 +19,7 @@ class Order extends OrderModel
     {
         $model = $this;
         if ($data['search'] != '') {
-            $model = $model->where('user.nickName|user.mobile', 'like', '%' . trim($data['search']) . '%');
+            $model = $model->like('user.nickName|user.mobile', trim($data['search']));
         }
         return $model->alias('order')->field('order.*')->with(['user'])
             ->join('user', 'user.user_id = order.user_id', 'left')

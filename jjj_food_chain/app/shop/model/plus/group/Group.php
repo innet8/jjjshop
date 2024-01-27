@@ -16,7 +16,7 @@ class Group extends GroupModel
     {
         $model = $this;
         if (isset($params['search']) && $params['search']) {
-            $model = $model->where('group_name', 'like', '%' . $params['search'] . '%');
+            $model = $model->like('group_name', $params['search']);
         }
         return $model->with(['image.file'])
             ->where('is_delete', '=', 0)

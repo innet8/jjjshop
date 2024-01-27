@@ -17,7 +17,7 @@ class TableType extends TableTypeModel
     {
         $model = $this;
         if (!empty($search)) {
-            $model = $model->where('type_name', 'like', '%' . $search . '%');
+            $model = $model->like('type_name', $search);
         }
         // 查询列表数据
         return $model->where('shop_supplier_id', '=', $shop_supplier_id)

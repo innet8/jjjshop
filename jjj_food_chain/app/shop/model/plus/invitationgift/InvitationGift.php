@@ -20,7 +20,7 @@ class InvitationGift extends InvitationGiftModel
         $model = $this;
         //检索活动名称
         if ($data['search'] != '') {
-            $model = $model->where('name', 'like', '%' . trim($data['search']) . '%');
+            $model = $model->like('name', trim($data['search']));
         }
         $list = $model->with(['Reward'])->where('is_delete', '=', 0)
             ->order('create_time', 'desc')

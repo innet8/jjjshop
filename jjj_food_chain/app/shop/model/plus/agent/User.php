@@ -26,7 +26,7 @@ class User extends UserModel
             ->order(['agent.create_time' => 'desc']);
         // 查询条件
         if (!empty($search)) {
-            $model = $model->where('user.nickName|agent.real_name|agent.mobile', 'like', '%' . $search . '%');
+            $model = $model->like('user.nickName|agent.real_name|agent.mobile', $search);
         }
         // 获取列表数据
         $list = $model->paginate($param);

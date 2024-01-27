@@ -25,7 +25,7 @@ class User extends UserModel
             ->order(['driver.create_time' => 'desc']);
         // 查询条件
         if (!empty($search)) {
-            $model = $model->where('user.nickName|driver.real_name|driver.mobile', 'like', '%' . $search . '%');
+            $model = $model->like('user.nickName|driver.real_name|driver.mobile', $search);
         }
         // 获取列表数据
         $list = $model->paginate($limit, false, [

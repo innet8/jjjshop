@@ -29,7 +29,7 @@ class Table extends TableModel
             $model = $model->where('type_id', '=', $params['type_id']);
         }
         if (!empty($params['search']) && $params['search']) {
-            $model = $model->where('table_no', 'like', '%' . $params['search'] . '%');
+            $model = $model->like('table_no', $params['search']);
         }
         // 查询列表数据
         return $model->where('shop_supplier_id', '=', $shop_supplier_id)

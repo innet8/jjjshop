@@ -25,7 +25,7 @@ class Product extends ProductModel
             $model = $model->whereIn('product.category_id', $categoryIds);
         }
         if (!empty($params['search'])) {
-            $model = $model->wherein('product_name', 'like', '%' . trim($params['search']) . '%');
+            $model = $model->like('product_name', trim($params['search']));
         }
         $model = $model->alias('product')
             ->field(['product.*'])

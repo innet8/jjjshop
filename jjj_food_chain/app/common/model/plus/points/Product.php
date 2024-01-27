@@ -70,7 +70,7 @@ class Product extends BaseModel
             $model = $model->where('category_id', '=', $params['category_id']);
         }
         if (isset($params['category_id']) && $params['product_name']) {
-            $model = $model->where('product_name', 'like', '%' . trim($params['product_name']) . '%');
+            $model = $model->like('product_name', trim($params['product_name']));
         }
         if (isset($params['product_status']) && $params['product_status']) {
             $model = $model->where('product_status', '=', $params['product_status']);

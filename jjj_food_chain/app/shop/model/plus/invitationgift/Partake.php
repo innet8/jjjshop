@@ -18,7 +18,7 @@ class Partake extends PartakeModel
     {
         $model = $this;
         if ($data['search'] != '') {
-            $model = $model->where('user.nickName|user.mobile', 'like', '%' . trim($data['search']) . '%');
+            $model = $model->like('user.nickName|user.mobile', trim($data['search']));
         }
         return $model->alias('partake')->field('partake.*')->with(['user', 'partake'])
             ->join('user', 'user.user_id = partake.user_id', 'left')

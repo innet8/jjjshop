@@ -88,7 +88,7 @@ class Order extends OrderModel
     {
         //搜索订单号
         if (isset($data['order_no']) && $data['order_no'] != '') {
-            $model = $model->where('order.order_no', 'like', '%' . trim($data['order_no']) . '%');
+            $model = $model->like('order.order_no', trim($data['order_no']));
         }
         //搜索自提门店
         if (isset($data['store_id']) && $data['store_id'] != '') {
@@ -99,7 +99,7 @@ class Order extends OrderModel
             $model = $model->where('order.delivery_type', '=', $data['style_id']);
         }
         if (isset($data['nickName']) && !empty($data['nickName'])) {
-            $model = $model->where('user.nickName', 'like', '%' . trim($data['nickName']) . '%');
+            $model = $model->like('user.nickName', trim($data['nickName']));
         }
         //搜索时间段
         if (isset($data['create_time']) && $data['create_time'] != '') {

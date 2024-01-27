@@ -259,10 +259,10 @@ class Product extends BaseModel
             $model = $model->where('category_id', 'IN', $arr);
         }
         if (!empty($params['product_name'])) {
-            $model = $model->where('product_name', 'like', '%' . trim($params['product_name']) . '%');
+            $model = $model->like('product_name', trim($params['product_name']));
         }
         if (!empty($params['search'])) {
-            $model = $model->where('product_name', 'like', '%' . trim($params['search']) . '%');
+            $model = $model->like('product_name', trim($params['search']));
         }
         $list = $model
             ->with(['category', 'image.file'])

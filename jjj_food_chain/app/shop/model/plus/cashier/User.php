@@ -25,7 +25,7 @@ class User extends UserModel
         $model = $this;
         $model = $model->where('shop_supplier_id', '=', $user['shop_supplier_id']);
         if (isset($params['search']) && $params['search']) {
-            $model = $model->where('user_name|mobile|account', 'like', '%' . $params['search'] . '%');
+            $model = $model->like('user_name|mobile|account', $params['search']);
         }
         // 查询列表数据
         return $model->where('is_delete', '=', '0')

@@ -16,7 +16,7 @@ class InvitationReceive extends InvitationReceiveModel
     {
         $model = $this;
         if ($data['search'] != '') {
-            $model = $model->where('user.nickName|user.mobile', 'like', '%' . trim($data['search']) . '%');
+            $model = $model->like('user.nickName|user.mobile', trim($data['search']));
         }
         return $model->alias('receive')->field('receive.*')->with(['user','invite'])
             ->join('user', 'user.user_id = receive.user_id', 'left')

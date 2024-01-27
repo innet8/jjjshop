@@ -30,7 +30,7 @@ class Supplier extends SupplierModel
     {
         $model = $this;
         if (isset($param['name']) && $param['name']) {
-            $model = $model->where('name', 'like', '%' . $param['name'] . '%');
+            $model = $model->like('name', $param['name']);
         }
         // 查询列表数据
         $list = $model->alias('s')
@@ -56,7 +56,7 @@ class Supplier extends SupplierModel
     {
         $model = $this;
         if (isset($param['name']) && $param['name']) {
-            $model = $model->where('name', 'like', '%' . $param['name'] . '%');
+            $model = $model->like('name', $param['name']);
         }
         if ($param['type'] == 10) {
             $latitude = $user['address']['latitude'];

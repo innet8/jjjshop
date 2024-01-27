@@ -67,8 +67,7 @@ class UserShiftLog extends BaseModel
 
         if ($username) {
             $model = $model->where(function ($q) use ($username) {
-                $q->where('su.user_name', 'like', '%' . $username . '%');
-                $q->whereOr('su.real_name', 'like', '%' . $username . '%');
+                $q->like('su.user_name|su.real_name', $username);
             });
         }
 
