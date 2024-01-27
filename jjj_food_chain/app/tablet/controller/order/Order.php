@@ -111,6 +111,7 @@ class Order extends Controller
         if ($order) {
             $sendKitchenProductTotalPrice = helper::getArrayColumnSum($order['sendKitchenProduct'], 'total_price');
             $list = OrderProduct::getGroupByTime($order['order_id']);
+            arsort($list);
         }
         return $this->renderSuccess('请求成功', compact('list', 'sendKitchenProductTotalPrice'));
     }
