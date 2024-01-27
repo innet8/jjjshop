@@ -4,7 +4,7 @@
         时间：2019-10-25
         描述：权限-角色管理-编辑角色
     -->
-    <div v-loading="loading">
+    <div v-loading="loading" class="add-box-role">
         <!--form表单-->
         <el-form size="small" ref="form" :model="form" label-position="top" label-width="180px">
             <!--编辑角色-->
@@ -13,7 +13,7 @@
             <el-form-item :label="$t('角色名称：')" prop="role_name" :rules="[{ required: true, message: ' ' }]">
                 <el-input v-model="form.role_name" :placeholder="$t('请输入角色名称')" class="max-w460"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('权限列表：')" v-model="form.access_id">
+            <el-form-item class="role-list" :label="$t('权限列表：')" v-model="form.access_id">
                 <el-tree :data="data" show-checkbox node-key="access_id" :default-expand-all="true"
                     :default-checked-keys="select_menu" :props="defaultProps" @check="handleCheckChange"></el-tree>
             </el-form-item>
@@ -171,5 +171,18 @@ export default {
 
 .img {
     margin-top: 10px;
+}
+.add-box-role{
+    height: calc(100% - 14px) ;
+    overflow: hidden;
+    .el-form{
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        .role-list{
+            flex: 1 1 auto;
+            overflow-y: auto;
+        }
+    }
 }
 </style>
