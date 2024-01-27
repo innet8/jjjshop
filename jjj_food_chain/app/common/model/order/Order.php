@@ -1028,9 +1028,9 @@ class Order extends BaseModel
 
     /**
      * 重新计算订单价格信息（服务费+消费税+会员折扣）（折扣抹零计算重置)
-     * @param $order_id     // 订单ID
-     * @param $re_order_no  // 是否重新生成订单号（用于加菜打印后）
-     * @return void
+     * @param $order_id
+     * @param $re_order_no
+     * @return array|\think\Model|null
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
@@ -1212,6 +1212,7 @@ class Order extends BaseModel
             'user_discount_money' => $user_discount_money
         ];
         $order->save($updateOrderArr);
+        return $order;
     }
 
     /**
@@ -1436,7 +1437,7 @@ class Order extends BaseModel
             ->find();
     }
 
-    //查询桌号订单未送厨商品
+    //查询桌号订单已送厨商品
     public function getSendKitchen($table_id)
     {
         return $this->with('sendKitchenProduct')
