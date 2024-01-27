@@ -16,7 +16,7 @@ class OptLog extends OptLogModel
         $model = $this;
         // 查询条件：订单号
         if (isset($params['username']) && !empty($params['username'])) {
-            $model = $model->where('user.user_name|user.real_name', 'like', "%{$params['username']}%");
+            $model = $model->like('user.user_name|user.real_name', $params['username']);
         }
         // 查询列表数据
         return $model->alias('log')->field(['log.*','user.user_name','user.real_name'])

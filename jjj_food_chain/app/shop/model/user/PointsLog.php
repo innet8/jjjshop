@@ -56,7 +56,7 @@ class PointsLog extends PointsLogModel
         // 用户ID
         $params['user_id'] > 0 && $this->where('log.user_id', '=', $params['user_id']);
         // 用户昵称
-        !empty($params['search']) && $this->where('user.nickName', 'like', "%{$params['search']}%");
+        !empty($params['search']) && $this->like('user.nickName', $params['search']);
         // 起始时间
         !empty($params['start_time']) && $this->where('log.create_time', '>=', strtotime($params['start_time']));
         // 截止时间

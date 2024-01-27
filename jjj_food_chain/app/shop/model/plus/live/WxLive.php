@@ -21,7 +21,7 @@ class WxLive extends WxLiveModel
     {
         $model = $this;
         if (isset($params['search']) && !empty($params['search'])) {
-            $model = $model->where('name|anchor_name', 'like', "%{$params['search']}%");
+            $model = $model->like('name|anchor_name', $params['search']);
         }
         return $model
             ->where('is_delete', '=', 0)

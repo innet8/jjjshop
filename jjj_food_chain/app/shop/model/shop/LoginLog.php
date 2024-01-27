@@ -16,7 +16,7 @@ class LoginLog extends LoginLogModel
         $model = $this;
         // 查询条件：订单号
         if (isset($params['username']) && !empty($params['username'])) {
-            $model = $model->where('username', 'like', "%{$params['username']}%");
+            $model = $model->like('username', $params['username']);
         }
         // 查询列表数据
         return $model->order(['create_time' => 'desc'])

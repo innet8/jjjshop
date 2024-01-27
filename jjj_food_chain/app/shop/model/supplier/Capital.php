@@ -17,7 +17,7 @@ class Capital extends SupplierCapitalModel
         $model = $this->alias('log')->field('log.*');
         // 商家名称
         $data['search'] = trim($data['search']);
-        !empty($data['search']) && $model = $model->where('s.name', 'like', "%{$data['search']}%");
+        !empty($data['search']) && $model = $model->like('s.name', $data['search']);
         //搜索时间段
         if (isset($data['value1']) && $data['value1'] != '') {
             $model = $model->where('log.create_time', 'between', [strtotime($data['value1'][0]), strtotime($data['value1'][1]) + 86399]);

@@ -41,7 +41,7 @@ class Order extends OrderModel
         // 用户ID
         $params['user_id'] > 0 && $this->where('order.user_id', '=', $params['user_id']);
         // 用户昵称/订单号
-        !empty($params['search']) && $this->where('order.order_no|user.nickName', 'like', "%{$params['search']}%");
+        !empty($params['search']) && $this->like('order.order_no|user.nickName', $params['search']);
         // 充值方式
         $params['recharge_type'] > -1 && $this->where('order.recharge_type', '=', (int)$params['recharge_type']);
         // 支付状态
