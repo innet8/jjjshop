@@ -14,28 +14,31 @@ class CardRecord extends CardRecordModel
      */
     public function getList($data)
     {
-        $model = $this;
-        if ($data['search']) {
-            $model = $model->where('card_name|nickName', 'like', '%' . $data['search'] . '%');
-        }
-        if ($data['status'] >= 0) {
-            if ($data['status'] == 0) {
-                $model = $model->where('expire_time', '<', time());
-            } else {
-                $model = $model->where('expire_time', '>=', time());
-            }
-
-        }
-        $list = $model->alias('r')
+        $model = $this->alias('r')
             ->where('pay_status', '=', 20)
             ->where('r.is_delete', '=', 0)
             ->with(['card', 'user'])
             ->join('user u', 'u.user_id=r.user_id')
             ->join('user_card c', 'c.card_id=r.card_id')
             ->field('r.*')
-            ->order(['r.create_time' => 'desc'])
-            ->paginate($data);
-        return $list;
+            ->order(['r.create_time' => 'desc']);
+
+        if (!empty($data['search'])) {
+            $model = $model->like('card_name|nickName', $data['search']);
+        }
+
+        if (isset($data['status']) && $data['status'] >= 0) {
+            $model = $model->where(function ($query) use ($data) {
+                if ($data['status'] == 0) {
+                    $query->where('r.expire_time', '<', time())->where('r.expire_time', '>', 0);
+                } else {
+                    $query->where('expire_time', '>=', time())
+                        ->whereOr('expire_time', 0);
+                }
+            });
+        }
+
+        return $model->paginate($data);
     }
 
     /**
