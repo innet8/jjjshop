@@ -84,7 +84,7 @@ class Controller extends JjjController
 
         $token = Request()->header('token');
         if (!$token) {
-            throw new BaseException(['msg' => '缺少必要的参数：token', 'code' => -1]);
+            throw new BaseException(['msg' => '缺少必要的参数：token', 'code' => -2]);
         }
         $data = checkToken($token, 'cashier');
         if ($data['code'] != 1) {
