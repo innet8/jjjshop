@@ -77,6 +77,7 @@ class Order extends OrderModel
                 break;
         }
         if (isset($params['time']) && $params['time']) {
+            trace('123123');
             if ($params['time'][0] && $params['time'][1]) {
                 $startTime = strtotime($params['time'][0]);
                 $endTime = strtotime($params['time'][1]);
@@ -94,6 +95,8 @@ class Order extends OrderModel
                 $model = $model->where('create_time', 'between', [$startTime, $endTime]);
             }
 
+        } else if($startTime && $endTime) {
+            $model = $model->where('create_time', 'between', [$startTime, $endTime]);
         }
 
         switch ($params['dataType'] ?? 1) {
