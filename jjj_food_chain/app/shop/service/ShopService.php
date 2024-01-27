@@ -5,6 +5,7 @@ namespace app\shop\service;
 use app\shop\model\product\Product;
 use app\shop\model\order\Order;
 use app\shop\model\user\User;
+use app\common\library\helper;
 use app\shop\model\product\Comment;
 use app\shop\model\supplier\Supplier as SupplierModel;
 use app\shop\model\supplier\Cash as SupplierCashModel;
@@ -56,13 +57,13 @@ class ShopService
                 // 店铺总量
                 'supplier_total' => $this->getSupplierTotal(),
                 // 营业额
-                'total_money' => $this->getOrderTotalPrice(null, $shop_supplier_id),
+                'total_money' => Helper::number2($this->getOrderTotalPrice(null, $shop_supplier_id)),
                 // 预计收入
-                'income_money' => $this->getOrderIncome(null, $shop_supplier_id),
+                'income_money' => Helper::number2($this->getOrderIncome(null, $shop_supplier_id)),
                 // 折扣总额
-                'total_discount_money' => $this->OrderModel->getOrderData(null, null, 'order_discount_money', $shop_supplier_id),
+                'total_discount_money' => Helper::number2($this->OrderModel->getOrderData(null, null, 'order_discount_money', $shop_supplier_id)),
                 // 退款金额
-                'refund_money' => $this->OrderModel->getOrderData(null, null, 'order_refund_money', $shop_supplier_id),
+                'refund_money' => Helper::number2($this->OrderModel->getOrderData(null, null, 'order_refund_money', $shop_supplier_id)),
             ],
             'wait_data' => [
                 // 订单
@@ -82,8 +83,8 @@ class ShopService
             'today_data' => [
                 // 销售额(元)
                 'order_total_price' => [
-                    'tday' => $this->getOrderTotalPrice($today, $shop_supplier_id),
-                    'ytd' => $this->getOrderTotalPrice($yesterday, $shop_supplier_id)
+                    'tday' => Helper::number2($this->getOrderTotalPrice($today, $shop_supplier_id)),
+                    'ytd' => Helper::number2($this->getOrderTotalPrice($yesterday, $shop_supplier_id))
                 ],
                 // 支付订单数
                 'order_total' => [
@@ -107,18 +108,18 @@ class ShopService
                 ],
                 // 预计收入(元)
                 'income_money' => [
-                    'tday' => $this->getOrderIncome($today, $shop_supplier_id),
-                    'ytd' => $this->getOrderIncome($yesterday, $shop_supplier_id)
+                    'tday' => Helper::number2($this->getOrderIncome($today, $shop_supplier_id)),
+                    'ytd' => Helper::number2($this->getOrderIncome($yesterday, $shop_supplier_id))
                 ],
                 // 折扣总额(元)
                 'order_discount_money' => [
-                    'tday' => $this->OrderModel->getOrderData($today, null, 'order_discount_money', $shop_supplier_id),
-                    'ytd' => $this->OrderModel->getOrderData($yesterday, null, 'order_discount_money', $shop_supplier_id)
+                    'tday' => Helper::number2($this->OrderModel->getOrderData($today, null, 'order_discount_money', $shop_supplier_id)),
+                    'ytd' => Helper::number2($this->OrderModel->getOrderData($yesterday, null, 'order_discount_money', $shop_supplier_id))
                 ],
                 // 退款金额(元)
                 'order_refund_money' => [
-                    'tday' => $this->OrderModel->getOrderData($today, null, 'order_refund_money', $shop_supplier_id),
-                    'ytd' => $this->OrderModel->getOrderData($yesterday, null, 'order_refund_money', $shop_supplier_id)
+                    'tday' => Helper::number2($this->OrderModel->getOrderData($today, null, 'order_refund_money', $shop_supplier_id)),
+                    'ytd' => Helper::number2($this->OrderModel->getOrderData($yesterday, null, 'order_refund_money', $shop_supplier_id))
                 ],
             ],
             'product_data' => [
