@@ -37,7 +37,7 @@ class Order extends OrderModel
     ];
 
     /**
-     * 用户中心订单列表
+     * 用户中心订单列表 time_type
      */
     public function getList($params)
     {
@@ -107,6 +107,7 @@ class Order extends OrderModel
                 $model = $model->where('order_status', '=', 20);
                 break;
         }
+
         return $model->with(['product.image', 'supplier'])
             ->where('is_delete', '=', 0)
             ->where('delivery_type', 'in', [30, 40])
@@ -327,21 +328,36 @@ class Order extends OrderModel
 
                     break;
                 case '3'://抹零
-                    if ($data['discountType'] == 1) {//抹分
-                        $discount_money = round($detail['order_price'] - intval($detail['pay_price'] * 10) / 10, 2);
-                    } elseif ($data['discountType'] == 2) {//抹角
-                        $discount_money = round($detail['order_price'] - intval($detail['pay_price']), 2);
-                    } elseif ($data['discountType'] == 3) {//四舍五入到角
-                        $discount_money = round($detail['order_price'] - round($detail['pay_price'], 1), 2);
-                    } elseif ($data['discountType'] == 4) {//四舍五入到元
-                        $discount_money = round($detail['order_price'] - round($detail['pay_price'], 0), 2);
-                    }
+//                    if ($data['discountType'] == 1) {//抹分
+//                        $discount_money = round($detail['order_price'] - intval($detail['pay_price'] * 10) / 10, 2);
+//                    } elseif ($data['discountType'] == 2) {//抹角
+//                        $discount_money = round($detail['order_price'] - intval($detail['pay_price']), 2);
+//                    } elseif ($data['discountType'] == 3) {//四舍五入到角
+//                        $discount_money = round($detail['order_price'] - round($detail['pay_price'], 1), 2);
+//                    } elseif ($data['discountType'] == 4) {//四舍五入到元
+//                        $discount_money = round($detail['order_price'] - round($detail['pay_price'], 0), 2);
+//                    }
                     break;
             }
 
             if ($data['type'] == 2) {
                 $detail->save(['discount_ratio' => $discount_ratio]);
                 (new OrderModel())->reloadPrice($detail['order_id']);
+            } else if ($data['type'] == 3) {
+                // 折扣抹零重置 （恢复旧版抹零就把这个判断删了。上面的case 3 注释恢复）
+                $detail->save(['discount_ratio' => 0, 'discount_money' => 0]);
+                $o = (new OrderModel())->reloadPrice($detail['order_id']);
+                if ($data['discountType'] == 1) {//抹分
+                    $discount_money = round($o['order_price'] - intval($o['pay_price'] * 10) / 10, 2);
+                } elseif ($data['discountType'] == 2) {//抹角
+                    $discount_money = round($o['order_price'] - intval($o['pay_price']), 2);
+                } elseif ($data['discountType'] == 3) {//四舍五入到角
+                    $discount_money = round($o['order_price'] - round($o['pay_price'], 1), 2);
+                } elseif ($data['discountType'] == 4) {//四舍五入到元
+                    $discount_money = round($o['order_price'] - round($o['pay_price'], 0), 2);
+                }
+                $pay_price = round($o['order_price'] - $discount_money, 2);
+                $o->save(['discount_money' => $discount_money, 'pay_price' => $pay_price]);
             } else {
                 if ($data['money'] > $detail['order_price']) {
                     $pay_price = $data['money'];
