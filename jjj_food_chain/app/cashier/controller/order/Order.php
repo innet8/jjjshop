@@ -6,6 +6,7 @@ use app\cashier\model\order\Cart as CartModel;
 use app\cashier\model\order\Order as OrderModel;
 use app\cashier\model\store\Table as TableModel;
 use app\common\enum\order\OrderStatusEnum;
+use app\common\enum\settings\DeliveryTypeEnum;
 use app\common\model\order\Order as CommonOrderModel;
 use app\cashier\service\order\settled\CashierOrderSettledService;
 use app\cashier\controller\Controller;
@@ -34,13 +35,43 @@ class Order extends Controller
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("list",type="array",ref="app\cashier\model\order\Order\getList")
      */
-    public function index()
+    public function index($dataType = 'all')
     {
+        // 订单列表
+        $model = new \app\shop\model\order\Order();
         $data = $this->postData();
+        $data['order_type'] = 1;
         $data['shop_supplier_id'] = $this->cashier['user']['shop_supplier_id'];
-        $list = (new OrderModel)->getList($data);
-        $info = (new OrderModel)->getInfo($data);
-        return $this->renderSuccess('', compact('list', 'info'));
+
+        $order_status = [
+            1=>'payment',
+            3=>'cancel',
+            2=>'complete',
+        ];
+
+        $data = [
+            'shop_supplier_id' => $this->cashier['user']['shop_supplier_id'],
+            'order_no' => $data['search'],
+            'style_id' => '',
+            'create_time' => $data['time'],
+            'time_type' => $data['time_type'],
+            'order_source' => $data['eat_type'] ?? 0,
+            'dataType' => $data['dataType'] == 0 ? 'all' : $order_status[$data['dataType']],
+        ];
+        trace('2222');
+        trace($data);
+        $data['order_type'] = 1;
+        $data['shop_supplier_id'] = $this->cashier['user']['shop_supplier_id'];
+        $list = $model->getList($dataType, $data);
+        $info = [
+                'all' => $model->getCount('all', $data),
+                'pendingNum' => $model->getCount('payment', $data),
+//                'pendingNum' => $model->getCount('process', $data),
+                'completeNum' => $model->getCount('complete', $data),
+                'cancelNum' => $model->getCount('cancel', $data),
+        ];
+        $ex_style = DeliveryTypeEnum::store();
+        return $this->renderSuccess('', compact('list', 'ex_style', 'info'));
     }
 
     /**

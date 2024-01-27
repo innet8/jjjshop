@@ -85,9 +85,9 @@ class Order extends OrderModel
     private function setWhere($model, $data)
     {
         // 时间类型 0-全都 1-今天 2-昨天 3-周
+        $startTime = 0;
+        $endTime = 0;
         if (isset($data['time_type']) && $data['time_type']) {
-            $startTime = 0;
-            $endTime = 0;
             switch ($data['time_type'] ?? 1) {
                 case '1'://今天
                     $startTime = strtotime(date('Y-m-d'));
@@ -102,9 +102,6 @@ class Order extends OrderModel
                     $endTime = time();
                     break;
             }
-            if ($startTime && $endTime) {
-                $model = $model->where('create_time', 'between', [$startTime, $endTime]);
-            }
         }
         // 收银类型 0-全都 10-桌台 20-收银
         if (isset($data['order_source']) && $data['order_source']) {
@@ -112,7 +109,7 @@ class Order extends OrderModel
         }
         // 搜索订单号
         if (isset($data['order_no']) && $data['order_no'] != '') {
-            $model = $model->where('order_no', 'like', '%' . trim($data['order_no']) . '%');
+            $model = $model->like('order_no', trim($data['order_no']));
         }
         // 搜索配送方式
         if (isset($data['style_id']) && $data['style_id'] != '') {
@@ -129,10 +126,30 @@ class Order extends OrderModel
         // 搜索时间段
         if (isset($data['date']) && is_array($data['date']) && isset($data['date'][0]) && isset($data['date'][1])) {
             $model = $model->where('create_time', 'between', [strtotime($data['date'][0]), strtotime($data['date'][1]) + 86399]);
+        } else if ($data['create_time']) {
+            // 开始时间 + 结束时间
+            if ($data['create_time'][0] && $data['create_time'][1]) {
+                $startTime = strtotime($data['create_time'][0]);
+                $endTime = strtotime($data['create_time'][1]);
+                if ($startTime == $endTime) {
+                    $endTime = $startTime + 86399;
+                }
+                $model = $model->where('create_time', 'between', [$startTime, $endTime]);
+            } else if ($data['create_time'][0]) {
+                // 只有开始时间
+                $startTime = strtotime($data['create_time'][0]);
+                $model = $model->where('create_time', '>', $startTime);
+            } else if ($data['create_time'][1]) {
+                // 只有结束时间
+                $endTime = strtotime($data['create_time'][1]);
+                $model = $model->where('create_time', '<', $endTime);
+            } else if ($startTime && $endTime) {
+                // 没有时间范围才按 time_type 查询
+                $model = $model->where('create_time', 'between', [$startTime, $endTime]);
+            }
         }
         // 已送厨
-        $model = $model->where('extra_times', '>', 0);
-        return $model;
+        return $model->where('extra_times', '>', 0);
     }
 
     /**
