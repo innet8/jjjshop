@@ -1237,7 +1237,6 @@ class Order extends BaseModel
             $this->error = '超过限购数量';
             return false;
         }
-
         $this->startTrans();
         try {
 
@@ -1258,7 +1257,7 @@ class Order extends BaseModel
                     'order_id' => $data['order_id'],
                     'product_id' => $data['product_id'],
                 ])->sum('total_num');
-                if ($limitNum && (($param['product_num'] - $this['total_num'] + $curNum) > $limitNum)) {
+                if ($limitNum && (($param['product_num'] + $curNum) > $limitNum)) {
                     $this->error = '超过限购数量';
                     return false;
                 }
@@ -1305,6 +1304,17 @@ class Order extends BaseModel
                 }
                 $order_id = $detail['order_id'];
                 $data['order_id'] = $order_id;
+
+
+                // 判断当前订单
+                $curNum = (new OrderProduct())->where([
+                    'order_id' => $data['order_id'],
+                    'product_id' => $data['product_id'],
+                ])->sum('total_num');
+                if ($limitNum && (($param['product_num'] + $curNum) > $limitNum)) {
+                    $this->error = '超过限购数量';
+                    return false;
+                }
 
                 $orderProduct = new OrderProductModel;
 //                $order_product_id = $orderProduct->isExist($data);
