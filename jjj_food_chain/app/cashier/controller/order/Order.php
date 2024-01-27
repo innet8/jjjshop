@@ -111,15 +111,17 @@ class Order extends Controller
         $params['eat_type'] = 10;
         $params['order_source'] = 10;
         $user = $this->cashier['user'];
+        if ($params['meal_num'] > 999) {
+            return $this->renderError('超过最大人数');
+        }
         // 商品结算信息
         $CartModel = new CartModel();
         // 购物车商品列表
-        $productList = $CartModel->getCartList($user, $params['table_id'], 10);
-//        if (empty($productList) || count($productList) == 0) {
-//            return $this->renderError('购物车商品不能为空');
-//        }
+//        $productList = $CartModel->getCartList($user, $params['table_id'], 10);
+
         // 实例化订单service
-        $orderService = new CashierOrderSettledService($user, $productList, $params);
+//        $orderService = new CashierOrderSettledService($user, $productList, $params);
+        $orderService = new CashierOrderSettledService($user, [], $params);
         // 获取订单信息
         $orderInfo = $orderService->settlement();
         // 订单结算提交
@@ -179,6 +181,9 @@ class Order extends Controller
      */
     public function updateMealNum($table_id, $meal_num)
     {
+        if ($meal_num > 999) {
+            return $this->renderError('超过最大人数');
+        }
         $detail = OrderModel::getTableUnderwayOrder($table_id);
         if (!$detail) {
             return $this->renderError('当前状态不可操作');
