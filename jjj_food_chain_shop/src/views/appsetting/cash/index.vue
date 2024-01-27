@@ -194,7 +194,6 @@ export default {
         },
         upLoad(data) {
             var type = ''
-            console.log(data);
             if(data.file_type.includes('video')){
                 type ='video'
             }
