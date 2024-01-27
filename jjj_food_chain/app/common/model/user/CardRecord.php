@@ -143,7 +143,7 @@ class CardRecord extends BaseModel
             ->where(function ($query) {
                 $query->where('expire_time', '=', 0)->whereOr('expire_time', '>', time());
             })
-            ->count();
+            ->findOrEmpty();
     }
 
     /**
