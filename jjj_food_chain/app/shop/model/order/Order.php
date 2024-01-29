@@ -264,7 +264,7 @@ class Order extends OrderModel
     public function refund($data)
     {
         // 判断订单是否有效
-        if ($this['pay_status']['value'] != 20 || $this['order_status']['value'] != 10) {
+        if ($this['pay_status']['value'] != 20 || ($this['order_status']['value'] != 10 && $this['order_status']['value'] != 30)) {
             $this->error = '该订单不合法';
             return false;
         }
