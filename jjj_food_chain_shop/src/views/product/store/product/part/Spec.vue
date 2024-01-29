@@ -86,7 +86,8 @@ export default {
                 this.restaurants_en = [];
                 this.restaurants_th = [];
                 val.unit.map((item, index) => {
-                    this.restaurants_zh.push({
+                    if (JSON.parse(item.unit_name).zh && JSON.parse(item.unit_name).zhtw && JSON.parse(item.unit_name).en && JSON.parse(item.unit_name).th) { 
+                        this.restaurants_zh.push({
                         value: JSON.parse(item.unit_name).zh,
                         index: index,
                     })
@@ -102,6 +103,8 @@ export default {
                         value: JSON.parse(item.unit_name).th,
                         index: index,
                     })
+                    }
+   
                 })
             },
             deep: true,
@@ -155,6 +158,7 @@ export default {
             if (key == 'en') {
                 restaurants = this.restaurants_en
             }
+            console.log(restaurants, 1213);
             return (restaurants) => {
                 return (restaurants.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
             };

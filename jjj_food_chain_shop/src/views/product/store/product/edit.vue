@@ -14,10 +14,10 @@
                 <Spec></Spec>
     
                 <!-- 属性设置-->
-                <Attr></Attr>
-    
+                <Attr ref="AttrRef"></Attr>
+
                 <!-- 加料设置-->
-                <Ingredients></Ingredients>
+                <Ingredients ref="IngredientsRef"></Ingredients>
                 <!--商品详情-->
                 <!-- <Content></Content> -->
                 <!--高级设置-->
@@ -203,11 +203,9 @@ export default {
                     self.form.model.product_attr.map((item, index) => {
                         self.form.model.product_attr[index].attribute_name = JSON.parse(item.attribute_name)
                         item.attribute_value.map((items, indexs) => {
-                            self.form.model.product_attr[index].attribute_value[indexs] = JSON.parse(items)
-
+                            self.form.model.product_attr[index].attribute_value[indexs] = JSON.parse(items)           
                         })
                     })
-
                     self.form.model.product_feed.map((item, index) => {
                         self.form.model.product_feed[index].feed_name = JSON.parse(item.feed_name)
                     })
@@ -233,6 +231,28 @@ export default {
         onSubmit: function () {
             let self = this;
             self.$refs.form.validate(valid => {
+                let returnConditions = false
+                if (self.form.model.product_attr.length > 0) {
+                    self.$refs.AttrRef.checkedForm();
+                    let checkArr = self.form.model.product_attr
+                    for (let i = 0; i < checkArr.length; i++) {
+                        if (!checkArr[i].attribute_name.en || !checkArr[i].attribute_name.th || !checkArr[i].attribute_name.zh || !checkArr[i].attribute_name.zhtw) { returnConditions  = true };
+                        for (let e = 0; e < checkArr[i].attribute_value.length; e++) {
+                            if (!checkArr[i].attribute_value[e].en || !checkArr[i].attribute_value[e].th || !checkArr[i].attribute_value[e].zh || !checkArr[i].attribute_value[e].zhtw)  { returnConditions  = true };
+                        }
+                    }
+                }
+
+                if (self.form.model.product_feed.length > 0) {
+                    self.$refs.IngredientsRef.checkedForm();
+                    let checkArr = self.form.model.product_feed;
+                    for (let i = 0; i < checkArr.length; i++) {
+                        if (!checkArr[i].feed_name.en || !checkArr[i].feed_name.th || !checkArr[i].feed_name.zh || !checkArr[i].feed_name.zhtw || !checkArr[i].price)  { returnConditions  = true };
+                 
+                    }
+                }
+            
+                if(returnConditions) return;
                 if (valid) {
                     let params = formatModel(JSON.parse(JSON.stringify(self.model)), JSON.parse(JSON.stringify(self.form.model)));
                     params.scene = JSON.parse(JSON.stringify(self.scene));

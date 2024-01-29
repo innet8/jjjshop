@@ -136,7 +136,9 @@ export default {
     },
     methods: {
         deleteAttr(i) {
-            this.form.model.sku.splice(i, 1)
+            if( this.form.model.sku.length > 1){
+                this.form.model.sku.splice(i, 1)
+            }
         },
 
         querySearch(queryString, cb, key) {

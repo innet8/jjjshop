@@ -21,7 +21,8 @@
                             <Delete />
                         </el-icon>
                     </template>
-                    <el-form size="small" class="product-attr" v-for="(items, indexs) in languageList" :key="indexs">
+                    <el-form :ref="`form-${index}`" :model="item" size="small" class="product-attr"
+                        v-for="(items, indexs) in languageList" :key="indexs">
                         <el-form-item :prop="`item.attribute_name[items.key]`" :rules="[{
                             validator: () => {
                                 return item.attribute_name[items.key] ? true : false;
@@ -92,26 +93,29 @@ export default {
                 this.restaurants_th = [];
 
                 val.attribute.map((item, index) => {
-                    this.restaurants_zh.push({
-                        value: JSON.parse(item.attribute_name).zh,
-                        index: index,
-                        child: item.attribute_value,
-                    })
-                    this.restaurants_zhtw.push({
-                        value: JSON.parse(item.attribute_name).zhtw,
-                        index: index,
-                        child: item.attribute_value,
-                    })
-                    this.restaurants_en.push({
-                        value: JSON.parse(item.attribute_name).en,
-                        index: index,
-                        child: item.attribute_value,
-                    })
-                    this.restaurants_th.push({
-                        value: JSON.parse(item.attribute_name).th,
-                        index: index,
-                        child: item.attribute_value,
-                    })
+                    if (JSON.parse(item.attribute_name).zh && JSON.parse(item.attribute_name).zhtw && JSON.parse(item.attribute_name).en && JSON.parse(item.attribute_name).th) {
+                        this.restaurants_zh.push({
+                            value: JSON.parse(item.attribute_name).zh,
+                            index: index,
+                            child: item.attribute_value,
+                        })
+                        this.restaurants_zhtw.push({
+                            value: JSON.parse(item.attribute_name).zhtw,
+                            index: index,
+                            child: item.attribute_value,
+                        })
+                        this.restaurants_en.push({
+                            value: JSON.parse(item.attribute_name).en,
+                            index: index,
+                            child: item.attribute_value,
+                        })
+                        this.restaurants_th.push({
+                            value: JSON.parse(item.attribute_name).th,
+                            index: index,
+                            child: item.attribute_value,
+                        })
+                    }
+
                 })
             },
             deep: true,
@@ -186,6 +190,20 @@ export default {
             this.form.model.product_attr[index].attribute_name.zhtw = this.restaurants_zhtw[e.index].value
             this.form.model.product_attr[index].much = e.child.length;
             this.form.model.product_attr[index].attribute_value = e.child
+        },
+
+        checkedForm() {
+
+            this.form.model.product_attr.map((item, index) => {
+                this.$refs['form-' + index].forEach((item, indexs) => {
+                    this.$refs['form-' + index][indexs].validate(valid => {
+                        if (!valid) {
+                            
+                        }
+                    })
+                })
+            })
+
         },
     },
 

@@ -5,19 +5,19 @@
             <!--基础信息-->
             <div class="product-form-flex">
                 <Basic @validateField="validateField"></Basic>
-    
+
                 <!--规格设置-->
                 <Spec></Spec>
-    
+
                 <!-- 属性设置-->
-                <Attr></Attr>
-    
+                <Attr ref="AttrRef"></Attr>
+
                 <!-- 加料设置-->
-                <Ingredients></Ingredients>
-    
+                <Ingredients ref="IngredientsRef"></Ingredients>
+
                 <!--商品详情-->
                 <!-- <Content></Content> -->
-    
+
                 <!--高级设置-->
                 <Buyset></Buyset>
             </div>
@@ -61,6 +61,7 @@ export default {
         return {
             /*是否正在加载*/
             loading: false,
+            active: false,
             /*form表单数据*/
             form: {
                 model: {
@@ -146,7 +147,8 @@ export default {
                 basicSetting: {},
                 /*分销佣金设置*/
                 agentSetting: {},
-            }
+            },
+
         };
     },
     provide: function () {
@@ -186,10 +188,35 @@ export default {
         validateField(e) {
             this.$refs.form.validateField(e);
         },
+
+
+
+
         /*提交*/
         onSubmit: function () {
             let self = this;
+
             self.$refs.form.validate(valid => {
+                let returnConditions = false
+                if (self.form.model.product_attr.length > 0) {
+                    self.$refs.AttrRef.checkedForm();
+                    let checkArr = self.form.model.product_attr
+                    for (let i = 0; i < checkArr.length; i++) {
+                        if (!checkArr[i].attribute_name.en || !checkArr[i].attribute_name.th || !checkArr[i].attribute_name.zh || !checkArr[i].attribute_name.zhtw) { returnConditions  = true };
+                        for (let e = 0; e < checkArr[i].attribute_value.length; e++) {
+                            if (!checkArr[i].attribute_value[e].en || !checkArr[i].attribute_value[e].th || !checkArr[i].attribute_value[e].zh || !checkArr[i].attribute_value[e].zhtw)  { returnConditions  = true };
+                        }
+                    }
+                }
+
+                if (self.form.model.product_feed.length > 0) {
+                    self.$refs.IngredientsRef.checkedForm();
+                    let checkArr = self.form.model.product_feed;
+                    for (let i = 0; i < checkArr.length; i++) {
+                        if (!checkArr[i].feed_name.en || !checkArr[i].feed_name.th || !checkArr[i].feed_name.zh || !checkArr[i].feed_name.zhtw || !checkArr[i].price)  { returnConditions  = true };
+                    }
+                }
+                if(returnConditions) return;
                 if (valid) {
                     let params = {}
                     params = JSON.parse(JSON.stringify(self.form.model));
@@ -228,6 +255,7 @@ export default {
                         });
                 }
             });
+
         },
 
         /*保存为草稿*/
@@ -253,16 +281,19 @@ export default {
     height: calc(100% - 14px);
     overflow: hidden;
 }
-.product-form{
+
+.product-form {
     height: 100%;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    .product-form-flex{
+
+    .product-form-flex {
         flex: 1 1 auto;
         overflow-y: auto;
     }
-    .common-button-wrapper{
+
+    .common-button-wrapper {
         flex: 0 0 auto;
         flex-shrink: 0;
     }
