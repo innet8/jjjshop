@@ -3,6 +3,7 @@
 namespace app\kitchen\model\order;
 
 use think\facade\Db;
+use app\common\enum\order\OrderStatusEnum;
 use app\kitchen\model\order\Order as OrderModel;
 use app\common\model\order\OrderProduct as OrderProductModel;
 
@@ -27,6 +28,7 @@ class OrderProduct extends OrderProductModel
             ->join('order o', 'op.order_id = o.order_id', 'left')
             ->where('op.is_send_kitchen', '=', 1)
             ->where('op.finish_num', '=', 0)
+            ->where('o.order_status', '=', OrderStatusEnum::NORMAL) // 订单状态
             ->order(['op.send_kitchen_time' => 'asc']); // 按照送厨时间排序
 
         if ($shop_supplier_id > 0) {
@@ -82,19 +84,37 @@ class OrderProduct extends OrderProductModel
             ->paginate($params);
 
         foreach ($list as &$item) {
+            // 关联查询出一级分类包含的二级分类产品id
+            $productIds = $this->alias('op')
+            ->distinct(true)
+            ->join('product p', 'op.product_id = p.product_id', 'left')
+            ->join('category c', 'p.category_id = c.category_id', 'left')
+            ->join('category c2', 'c2.category_id = c.category_id', 'left')
+            ->where('op.is_send_kitchen', '=', 1)
+            ->where('op.finish_num', '=', 0);
+            if ($item['category_id'] > 0) {
+                $productIds = $productIds->where(function ($query) use ($item) {
+                    $query->where('c.category_id', '=', $item['category_id']) // 一级分类的产品
+                        ->whereOr('c2.parent_id', '=', $item['category_id']); // 二级分类的产品
+                });
+            }
+            $productIds = $productIds->column('p.product_id');
+
             // 分类名称翻译
             $item['category_name_text'] = extractLanguage($item['category_name_text']);
-            $orderProducts = $this->where('product_id', '=', $item['product_id'])
-                ->field(['order_product_id', 'order_id', 'product_id', 'product_name', 'is_send_kitchen', 'send_kitchen_time', 'finish_num', 'finish_time', 'total_num', 'product_attr', 'remark'])
+            $orderProducts = $this->field(['order_product_id', 'order_id', 'product_id', 'product_name', 'is_send_kitchen', 'send_kitchen_time', 'finish_num', 'finish_time', 'total_num', 'product_attr', 'remark'])
+                ->whereIn('product_id', $productIds)
                 ->where('is_send_kitchen', '=', 1)
                 ->where('finish_num', '=', 0)
                 ->order('send_kitchen_time', 'asc')
                 ->select();
+
             // 流水号
             foreach ($orderProducts as &$orderProduct) {
                 $order = OrderModel::field('table_no, callNo')->where('order_id', '=', $orderProduct['order_id'])->find();
                 $orderProduct['serial_no'] = $order['callNo'] ? $order['callNo'] : $order['table_no'];
             }
+            unset($orderProduct);
             $item['order_product'] = $orderProducts;
         }
         unset($item);
