@@ -149,7 +149,7 @@ class Order extends OrderModel
             $model = $model->where('create_time', 'between', [$startTime, $endTime]);
         }
         // 已送厨
-        return $model->where('extra_times', '>', 0);
+        return $model;
     }
 
     /**
@@ -163,21 +163,37 @@ class Order extends OrderModel
             case 'all':
                 break;
             case 'payment';
-                $filter['pay_status'] = OrderPayStatusEnum::PENDING;
-                $filter['order_status'] = 10;
+//                $filter['pay_status'] = OrderPayStatusEnum::PENDING;
+//                $filter['order_status'] = 10;
+//                $filter['extra_times'] = ['>', 0];
+                $filter[] = ['pay_status', '=', OrderPayStatusEnum::PENDING];
+                $filter[] = ['order_status', '=', 10];
+                $filter[] = ['extra_times', '>', 0];
                 break;
             case 'process';
-                $filter['pay_status'] = OrderPayStatusEnum::SUCCESS;
-//                $filter['delivery_status'] = 10;
-                $filter['order_status'] = 10;
+//                $filter['pay_status'] = OrderPayStatusEnum::SUCCESS;
+////                $filter['delivery_status'] = 10;
+//                $filter['order_status'] = 10;
+//                $filter['extra_times'] = ['>', 0];
+                $filter[] = ['pay_status', '=', OrderPayStatusEnum::SUCCESS];
+                $filter[] = ['order_status', '=', 10];
+                $filter[] = ['extra_times', '>', 0];
                 break;
             case 'complete';
-                $filter['pay_status'] = OrderPayStatusEnum::SUCCESS;
-                $filter['order_status'] = 30;
+//                $filter['pay_status'] = OrderPayStatusEnum::SUCCESS;
+//                $filter['order_status'] = 30;
+//                $filter['extra_times'] = ['>', 0];
+                $filter[] = ['pay_status', '=', OrderPayStatusEnum::SUCCESS];
+                $filter[] = ['order_status', '=', 30];
+                $filter[] = ['extra_times', '>', 0];
                 break;
             case 'cancel';
-//                $filter['pay_status'] = OrderPayStatusEnum::SUCCESS;
-                $filter['order_status'] = 20;
+////                $filter['pay_status'] = OrderPayStatusEnum::SUCCESS;
+//                $filter['order_status'] = 20;
+//                $filter['extra_times'] = ['>', 0];
+//                $filter[] = ['pay_status', '=', OrderPayStatusEnum::SUCCESS];
+                $filter[] = ['order_status', '=', 20];
+                $filter[] = ['extra_times', '>', 0];
                 break;
         }
         return $filter;
