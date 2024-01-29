@@ -950,7 +950,8 @@ class Cart extends CartModel
         $consume_fee = 0;
         if ($consumeFee['is_open']) {
             $consume_rate = helper::bcdiv($consumeFee['tax_rate'], 100);
-            $consume_fee = helper::bcmul($total_product_pay_price, $consume_rate);
+            $consume_fee = helper::bcmul($total_product_pay_price, $consume_rate, 3);
+            $consume_fee = round($consume_fee, 2);
         }
         $total_consumption_tax_money = $consume_fee;    // 总消费税
 

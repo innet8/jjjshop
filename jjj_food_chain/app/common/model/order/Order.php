@@ -1180,8 +1180,10 @@ class Order extends BaseModel
         $original_consume_fee = 0;
         if ($consumeFee['is_open']) {
             $consume_rate = helper::bcdiv($consumeFee['tax_rate'], 100);
-            $consume_fee = helper::bcmul($total_price, $consume_rate);
-            $original_consume_fee = helper::bcmul($order_price, $consume_rate); // 原消费税
+            $consume_fee = helper::bcmul($total_price, $consume_rate, 3);
+            $original_consume_fee = helper::bcmul($order_price, $consume_rate, 3); // 原消费税
+            $consume_fee = round($consume_fee, 2);
+            $original_consume_fee = round($original_consume_fee, 2);
         }
         // 应付
         $pay_price = $total_price + $service_money + $service_fee + $consume_fee; // 应付金额 = 商品折扣总价（会员折扣） + 原服务费 + 新服务费用 + 消费税
