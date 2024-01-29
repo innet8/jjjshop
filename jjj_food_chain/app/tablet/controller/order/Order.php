@@ -31,6 +31,7 @@ class Order extends Controller
         // 立即购买：获取订单商品列表
         $params = $this->postData();
         $params['eat_type'] = 10;
+        $params['order_source'] = 10;
 //        // 商品结算信息
 //        $CartModel = new CartModel;
 //        // 购物车商品列表

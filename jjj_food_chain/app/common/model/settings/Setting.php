@@ -305,6 +305,8 @@ class Setting extends BaseModel
                     'cashier_open' => '1',   // 是否开启打印
                     'cashier_printer_id' => '0', // 打印机id
                     'order_status' => [], // 订单类型 10下单打印 20付款打印 30确认收货打印
+                    'language_list' => LANGUAGE_LIST, // 语言列表
+                    'default_language' => 'en', // 默认语言
                 ],
             ],
             SettingEnum::FULL_FREE => [

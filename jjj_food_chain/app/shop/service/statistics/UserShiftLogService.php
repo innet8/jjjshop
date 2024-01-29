@@ -26,7 +26,7 @@ class UserShiftLogService
         $sheet->getColumnDimension('P')->setWidth(30);
 
         //设置工作表标题名称
-        $sheet->setTitle('用户交班记录');
+        $sheet->setTitle(__('用户交班记录'));
 
         $sheet->setCellValue('A1', __('交班编号'));
         $sheet->setCellValue('B1', __('收银员'));
