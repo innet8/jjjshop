@@ -45,7 +45,7 @@
                     <el-table-column prop="money" :label="$t('价格')"></el-table-column>
                     <el-table-column prop="discount" :label="$t('折扣')">
                         <template #default="scope">
-                            <span v-if="scope.row.is_discount > 0">{{ Number(scope.row.discount || 0) }}折</span>
+                            <span v-if="scope.row.is_discount > 0">{{ Number(scope.row.discount || 0) }}%</span>
                             <span v-else>{{ $t('无') }}</span>
                         </template>
                     </el-table-column>

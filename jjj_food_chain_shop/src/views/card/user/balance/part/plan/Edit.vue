@@ -21,8 +21,8 @@
         <el-input type="number" placeholder="请输入到账金额" v-model="form.real_money">
         </el-input>
       </el-form-item>
-      <el-form-item label="排序" :label-width="formLabelWidth" prop="sort" :rules="[{required: true,message: '请输入排序'}]">
-        <el-input type="number" placeholder="请输入排序" v-model="form.sort">
+      <el-form-item label="排序" :label-width="formLabelWidth" prop="sort" :rules="[{required: true,message: '接近0，排序等級越高'}]">
+        <el-input type="number" placeholder="接近0，排序等級越高" v-model="form.sort">
         </el-input>
       </el-form-item>
     </el-form>

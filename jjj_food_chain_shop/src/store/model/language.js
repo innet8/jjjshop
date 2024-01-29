@@ -3,7 +3,7 @@ import { computed } from 'vue';
 export const languageStore = defineStore({
     id: 'Language',
     state: () => ({
-        language: 'th',
+        language: 'en',
         languageList: [
             {
                 key: 'th',
@@ -39,7 +39,7 @@ export const languageStore = defineStore({
         getLanguage() {
             return {
                 language: computed(()=>{
-                    let result = 'ภาษาไทย'
+                    let result = 'English'
                     this.languageList.map((item=>{
                         if(item.key == this.language ){
                             result = item.label

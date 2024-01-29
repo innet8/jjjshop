@@ -110,7 +110,7 @@
     "退款金额（元）": "Refund amount (yuan)",
     "今日概况": "Today's overview",
     "昨日：": "Yesterday:",
-    "会员数（人）": "Number of members (person)",
+    "会员数": "Number of members",
     "待办事项": "To-do list",
     "库存告急": "Inventory is running low",
     "查看": "Check",
@@ -596,7 +596,6 @@
     "修改管理员": "Modify administrator",
     "营业总额": "Total sales",
     "折扣总额": "Total discount",
-    "会员数": "Number of members",
     "添加角色": "Add role",
     "角色名称": "Role Name",
     "角色名称：": "Role Name:",
@@ -780,5 +779,6 @@
     "小票显示的语言将根据选择的语言打印": "The language displayed on the receipt will be printed according to the selected language",
     "发布": "release",
     "近七日数据": "Data for the past seven days",
-    "点餐管理系统": "Order Management System"
+    "点餐管理系统": "Order Management System",
+    "订单量": "Order quantity"
 }

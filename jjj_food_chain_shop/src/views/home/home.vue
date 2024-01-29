@@ -56,7 +56,7 @@
                         <p class="yesterday">{{ $t('昨日：') }}{{Number(today_data.order_discount_money?.ytd).toFixed(2)  }}</p>
                     </div>
                     <div class="grid-content">
-                        <p class="des">{{ $t('会员数（人）') }}</p>
+                        <p class="des">{{ $t('会员数') }}</p>
                         <h3>{{ today_data.new_user_total?.tday }}</h3>
                         <p class="yesterday">{{ $t('昨日：') }}{{ today_data.new_user_total?.ytd }}</p>
                     </div>
