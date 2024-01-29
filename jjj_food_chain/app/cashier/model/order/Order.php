@@ -170,15 +170,7 @@ class Order extends OrderModel
         }
 
         // 订单商品送厨
-        try {
-
-            (new OrderProductModel())->sendKitchen($this['order_id']);
-        } catch (\Exception $e) {
-            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
-            $this->error = $e->getMessage();
-            return false;
-        }
-
+        (new OrderProductModel())->sendKitchen($this['order_id']);
 
         return $status;
     }
