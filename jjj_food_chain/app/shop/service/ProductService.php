@@ -24,17 +24,17 @@ class ProductService extends BaseProductService
     {
         // 商品分类
         $category = CategoryModel::getCacheTree($type, 0, $store);
-        //属性
+        // 属性
         $attribute = (new AttributeModel)->getAllList($store['user']['shop_supplier_id']);
-        //加料
+        // 加料
         $feed = (new FeedModel)->getAllList($store['user']['shop_supplier_id']);
-        //单位
+        // 单位
         $unit = (new UnitModel)->getAllList($store['user']['shop_supplier_id']);
-        //规格
+        // 规格
         $spec = (new SpecModel)->getAllList($store['user']['shop_supplier_id']);
-        //打印标签
+        // 打印标签
         $labelList = (new LabelModel)->getAllList($store['user']['shop_supplier_id']);
-        //特殊分类
+        // 特殊分类
         $special = CategoryModel::getCacheTree($type, 1, $store);
         // 会员等级列表
         $gradeList = GradeModel::getUsableList();

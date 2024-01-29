@@ -34,7 +34,7 @@ class Category extends BaseModel
 
     public function child()
     {
-        return $this->hasMany('app\\common\\model\\product\\Category', 'parent_id', 'category_id')->with(['images', 'child']);
+        return $this->hasMany('app\\common\\model\\product\\Category', 'parent_id', 'category_id')->order(['sort' => 'asc', 'create_time' => 'asc'])->with(['images', 'child']);
     }
 
     /**
@@ -56,6 +56,7 @@ class Category extends BaseModel
      */
     public static function getALL($type, $is_special, $store = '', $name = '')
     {
+        trace('getALL');
         $user = $store['user'];
         $supplier = $store['supplier'];
         if ($supplier['is_main'] == 1 || $supplier['category_set'] == 20) {
@@ -179,7 +180,7 @@ class Category extends BaseModel
             ->order(['is_special' => 'desc', 'sort' => 'asc', 'create_time' => 'asc'])
             ->where('shop_supplier_id', '=', $shop_supplier_id)
             ->select();
-        // 
+        //
         if (!Cache::get('categ2ory_cashier_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special)) {
             $data = $model->with(['images', 'child'])
                 ->where('parent_id', '=', 0)
