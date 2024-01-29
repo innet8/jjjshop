@@ -288,7 +288,15 @@ class User extends BaseModel
             $diffMoney = $this['balance'] + $data['recharge_value'];
             $money = $data['recharge_value'];
         } elseif ($data['mode'] === 'dec') {
-            $diffMoney = $this['balance'] - $data['recharge_value'] <= 0 ? 0 : $this['balance'] - $data['recharge_value'];
+            $diffMoney = $this['balance'] - $data['recharge_value'];
+            if ($diffMoney < 0) {
+                if ($this['balance'] > 0) {
+                    $this->error = '余额不能小于当前数值';
+                } else {
+                    $this->error = '余额不能小于0';
+                }
+                return false;
+            }
             $money = -$data['recharge_value'];
         } else {
             $diffMoney = $data['recharge_value'];
@@ -332,7 +340,15 @@ class User extends BaseModel
             $diffMoney = $this['points'] + $data['recharge_value'];
             $points = $data['recharge_value'];
         } elseif ($data['mode'] === 'dec') {
-            $diffMoney = $this['points'] - $data['recharge_value'] <= 0 ? 0 : $this['points'] - $data['recharge_value'];
+            $diffMoney = $this['points'] - $data['recharge_value'];
+            if ($diffMoney < 0) {
+                if ($this['points'] > 0) {
+                    $this->error = '积分不能小于当前数值';
+                } else {
+                    $this->error = '积分不能小于0';
+                }
+                return false;
+            }
             $points = -$data['recharge_value'];
         } else {
             $diffMoney = $data['recharge_value'];
