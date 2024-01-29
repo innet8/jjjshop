@@ -344,7 +344,7 @@ class OrderProduct extends BaseModel
             return false;
         }
         // 菜品打印
-        // (new OrderPrinterService)->printProductTicket($printOrder, 30);
+         (new OrderPrinterService)->printProductTicket($printOrder, 30);
         //
         return true;
     }
