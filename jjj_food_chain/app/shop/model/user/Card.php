@@ -72,6 +72,8 @@ class Card extends CardModel
             $isExist = (new CardRecord())->checkExistByUserId($userId);
             if ($isExist) {
                 if ($data['card_id'] == $isExist['card_id']) {
+                    $this->error = "会员已拥有此会员卡";
+                    return false;
                     continue;
                 }
                 // 删除原有的会员卡
@@ -117,9 +119,9 @@ class Card extends CardModel
                 // 赠送余额
                 if ($detail['open_money'] && $detail['open_money_num']) {
                     (new User())->where('user_id', '=', $user['user_id'])
-                        ->inc('balance', $detail['open_money_num']);
+                        ->inc('balance', $detail['open_money_num'])->update();
 
-                    BalanceLogModel::add(BalanceLogSceneEnum::RECHARGE, [
+                    BalanceLogModel::add(BalanceLogSceneEnum::ADMIN, [
                         'user_id' => $user['user_id'],
                         'money' => $detail['open_money_num'],
                     ], ['order_no' => '后台发放会员卡赠送']);
@@ -163,7 +165,7 @@ class Card extends CardModel
             }
             if ($detail['open_money'] && $detail['open_money_num']) {
                 (new User())->where('user_id', '=', $user['user_id'])
-                    ->dec('balance', $detail['open_money_num']);
+                    ->dec('balance', $detail['open_money_num'])->update();
 
                 BalanceLogModel::add(BalanceLogSceneEnum::ADMIN, [
                     'user_id' => $user['user_id'],
