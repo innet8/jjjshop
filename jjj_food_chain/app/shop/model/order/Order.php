@@ -131,10 +131,7 @@ class Order extends OrderModel
             if ($data['create_time'][0] && $data['create_time'][1]) {
                 $startTime = strtotime($data['create_time'][0]);
                 $endTime = strtotime($data['create_time'][1]);
-                if ($startTime == $endTime) {
-                    $endTime = $startTime + 86399;
-                }
-                $model = $model->where('create_time', 'between', [$startTime, $endTime]);
+                $model = $model->where('create_time', 'between', [$startTime, $endTime  + 86399]);
             } else if ($data['create_time'][0]) {
                 // 只有开始时间
                 $startTime = strtotime($data['create_time'][0]);
