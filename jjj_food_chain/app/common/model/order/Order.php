@@ -428,6 +428,28 @@ class Order extends BaseModel
     }
 
     /**
+     * 订单详情（包含删除的订单记录信息）
+     * @param $where
+     * @param string[] $with
+     * @return array|\think\Model|null
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public static function detailWithTrashed($where, $with = ['user', 'address', 'product' => ['image'], 'extract', 'supplier', 'cashier'])
+    {
+        $filter = is_array($where) ? $where : ['order_id' => (int)$where];
+        $query = self::with($with);
+        $query = $query->with([
+            'product.image' => function($query){
+                $query->withTrashed();
+            }
+        ]);
+        $query = $query->where($filter);
+        return $query->find();
+    }
+
+    /**
      * 获取桌台进行中订单
      * @param $table_id
      * @return array|mixed
