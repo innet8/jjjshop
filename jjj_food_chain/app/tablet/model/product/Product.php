@@ -18,7 +18,10 @@ class Product extends ProductModel
         // 筛选条件
         $model = $this;
         if ($params['category_id'] > 0) {
-            $model = $model->where('product.category_id', '=', $params['category_id']);
+            $categoryIds = Category::where('category_id', '=', $params['category_id'])
+                ->whereOr('parent_id', '=', $params['category_id'])
+                ->column('category_id');
+            $model = $model->whereIn('product.category_id', $categoryIds);
         }
         if (!empty($params['search'])) {
             $model = $model->like('product_name', trim($params['search']));
