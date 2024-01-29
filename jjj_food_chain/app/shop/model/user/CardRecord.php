@@ -29,6 +29,7 @@ class CardRecord extends CardRecordModel
 
         if (isset($data['status']) && $data['status'] >= 0) {
             $model = $model->where(function ($query) use ($data) {
+                $query = $query->where('r.is_delete', '=', 0);
                 if ($data['status'] == 0) {
                     $query->where('r.expire_time', '<', time())->where('r.expire_time', '>', 0);
                 } else {
