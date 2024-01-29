@@ -455,7 +455,7 @@ class Order extends OrderModel
     }
 
     // 订单支付
-    public function orderPay($data)
+    public function orderPay($data, $cashier = null)
     {
         if ($this['pay_status']['value'] != 10) {
             $this->error = "订单已支付";
@@ -463,6 +463,9 @@ class Order extends OrderModel
         }
         if (isset($data['user_id']) && $data['user_id'] > 0) {
             $this->save(['user_id' => $data['user_id']]);
+        }
+        if ($cashier && isset($cashier['cashier_id'])) {
+            $this->save(['cashier_id' => $cashier['cashier_id']]);
         }
         return $this->onPayment($this['order_no'], $data['pay_type']);
     }

@@ -269,7 +269,7 @@ class Order extends Controller
         if (!$detail) {
             return $this->renderSuccess('桌台订单不存在');
         }
-        if ($detail->orderPay($this->postData())) {
+        if ($detail->orderPay($this->postData(), $this->cashier['user'])) {
             TableModel::close($detail['table_id']);
             return $this->renderSuccess('结账成功');
         }
