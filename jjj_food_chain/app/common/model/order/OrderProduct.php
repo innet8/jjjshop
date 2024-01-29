@@ -58,7 +58,7 @@ class OrderProduct extends BaseModel
         foreach ($values as $key => $data) {
             $values[$key] = extractLanguage($values[$key]);
         }
-        return implode(";", $values);
+        return trim(implode(";", $values), ";");
     }
 
     /**
