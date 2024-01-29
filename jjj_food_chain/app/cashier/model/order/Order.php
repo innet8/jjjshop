@@ -740,17 +740,25 @@ class Order extends OrderModel
             ['order_id', '=', $order_id],
             ['order_status', '=', OrderStatusEnum::NORMAL]
         ]);
+
         if (!$detail) {
             $this->error = '当前状态不可操作';
             return false;
         }
+
         $this->startTrans();
         try {
-            // 把送厨的订单删除
-            (new OrderProduct)->where('order_id', '=', $order_id)->delete();
-            // 把订单取消
             $detail = Order::detail($order_id);
-            $detail->CashierOrderCancels();
+            $force = $detail['extra_times'] <= 0;
+            OrderProduct::destroy(function ($query) use ($order_id) {
+                $query->where('order_id', '=', $order_id);
+            }, $force);
+            //
+            if ($force) {
+                $detail->force()->delete();
+            }else{
+                $detail->CashierOrderCancels();
+            }
             $this->commit();
             return true;
         } catch (\Exception $e) {
@@ -759,7 +767,6 @@ class Order extends OrderModel
             $this->rollback();
             return false;
         }
-
     }
 
     // 挂单列表

@@ -2,23 +2,27 @@
 
 namespace app\common\model\order;
 
-use app\common\enum\order\OrderStatusEnum;
 use think\facade\Log;
 use app\common\library\helper;
 use app\common\model\BaseModel;
+use think\model\concern\SoftDelete;
+use app\common\enum\order\OrderStatusEnum;
 use app\common\model\order\Order as OrderModel;
 use app\common\service\order\OrderPrinterService;
 use app\common\model\product\Product as ProductModel;
-use app\common\model\product\ProductSku as ProductSkuModel;
 use app\common\service\product\factory\ProductFactory;
+use app\common\model\product\ProductSku as ProductSkuModel;
 
 /**
  * 订单商品模型
  */
 class OrderProduct extends BaseModel
 {
+    use SoftDelete;
     protected $name = 'order_product';
     protected $pk = 'order_product_id';
+    protected $deleteTime = 'delete_time';
+    protected $defaultSoftDelete = 0;
 
     protected $append = [
         'product_name_text',
@@ -329,10 +333,10 @@ class OrderProduct extends BaseModel
             $order['product'] = $order->product()->where('is_send_kitchen', 0)->select();
             // 更新前打印数据
             $printOrder = $order;
-            // 
+            //
             $this->where('order_id', '=', $order_id)->where('is_send_kitchen', '=', 0)->update(['is_send_kitchen' => 1, 'send_kitchen_time' => time()]);
             $this->commit();
-            // 
+            //
         } catch (\Exception $e) {
             Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
             $this->error = $e->getMessage();
@@ -340,8 +344,8 @@ class OrderProduct extends BaseModel
             return false;
         }
         // 菜品打印
-        (new OrderPrinterService)->printProductTicket($printOrder, 30);
-        // 
+        // (new OrderPrinterService)->printProductTicket($printOrder, 30);
+        //
         return true;
     }
 

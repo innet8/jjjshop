@@ -59,7 +59,7 @@ class Order extends BaseModel
      */
     public function product()
     {
-        return $this->hasMany('app\\common\\model\\order\\OrderProduct', 'order_id', 'order_id')->hidden(['content']);
+        return $this->hasMany('app\\common\\model\\order\\OrderProduct', 'order_id', 'order_id')->withTrashed()->hidden(['content']);
     }
 
     /**
@@ -421,7 +421,7 @@ class Order extends BaseModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public static function detail($where, $with = ['user', 'address', 'product' => ['image'], 'extract', 'supplier'])
+    public static function detail($where, $with = ['user', 'address', 'product' => ['image'], 'extract', 'supplier', 'cashier'])
     {
         is_array($where) ? $filter = $where : $filter['order_id'] = (int)$where;
         return self::with($with)->where($filter)->find();
