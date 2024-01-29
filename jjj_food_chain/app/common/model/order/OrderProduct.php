@@ -271,7 +271,7 @@ class OrderProduct extends BaseModel
     {
         $this->startTrans();
         try {
-            if ($money < 0) {
+            if ($money < 0 || $money > 1000000) {
                 $this->error = "价格错误";
                 return false;
             }

@@ -71,15 +71,15 @@ class CardPaySuccessService extends BaseService
     private function updateCard()
     {
         CardModel::where('card_id', '=', $this->model['card_id'])->inc('receive_num', 1)->update();
-        //赠送积分
+        // 赠送积分
         if ($this->model['open_points'] && $this->model['open_points_num']) {
             $this->user->setIncPoints($this->model['open_points_num'], '发会员卡获取积分');
         }
-        //赠送优惠券
+        // 赠送优惠券
         if ($this->model['open_coupon'] && $this->model['open_coupons']) {
             (new UserCouponModel)->addUserCardCoupon($this->model['open_coupons'], $this->user, $this->model['order_id']);
         }
-        //赠送余额
+        // 赠送余额
         if ($this->model['open_money'] && $this->model['open_money_num']) {
             (new UserModel)->where('user_id', '=', $this->user['user_id'])
                 ->inc('balance', $this->model['open_money_num'])

@@ -319,7 +319,7 @@ class Order extends OrderModel
             $discount_ratio = 0;
             switch ($data['type']) {
                 case '1'://改价
-                    if ($data['money'] > 100000000 || $data['money'] < 0) {
+                    if ($data['money'] > 999999999 || $data['money'] < 0) {
                         $this->error = "价格范围错误";
                         return false;
                     }

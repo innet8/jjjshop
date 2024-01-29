@@ -20,7 +20,7 @@ class CardRecord extends CardRecordModel
             ->join('user u', 'u.user_id=r.user_id')
             ->join('user_card c', 'c.card_id=r.card_id')
             ->where('pay_status', '=', 20)
-            ->where('r.is_delete', '=', 0)
+            // ->where('r.is_delete', '=', 0)
             ->order(['r.create_time' => 'desc']);
 
         if (!empty($data['search'])) {
@@ -29,6 +29,7 @@ class CardRecord extends CardRecordModel
 
         if (isset($data['status']) && $data['status'] >= 0) {
             $model = $model->where(function ($query) use ($data) {
+                $query = $query->where('r.is_delete', '=', 0);
                 if ($data['status'] == 0) {
                     $query->where('r.expire_time', '<', time())->where('r.expire_time', '>', 0);
                 } else {

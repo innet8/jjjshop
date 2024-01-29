@@ -67,9 +67,9 @@ class Order extends Controller
             'time_type' => $data['time_type'],
             'order_source' => $data['eat_type'] ?? 0,
             'dataType' =>  $dataType,
+            'list_rows' =>  $data['list_rows'] ?? 6,
         ];
-        trace('2222');
-        trace($data);
+
         $list = $model->getList($dataType, $data);
         $info = [
                 'all' => $model->getCount('all', $data),
