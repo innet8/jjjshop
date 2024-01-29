@@ -57,7 +57,7 @@ class Order extends Controller
     public function detail($order_id)
     {
         // 订单详情
-        $detail = OrderModel::detail($order_id);
+        $detail = OrderModel::detailWithTrashed($order_id);
         if (isset($detail['pay_time']) && $detail['pay_time'] > 0) {
             $detail['pay_time'] = date('Y-m-d H:i:s', $detail['pay_time']);
         }
