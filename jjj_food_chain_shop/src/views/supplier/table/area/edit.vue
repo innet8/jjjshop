@@ -33,7 +33,7 @@ export default {
             form: {
                 area_id: 0,
                 area_name: '',
-                sort: ''
+                sort: null,
             },
             file_path: '',
             formRules: {

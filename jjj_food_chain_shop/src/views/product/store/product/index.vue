@@ -60,7 +60,7 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="category.name_text" :label="$t('分类')"></el-table-column>
+                    <el-table-column prop="category.path_name_text" :label="$t('分类')"></el-table-column>
                     <el-table-column prop="sales_actual" :label="$t('实际销量')"></el-table-column>
                     <el-table-column prop="product_stock" :label="$t('库存')"></el-table-column>
                     <el-table-column prop="product_status.text" :label="$t('状态')" width="100">

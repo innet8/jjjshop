@@ -10,6 +10,7 @@
             <el-form-item v-if="form.is_open == '1'" :label="$t('金额')" prop="service_charge">
                 <el-input-number class="max-w460" :controls="false" :precision="2" :min="0"  :placeholder="$t('请输入')" v-model.number="form.service_charge"></el-input-number>
                     <span>{{ currency.unit }}</span>
+                    <div class="tips">{{ $t('收银/桌台订单所需要增加的服务费') }}</div>
             </el-form-item>
         </el-form>
         <!--提交-->

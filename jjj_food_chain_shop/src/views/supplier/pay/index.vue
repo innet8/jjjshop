@@ -25,12 +25,12 @@
             </div>
 
             <!--分页-->
-            <div class="pagination">
+            <!-- <div class="pagination">
                 <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" background
-                    :current-page="curPage" :page-size="pageSize" layout="total, prev, pager, next, jumper"
+                    :current-page="curPage" :page-size="pageSize" layout=" prev, pager, next, jumper"
                     :total="totalDataNumber">
                 </el-pagination>
-            </div>
+            </div> -->
         </div>
 
     </div>

@@ -4,11 +4,11 @@
         <!--form表单-->
         <el-form size="small" ref="form" :model="form" label-position="top">
             <!--添加门店-->
-            <el-form-item :label="$t('打印机名称')+$t('：')" prop="printer_name" :rules="[{ required: true, message: ' ' }]">
+            <el-form-item :label="$t('打印机名称')" prop="printer_name" :rules="[{ required: true, message: ' ' }]">
                 <el-input v-model="form.printer_name" :placeholder="$t('请输入打印机名称')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('打印机类型')" prop="printer_type" :rules="[{ required: true, message: ' ' }]">
-                <el-select v-model="form.printer_type" placeholder="请选择" style="width: 100%;">
+                <el-select v-model="form.printer_type" :placeholder="$t('请选择类型')" style="width: 100%;">
                     <el-option v-for="(item, index) in type" :key="index" :label="item" :value="index">
                     </el-option>
                 </el-select>
@@ -91,7 +91,7 @@
 
             <el-form-item :label="$t('排序')" prop="sort" :rules="[{ required: true, message: $t('接近0，排序等級越高') }]">
                 <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('接近0，排序等級越高')" v-model.number="form.sort" autocomplete="off"></el-input-number>
-                <div class="tips">{{ $t('数字越小越靠前') }}</div>
+               
             </el-form-item>
 
             <!--提交-->
@@ -126,7 +126,7 @@ export default {
             form: {
                 printer_name: '',
                 printer_type: '',
-                sort: 1,
+                sort: null,
                 print_times: '',
                 FEI_E_YUN: {
                     USER: '',

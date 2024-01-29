@@ -41,7 +41,7 @@ export default {
                 type_name: '',
                 min_num: 1,
                 max_num: 1,
-                sort: 100,
+                sort: null,
             },
             file_path: '',
             formRules: {

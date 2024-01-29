@@ -82,7 +82,7 @@ export default {
                 wait_color: ['', ''],
             },
             input1: $t('10分钟'),
-            input2: $t('10分钟及以上'),
+            input2: $t('20分钟及以上'),
             languageList: [],
             open:false,
             loading:false,

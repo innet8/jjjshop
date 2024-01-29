@@ -183,7 +183,7 @@ export default {
         /*删除*/
         deleteClick(row) {
             let self = this;
-            ElMessageBox.confirm($t('此操作将永久删除该记录, 是否继续?'), $t('提示'), {
+            ElMessageBox.confirm($t('删除后不可恢复，确认删除吗?'), $t('提示'), {
                 confirmButtonText: $t('确定'),
                 cancelButtonText: $t('取消'),
                 type: 'warning'
@@ -199,7 +199,7 @@ export default {
                             self.loading = false;
                             if (data.code == 1) {
                                 ElMessage({
-                                    message: $t('恭喜你，该管理员删除成功'),
+                                    message: $t('删除成功'),
                                     type: 'success'
                                 });
                                 //刷新页面
