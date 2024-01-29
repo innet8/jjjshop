@@ -112,7 +112,7 @@ class Order extends Controller
         if ($order) {
             $sendKitchenProductTotalPrice = helper::getArrayColumnSum($order['sendKitchenProduct'], 'total_price');
             $list = OrderProduct::getGroupByTime($order['order_id']);
-            arsort($list);
+            array_multisort(array_column($list,'timestamp'), SORT_DESC, $list); //SORT_DESC降序，SORT_ASC升序
         }
         return $this->renderSuccess('请求成功', compact('list', 'sendKitchenProductTotalPrice'));
     }

@@ -355,12 +355,22 @@ class OrderProduct extends BaseModel
         $orderProductList = OrderProduct::where('order_id', '=', $order_id)->where('is_send_kitchen', '=', 1)->select();
         $result = [];
 
+//        foreach ($orderProductList as $orderProduct) {
+//            $sendKitchenTime = format_time_his($orderProduct->send_kitchen_time);
+//            if (!isset($result[$sendKitchenTime])) {
+//                $result[$sendKitchenTime] = [];
+//            }
+//            $result[$sendKitchenTime][] = $orderProduct;
+//        }
+//        return $result;
         foreach ($orderProductList as $orderProduct) {
-            $sendKitchenTime = format_time_his($orderProduct->send_kitchen_time);
+            $sendKitchenTime = $orderProduct->send_kitchen_time;
             if (!isset($result[$sendKitchenTime])) {
                 $result[$sendKitchenTime] = [];
             }
-            $result[$sendKitchenTime][] = $orderProduct;
+            $result[$sendKitchenTime]['plist'][] = $orderProduct;
+            $result[$sendKitchenTime]['timestamp'] = $orderProduct->send_kitchen_time;
+            $result[$sendKitchenTime]['date'] = format_time_his($orderProduct->send_kitchen_time);
         }
         return $result;
     }
