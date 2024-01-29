@@ -30,7 +30,7 @@ class AddCallTable extends Migrator
     {
         $table = $this->table('call', ['engine' => 'InnoDB', 'collation' => 'utf8mb4_unicode_ci', 'comment' => '呼叫表']);
         $table->addColumn('table_id', 'integer', ['comment' => '桌位ID'])
-            ->addColumn('table_no', 'string', ['limit' => 20, 'comment' => '桌位号'])
+            ->addColumn('table_no', 'string', ['limit' => 50, 'comment' => '桌位号'])
             ->addColumn('call_type', 'integer', ['comment' => '呼叫类型(1服务员,2收款)'])
             ->addColumn('status', 'integer', ['default' => 0, 'comment' => '状态(0未处理,1已处理)'])
             ->addColumn('app_id', 'integer', ['default' => 0, 'comment' => '应用id'])
