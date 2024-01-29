@@ -185,7 +185,8 @@ function export_excel($fileName, $tileArray = [], $dataArray = [])
 function log_write($value, $channel = '')
 {
     $msg = is_string($value) ? $value : var_export($value, true);
-    Log::channel($channel)->write($msg);
+//    Log::channel($channel)->write($msg);
+    trace($msg);
 }
 
 /**
