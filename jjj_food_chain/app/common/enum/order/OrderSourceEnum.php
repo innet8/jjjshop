@@ -25,11 +25,11 @@ class OrderSourceEnum extends Enum
     {
         $arr = [
             self::MASTER => [
-                'name' => __('桌台下单'),
+                'name' => __('桌台订单'),
                 'value' => self::MASTER,
             ],
             self::CASHIER => [
-                'name' => __('收银下单'),
+                'name' => __('收银订单'),
                 'value' => self::CASHIER,
             ],
             self::SCAN => [
