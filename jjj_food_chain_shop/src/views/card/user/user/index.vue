@@ -18,7 +18,7 @@
                 </el-form-item>
                 <el-form-item :label="$t('昵称/手机号/ID')"><el-input v-model="formInline.keyword"
                     :placeholder="$t('请输入昵称/手机号/ID')"></el-input></el-form-item>
-                <el-form-item :label="$t('注册时间')">
+                <el-form-item :label="$t('添加时间')">
                     <div class="block">
                         <span class="demonstration"></span>
                         <el-date-picker v-model="formInline.reg_date" type="daterange" value-format="YYYY-MM-DD"

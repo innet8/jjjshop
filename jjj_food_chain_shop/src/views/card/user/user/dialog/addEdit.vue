@@ -13,7 +13,7 @@
                     <el-radio :label="2">{{ $t('保密') }}</el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item :label="$t('会员')" prop="grade_id" :rules="[{ required: true, message: $t('请选择等级') }]">
+            <el-form-item :label="$t('会员等级')" prop="grade_id" :rules="[{ required: true, message: $t('请选择等级') }]">
                 <el-select class="percent-w100" v-model="form.grade_id" :placeholder="$t('请选择等级')" >
                     <el-option v-for="(item, index) in gradeList" :key="index" :label="item.name"
                         :value="item.grade_id"></el-option>
@@ -24,9 +24,10 @@
             </el-form-item>
             <el-form-item :label="$t('密码')" prop="password" >
                 <el-input class="percent-w100" type="password" v-model="form.password" :placeholder="$t('请输入密码')"></el-input>
+                <div class="tips">{{ $t('密码必须是4-16位的数字') }}</div>
             </el-form-item>
             <el-form-item :label="$t('生日')">
-                <el-date-picker class="percent-w100" v-model="form.birthday" type="date"
+                <el-date-picker class="date-picker" :clearable="true" v-model="form.birthday" type="date"
                     value-format="YYYY-MM-DD"></el-date-picker>
             </el-form-item>
         </el-form>
@@ -118,3 +119,9 @@ export default {
     },
 }
 </script>
+<style scoped lang="scss">
+:deep(.date-picker){
+    width: 180px !important;
+    max-width: 180px !important;
+}
+</style>

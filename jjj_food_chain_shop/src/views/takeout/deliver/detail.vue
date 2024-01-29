@@ -435,7 +435,7 @@
           .then(data => {
             self.loading = false;
             ElMessage({
-              message: '恭喜你，操作成功',
+              message: $t('操作成功'),
               type: 'success'
             });
             self.getParams();

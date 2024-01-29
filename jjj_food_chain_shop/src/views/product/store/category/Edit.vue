@@ -33,7 +33,7 @@
             </el-form-item> -->
 
             <el-form-item :label="$t('分类排序')" prop="sort">
-                <el-input-number :controls="false" :placeholder="$t('分类排序不能为空')" :min="0" :max="999" v-model.number="form.sort" autocomplete="off"></el-input-number>
+                <el-input-number :controls="false" :placeholder="$t('接近0，排序等级越高')" :min="0" :max="999" v-model.number="form.sort" autocomplete="off"></el-input-number>
             </el-form-item>
         </el-form>
         <template #footer>

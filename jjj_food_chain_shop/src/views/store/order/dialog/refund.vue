@@ -1,21 +1,29 @@
 <template>
   <div>
-    <el-dialog title="退款" v-model="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
+    <el-dialog :title="$t('退款')" v-model="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
       :close-on-press-escape="false">
       <el-form size="small" ref="form" :model="form" label-position="top">
-        <el-form-item label="订单号" :label-width="formLabelWidth" prop="order_no"
+        <el-form-item :label="$t('可退款金额')" :label-width="formLabelWidth" prop="order_no"
           :rules="[{required: true,message: ' '}]">
-          <el-input v-model="form.order_no" placeholder="请输入订单号" class="max-w460" :readonly="true"></el-input>
+          <el-input v-model="form.pay_price" disabled :placeholder="$t('可退款金额')" :readonly="true">
+            <template #append>
+                {{ currency.unit }}
+            </template>
+        </el-input>
         </el-form-item>
-        <el-form-item label="退款金额" :label-width="formLabelWidth" prop="refund_money"
+        <el-form-item :label="$t('订单号')" :label-width="formLabelWidth" prop="order_no"
           :rules="[{required: true,message: ' '}]">
-          <el-input type="number" v-model="form.refund_money" placeholder="请输入退款金额"></el-input>
+          <el-input v-model="form.order_no" :placeholder="$t('请输入订单号')" :readonly="true"></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('退款金额')" :label-width="formLabelWidth" prop="refund_money"
+          :rules="[{required: true,message: ' '}]">
+          <el-input type="number" v-model="form.refund_money" :placeholder="$t('请输入退款金额')"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
       <div class="dialog-footer">
-        <el-button @click="dialogFormVisible">取 消</el-button>
-        <el-button type="primary" @click="submit" :loading="loading">确 定</el-button>
+        <el-button @click="dialogFormVisible">{{ $t('取消') }}</el-button>
+        <el-button type="primary" @click="submit" :loading="loading">{{ $t('确定') }}</el-button>
       </div>
       </template>
     </el-dialog>
@@ -23,6 +31,8 @@
 </template>
 
 <script>
+import { useUserStore } from '@/store';
+const { currency } = useUserStore();
   import OrderApi from '@/api/order.js';
   import draggable from 'vuedraggable';
   export default {
@@ -39,15 +49,18 @@
         form: {
           order_id: '',
           refund_money: '',
-          order_no: ''
+          order_no: '',
+          pay_price:'',
         },
+        currency:currency,
       };
     },
-    props: ['open_edit', 'order_no', 'order_id'],
+    props: ['open_edit', 'order_no', 'order_id','pay_price'],
     created() {
       this.dialogVisible = this.open_edit;
       this.form.order_no = this.order_no;
       this.form.order_id = this.order_id;
+      this.form.pay_price = this.pay_price;
     },
     methods: {
       /*处理*/

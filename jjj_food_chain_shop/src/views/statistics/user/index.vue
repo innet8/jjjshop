@@ -71,6 +71,8 @@ import qs from 'qs';
 import { useUserStore } from '@/store';
 import StatisticsApi from '@/api/statistics.js';
 import detail from './detail.vue'
+import { languageStore } from '@/store/model/language.js';
+const languageTag = languageStore().language
 const { token } = useUserStore();
 export default {
     components: { detail },
@@ -95,6 +97,7 @@ export default {
             token,
             detailId: {},
             open: false,
+            languageTag:languageTag,
         }
     },
 
@@ -146,7 +149,7 @@ export default {
         onExport: function () {
             let baseUrl = window.location.protocol + '//' + window.location.host;
             this.searchForm.token = this.token;
-            window.location.href = baseUrl + '/index.php/shop/user.UserShiftLog/export?' + qs.stringify(this.searchForm);
+            window.location.href = baseUrl + '/index.php/shop/user.UserShiftLog/export?' + qs.stringify(this.searchForm)+'&language='+this.languageTag;
         },
     }
 };

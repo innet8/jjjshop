@@ -260,7 +260,7 @@
                 self.loading = false;
                 if (data.code == 1) {
                  ElMessage({
-                    message: '恭喜你，操作成功',
+                    message: $t('操作成功'),
                     type: 'success'
                   });
                   this.getData();
@@ -294,7 +294,7 @@
                 self.loading = false;
                 if (data.code == 1) {
                   ElMessage({
-                    message: '恭喜你，操作成功',
+                    message: $t('操作成功'),
                     type: 'success'
                   });
                   this.getData();

@@ -5,22 +5,22 @@
       描述：会员-用户列表-会员充值
   -->
   <div>
-    <el-dialog title="取消订单" v-model="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
+    <el-dialog :title="$t('取消订单')" v-model="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
       :close-on-press-escape="false">
       <el-form size="small" ref="form" :model="form" label-position="top">
-        <el-form-item label="订单号" :label-width="formLabelWidth" prop="order_no"
+        <el-form-item :label="$t('订单号')" :label-width="formLabelWidth" prop="order_no"
           :rules="[{required: true,message: ' '}]">
-          <el-input v-model="form.order_no" placeholder="请输入订单号" class="max-w460" :readonly="true"></el-input>
+          <el-input v-model="form.order_no" :placeholder="$t('请输入订单号')"  :readonly="true"></el-input>
         </el-form-item>
-        <el-form-item label="备注" :label-width="formLabelWidth" prop="cancel_remark"
+        <el-form-item :label="$t('备注')" :label-width="formLabelWidth" prop="cancel_remark"
           :rules="[{required: true,message: ' '}]">
-          <el-input type="textarea" v-model="form.cancel_remark" placeholder="请输入备注"></el-input>
+          <el-input type="textarea" v-model="form.cancel_remark" :placeholder="$t('请输入备注')"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
       <div class="dialog-footer">
-        <el-button @click="dialogFormVisible">取 消</el-button>
-        <el-button type="primary" @click="submit" :loading="loading">确 定</el-button>
+        <el-button @click="dialogFormVisible">{{ $t('取消') }}</el-button>
+        <el-button type="primary" @click="submit" :loading="loading">{{ $t('确定') }}</el-button>
       </div>
       </template>
     </el-dialog>

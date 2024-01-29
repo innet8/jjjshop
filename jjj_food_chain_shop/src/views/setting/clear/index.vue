@@ -20,7 +20,7 @@
 
       <!--提交-->
       <div class="common-button-wrapper">
-        <el-button type="primary" @click="onSubmit">{{$t('提交')}}</el-button>
+        <el-button type="primary" @click="onSubmit">{{$t('确定')}}</el-button>
       </div>
 
 

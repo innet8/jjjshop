@@ -185,7 +185,7 @@
         </Cancel>
         <!--处理-->
         <refund v-if="open_refund" :open_edit="open_refund" :order_no="order_no" :order_id="order_id"
-            @closeDialog="closerefundDialogFunc($event, 'edit')">
+          :pay_price="pay_price"  @closeDialog="closerefundDialogFunc($event, 'edit')">
         </refund>
     </div>
 </template>
@@ -247,6 +247,7 @@ export default {
             /*当前编辑的对象*/
             order_no: 0,
             order_id: 0,
+            pay_price: 0,
             token,
         };
     },
@@ -345,7 +346,7 @@ export default {
                     .then(data => {
                         self.loading = false;
                         ElMessage({
-                            message: '恭喜你，操作成功',
+                            message: $t('操作成功'),
                             type: 'success'
                         });
                         self.getData();
@@ -403,6 +404,7 @@ export default {
         refundClick(item) {
             this.order_no = item.order_no;
             this.order_id = item.order_id;
+            this.pay_price = (Number(item.pay_price) - Number(item.refund_money)).toFixed(2);
             this.open_refund = true;
         },
 

@@ -74,7 +74,7 @@
       <!--提交-->
       <div class="common-button-wrapper">
         <el-button  size="small" @click="getData" :loading="loading">{{ $t('重置') }}</el-button>
-        <el-button type="primary" size="small" @click="onSubmit" :loading="loading">{{ $t('保存') }}</el-button>
+        <el-button type="primary" size="small" @click="onSubmit" :loading="loading">{{ $t('确定') }}</el-button>
       </div>
 
     </el-form>
