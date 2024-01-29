@@ -15,7 +15,7 @@
             </el-form>
             <div>
                 <el-button size="small" type="primary" icon="Plus" v-auth="'/product/expand/unit/add'" @click="addClick">{{ $t('添加单位') }}</el-button>
-                <el-button size="small" v-auth="'/product/expand/unit/batch_delete'" @click="deleteBatch">{{ $t('批量删除') }}</el-button>
+                <el-button size="small" v-auth="'/product/expand/unit/batch_delete'" :disabled="multipleSelection.length == 0" @click="deleteBatch">{{ $t('批量删除') }}</el-button>
             </div>
         </div>
         <!--内容-->
@@ -156,7 +156,7 @@ export default {
         },
         deleteClick(id) {
             let self = this;
-            ElMessageBox.confirm('删除后不可恢复，确认删除吗?', '提示', {
+            ElMessageBox.confirm($t('删除后不可恢复，确认删除吗?'), $t('提示'), {
                 type: 'warning'
             })
                 .then(() => {
@@ -164,7 +164,7 @@ export default {
                         unit_id: id
                     }).then(data => {
                         ElMessage({
-                            message: '删除成功',
+                            message: $t('删除成功'),
                             type: 'success'
                         });
                         self.getData();

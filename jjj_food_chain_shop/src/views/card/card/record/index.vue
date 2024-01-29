@@ -41,7 +41,7 @@
           </el-table-column>
           <el-table-column prop="discount" :label="$t('折扣')">
             <template #default="scope">
-              <span v-if="scope.row.discount">{{scope.row.discount}}{{ $t('折') }}</span>
+              <span v-if="scope.row.discount">{{scope.row.discount}}%</span>
               <span v-else>{{ $t('无') }}</span>
             </template>
           </el-table-column>

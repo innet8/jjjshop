@@ -32,12 +32,12 @@
                                 message: $t('请输入加料名称')
                             }]">
                             <template #label>
-                                {{ $t('加料名称：') }}<span class="product-tips">{{ items.label }}</span>
+                                {{ $t('加料名称：') }}<span class="product-tips">({{ items.label }})</span>
                             </template>
                             <el-autocomplete :fetch-suggestions="(e, h) => querySearch(e, h, items.key)"
                                 @select="(e) => selectChange(e, index)" class="inline-input"
                                 v-model="item.feed_name[items.key]" maxlength="128"
-                                :placeholder="$t('如:杯型')"></el-autocomplete>
+                                :placeholder="$t('如：番茄酱')"></el-autocomplete>
                         </el-form-item>
                         <el-form-item :label="$t('价格：')" :prop="`item.price`" :rules="[{
                                 validator: () => {
@@ -209,7 +209,9 @@ export default {
 :deep(.inline-input) {
     width: 100%;
 }
-
+.product-tips{
+    color: var(--el-color-tips);
+}
 .product-box {
     display: flex;
 }

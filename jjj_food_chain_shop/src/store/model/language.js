@@ -11,11 +11,11 @@ export const languageStore = defineStore({
             },
             {
                 key: 'zh',
-                label: '简体'
+                label: '简体中文'
             },
             {
                 key: 'zhtw',
-                label: '繁体'
+                label: '繁体中文'
             },
             {
                 key: 'en',

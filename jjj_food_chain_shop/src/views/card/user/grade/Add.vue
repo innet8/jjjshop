@@ -75,7 +75,7 @@ export default {
                 /*推荐人数满*/
                 upgrade_invite: 0,
                 /*等级权重*/
-                weight: 100,
+                weight: null,
             },
             /*左边长度*/
             formLabelWidth: '120px',

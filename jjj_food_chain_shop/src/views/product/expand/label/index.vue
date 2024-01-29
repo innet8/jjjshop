@@ -15,7 +15,7 @@
             </el-form>
             <div>
                 <el-button size="small" type="primary" icon="Plus" v-auth="'/product/expand/label/add'" @click="addClick">{{ $t('添加标签') }}</el-button>
-                <el-button size="small" v-auth="'/product/expand/label/batch_delete'" @click="deleteBatch">{{ $t('批量删除')}}</el-button>
+                <el-button size="small" v-auth="'/product/expand/label/batch_delete'" :disabled="multipleSelection.length == 0" @click="deleteBatch">{{ $t('批量删除')}}</el-button>
             </div>
         </div>
         <!--内容-->

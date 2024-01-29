@@ -10,7 +10,7 @@
     <el-form-item :label="$t('会员卡名称：')" :rules="[{ required: true, message: $t('请填写会员卡名称') }]" prop="model.card_name">
       <el-input v-model="form.model.card_name" :maxlength="50" class="max-w460"></el-input>
     </el-form-item>
-    <el-form-item :label="$t('卡片类型：')" prop="model.is_default">
+    <!-- <el-form-item :label="$t('卡片类型：')" prop="model.is_default">
       <el-radio-group v-model="form.model.is_default">
           <el-radio :label="0">{{ $t('默认') }}</el-radio>
           <el-radio :label="1">{{ $t('自定义') }}</el-radio>
@@ -24,7 +24,7 @@
           </div>
         </div>
       </div>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item :label="$t('卡片样式：')" prop="card_style" v-if="form.model.is_default==1">
       <div class="d-s-c f-w maxwidth-530">
           <div class="img" @click="openUpload()">

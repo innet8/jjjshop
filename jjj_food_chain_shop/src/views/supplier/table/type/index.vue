@@ -119,7 +119,7 @@ export default {
         /*删除分类*/
         deleteClick(row) {
             let self = this;
-            ElMessageBox.confirm('删除后不可恢复，确认删除该记录吗?', '提示', {
+            ElMessageBox.confirm('删除后不可恢复，确认删除吗？', '提示', {
                 type: 'warning'
             }).then(() => {
                 StoreApi.deleteType({

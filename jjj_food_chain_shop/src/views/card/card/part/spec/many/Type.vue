@@ -215,7 +215,7 @@ export default {
     /*删除规格组事件*/
     onDeleteGroup: function(index) {
       var self = this;
-     ElMessageBox.confirm('删除后不可恢复，确认删除该记录吗?', '提示', {
+     ElMessageBox.confirm('删除后不可恢复，确认删除吗？', '提示', {
           type: 'warning'
         })
         .then(() => {
@@ -238,7 +238,7 @@ export default {
         return;
       }
 
-      ElMessageBox.confirm('删除后不可恢复，确认删除该记录吗?', '提示', {
+      ElMessageBox.confirm('删除后不可恢复，确认删除吗？', '提示', {
           type: 'warning'
         })
         .then(() => {

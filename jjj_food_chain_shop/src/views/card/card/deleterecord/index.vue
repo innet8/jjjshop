@@ -6,7 +6,7 @@
       -->
   <div class="user">
     <!--搜索表单-->
-    <div class="common-seach-wrap">
+    <!-- <div class="common-seach-wrap">
       <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item :label="$t('关键词')">
           <el-input v-model="formInline.card_name" :placeholder="$t('请输入关键词')"></el-input>
@@ -15,7 +15,7 @@
           <el-button type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
         </el-form-item>
       </el-form>
-    </div>
+    </div> -->
     <!--内容-->
     <div class="product-content">
       <div class="table-wrap">
