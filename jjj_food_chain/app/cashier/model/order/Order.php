@@ -484,10 +484,10 @@ class Order extends OrderModel
             return false;
         }
 
-        if (count($this['product']) <= 1 && $orderProduct['total_num'] <= $num) {
-            $this->error = "仅剩一个商品，不允许退菜，请选择退单";
-            return false;
-        }
+//        if (count($this['product']) <= 1 && $orderProduct['total_num'] <= $num) {
+//            $this->error = "仅剩一个商品，不允许退菜，请选择退单";
+//            return false;
+//        }
 
         if ($orderProduct['total_num'] < $num) {
             $this->error = "退菜数量不能大于当前商品数量";
