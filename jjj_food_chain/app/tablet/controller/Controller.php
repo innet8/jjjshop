@@ -41,7 +41,8 @@ class Controller extends JjjController
         '/table/table/getInfo',
         '/table/table/unbind',
         '/order/order/tableBuy',
-        '/base/base/verifyPassword'
+        '/base/base/verifyPassword',
+        '/call/call/call'
     ];
 
     /**
