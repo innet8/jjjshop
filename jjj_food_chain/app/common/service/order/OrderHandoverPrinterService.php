@@ -40,7 +40,7 @@ class OrderHandoverPrinterService
             $content = $this->getPrintContent(PrinterTypeEnum::SUNMI_LAN,$data);
             $content = hex2bin($content);
             if (preg_match('/[\p{Thai}]/u', $content) ) {
-                $content = iconv("UTF-8", "UTF-8//IGNORE", $content);
+                $content = iconv("UTF-8", "CP874//IGNORE", $content);
             } else {
                 $content = iconv("UTF-8", "GBK//IGNORE", $content);
             }
