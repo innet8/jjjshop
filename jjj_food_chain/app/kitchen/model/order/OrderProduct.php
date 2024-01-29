@@ -41,6 +41,7 @@ class OrderProduct extends OrderProductModel
             $item['serial_no'] = $item['callNo'] ? $item['callNo'] : $item['table_no']; // 流水号
             $orderProducts = $this->where('order_id', '=', $item['order_id'])
                 ->field(['order_product_id', 'order_id', 'product_id', 'product_name', 'is_send_kitchen', 'send_kitchen_time', 'finish_num', 'finish_time', 'total_num', 'product_attr', 'remark'])
+                ->where('is_send_kitchen', '=', 1)
                 ->where('finish_num', '=', 0)
                 ->order('send_kitchen_time', 'asc')
                 ->select();
@@ -85,6 +86,7 @@ class OrderProduct extends OrderProductModel
             $item['category_name_text'] = extractLanguage($item['category_name_text']);
             $orderProducts = $this->where('product_id', '=', $item['product_id'])
                 ->field(['order_product_id', 'order_id', 'product_id', 'product_name', 'is_send_kitchen', 'send_kitchen_time', 'finish_num', 'finish_time', 'total_num', 'product_attr', 'remark'])
+                ->where('is_send_kitchen', '=', 1)
                 ->where('finish_num', '=', 0)
                 ->order('send_kitchen_time', 'asc')
                 ->select();
@@ -126,6 +128,7 @@ class OrderProduct extends OrderProductModel
             $item['serial_no'] = $item['callNo'] ? $item['callNo'] : $item['table_no']; // 流水号
             $orderProducts = $this->where('order_id', '=', $item['order_id'])
                 ->field(['order_product_id', 'order_id', 'product_id', 'product_name', 'is_send_kitchen', 'send_kitchen_time', 'finish_num', 'finish_time', 'total_num', 'product_attr', 'remark'])
+                ->where('is_send_kitchen', '=', 1)
                 ->where('finish_num', '>', 0)
                 ->order('send_kitchen_time', 'asc')
                 ->select();
