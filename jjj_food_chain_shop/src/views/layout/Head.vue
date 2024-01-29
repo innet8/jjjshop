@@ -60,6 +60,7 @@ export default defineComponent({
         const router = useRouter();
         const { userInfo, bus_on, bus_emit, bus_off, afterLogout } = useUserStore();
         const language = languageStore()
+        const languageTag = languageStore().language
         const languageNow = language.getLanguage().language
         const languageList = language.getLanguageList()
         const state = reactive({
@@ -107,6 +108,7 @@ export default defineComponent({
             languageList,
             languageNow,
             language,
+            languageTag,
         };
     },
     methods: {
@@ -132,6 +134,7 @@ export default defineComponent({
         },
 
         setLanguage(e) {
+            if(e==this.languageTag)return;
             ElMessageBox.confirm(
                 $t('切换语言需要刷新后生效，是否确定刷新?'),
                 $t('提示'), {

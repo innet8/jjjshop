@@ -4,14 +4,14 @@ import auto_en from "./auto/en.json"
 import auto_zhtw from "./auto/zh-tw.json"
 import auto_th from "./auto/th.json"
 
-let lang = 'th'
+let lang = 'en'
 if(JSON.parse(localStorage.getItem("Language"))){
     lang = JSON.parse(localStorage.getItem("Language")).language 
 }
 const i18n = createI18n({
     legacy: false,
-    locale: lang || "th",
-    fallbackLocale: "th",
+    locale: lang || "en",
+    fallbackLocale: "en",
     globalInjection: true,
     messages: {
         zh: { ...auto_zh },

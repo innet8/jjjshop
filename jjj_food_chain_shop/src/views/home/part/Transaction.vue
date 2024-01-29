@@ -72,8 +72,8 @@ let myChart = null;
             text:$t('近七日数据')
           },
           grid: {
-            left: '0px',
-            right: '0px',
+            left: '40px',
+            right: '40px',
             bottom: '0px',
             top: '60px',
             containLabel: true
@@ -125,7 +125,7 @@ let myChart = null;
             series2.push(item.total_num);
           });
           if (this.activeName == 'order') {
-            names = [$t('成交额'), $t('成交量')];
+            names = [$t('成交额'), $t('订单量')];
           } else if (this.activeName == 'refund') {
             names = ['退单额', '退单量'];
           }

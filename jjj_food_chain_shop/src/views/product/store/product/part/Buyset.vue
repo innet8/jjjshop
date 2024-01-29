@@ -24,7 +24,7 @@
         <!-- <el-form-item :label="$t('初始销量：')">
       <el-input-number :controls="false" :min="0" v-model="form.model.sales_initial" class="max-w460"></el-input-number>
     </el-form-item> -->
-        <el-form-item :label="$t('商品排序：')" :rules="[{ required: true, message: $t('请输入商品排序') }]" prop="model.product_sort">
+        <el-form-item :label="$t('商品排序：')" :rules="[{ required: true, message: $t('接近0，排序等级越高') }]" prop="model.product_sort">
             <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('接近0，排序等级越高')"
                 v-model="form.model.product_sort" class="max-w460"></el-input-number>
         </el-form-item>

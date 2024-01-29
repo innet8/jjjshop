@@ -76,7 +76,7 @@
 				</el-radio-group>
 			</el-form-item>
 			<el-form-item label="排序"><el-input type="number" v-model="form.sort"
-					placeholder="请输入排序"></el-input></el-form-item>
+					placeholder="接近0，排序等級越高"></el-input></el-form-item>
 
 			<!--提交-->
 			<div class="common-button-wrapper">

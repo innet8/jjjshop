@@ -101,6 +101,9 @@
 .el-button{
     text-transform: capitalize;
 }
+.el-button:focus{
+    outline: none;
+}
 .el-button.el-button--small.el-button--text{
     padding-left: 0;
     padding-right: 0;

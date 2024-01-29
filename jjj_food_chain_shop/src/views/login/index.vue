@@ -4,12 +4,12 @@
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="left" label-width="0px"
                 class="demo-ruleForm login-container d-b-c">
                 <div class="flex-1 login-box">
-                    <h3 class="title" style="margin-bottom: 40px;"><img src="/src/assets/logo.svg"/>{{ $t('点餐管理系统') }}</h3>
+                    <h3 class="title" style="margin-bottom: 40px;"><img src="/src/assets/logo.svg" />{{ $t('点餐管理系统') }}</h3>
                     <!--用户名-->
                     <el-form-item prop="account">
                         <div class="left-img-input"><img class="l-img" src="/src/assets/img/user.png">
                             <el-input class="l-input" type="text" v-model="ruleForm.account" auto-complete="off"
-                            :placeholder="$t('请输入用户名')">
+                                :placeholder="$t('请输入用户名')">
                             </el-input>
                         </div>
                         <!-- <el-input type="text" v-model="ruleForm.account" auto-complete="off" placeholder="账号"></el-input> -->
@@ -35,8 +35,9 @@
             </div>
           </el-form-item> -->
                     <!--登录-->
-                    <el-button type="primary" :disabled="disabledC" style="width:100%;height: 48px;font-size: 18px;margin-top: 6px;"
-                        @click.native.prevent="SubmitFunc" :loading="logining">{{ $t('登录') }}
+                    <el-button type="primary" :disabled="disabledC"
+                        style="width:100%;height: 48px;font-size: 18px;margin-top: 6px;" @click.native.prevent="SubmitFunc"
+                        :loading="logining">{{ $t('登录') }}
                     </el-button>
                 </div>
 
@@ -45,7 +46,8 @@
         <div class="language-box">
             <el-dropdown trigger="click" @command="setLanguage">
                 <span class="el-dropdown-link">
-                    <SvgIcon class="data-box-icon" name="language"></SvgIcon>{{ languageNow }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
+                    <SvgIcon class="data-box-icon" name="language"></SvgIcon>{{ languageNow }}<el-icon
+                        class="el-icon--right"><arrow-down /></el-icon>
                 </span>
                 <template #dropdown>
                     <el-dropdown-menu>
@@ -72,6 +74,7 @@ import SvgIcon from "@/components/svg-icon/SvgIcon.vue";
 const { afterLogin } = useUserStore();
 const language = languageStore()
 const languageNow = language.getLanguage().language
+const languageTag = languageStore().language
 const languageList = language.getLanguageList()
 export default {
 
@@ -79,9 +82,10 @@ export default {
         sidentify,
         SvgIcon
     },
-    computed:{
-        disabledC(){
-            return this.ruleForm.account == '' && this.ruleForm.checkPass ==''
+
+    computed: {
+        disabledC() {
+            return this.ruleForm.account == '' && this.ruleForm.checkPass == ''
         }
     },
     data() {
@@ -145,6 +149,7 @@ export default {
             language: language,
             languageNow: languageNow,
             languageList: languageList,
+            languageTag: languageTag,
         };
     },
     created() {
@@ -154,6 +159,11 @@ export default {
     mounted() {
         this.identifyCode = '';
         this.makeCode(this.identifyCodes, 4);
+        document.addEventListener('keyup', this.onEnter);
+    },
+
+    destroyed() {
+        document.removeEventListener('keyup', this.onEnter);
     },
     methods: {
         //验证码----start
@@ -170,7 +180,7 @@ export default {
                     this.randomNum(0, this.identifyCodes.length)
                 ];
             }
-   
+
         },
         /*获取基础配置*/
         getData() {
@@ -196,7 +206,12 @@ export default {
                     self.loading = false;
                 });
         },
-
+        onEnter(event) {
+            if (event.key === 'Enter') {
+                // 处理回车事件的逻辑
+                this.SubmitFunc();
+            }
+        },
         /*登录方法*/
         SubmitFunc(ev) {
             var _this = this;
@@ -225,6 +240,7 @@ export default {
             });
         },
         setLanguage(e) {
+            if (e == this.languageTag) return;
             ElMessageBox.confirm(
                 $t('切换语言需要刷新后生效，是否确定刷新?'),
                 $t('提示'), {
@@ -360,7 +376,8 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    .el-dropdown-link{
+
+    .el-dropdown-link {
         color: var(--el-color-black);
         font-size: 14px;
         display: flex;
@@ -368,11 +385,11 @@ export default {
         gap: 8px;
         cursor: pointer;
     }
-    .data-box-icon{
+
+    .data-box-icon {
         width: 16px;
         height: 16px;
         color: var(--el-color-black);
     }
 }
-
 </style>

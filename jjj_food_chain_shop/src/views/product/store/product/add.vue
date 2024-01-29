@@ -107,7 +107,7 @@ export default {
                     /*商品排序，默认100*/
                     product_sort: null,
                     /*限购数量*/
-                    limit_num: null,
+                    limit_num: 0,
                     special_id: '',
                     /*是否开启积分赠送,默认1为开启，0为关闭*/
                     is_points_gift: 1,
