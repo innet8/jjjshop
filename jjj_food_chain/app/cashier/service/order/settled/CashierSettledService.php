@@ -321,7 +321,7 @@ abstract class CashierSettledService extends BaseService
         // 订单数据
         $data = [
             'user_id' => $order['user_id'],
-            'order_no' => $this->model->orderNo(),
+            'order_no' => $this->model->newOrderNo($this->orderSource['source']),
             'total_price' => $order['order_total_price'],
             'bag_price' => $order['order_bag_price'],
             'order_price' => $order['total_order_price'],

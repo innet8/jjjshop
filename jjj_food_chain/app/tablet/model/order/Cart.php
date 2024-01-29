@@ -120,7 +120,6 @@ class Cart extends CartModel
                     trace('折扣信息');
                     trace($discount);
                 } else {
-                    trace('aaaaa');
                     $discount = 0;
                 }
                 $alone_grade_type = 10;
@@ -150,7 +149,6 @@ class Cart extends CartModel
                     // 会员卡
                     $discountRatio = $discount;
                 }
-                trace('bbbbb');
                 trace('折扣');
                 trace($discountRatio);
                 if ($discountRatio <= 1) {

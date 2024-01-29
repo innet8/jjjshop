@@ -27,6 +27,24 @@ class OrderService
     }
 
     /**
+     * 生成新版订单号
+     * 訂單號：18位纯数字（前八位是年月日，第九位1是收銀/2是桌台/3是外賣，后九位随机生成）
+     * 订单来源 order_source 10-桌台 20-收银台
+     */
+    public static function createNewOrderNo($order_source)
+    {
+        if ($order_source == 10) {
+            $type_num = 2;
+        } else if ($order_source == 20) {
+            $type_num = 1;
+        } else {
+            $type_num = 3;
+        }
+
+        return date('Ymd') . $type_num . substr(implode('', array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 9);
+    }
+
+    /**
      * 生成交易号
      */
     public static function createTradeNo()

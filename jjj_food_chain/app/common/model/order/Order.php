@@ -519,6 +519,15 @@ class Order extends BaseModel
     }
 
     /**
+     * 生成新版订单号
+     * @return string
+     */
+    public function newOrderNo($order_source)
+    {
+        return OrderService::createNewOrderNo($order_source);
+    }
+
+    /**
      * 生成交易号
      * @return string
      */
@@ -1199,7 +1208,7 @@ class Order extends BaseModel
 
         // 会员优惠金额
         $updateOrderArr = [
-            'order_no' => $re_order_no ? $this->orderNo() : $order['order_no'],
+            'order_no' => $re_order_no ? $this->newOrderNo($order['order_source']) : $order['order_no'],
             'discount_money' => $discount_money,  // 折扣优惠重置
             'total_price' => $total_price,
             'order_price' => $order_price + $service_money + $service_fee + $consume_fee, // 订单总额 = 商品原始总价 + 原服务费 + 新服务费用 + 消费税
