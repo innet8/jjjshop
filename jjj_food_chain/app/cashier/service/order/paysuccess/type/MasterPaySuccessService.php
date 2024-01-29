@@ -14,6 +14,7 @@ use app\common\service\order\OrderCompleteService;
 use app\common\service\product\factory\ProductFactory;
 use app\common\enum\user\balanceLog\BalanceLogSceneEnum;
 use app\common\model\user\BalanceLog as BalanceLogModel;
+use think\facade\Log;
 
 /**
  * 订单支付成功服务类
@@ -42,8 +43,11 @@ class MasterPaySuccessService extends BaseService
     {
         // 实例化订单模型
         $this->model = OrderModel::getPayDetail($this->orderNo);
+        trace('bbbbb');
+        trace($this->model['user_id']);
         // 获取用户信息
         $this->user = UserModel::detail($this->model['user_id']);
+        trace('cccccccc');
         $this->paySuccess($payType);
         if ($this->getError() != '') {
             return false;
@@ -58,6 +62,8 @@ class MasterPaySuccessService extends BaseService
     {   
         // 更新付款状态
         $status = $this->updatePayStatus($payType);
+        trace('ddddddd');
+        trace($status);
         // 订单支付成功行为
         if ($status == true) {
             $detail = OrderModel::detail($this->model['order_id']);
@@ -77,7 +83,9 @@ class MasterPaySuccessService extends BaseService
                     $OrderCompleteService->complete([$detail], $detail['app_id']);
                 });
             }
+            trace('xxxxxx');
             event('CashierPaySuccess', $detail);
+            trace('zzzzzz');
         }
     }
 
@@ -91,6 +99,8 @@ class MasterPaySuccessService extends BaseService
             return false;
         }
         // 验证余额支付时用户余额是否满足
+        trace('eeeeee');
+        trace($payType);
         if ($payType == OrderPayTypeEnum::BALANCE) {
             if ($this->model['user_id'] == 0) {
                 $this->error = '请先选择会员登录';
@@ -101,15 +111,24 @@ class MasterPaySuccessService extends BaseService
                 return false;
             }
         }
+        trace('ffffff');
         // 事务处理
-        $this->model->transaction(function () use ($payType) {
-            // 更新订单状态
-            $this->updateOrderInfo($payType);
-            // 累积用户总消费金额
-            $this->model['user_id'] && $this->user->setIncPayMoney($this->model['pay_price']);
-            // 记录订单支付信息
-            $this->updatePayInfo($payType);
-        });
+        try {
+            $this->model->transaction(function () use ($payType) {
+                // 更新订单状态
+                $this->updateOrderInfo($payType);
+                // 累积用户总消费金额
+                $this->model['user_id'] && $this->user->setIncPayMoney($this->model['pay_price']);
+                // 记录订单支付信息
+                $this->updatePayInfo($payType);
+            });
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
+            $this->error = $e->getMessage();
+            return false;
+        }
+
+
         return true;
     }
 
