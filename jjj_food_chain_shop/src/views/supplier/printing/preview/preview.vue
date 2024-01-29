@@ -2,7 +2,7 @@
     <el-dialog @close="handleClose" width="480" v-model="dialogVisible" :close-on-click-modal="false"
         :close-on-press-escape="false" :title="title">
         <div class="box-border">
-            <h2 v-if="storeShow">{{$t('店铺名字(分店名字)')}}</h2>
+            <h2 v-if="storeShow">{{$t('店铺名字')}}</h2>
             <h3>{{ titleName }}</h3>
             <div class="box-main" :class="index == 0 ? 'box-main-border' : ''" v-for="(item, index) in details"
                 :key="index">

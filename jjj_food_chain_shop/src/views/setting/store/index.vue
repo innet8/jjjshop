@@ -8,7 +8,7 @@
     <!--form表单-->
     <el-form size="small" ref="form" :model="form" label-position="top" label-width="150px">
       <!--添加门店-->
-      <el-form-item :label="$t('商城名称')" :rules="[{required: true,message: ' '}]" prop="name">
+      <el-form-item :label="$t('门店名称')" :rules="[{required: true,message: ' '}]" prop="name">
         <el-input v-model="form.name" :placeholder="$t('商城名称')" class="max-w460"></el-input>
       </el-form-item>
       <el-form-item :label="$t('LOGO')" :rules="[{required: true,message: ' '}]" prop="name">
@@ -18,7 +18,7 @@
         <img class="mt10" v-img-url="form.logoUrl" :width="100">
       </el-form-item>
       
-      <el-form-item :label="$t('商家ID')" prop="customer">
+      <el-form-item :label="$t('店铺ID')" prop="customer">
         <el-input v-model="form.shop.shop_supplier_id" disabled placeholder="" class="max-w460"></el-input>
       </el-form-item>
       <el-form-item :label="$t('机器码')"  prop="key">
@@ -26,7 +26,8 @@
       </el-form-item>
       <!--提交-->
       <div class="common-button-wrapper">
-        <el-button type="primary" @click="onSubmit" :loading="loading">{{$t('确定')}}</el-button>
+        <el-button  @click="getParams" :loading="loading">{{$t('重置')}}</el-button>
+        <el-button type="primary" @click="onSubmit" :loading="loading">{{$t('保存')}}</el-button>
       </div>
     </el-form>
     <!--上传图片-->

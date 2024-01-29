@@ -64,7 +64,8 @@
             <div v-if="form.cashier_open == 1" class="cashier-desc">{{ $t('交班单、营业数据、预结账单、结账单') }}</div>
             <!--提交-->
             <div class="common-button-wrapper">
-                <el-button type="primary" @click="onSubmit" :loading="loading">{{ $t('提交') }}</el-button>
+                <el-button  @click="getData" :loading="loading">{{ $t('重置') }}</el-button>
+                <el-button type="primary" @click="onSubmit" :loading="loading">{{ $t('确定') }}</el-button>
             </div>
         </el-form>
     </div>

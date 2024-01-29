@@ -45,7 +45,7 @@ export default {
                 table_no: '',
                 area_id: '',
                 type_id: '',
-                sort: '',
+                sort: null,
             },
             formRules: {
                 table_no: [{

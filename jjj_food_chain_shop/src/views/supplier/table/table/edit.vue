@@ -47,7 +47,7 @@ export default {
                 table_no: '',
                 area_id: 1,
                 type_id: 1,
-                sort: 100,
+                sort: null,
             },
             file_path: '',
             formRules: {

@@ -8,9 +8,9 @@
             </el-form-item>
             <el-form-item :label="$t('性别')"  prop="gender" :rules="[{ required: true, message: $t('请选择性别') }]">
                 <el-radio-group v-model="form.gender">
+                    <el-radio :label="2">{{ $t('保密') }}</el-radio>
                     <el-radio :label="1">{{ $t('男') }}</el-radio>
                     <el-radio :label="0">{{ $t('女') }}</el-radio>
-                    <el-radio :label="2">{{ $t('保密') }}</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('会员等级')" prop="grade_id" :rules="[{ required: true, message: $t('请选择等级') }]">
@@ -47,7 +47,7 @@ export default {
             dialogVisible: false,
             form: {
                 nick_name: '',
-                gender: '',
+                gender: 2,
                 mobile: '',
                 grade_id: 1,
                 password: '',

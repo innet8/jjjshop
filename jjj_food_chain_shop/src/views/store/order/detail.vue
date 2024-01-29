@@ -77,13 +77,13 @@
 							{{ detail.discount_money }}
 						</div>
 					</el-col> -->
-                    <el-col :span="6">
+                    <el-col :span="6" v-if=" detail.order_status.value == 30">
                         <div class="pb16">
                             <span class="gray9">{{ $t('实付款金额：') }}</span>
                             {{ currency.unit }}{{ detail.pay_price }}
                         </div>
                     </el-col>
-                    <el-col :span="6">
+                    <el-col :span="6" v-if=" detail.order_status.value == 30">
                         <div class="pb16">
                             <span class="gray9">{{ $t('支付方式：') }}</span>
                             {{ detail.pay_type.text }}

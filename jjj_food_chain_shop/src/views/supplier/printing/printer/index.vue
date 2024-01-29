@@ -131,9 +131,9 @@ export default {
         /*删除用户*/
         deleteClick(row) {
             let self = this;
-            ElMessageBox.confirm('此操作将永久删除该记录, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            ElMessageBox.confirm($t('删除后不可恢复，确认删除吗?'), $t('提示'), {
+                confirmButtonText: $t('确定'),
+                cancelButtonText: $t('取消'),
                 type: 'warning'
             }).then(() => {
                 self.loading = true;

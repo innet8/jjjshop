@@ -609,7 +609,7 @@ function printText($leftText, $centerText="", $rightText="", $total = 32, $leftN
 
 /**
  * 提取语言
- * @return array
+ * @return string|array
  */
 function extractLanguage($json)
 {
