@@ -18,10 +18,31 @@ class Category extends BaseModel
     /**
      * 处理多语言
      */
-    protected $append = ['name_text'];
+    protected $append = ['name_text', 'path_name_text'];
     public static function getNameTextAttr($value, $data=[])
     {
         return extractLanguage($value ?: $data['name'] ?? '');
+    }
+
+    /**
+     * 全路径分类名称
+     *
+     * @param [type] $value
+     * @param array $data
+     * @return string
+     */
+    public static function getPathNameTextAttr($value, $data=[])
+    {
+        $text = extractLanguage($data['name'] ?? '');
+        if ($data['parent_id'] > 0) {
+            try {
+                $parentName = self::where('category_id', $data['parent_id'])->value('name');
+                $parentText = extractLanguage($parentName ?? '');
+                $text = $parentText . '-' . $text;
+            } catch (\Exception $e) {
+            }
+        }
+        return $text;
     }
 
     /**
