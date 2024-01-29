@@ -10,7 +10,7 @@
       <!--提交-->
       <div class="common-button-wrapper">
         <el-button size="small" type="info" @click="cancelFunc">{{ $t('取消') }}</el-button>
-        <el-button size="small" type="primary" @click="onSubmit" :loading="loading">{{ $t('提交') }}</el-button>
+        <el-button size="small" type="primary" @click="onSubmit" :loading="loading">{{ $t('确定') }}</el-button>
       </div>
     </el-form>
   </div>
@@ -48,8 +48,8 @@
             month_points_num: 0,
             month_coupon: 0,
             month_coupons: [],
-            expire: null,
-            money: null,
+            expire: 0,
+            money: 0,
             stock: '',
             status: 0,
             content: '',

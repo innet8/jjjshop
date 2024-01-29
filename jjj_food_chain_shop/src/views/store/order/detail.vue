@@ -10,104 +10,104 @@
             <div class="common-form">{{ $t('基本信息') }}</div>
             <div class="table-wrap">
                 <el-row>
-                    <el-col :span="5">
+                    <el-col :span="6">
                         <div class="pb16">
                             <span class="gray9">{{ $t('订单类型：') }}</span>
                             {{ detail.order_source_text }}
                         </div>
                     </el-col>
-                    <el-col :span="5">
+                    <el-col :span="6">
                         <div class="pb16">
                             <span class="gray9">{{ $t('订单号：') }}</span>
                             {{ detail.order_no }}
                         </div>
                     </el-col>
-                    <el-col :span="5" v-if="detail.user">
+                    <el-col :span="6" v-if="detail.user">
                         <div class="pb16">
                             <span class="gray9">{{ $t('买家：') }}</span>
                             {{ detail.user?.nickName || '' }}
                             <span>{{ $t('用户ID：') }}({{ detail.user?.user_id }})</span>
                         </div>
                     </el-col>
-                    <el-col :span="5">
+                    <el-col :span="6">
                         <div class="pb16">
                             <span class="gray9">{{ $t('订单金额：') }}</span>
                             {{ currency.unit }}{{ detail.order_price }}
                         </div>
                     </el-col>
-                    <el-col :span="5" v-if="detail.express_price > 0">
+                    <el-col :span="6" v-if="detail.express_price > 0">
                         <div class="pb16">
                             <span class="gray9">{{ $t('配送费：') }}</span>
                             {{ detail.express_price }}
                         </div>
                     </el-col>
-                    <el-col :span="5" v-if="detail.bag_price > 0">
+                    <el-col :span="6" v-if="detail.bag_price > 0">
                         <div class="pb16">
                             <span class="gray9">{{ $t('包装费：') }}</span>
                             {{ detail.bag_price }}
                         </div>
                     </el-col>
-                    <!-- <el-col :span="5" v-if="detail.service_money > 0">
+                    <!-- <el-col :span="6" v-if="detail.service_money > 0">
 						<div class="pb16">
 							<span class="gray9">{{ $t('服务费：') }}</span>
 							{{ detail.service_money }}
 						</div>
 					</el-col> -->
-                    <!-- <el-col :span="5" v-if="detail.coupon_money > 0">
+                    <!-- <el-col :span="6" v-if="detail.coupon_money > 0">
 						<div class="pb16" >
 							<span class="gray9">{{ $t('优惠券抵扣：') }}</span>
 							{{ detail.coupon_money }}
 						</div>
 					</el-col> -->
-                    <!-- <el-col :span="5" v-if="detail.points_money > 0">
+                    <!-- <el-col :span="6" v-if="detail.points_money > 0">
 						<div class="pb16" >
 							<span class="gray9">{{ $t('积分抵扣：') }}</span>
 							{{ detail.points_money }}
 						</div>
 					</el-col>
-					<el-col :span="5"  v-if="detail.fullreduce_money > 0">
+					<el-col :span="6"  v-if="detail.fullreduce_money > 0">
 						<div class="pb16">
 							<span class="gray9">{{ $t('满减金额：') }}</span>
 							{{ detail.fullreduce_money }}
 						</div>
 					</el-col> -->
-                    <!-- <el-col :span="5" v-if="detail.discount_money > 0">
+                    <!-- <el-col :span="6" v-if="detail.discount_money > 0">
 						<div class="pb16" >
 							<span class="gray9">{{ $t('优惠金额：') }}</span>
 							{{ detail.discount_money }}
 						</div>
 					</el-col> -->
-                    <el-col :span="5">
+                    <el-col :span="6">
                         <div class="pb16">
                             <span class="gray9">{{ $t('实付款金额：') }}</span>
                             {{ currency.unit }}{{ detail.pay_price }}
                         </div>
                     </el-col>
-                    <el-col :span="5">
+                    <el-col :span="6">
                         <div class="pb16">
                             <span class="gray9">{{ $t('支付方式：') }}</span>
                             {{ detail.pay_type.text }}
                         </div>
                     </el-col>
-                    <el-col :span="5">
+                    <el-col :span="6">
                         <div class="pb16">
                             <span class="gray9">{{ $t('用餐方式：') }}</span>
                             {{ detail.delivery_type.text }}
                         </div>
                     </el-col>
-                    <!-- <el-col :span="5" v-if="detail.mealtime">
+                    <!-- <el-col :span="6" v-if="detail.mealtime">
 						<div class="pb16">
 							<span class="gray9">{{ $t('取餐时间：') }}</span>
 							{{ detail.mealtime}}
 						</div>
 					</el-col> -->
-                    <el-col :span="5" v-if="detail.table_no">
+                    <el-col :span="6" v-if="detail.table_no">
                         <div class="pb16">
                             <span class="gray9">{{ $t('桌号：') }}</span>
                             {{ detail.table_no }}
                         </div>
                     </el-col>
-                    <el-col :span="5">
+                    <el-col :span="6">
                         <div class="pb16">
                             <span class="gray9">{{ $t('交易状态：') }}</span>
                             {{
@@ -116,13 +116,19 @@
                             }}
                         </div>
                     </el-col>
+                    <el-col :span="6" v-if="detail.cashier">
+                        <div class="pb16">
+                            <span class="gray9">{{ $t('收银员：') }}</span>
+                            {{ detail.cashier?.real_name }}
+                        </div>
+                    </el-col>
                 </el-row>
             </div>
             <!--商户信息-->
             <!-- <div class="common-form mt16">门店信息</div>
 			<div class="table-wrap">
 				<el-row>
-					<el-col :span="5">
+					<el-col :span="6">
 						<div class="pb16">
 							<span class="gray9">门店名称：</span>
 							{{ detail.supplier.name }}
@@ -175,13 +181,13 @@
 				<div class="common-form mt16">配送信息</div>
 				<div class="table-wrap">
 					<el-row>
-						<el-col :span="5">
+						<el-col :span="6">
 							<div class="pb16">
 								<span class="gray9">联系人：</span>
 								{{ detail.address.name }}
 							</div>
 						</el-col>
-						<el-col :span="5">
+						<el-col :span="6">
 							<div class="pb16">
 								<span class="gray9">联系电话：</span>
 								{{ detail.address.phone }}
@@ -210,7 +216,7 @@
 				<div class="common-form mt16">自提用户信息</div>
 				<div class="table-wrap" v-if="detail.extract">
 					<el-row>
-						<el-col :span="5">
+						<el-col :span="6">
 							<div class="pb16">
 								<span class="gray9">联系电话：</span>
 								{{ detail.extract.phone }}
@@ -233,37 +239,37 @@
 				<div class="common-form mt16">付款信息</div>
 				<div class="table-wrap">
 					<el-row>
-						<el-col :span="5">
+						<el-col :span="6">
 							<div class="pb16">
 								<span class="gray9">应付款金额：</span>
 								{{ detail.pay_price }}
 							</div>
 						</el-col>
-						<el-col :span="5">
+						<el-col :span="6">
 							<div class="pb16">
 								<span class="gray9">支付方式：</span>
 								{{ detail.pay_type.text }}
 							</div>
 						</el-col>
-						<el-col :span="5">
+						<el-col :span="6">
 							<div class="pb16">
 								<span class="gray9">支付流水号：</span>
 								{{ detail.transaction_id }}
 							</div>
 						</el-col>
-						<el-col :span="5">
+						<el-col :span="6">
 							<div class="pb16">
 								<span class="gray9">付款状态：</span>
 								{{ detail.pay_status.text }}
 							</div>
 						</el-col>
-						<el-col :span="5">
+						<el-col :span="6">
 							<div class="pb16">
 								<span class="gray9">付款时间：</span>
 								{{ detail.pay_time }}
 							</div>
 						</el-col>
-						<el-col :span="5" v-if="detail.refund_money>0">
+						<el-col :span="6" v-if="detail.refund_money>0">
 							<div class="pb16">
 								<span class="gray9">退款金额：</span>
 								{{ detail.refund_money }}
@@ -279,7 +285,7 @@
 					<div class="common-form mt16">配送信息</div>
 					<div class="table-wrap">
 						<el-row>
-							<el-col :span="5">
+							<el-col :span="6">
 								<div class="pb16">
 									<span class="gray9">配送状态：</span>
 									{{ detail.delivery_status.text }}
@@ -295,7 +301,7 @@
                 <div class="common-form mt16">{{ $t('取消信息') }}</div>
                 <div class="table-wrap">
                     <el-row>
-                        <el-col :span="5">
+                        <el-col :span="6">
                             <div class="pb16">
                                 <span class="gray9">{{ $t('商家备注') }}:</span>
                                 {{ detail.cancel_remark }}

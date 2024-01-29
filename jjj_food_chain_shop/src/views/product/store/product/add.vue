@@ -25,7 +25,7 @@
             <!--提交-->
             <div class="common-button-wrapper">
                 <el-button size="small" type="info" @click="cancelFunc">{{ $t('取消') }}</el-button>
-                <el-button size="small" type="primary" @click="onSubmit" :loading="loading">{{ $t('发布') }}</el-button>
+                <el-button size="small" type="primary" @click="onSubmit" :loading="loading">{{ $t('确定') }}</el-button>
             </div>
         </el-form>
     </div>

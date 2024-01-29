@@ -15,7 +15,7 @@
                         </span>
                         <template #dropdown>
                             <el-dropdown-menu>
-                                <el-dropdown-item v-for="item in languageList" :command="item.key">{{ item.label
+                                <el-dropdown-item v-for="item in languageList" :disabled="item.key == languageTag" :command="item.key">{{ item.label
                                 }}</el-dropdown-item>
                             </el-dropdown-menu>
                         </template>

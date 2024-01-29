@@ -145,7 +145,7 @@
 
 			delClick: function(row) {
 				let self = this;
-				let msg = '删除后不可恢复，确认删除该记录吗?';
+				let msg = '删除后不可恢复，确认删除吗？';
 				ElMessageBox.confirm(msg, '提示', {
 						type: 'warning'
 					})

@@ -16,7 +16,7 @@
             <div>
                 <el-button size="small" type="primary" icon="Plus" v-auth="'/product/expand/feed/add'" @click="addClick">
                     {{ $t('添加加料') }}</el-button>
-                <el-button size="small" v-auth="'/product/expand/feed/batch_delete'" @click="deleteBatch">{{ $t('批量删除') }}</el-button>
+                <el-button size="small" v-auth="'/product/expand/feed/batch_delete'" :disabled="multipleSelection.length == 0" @click="deleteBatch">{{ $t('批量删除') }}</el-button>
             </div>
         </div>
         <!--内容-->
