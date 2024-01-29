@@ -155,20 +155,22 @@ class Order extends OrderModel
         $this->startTrans();
         try {
             $status = $PaySuccess->onPaySuccess($pay_type);
+            trace('$status');
+            trace($status);
             if (!$status) {
                 $this->error = $PaySuccess->getError();
                 return false;
             }
             $this->commit();
         } catch (\Exception $e) {
-//            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
+            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
             $this->error = $e->getMessage();
             $this->rollback();
             return false;
         }
 
         // 订单商品送厨
-        (new OrderProductModel())->sendKitchen($this['order_id']);
+//        (new OrderProductModel())->sendKitchen($this['order_id']);
 
         return $status;
     }
