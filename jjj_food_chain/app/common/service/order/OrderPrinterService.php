@@ -156,6 +156,9 @@ class OrderPrinterService
             $this->currencyUnit = $currency['unit'];
         }
 
+        trace('======aa');
+        trace(__("金额"));
+
         $isThai =  preg_match('/[\p{Thai}]/u', __("金额"));
 
         /* *
@@ -561,6 +564,8 @@ class OrderPrinterService
     private function getPrintProductContent($data, $order, $printer = null, $products = null)
     {
         $printerType = $printer['printer_type']['value'];
+        trace('======bbb');
+        trace(__("金额"));
         $isThai =  preg_match('/[\p{Thai}]/u', __("金额"));
         /* *
         *
