@@ -18,6 +18,7 @@ class Product extends Controller
      * @Apidoc\Url ("/index.php/tablet/product.product/index")
      * @Apidoc\Param("category_id", type="int", require=true, desc="商品分类ID")
      * @Apidoc\Param("search", type="string", require=false, default="", desc="搜索关键字")
+     * @Apidoc\Param("is_special", type="int", require=false, default="", desc="是否特色分类 0-否 1-是")
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("list",type="array",ref="app\cashier\model\product\Product\list")
      */

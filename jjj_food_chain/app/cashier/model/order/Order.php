@@ -479,6 +479,10 @@ class Order extends OrderModel
         }
 
         $orderProduct = OrderProduct::detail($order_product_id);
+        if (!$orderProduct) {
+            $this->error = "当前状态不可操作";
+            return false;
+        }
 
         if (count($this['product']) <= 1 && $orderProduct['total_num'] <= $num) {
             $this->error = "仅剩一个商品，不允许退菜，请选择退单";
