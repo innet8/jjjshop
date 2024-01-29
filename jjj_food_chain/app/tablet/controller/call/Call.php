@@ -23,7 +23,7 @@ class Call extends Controller
      */
     public function call($table_id, $call_type, $shop_supplier_id)
     {
-        $tableNo = Table::where('table_id', $table_id)->where('status', 30)->value('table_no');
+        $tableNo = Table::where('table_id', $table_id)->value('table_no');
         if (!$tableNo) {
             return $this->renderError('桌台已关闭');
         }
