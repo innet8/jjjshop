@@ -59,7 +59,7 @@ class Order extends BaseModel
      */
     public function product()
     {
-        return $this->hasMany('app\\common\\model\\order\\OrderProduct', 'order_id', 'order_id')->withTrashed()->hidden(['content']);
+        return $this->hasMany('app\\common\\model\\order\\OrderProduct', 'order_id', 'order_id')->hidden(['content']);
     }
 
     /**
