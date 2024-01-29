@@ -161,6 +161,7 @@ class Order extends OrderModel
         // 订单数据类型
         switch ($dataType) {
             case 'all':
+                $filter[] = ['extra_times', '>', 0];
                 break;
             case 'payment';
 //                $filter['pay_status'] = OrderPayStatusEnum::PENDING;
