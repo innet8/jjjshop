@@ -23,7 +23,7 @@ class ProductService extends BaseProductService
     public static function getEditData($type, $store)
     {
         // 商品分类
-        $category = CategoryModel::getCacheTree($type, 0, $store);
+        $category = CategoryModel::getActiveALL($type, 0, $store);
         // 属性
         $attribute = (new AttributeModel)->getAllList($store['user']['shop_supplier_id']);
         // 加料
@@ -35,7 +35,7 @@ class ProductService extends BaseProductService
         // 打印标签
         $labelList = (new LabelModel)->getAllList($store['user']['shop_supplier_id']);
         // 特殊分类
-        $special = CategoryModel::getCacheTree($type, 1, $store);
+        $special = CategoryModel::getActiveALL($type, 1, $store);
         // 会员等级列表
         $gradeList = GradeModel::getUsableList();
         // 平台分销规则

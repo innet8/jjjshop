@@ -56,7 +56,6 @@ class Category extends BaseModel
      */
     public static function getALL($type, $is_special, $store = '', $name = '')
     {
-        trace('getALL');
         $user = $store['user'];
         $supplier = $store['supplier'];
         if ($supplier['is_main'] == 1 || $supplier['category_set'] == 20) {
@@ -305,5 +304,41 @@ class Category extends BaseModel
             ->order('is_special desc,sort asc')
             ->select();
         return $list;
+    }
+
+    /**
+     * 获取活跃的所有分类
+     */
+    public static function getActiveALL($type, $is_special, $store = '', $name = '')
+    {
+        $user = $store['user'];
+        $supplier = $store['supplier'];
+        $shop_supplier_id = $supplier['is_main'] == 1 || $supplier['category_set'] == 20
+                            ? $user['shop_supplier_id']
+                            : SupplierModel::where('is_main', '=', 1)->value('shop_supplier_id');
+
+        $model = new static;
+        $query = $model->with(['images', 'child' => function ($query) {
+                    $query->where('status', '=', 1);
+                }])
+                ->where('parent_id', '=', 0)
+                ->where('status',1)
+                ->where('type', '=', $type)
+                ->where('is_special', '=', $is_special)
+                ->order(['sort' => 'asc', 'create_time' => 'asc'])
+                ->where('shop_supplier_id', '=', $shop_supplier_id);
+
+        if ($name) {
+            $query = $query->like('name', "%{$name}%");
+        }
+
+        $all = $query->select()->toArray();
+
+        if ($is_special == 1 && empty($all)) {
+            (new static)->addSpecial($model::$app_id, $shop_supplier_id);
+            $all = $query->select()->toArray();
+        }
+
+        return $all;
     }
 }
