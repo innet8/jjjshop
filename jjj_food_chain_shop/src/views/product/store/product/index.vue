@@ -10,15 +10,8 @@
 
             <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
                 <el-form-item :label="$t('商品分类')">
-                    <el-select size="small" v-model="searchForm.category_id" :placeholder="$t('全部分类')">
-                        <el-option :label="$t('全部')" value="0"></el-option>
-                        <template v-for="cat in categoryList" :key="cat.category_id">
-                            <el-option :value="cat.category_id" :label="cat.name_text"></el-option>
-                            <template v-for="cat_c in cat.child" :key="cat_c.category_id">
-                                <el-option :value="cat_c.category_id" :label="cat_c.name_text">|—{{ cat_c.name_text }}</el-option>
-                            </template>
-                        </template>
-                    </el-select>
+                    <el-cascader :options="categoryList" :props="{ checkStrictly: true, }" v-model="searchForm.category_id"
+                        clearable :placeholder="$t('请选择分类')"></el-cascader>
                 </el-form-item>
                 <el-form-item :label="$t('商品库存')">
                     <el-select size="small" v-model="stock" :placeholder="$t('全部库存')">
@@ -41,8 +34,8 @@
                     <el-button size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
                 </el-form-item>
             </el-form>
-            <el-button size="small" type="primary" icon="Plus" v-auth="'/product/store/product/add'"
-                        @click="addClick">{{ $t('添加商品') }}</el-button>
+            <el-button size="small" type="primary" icon="Plus" v-auth="'/product/store/product/add'" @click="addClick">{{
+                $t('添加商品') }}</el-button>
         </div>
         <!--添加产品-->
         <!--内容-->
@@ -65,7 +58,8 @@
                     <el-table-column prop="product_stock" :label="$t('库存')"></el-table-column>
                     <el-table-column prop="product_status.text" :label="$t('状态')" width="100">
                         <template #default="scope">
-                            <el-switch :disabled="!this.$filter.isAuth('/product/store/product/state')" :model-value="scope.row.product_status.value == 10 ? true : false"
+                            <el-switch :disabled="!this.$filter.isAuth('/product/store/product/state')"
+                                :model-value="scope.row.product_status.value == 10 ? true : false"
                                 @click="undercarriage(scope.row, scope.row.product_status.value == 10 ? 20 : 10)"></el-switch>
                         </template>
                     </el-table-column>
@@ -126,7 +120,7 @@ export default {
     },
     created() {
         /*获取列表*/
-        if(this.$route.query.inventory){
+        if (this.$route.query.inventory) {
             this.stock = 10;
             this.$route.query = {}
         }
@@ -162,12 +156,28 @@ export default {
             Params.list_rows = self.pageSize;
             Params.type = self.activeName;
             Params.stock = self.stock;
+            if (typeof Params.category_id == 'object' && Params.category_id) {
+                Params.category_id = Number(Params.category_id[Params.category_id.length - 1])
+            }
             self.loading = true;
             PorductApi.storeProductList(Params, true)
                 .then(data => {
                     self.loading = false;
                     self.tableData = data.data.list.data;
-                    self.categoryList = data.data.category;
+                    self.categoryList = [];
+                    data.data.category.map((item, index) => {
+                        self.categoryList.push({
+                            value: item.category_id,
+                            label: item.name_text,
+                            children: [],
+                        })
+                        item.child.map((items, indexs) => {
+                            self.categoryList[index].children.push({
+                                value: items.category_id,
+                                label: items.name_text,
+                            })
+                        })
+                    })
                     self.totalDataNumber = data.data.list.total;
                     self.product_count = data.data.product_count;
                 })
@@ -259,9 +269,9 @@ export default {
 </script>
 
 <style scoped>
-    .common-seach-wrap {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 0;
-    }
+.common-seach-wrap {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0;
+}
 </style>
