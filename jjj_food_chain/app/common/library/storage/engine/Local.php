@@ -19,6 +19,8 @@ class Local extends Server
      */
     public function upload()
     {
+        dump("upload");
+        dump($this->isInternal);
         return $this->isInternal ? $this->uploadByInternal() : $this->uploadByExternal();
     }
 
@@ -27,11 +29,13 @@ class Local extends Server
      */
     private function uploadByExternal()
     {
+        dump('uploadByExternal');
         $saveName = '';
         // 验证文件并上传
         try{
             $saveName = Filesystem::disk('public')->putFile( '', $this->file);
         }catch (\Exception $e){
+            dump($e->getMessage());
             log_write('文件上传异常:'.$e->getMessage());
         }
         return $saveName;
@@ -42,6 +46,8 @@ class Local extends Server
      */
     private function uploadByInternal()
     {
+        dump('uploadByInternal');
+
         // 上传目录
         $uplodDir = public_path()  . '/uploads';
         // 要上传图片的本地路径
