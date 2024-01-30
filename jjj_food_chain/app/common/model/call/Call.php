@@ -45,7 +45,7 @@ class Call extends BaseModel
     {
         $call = self::withoutGlobalScope()->where('id', $callId)->where('shop_supplier_id', $shopSupplierId)->find();
         if ($call) {
-            self::withoutGlobalScope()->where('table_id', $call['table_id'])->update(['status' => 1]);
+            self::withoutGlobalScope()->where('table_id', $call['table_id'])->where('status', 0)->update(['status' => 1]);
         }
     }
 
