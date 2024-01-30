@@ -6,13 +6,14 @@
     -->
     <div class="product-add" v-loading="loading">
         <!--form表单-->
-        <el-form size="small" ref="form" :model="form" class="product-form" label-position="top" label-width="180px" v-if="!loading">
+        <el-form size="small" ref="form" :model="form" class="product-form" label-position="top" label-width="180px"
+            v-if="!loading">
             <!--基础信息-->
             <div class="product-form-flex">
                 <Basic @validateField="validateField"></Basic>
                 <!--规格设置-->
                 <Spec></Spec>
-    
+
                 <!-- 属性设置-->
                 <Attr ref="AttrRef"></Attr>
 
@@ -203,7 +204,7 @@ export default {
                     self.form.model.product_attr.map((item, index) => {
                         self.form.model.product_attr[index].attribute_name = JSON.parse(item.attribute_name)
                         item.attribute_value.map((items, indexs) => {
-                            self.form.model.product_attr[index].attribute_value[indexs] = JSON.parse(items)           
+                            self.form.model.product_attr[index].attribute_value[indexs] = JSON.parse(items)
                         })
                     })
                     self.form.model.product_feed.map((item, index) => {
@@ -231,35 +232,35 @@ export default {
         onSubmit: function () {
             let self = this;
             self.$refs.form.validate(valid => {
-                let returnConditions = false
                 if (self.form.model.product_attr.length > 0) {
                     self.$refs.AttrRef.checkedForm();
-                    let checkArr = self.form.model.product_attr
-                    for (let i = 0; i < checkArr.length; i++) {
-                        if (!checkArr[i].attribute_name.en || !checkArr[i].attribute_name.th || !checkArr[i].attribute_name.zh || !checkArr[i].attribute_name.zhtw) { returnConditions  = true };
-                        for (let e = 0; e < checkArr[i].attribute_value.length; e++) {
-                            if (!checkArr[i].attribute_value[e].en || !checkArr[i].attribute_value[e].th || !checkArr[i].attribute_value[e].zh || !checkArr[i].attribute_value[e].zhtw)  { returnConditions  = true };
-                        }
-                    }
                 }
-
                 if (self.form.model.product_feed.length > 0) {
                     self.$refs.IngredientsRef.checkedForm();
-                    let checkArr = self.form.model.product_feed;
+                }
+                if (self.form.model.product_attr.length > 0) {
+                    let checkArr = self.form.model.product_attr
                     for (let i = 0; i < checkArr.length; i++) {
-                        if (!checkArr[i].feed_name.en || !checkArr[i].feed_name.th || !checkArr[i].feed_name.zh || !checkArr[i].feed_name.zhtw || !checkArr[i].price)  { returnConditions  = true };
-                 
+                        if (checkArr[i].attribute_name.en == '' || checkArr[i].attribute_name.th == '' || checkArr[i].attribute_name.zh == '' || checkArr[i].attribute_name.zhtw == '') return;
+                        for (let e = 0; e < checkArr[i].attribute_value.length; e++) {
+                            if (checkArr[i].attribute_value[e].en == '' || checkArr[i].attribute_value[e].th == '' || checkArr[i].attribute_value[e].zh == '' || checkArr[i].attribute_value[e].zhtw == '') return;
+                        }
+                    
                     }
                 }
-            
-                if(returnConditions) return;
+                if (self.form.model.product_feed.length > 0) {
+                    let checkArr = self.form.model.product_feed;
+                    for (let i = 0; i < checkArr.length; i++) {
+                        if (checkArr[i].feed_name.en == '' || checkArr[i].feed_name.th == '' || checkArr[i].feed_name.zh == '' || checkArr[i].feed_name.zhtw == '' || checkArr[i].price == '' || checkArr[i].price == null) return;
+                    }
+                }
                 if (valid) {
                     let params = formatModel(JSON.parse(JSON.stringify(self.model)), JSON.parse(JSON.stringify(self.form.model)));
                     params.scene = JSON.parse(JSON.stringify(self.scene));
-                    params.image =  JSON.parse(JSON.stringify(self.ImgKeepId(params.image)));
+                    params.image = JSON.parse(JSON.stringify(self.ImgKeepId(params.image)));
                     params.product_id = JSON.parse(JSON.stringify(self.product_id));
                     params.sku = JSON.parse(JSON.stringify(self.form.model.sku));
-                    params.alone_grade_equity =  JSON.parse(JSON.stringify(self.convertJson(self.form.gradeList)));
+                    params.alone_grade_equity = JSON.parse(JSON.stringify(self.convertJson(self.form.gradeList)));
                     //处理数据
                     params.product_name = JSON.stringify(params.product_name)
                     params.product_unit = JSON.stringify(params.product_unit)
@@ -333,16 +334,19 @@ export default {
     height: calc(100% - 14px);
     overflow: hidden;
 }
-.product-form{
+
+.product-form {
     height: 100%;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    .product-form-flex{
+
+    .product-form-flex {
         flex: 1 1 auto;
         overflow-y: auto;
     }
-    .common-button-wrapper{
+
+    .common-button-wrapper {
         flex: 0 0 auto;
         flex-shrink: 0;
     }

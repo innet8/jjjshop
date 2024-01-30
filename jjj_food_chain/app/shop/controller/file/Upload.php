@@ -17,16 +17,21 @@ class Upload extends JjjController
      */
     public function image($group_id = -1)
     {
+        trace("Upload-image-11111111");
         // 实例化存储驱动
         $config = SettingModel::getItem('storage');
 
         $StorageDriver = new StorageDriver($config);
 
         // 设置上传文件的信息
+        trace("StorageDriver->image");
         $StorageDriver->setUploadFile('iFile');
-
+        trace("StorageDriver->setUploadFile('iFile')");
+        trace($StorageDriver->getError());
         // 上传图片
         $saveName = $StorageDriver->upload();
+        trace("saveName");
+        trace($saveName);
         if ($saveName == '') {
             return json(['code' => 0, 'msg' => '图片上传失败' . $StorageDriver->getError()]);
         }

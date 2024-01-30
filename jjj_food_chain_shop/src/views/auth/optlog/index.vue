@@ -27,9 +27,9 @@
                     <el-table-column prop="url" label="URL" width="300">
                         <template #default="scope">
                             <el-input size="small" :placeholder="$t('请输入内容')" v-model="scope.row.url">
-                                <template #append>
+                                <!-- <template #append>
                                     <el-button @click="gotoUrl(scope.row.url)" icon="Link"></el-button>
-                                </template>
+                                </template> -->
                             </el-input>
                         </template>
                     </el-table-column>

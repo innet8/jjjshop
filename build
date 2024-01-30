@@ -32,6 +32,15 @@ build() {
     # npm run translate
     npm run build:h5 
     rm -rf ../../jjj_food_chain/public/tablet && cp -r ./dist/build/h5 ../../jjj_food_chain/public/tablet
+
+
+    # 收银端-副屏
+    cd ../../tmp/tiger-mini
+    git pull
+    npm i
+    # npm run translate
+    npm run build:h5 
+    rm -rf ../../jjj_food_chain/public/cashier-mini && cp -r ./dist/build/h5 ../../jjj_food_chain/public/cashier-mini
 }
 
 build
