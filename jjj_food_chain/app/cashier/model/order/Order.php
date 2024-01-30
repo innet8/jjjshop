@@ -161,7 +161,7 @@ class Order extends OrderModel
             }
             $this->commit();
         } catch (\Exception $e) {
-            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
+//            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
             $this->error = $e->getMessage();
             $this->rollback();
             return false;
@@ -444,7 +444,7 @@ class Order extends OrderModel
             $this->commit();
             return true;
         } catch (\Exception $e) {
-            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
+//            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
             $this->error = $e->getMessage();
             $this->rollback();
             return false;
@@ -689,7 +689,7 @@ class Order extends OrderModel
                 return false;
             }
         } catch (\Exception $e) {
-            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
+//            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
             $this->error = $e->getMessage();
             $this->rollback();
             return false;
@@ -759,7 +759,7 @@ class Order extends OrderModel
             $this->commit();
             return true;
         } catch (\Exception $e) {
-            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
+//            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
             $this->error = $e->getMessage();
             $this->rollback();
             return false;
