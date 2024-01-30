@@ -1136,7 +1136,7 @@ class Order extends BaseModel
                         $discount && $grade_product_price = round($grade_product_price * $discount, 2);
                     } else {
                         // 商品会员折扣后单价
-                        $grade_product_price = helper::number2(helper::bcmul($product['product_price'], $discountRatio, 3), true);
+                        $grade_product_price = helper::bcmul($product['product_price'], $discountRatio, 3);
 //                        trace('商品会员折扣后单价');
 //                        trace($grade_product_price);
                     }
