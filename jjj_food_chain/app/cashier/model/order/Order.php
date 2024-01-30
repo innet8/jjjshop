@@ -155,8 +155,6 @@ class Order extends OrderModel
         $this->startTrans();
         try {
             $status = $PaySuccess->onPaySuccess($pay_type);
-            trace('$status');
-            trace($status);
             if (!$status) {
                 $this->error = $PaySuccess->getError();
                 return false;

@@ -42,11 +42,8 @@ class MasterPaySuccessService extends BaseService
     {
         // 实例化订单模型
         $this->model = OrderModel::getPayDetail($this->orderNo);
-        trace('bbbbb');
-        trace($this->model['user_id']);
         // 获取用户信息
         $this->user = UserModel::detail($this->model['user_id']);
-        trace('cccccccc');
         $this->paySuccess($payType);
         if ($this->getError() != '') {
             return false;

@@ -1463,7 +1463,7 @@ class Order extends BaseModel
     //查询桌号订单未送厨商品
     public function getUnSendKitchen($table_id)
     {
-        return $this->with('unSendKitchenProduct')
+        return $this->with(['product', 'unSendKitchenProduct'])
             ->where('table_id', '=', $table_id)
             ->where('order_status', '=', OrderStatusEnum::NORMAL)
             ->where('is_delete', '=', 0)
