@@ -32,6 +32,9 @@ abstract class Server
     {
         // 接收上传的文件
         $this->file = Request::file($name);
+        dump($name);
+        dump($this->file);
+        die;
         if (empty($this->file)) {
             throw new Exception('未找到上传文件的信息');
         }
