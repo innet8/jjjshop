@@ -497,7 +497,7 @@ class Order extends OrderModel
             // 退回商品库存
             ProductFactory::getFactory($this['order_source'])->backProductStock([$orderProduct], $isPay);
             if ($orderProduct['total_num'] == $num) {
-                $orderProduct->delete();
+                $orderProduct->force()->delete();
             } else {
                 $total_num = $orderProduct['total_num'] - $num;
                 $orderProduct->save([
