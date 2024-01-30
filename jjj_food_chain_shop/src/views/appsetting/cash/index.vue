@@ -212,12 +212,16 @@ export default {
         deleteOne(scope) {
             this.form.carousel.splice(scope.$index, 1)
             this.form.carousel.sort((a, b) => {
-                return a.sort - b.sort;
+                if (a.sort == '') return 1; // 如果a为null，则将其排在后面
+                if (b.sort == '') return -1; // 如果b为null，则将其排在后面
+                return a.sort - b.sort; // 按照数值大小进行排序
             });
         },
         sortOne() {
             this.form.carousel.sort((a, b) => {
-                return a.sort - b.sort;
+                if (a.sort == '') return 1; // 如果a为null，则将其排在后面
+                if (b.sort == '') return -1; // 如果b为null，则将其排在后面
+                return a.sort - b.sort; // 按照数值大小进行排序
             });
         },
     },

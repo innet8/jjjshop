@@ -1,13 +1,11 @@
 <template >
     <div class="salb">
         <el-form size="small" ref="form" :model="form" label-position="top">
-            <el-form-item :label="$t('轮播内容')" prop="image" :rules="[{ required: true, message: '' }]">
+            <el-form-item :label="$t('轮播内容')" prop="carousel" :rules="[{ required: true, message: '' }]">
                 <div class="draggable-list">
-                    <flieUpload  @upLoad="upLoad"
-                    :imgSize="2" :videoSize="10"
-                    :tips1="$t('图片：支持JPG、JPEG、PNG格式，小于2MB，尺寸：1160*1104px')"
-                        :tips2="$t('视频：支持AVI、MPEG、MOV、MP4格式，小于10MB，尺寸：1160*1104px')"
-                    ></flieUpload>
+                    <flieUpload @upLoad="upLoad" :imgSize="2" :videoSize="10"
+                        :tips1="$t('图片：支持JPG、JPEG、PNG格式，小于2MB，尺寸：1160*1104px')"
+                        :tips2="$t('视频：支持AVI、MPEG、MOV、MP4格式，小于10MB，尺寸：1160*1104px')"></flieUpload>
                     <el-table size="small" :data="form.carousel" border style="width: 100%" v-loading="loading">
                         <el-table-column prop="real_name" :label="$t('图片名称')"></el-table-column>
                         <el-table-column prop="sort" :label="$t('排序')">
@@ -79,7 +77,8 @@
             <el-button size="small" type="info" @click="getData()">{{ $t('重置') }}</el-button>
             <el-button size="small" type="primary" @click="onSubmit" :loading="loading">{{ $t('保存') }}</el-button>
         </div>
-        <setPassword :advancedPassword="form.advanced_password" v-if="open" :open="open"  @close="(e) => { open = false; if (e == 1) { this.getData(); } }">
+        <setPassword :advancedPassword="form.advanced_password" v-if="open" :open="open"
+            @close="(e) => { open = false; if (e == 1) { this.getData(); } }">
         </setPassword>
     </div>
 </template>
@@ -88,28 +87,28 @@ import flieUpload from '@/components/flieUpload/upLoad.vue'
 import setPassword from './setPassword.vue';
 import Terminal from '@/api/terminal.js';
 export default {
-    components: { flieUpload ,setPassword },
+    components: { flieUpload, setPassword },
     data() {
         return {
-            form:{
+            form: {
                 carousel: [],
                 is_auto_send: 0,
                 auto_lock_screen: 300,
                 language: [],
                 default_language: 'th',
                 advanced_password: false,
-                server:{
-                    ip:'',
-                    port:'',
+                server: {
+                    ip: '',
+                    port: '',
                 },
             },
             languageList: [],
-            open:false,
-            loading:false,
-            password:'',
+            open: false,
+            loading: false,
+            password: '',
         }
     },
-    created(){
+    created() {
         this.getData();
     },
     computed: {
@@ -126,7 +125,7 @@ export default {
             return result
         },
     },
-    methods:{
+    methods: {
         setPassword() {
             this.open = true
         },
@@ -134,7 +133,7 @@ export default {
             let self = this;
             let params = JSON.parse(JSON.stringify(self.form));
             self.loading = true;
-            Terminal.saveTablet(params,true).then(data => {
+            Terminal.saveTablet(params, true).then(data => {
                 self.loading = false;
                 ElMessage({
                     message: $t('保存成功'),
@@ -161,30 +160,34 @@ export default {
         },
         upLoad(data) {
             var type = ''
-            if(data.file_type.includes('video')){
-                type ='video'
+            if (data.file_type.includes('video')) {
+                type = 'video'
             }
-            if(data.file_type.includes('image')){
-                type ='image'
+            if (data.file_type.includes('image')) {
+                type = 'image'
             }
             this.form.carousel.push(
                 {
                     real_name: data.real_name,
                     file_path: data.file_path,
                     sort: 0,
-                    type:type,
+                    type: type,
                 }
             )
         },
         deleteOne(scope) {
             this.form.carousel.splice(scope.$index, 1)
             this.form.carousel.sort((a, b) => {
-                return a.sort - b.sort;
+                if (a.sort == '') return 1; // 如果a为null，则将其排在后面
+                if (b.sort == '') return -1; // 如果b为null，则将其排在后面
+                return a.sort - b.sort; // 按照数值大小进行排序
             });
         },
-        sortOne(){
+        sortOne() {
             this.form.carousel.sort((a, b) => {
-                return a.sort - b.sort;
+                if (a.sort == '') return 1; // 如果a为null，则将其排在后面
+                if (b.sort == '') return -1; // 如果b为null，则将其排在后面
+                return a.sort - b.sort; // 按照数值大小进行排序
             });
         },
     },
