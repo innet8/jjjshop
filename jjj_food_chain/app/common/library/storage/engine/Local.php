@@ -30,11 +30,13 @@ class Local extends Server
     private function uploadByExternal()
     {
         dump('uploadByExternal');
+        dump($this->file);
         $saveName = '';
         // 验证文件并上传
         try{
-            $saveName = Filesystem::disk('public')->putFile( '', $this->file);
+            $saveName = Filesystem::disk('public')->putFile('', $this->file);
         }catch (\Exception $e){
+            dump('文件上传异常');
             dump($e->getMessage());
             log_write('文件上传异常:'.$e->getMessage());
         }
