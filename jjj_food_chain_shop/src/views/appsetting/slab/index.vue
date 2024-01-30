@@ -17,7 +17,7 @@
                                     },
                                     message: $t('请输入排序')
                                 }]" prop="scope.row.sort">
-                                    <el-input-number :controls="false" @blur="sortOne" :min="0" :max="999"
+                                    <el-input-number :controls="false" :min="0" :max="999"
                                         :placeholder="$t('接近0，排序等級越高')" v-model.number="scope.row.sort"></el-input-number>
                                 </el-form-item>
                             </template>
@@ -140,11 +140,12 @@ export default {
         },
         onSubmit() {
             let self = this;
-            let params = JSON.parse(JSON.stringify(self.form));
             this.$refs["form-item"].validate()
-            for (let i = 0; i < params.carousel.length; i++) {
-                if(params.carousel[i].sort==null) {return};
+            for (let i = 0; i < self.form.carousel.length; i++) {
+                if(self.form.carousel[i].sort==null) {return};
             }
+            this.sortOne();
+            let params = JSON.parse(JSON.stringify(self.form));
             self.loading = true;
             Terminal.saveTablet(params, true).then(data => {
                 self.loading = false;
