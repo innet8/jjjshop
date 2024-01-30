@@ -2,6 +2,7 @@
 
 namespace app\cashier\model\order;
 
+use app\common\model\settings\Setting as SettingModel;
 use think\facade\Log;
 use app\common\library\helper;
 use app\common\model\store\PayType;
@@ -375,7 +376,17 @@ class Order extends OrderModel
                     $discount_money = round($o['order_price'] - round($o['pay_price'], 0), 2);
                 }
                 $pay_price = round($o['order_price'] - $discount_money, 2);
-                $o->save(['discount_money' => $discount_money, 'pay_price' => $pay_price]);
+                // 积分奖励按照应付计算
+                $setting = SettingModel::getItem('points');
+                if ($setting['is_shopping_gift']) {
+                    // 积分赠送比例
+                    $ratio = $setting['gift_ratio'] / 100;
+                } else {
+                    $ratio = 1;
+                }
+                $points_bonus = helper::bcmul($pay_price, $ratio, 3);
+                $points_bonus = round($points_bonus, 2);
+                $o->save(['discount_money' => $discount_money, 'pay_price' => $pay_price, 'points_bonus' => $points_bonus]);
             } else {
                 if ($data['money'] > $detail['order_price']) {
                     $pay_price = $data['money'];
@@ -387,7 +398,17 @@ class Order extends OrderModel
                 }
 
                 if ($data['type'] == 1) {
-                    $detail->save(['discount_money' => $discount_money, 'pay_price' => $pay_price, 'discount_ratio' => $discount_ratio]);
+                    // 积分奖励按照应付计算
+                    $setting = SettingModel::getItem('points');
+                    if ($setting['is_shopping_gift']) {
+                        // 积分赠送比例
+                        $ratio = $setting['gift_ratio'] / 100;
+                    } else {
+                        $ratio = 1;
+                    }
+                    $points_bonus = helper::bcmul($pay_price, $ratio, 3);
+                    $points_bonus = round($points_bonus, 2);
+                    $detail->save(['discount_money' => $discount_money, 'pay_price' => $pay_price, 'discount_ratio' => $discount_ratio, 'user_discount_money' => 0, 'points_bonus' => $points_bonus]);
                 } else {
                     $detail->save(['discount_money' => $discount_money, 'pay_price' => $pay_price]);
                 }
