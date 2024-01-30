@@ -8,14 +8,14 @@
                         <h3>{{ $t('营业总额') }}</h3>
                         <SvgIcon class="data-box-icon" name="icon1"></SvgIcon>
                     </div>
-                    <h4>{{ Number(top_data.total_money).toFixed(2)  }}</h4>
+                    <h4>{{ Number(top_data.total_money || 0).toFixed(2)  }}</h4>
                 </div>
                 <div class="data-box">
                     <div class="data-box-title">
                         <h3>{{ $t('折扣总额') }}</h3>
                         <SvgIcon class="data-box-icon" name="icon2"></SvgIcon>
                     </div>
-                    <h4>{{ Number(top_data.total_discount_money).toFixed(2) }}</h4>
+                    <h4>{{ Number(top_data.total_discount_money || 0).toFixed(2) }}</h4>
                 </div>
                 <div class="data-box">
                     <div class="data-box-title">
@@ -36,7 +36,7 @@
                         <h3>{{ $t('退款金额') }}</h3>
                         <SvgIcon class="data-box-icon" name="icon5"></SvgIcon>
                     </div>
-                    <h4>{{  Number(top_data.refund_money).toFixed(2) }}</h4>
+                    <h4>{{  Number(top_data.refund_money || 0).toFixed(2) }}</h4>
                 </div>
 
             </div>
@@ -48,12 +48,12 @@
                     <div class="grid-content">
                         <p class="des">{{ $t('营业总额') }}</p>
                         <h3>{{ today_data.order_total_price?.tday }}</h3>
-                        <p class="yesterday">{{ $t('昨日：') }}{{ Number(today_data.order_total_price?.ytd).toFixed(2)  }}</p>
+                        <p class="yesterday">{{ $t('昨日：') }}{{ Number(today_data.order_total_price?.ytd || 0).toFixed(2)  }}</p>
                     </div>
                     <div class="grid-content">
                         <p class="des">{{ $t('折扣总额') }}</p>
                         <h3>{{ today_data.order_discount_money?.tday }}</h3>
-                        <p class="yesterday">{{ $t('昨日：') }}{{Number(today_data.order_discount_money?.ytd).toFixed(2)  }}</p>
+                        <p class="yesterday">{{ $t('昨日：') }}{{Number(today_data.order_discount_money?.ytd || 0).toFixed(2)  }}</p>
                     </div>
                     <div class="grid-content">
                         <p class="des">{{ $t('会员数') }}</p>
@@ -68,7 +68,7 @@
                     <div class="grid-content">
                         <p class="des">{{ $t('退款金额') }}</p>
                         <h3>{{ today_data.order_refund_money?.tday }}</h3>
-                        <p class="yesterday">{{ $t('昨日：') }}{{ Number(today_data.order_refund_money?.ytd).toFixed(2)  }}</p>
+                        <p class="yesterday">{{ $t('昨日：') }}{{ Number(today_data.order_refund_money?.ytd || 0).toFixed(2)  }}</p>
                     </div>
 
                 </div>
