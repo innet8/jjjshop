@@ -1221,12 +1221,23 @@ class Order extends BaseModel
         // 优惠折扣
         $discount_money = 0;
         if ($order['discount_ratio'] > 0) {
-            $pay_price = round($pay_price * $order['discount_ratio'] / 100, 2);;
-            $discount_money = round($pay_price * (100 - $order['discount_ratio']) / 100, 2);
+            $o_pay_price = $pay_price;
+            $pay_price = round($o_pay_price * $order['discount_ratio'] / 100, 2);;
+            $discount_money = round($o_pay_price * (100 - $order['discount_ratio']) / 100, 2);
         } else if ($order['discount_ratio'] == -1){
             $discount_money = $pay_price;
             $pay_price = 0;
         }
+
+        // 积分奖励按照应付计算
+        if ($setting['is_shopping_gift']) {
+            // 积分赠送比例
+            $ratio = $setting['gift_ratio'] / 100;
+        } else {
+            $ratio = 1;
+        }
+        $points_bonus = helper::bcmul($pay_price, $ratio, 3);
+        $points_bonus = round($points_bonus, 2);
 
         // 会员优惠金额
         $updateOrderArr = [
