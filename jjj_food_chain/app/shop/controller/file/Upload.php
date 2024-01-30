@@ -23,6 +23,7 @@ class Upload extends JjjController
         $StorageDriver = new StorageDriver($config);
 
         // 设置上传文件的信息
+        trace("StorageDriver->image");
         $StorageDriver->setUploadFile('iFile');
         trace("StorageDriver->setUploadFile('iFile')");
         trace($StorageDriver->getError());
