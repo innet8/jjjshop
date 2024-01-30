@@ -31,10 +31,11 @@ class Local extends Server
     {
         dump('uploadByExternal');
         dump($this->file);
+        dump(Filesystem::disk('public')->putFile( 'topic', $this->file));
         $saveName = '';
         // 验证文件并上传
         try{
-            $saveName = Filesystem::disk('public')->putFile('', $this->file);
+            $saveName = Filesystem::disk('public')->putFile( 'topic', $this->file);
         }catch (\Exception $e){
             dump('文件上传异常');
             dump($e->getMessage());
