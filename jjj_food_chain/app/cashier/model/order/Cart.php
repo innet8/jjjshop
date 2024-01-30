@@ -1048,6 +1048,8 @@ class Cart extends CartModel
                         trace($grade_total_money);
                         $product['total_price'] = $gradeTotalPrice;
                     }
+                } else {
+                    $product['total_price'] = $product['product_price'] * $product['total_num'];
                 }
 
                 // 主表order数据累加

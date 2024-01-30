@@ -1164,6 +1164,8 @@ class Order extends BaseModel
 //                    trace($grade_total_money);
                     $product['total_price'] = $gradeTotalPrice;
                 }
+            } else {
+                $product['total_price'] = $product['product_price'] * $product['total_num'];
             }
             $product_points_bonus = 0;
             if ($setting['is_shopping_gift']) {
