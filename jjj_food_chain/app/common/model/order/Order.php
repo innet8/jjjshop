@@ -1480,6 +1480,7 @@ class Order extends BaseModel
             ->where('table_id', '=', $table_id)
             ->where('order_status', '=', OrderStatusEnum::NORMAL)
             ->where('is_delete', '=', 0)
+            ->order('order_id desc')
             ->find();
     }
 
@@ -1490,6 +1491,7 @@ class Order extends BaseModel
             ->where('table_id', '=', $table_id)
             ->where('order_status', '=', OrderStatusEnum::NORMAL)
             ->where('is_delete', '=', 0)
+            ->order('order_id desc')
             ->find();
     }
 }
