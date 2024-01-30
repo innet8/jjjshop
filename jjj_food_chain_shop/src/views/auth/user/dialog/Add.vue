@@ -14,7 +14,7 @@
                     <div class="tips">{{ $t('用户名4-16位纯数字') }}</div>
                 </el-form-item>
             <el-form-item :label="$t('角色')" prop="role_id">
-                <el-select v-model="form.role_id" :multiple="true" :placeholder="$t('请选择')">
+                <el-select v-model="form.role_id" :multiple="true" :placeholder="$t('请选择角色')">
                     <el-option v-for="item in roleList" :value="item.role_id" :key="item.role_id"
                         :label="item.role_name_h1"></el-option>
                 </el-select>

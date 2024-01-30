@@ -150,7 +150,10 @@ export default defineComponent({
     methods: {
         /*点击菜单跳转*/
         choseMenu(type, item, index) {
-            document.title = $t(item.name);
+            if(item){
+                document.title = $t(item.name);
+            }
+
             if (type == 1) {
                 this.active_menu = null;
                 this.active_child = null;

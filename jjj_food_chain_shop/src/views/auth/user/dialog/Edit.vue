@@ -10,15 +10,19 @@
         <el-form size="small" ref="form" :model="form" label-position="top" :rules="formRules"
             :label-width="formLabelWidth">
             <el-form-item :label="$t('用户名')" prop="user_name"><el-input v-model="form.user_name"
-                    :placeholder="$t('请输入用户名')"></el-input></el-form-item>
+                    :placeholder="$t('请输入用户名')"></el-input>
+                <div class="tips">{{ $t('用户名4-16位纯数字') }}</div>
+            </el-form-item>
             <el-form-item :label="$t('角色')" prop="role_id">
-                <el-select v-model="form.role_id" :multiple="true" :placeholder="$t('请选择')">
+                <el-select v-model="form.role_id" :multiple="true" :placeholder="$t('请选择角色')">
                     <el-option v-for="item in roleList" :value="item.role_id" :key="item.role_id"
                         :label="item.role_name_h1"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item :label="$t('登录密码')" prop="password"><el-input v-model="form.password" :placeholder="$t('请输入登录密码')"
-                    type="password"></el-input></el-form-item>
+                    type="password"></el-input>
+                <div class="tips">{{ $t('密码4-16位纯数字') }}</div>
+            </el-form-item>
             <el-form-item :label="$t('确认密码')" prop="confirm_password"><el-input v-model="form.confirm_password"
                     :placeholder="$t('请输入确认密码')" type="password"></el-input></el-form-item>
             <el-form-item :label="$t('姓名')" prop="real_name"><el-input v-model="form.real_name"

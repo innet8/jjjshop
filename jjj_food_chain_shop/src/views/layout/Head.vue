@@ -15,8 +15,9 @@
                         </span>
                         <template #dropdown>
                             <el-dropdown-menu>
-                                <el-dropdown-item v-for="item in languageList" :disabled="item.key == languageTag" :command="item.key">{{ item.label
-                                }}</el-dropdown-item>
+                                <el-dropdown-item v-for="item in languageList" :disabled="item.key == languageTag" :command="item.key">
+                                <div class="language-div">{{ item.label}}<img v-if="item.key == languageTag" src="../../assets/img/Check.svg"/></div>
+                                </el-dropdown-item>
                             </el-dropdown-menu>
                         </template>
                     </el-dropdown>
@@ -171,7 +172,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" >
 .common-header .el-tabs__nav-wrap::after {
     display: none;
 }
@@ -187,5 +188,14 @@ export default defineComponent({
     color: #fff;
     width: 16px;
     height: 16px;
+}
+:deep(.language-div){
+    width: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    img{
+        width: 18px;
+    }
 }
 </style>

@@ -91,7 +91,7 @@
 
             <el-form-item :label="$t('排序')" prop="sort" :rules="[{ required: true, message: $t('接近0，排序等級越高') }]">
                 <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('接近0，排序等級越高')" v-model.number="form.sort" autocomplete="off"></el-input-number>
-                <div class="tips">{{ $t('数字越小越靠前') }}</div>
+      
             </el-form-item>
 
             <!--提交-->

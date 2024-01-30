@@ -219,3 +219,7 @@
     background: var(--el-color-tips);
     border-color: var(--el-color-tips);
 }
+.el-dropdown-menu__item.is-disabled{
+    color:var(--el-color-primary) !important;
+    background: #FFF6DE;
+}

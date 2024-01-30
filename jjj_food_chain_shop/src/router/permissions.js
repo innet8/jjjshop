@@ -13,7 +13,7 @@ export async function setupPermissions(router) {
 	let load = 0;
 	router.beforeEach(async (to, from, next) => {
 		bus_emit('MenuName', to.meta && to.meta.title);
-		const { token, menus } = useUserStore();
+		const { token, menus, renderMenus } = useUserStore();
 		const whiteList = ['/login'];
 		if (!token) {
 			if (whiteList.includes(to.path)) {
@@ -28,6 +28,14 @@ export async function setupPermissions(router) {
 				});
 				return;
 			}
+
+            if ( menus.map(h=>h.path).indexOf(to.path) == -1 ){
+                next({
+					path: renderMenus[0].redirect_name
+				});
+				return;
+            }
+
             // if(isLock.value && to.path != '/lockscreen'){
             //     next({
 			// 		path: '/lockscreen'

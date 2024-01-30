@@ -29,9 +29,8 @@
         </div>
       </el-form-item>
       <el-form-item :label="$t('积分赠送比例') " prop="gift_ratio" :rules="[{required: true,message: ' '}]">
-        <el-input :placeholder="$t('请输入内容')" v-model="form.gift_ratio" class="max-w460">
-          <template #append>%</template>
-        </el-input>
+        <el-input-number :controls="false" class="max-w460" :min="0" :max="100" :placeholder="$t('请输入内容')" v-model.number="form.gift_ratio"></el-input-number>
+        <span>%</span>
         <div class="lh18 mt10 gray9">
           <p> {{ $t('注：请填写数字0~100；订单的运费不参与积分赠送') }}</p>
           <p> {{ $t('例：订单付款金额(100.00元) * 积分赠送比例(100%) = 实际赠送的积分(100积分)') }}</p>
