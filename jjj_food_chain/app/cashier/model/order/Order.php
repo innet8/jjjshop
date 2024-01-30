@@ -615,9 +615,6 @@ class Order extends OrderModel
         if (isset($params['shop_supplier_id']) && $params['shop_supplier_id']) {
             $model = $model->where('a.shop_supplier_id', '=', $params['shop_supplier_id']);
         }
-        if (isset($params['category_type']) && $params['category_type']) {
-            $model = $model->where('c.parent_id', $params['category_type'] == 1 ? '=' : '>', 0);
-        }
 
         $startTime = 0;
         $endTime = 0;
@@ -648,15 +645,27 @@ class Order extends OrderModel
         $model = $model->alias('a')
             ->leftJoin('order_product rp','a.order_id = rp.order_id')
             ->leftJoin('product p','p.product_id = rp.product_id')
-            ->leftJoin('category c','c.category_id = p.category_id')
+            // ->leftJoin('category c','c.category_id = p.category_id')
             ->where('a.pay_status', '=', OrderPayStatusEnum::SUCCESS)
             ->where('a.order_status', '=', OrderStatusEnum::COMPLETED)
             ->where('a.eat_type', '<>', 0);
         //
+        if (isset($params['category_type']) && $params['category_type']) {
+            if ($params['category_type'] == 1) {
+                $model = $model ->leftJoin('category c2', 'p.category_id = c2.category_id');
+                $model = $model->leftJoin('category c', 'c.category_id = IF(c2.parent_id = 0, c2.category_id, c2.parent_id)');
+                $model = $model->where('c.parent_id', '=', 0);
+            } else {
+                $model = $model->leftJoin('category c','c.category_id = p.category_id');
+                $model = $model->where('c.parent_id', '>', 0);
+            }
+            // $model = $model->where('c.parent_id', $params['category_type'] == 1 ? '=' : '>', 0);
+        }
+        //
         $incomes = [];
         $payTypes = PayType::getEnableListAll($params['shop_supplier_id'], self::$app_id);
         foreach ($payTypes as $payType){
-            $value = (clone $model)->where('pay_type', $payType['value'])->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00";
+            $value = (clone $model)->where('pay_type', $payType['value'])->field("sum(DISTINCT pay_price - refund_money) as price")->find()->append([])['price'] ?? "0.00";
             if ($value > 0) {
                 $incomes[] = [
                     'pay_type' => $payType['value'],
@@ -666,7 +675,7 @@ class Order extends OrderModel
             }
         }
         //
-        $categorys = (clone $model)->group("c.category_id")->field("c.name, count(a.order_id) as sales, sum(a.pay_price - a.refund_money) as prices")->select()->append([])?->toArray();
+        $categorys = (clone $model)->group("c.category_id")->field("c.name, count(DISTINCT a.order_id) as sales, sum(DISTINCT a.pay_price - a.refund_money) as prices")->select()->append([])?->toArray();
         foreach ($categorys as $key => $data){
             $categorys[$key]['name_text'] = Category::getNameTextAttr($data['name'] ?: '');
         }
@@ -678,8 +687,8 @@ class Order extends OrderModel
             'categorys' => $categorys,
             'sales_num' => (clone $model)->count(),
             'incomes' => $incomes,
-            'refund_amount' => number_format((clone $model)->sum("refund_money"), 2, '.', ''),
-            'total_amount' => number_format((clone $model)->sum("pay_price"), 2, '.', ''),
+            'refund_amount' => number_format((clone $model)->sum("DISTINCT refund_money"), 2, '.', ''),
+            'total_amount' => number_format((clone $model)->sum("DISTINCT pay_price"), 2, '.', ''),
             'times' => [$startTime, $endTime],
         ];
     }
