@@ -49,6 +49,7 @@ git-clone(){
     cd /
     git clone --depth=1 https://github.com/innet8/jjjshop.git
     chown -R www-data:root /jjjshop/
+    chmod -R 777  /jjjshop/jjj_food_chain/runtime
     chmod +x /jjjshop/jjj_food_chain/lanp-install.sh
     cd /jjjshop/jjj_food_chain
     if [ $? -ne 0 ]; then
