@@ -40,7 +40,7 @@ class Call extends Controller
         //
         (new CallModel)->markAsProcessed($call_id, $this->cashier['user']['shop_supplier_id'] ?? 0);
         //
-        return $this->renderSuccess();
+        return $this->renderSuccess('成功');
     }
 
     /**
