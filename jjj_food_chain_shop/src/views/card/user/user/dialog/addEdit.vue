@@ -81,7 +81,7 @@ export default {
                         self.loading = true;
                         UserApi.edituser(params, true).then(data => {
                             self.loading = false;
-                            ElMessage({
+                            this.$ElMessage({
                                 message: '编辑成功',
                                 type: 'success'
                             });
@@ -98,7 +98,7 @@ export default {
                         self.loading = true;
                         UserApi.adduser(params, true).then(data => {
                             self.loading = false;
-                            ElMessage({
+                            this.$ElMessage({
                                 message: '添加成功',
                                 type: 'success'
                             });

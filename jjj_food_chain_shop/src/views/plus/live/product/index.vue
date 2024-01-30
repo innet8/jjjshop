@@ -153,7 +153,7 @@
 						LiveApi.deleteProduct({
 							wx_product_id: row.wx_product_id
 						}).then(data => {
-							ElMessage({
+							this.$ElMessage({
 								message: '删除成功',
 								type: 'success'
 							});

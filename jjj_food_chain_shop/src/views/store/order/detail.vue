@@ -445,7 +445,7 @@ export default {
                     OrderApi.storedelete({
                         order_id: item.order_id
                     }).then(data => {
-                        ElMessage({
+                        this.$ElMessage({
                             message: $t('删除成功'),
                             type: 'success'
                         });

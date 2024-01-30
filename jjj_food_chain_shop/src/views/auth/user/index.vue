@@ -169,7 +169,7 @@ export default {
             AuthApi.setStatus({ shop_user_id: e.shop_user_id, status: e.is_status }, true)
                 .then(data => {
                     if (data.code == 1) {
-                        ElMessage({
+                        this.$ElMessage({
                             message: data.msg,
                             type: 'success'
                         });
@@ -198,7 +198,7 @@ export default {
                         .then(data => {
                             self.loading = false;
                             if (data.code == 1) {
-                                ElMessage({
+                                this.$ElMessage({
                                     message: $t('删除成功'),
                                     type: 'success'
                                 });

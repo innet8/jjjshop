@@ -101,7 +101,7 @@ export default {
                 .then(data => {
                     self.loading = false;
                     if (data.code == 1) {
-                        ElMessage({
+                        this.$ElMessage({
                             message: $t('恭喜你，发卡成功'),
                             type: 'success'
                         });

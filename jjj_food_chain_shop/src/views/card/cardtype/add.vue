@@ -52,7 +52,7 @@
             self.submit_loading = true;
             CardApi.addcardtype(params, true).then(data => {
                 self.submit_loading = false;
-                ElMessage({
+                this.$ElMessage({
                   message: data.msg,
                   type: 'success'
                 });

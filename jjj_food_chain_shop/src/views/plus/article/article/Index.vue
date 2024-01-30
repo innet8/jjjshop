@@ -149,7 +149,7 @@
                 true
               )
               .then(data => {
-                ElMessage({
+                this.$ElMessage({
                   message: data.msg,
                   type: 'success'
                 });
@@ -176,7 +176,7 @@
                 true
               )
               .then(data => {
-                ElMessage({
+                this.$ElMessage({
                   message: data.msg,
                   type: 'success'
                 });
@@ -185,7 +185,7 @@
               .catch(error => {});
           })
           .catch(() => {
-            ElMessage({
+            this.$ElMessage({
               type: 'info',
               message: '已取消删除'
             });

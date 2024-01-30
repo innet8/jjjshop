@@ -123,7 +123,7 @@ export default {
                 StoreApi.deleteArea({
                     area_id: row.area_id
                 }).then(data => {
-                    ElMessage({
+                    this.$ElMessage({
                         message: $t('删除成功'),
                         type: 'success'
                     });

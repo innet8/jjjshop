@@ -77,7 +77,7 @@ const { currency } = useUserStore();
               self.loading = true;
               OrderApi.storeRefund(form, true).then(data => {
                   self.loading = false;
-                  ElMessage({
+                  this.$ElMessage({
                     message: data.msg,
                     type: 'success'
                   });
@@ -87,7 +87,7 @@ const { currency } = useUserStore();
                   self.loading = false;
                 });
             }).catch(() => {
-              ElMessage({
+              this.$ElMessage({
                 type: 'info',
                 message: '已取消退款'
               });

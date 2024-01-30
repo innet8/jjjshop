@@ -173,7 +173,7 @@
             .then(data => {
               self.loading = false;
               if (data.code == 1) {
-               ElMessage({
+               this.$ElMessage({
                   message: $t('操作成功'),
                   type: 'success'
                 });

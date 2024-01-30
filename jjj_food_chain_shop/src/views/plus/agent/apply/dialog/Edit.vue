@@ -65,7 +65,7 @@ export default {
       let params = this.form;
       PlusApi.editApplyStatus(params, true)
         .then(data => {
-          ElMessage({
+          this.$ElMessage({
             message: '恭喜你，修改成功',
             type: 'success'
           });

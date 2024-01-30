@@ -144,7 +144,7 @@ export default {
                 category_id: id,
                 status: e
             }).then(data => {
-                ElMessage({
+                this.$ElMessage({
                     message: data.msg,
                     type: 'success'
                 });
@@ -175,7 +175,7 @@ export default {
                 PorductApi.storeCatDel({
                     category_id: row.category_id
                 }).then(data => {
-                    ElMessage({
+                    this.$ElMessage({
                         message: $t('删除成功'),
                         type: 'success'
                     });

@@ -159,7 +159,7 @@ export default {
             .then(data => {
               self.loading = false;
               if (data.code == 1) {
-                ElMessage({
+                this.$ElMessage({
                   message: '恭喜你，该管理员删除成功',
                   type: 'success'
                 });

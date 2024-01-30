@@ -434,7 +434,7 @@
           )
           .then(data => {
             self.loading = false;
-            ElMessage({
+            this.$ElMessage({
               message: $t('操作成功'),
               type: 'success'
             });

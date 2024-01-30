@@ -168,7 +168,7 @@ export default {
                     PorductApi.deleteAttribute({
                         attribute_id: id
                     }).then(data => {
-                        ElMessage({
+                        this.$ElMessage({
                             message: $t('删除成功'),
                             type: 'success'
                         });
@@ -190,7 +190,7 @@ export default {
                     PorductApi.deleteAttribute({
                         attribute_id: attribute_id
                     }).then(data => {
-                        ElMessage({
+                        this.$ElMessage({
                             message: $t('删除成功'),
                             type: 'success'
                         });

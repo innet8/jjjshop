@@ -173,7 +173,7 @@ export default {
         .then(data => {
           self.loading = false;
           if (data.code == 1) {
-            ElMessage({
+            this.$ElMessage({
               message: '恭喜你，保存成功',
               type: 'success'
             });
@@ -207,7 +207,7 @@ export default {
       this.open_add = e.openDialog;
       let len = this.coupon.length;
       if (len >= 3) {
-        ElMessage({
+        this.$ElMessage({
           message: '最多添加3张优惠券',
           type: 'error'
         });
@@ -231,7 +231,7 @@ export default {
     checkData(param) {
       if (param.type == 1) {
         if (!param.title) {
-          ElMessage({
+          this.$ElMessage({
             message: '标题不能为空',
             type: 'error'
           });
@@ -243,7 +243,7 @@ export default {
       }
       if (param.type < 3) {
         if (!param.link) {
-          ElMessage({
+          this.$ElMessage({
             message: '请选择跳转链接',
             type: 'error'
           });
@@ -251,7 +251,7 @@ export default {
         }
       } else {
         if (param.coupon.length == 0) {
-          ElMessage({
+          this.$ElMessage({
             message: '请选择优惠卷',
             type: 'error'
           });
@@ -260,7 +260,7 @@ export default {
       }
 
       if (!(param.image_id > 0)) {
-        ElMessage({
+        this.$ElMessage({
           message: '请上传图片',
           type: 'error'
         });

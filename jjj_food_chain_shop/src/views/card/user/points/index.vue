@@ -126,7 +126,7 @@
               .then(data => {
                 self.loading = false;
                 if (data.code == 1) {
-                  ElMessage({
+                  this.$ElMessage({
                     message: '恭喜你，保存成功',
                     type: 'success'
                   });

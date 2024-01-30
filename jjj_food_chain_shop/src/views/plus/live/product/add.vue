@@ -171,7 +171,7 @@
 						LiveApi.addProduct(param,true)
 							.then(data => {
 								self.loading = false;
-								ElMessage({
+								this.$ElMessage({
 									message: '创建成功',
 									type: 'success'
 								});

@@ -96,7 +96,7 @@
             self.loading = true;
             PointsApi.editCategory(params, true).then(data => {
               self.loading = false;
-              ElMessage({
+              this.$ElMessage({
                 message: '修改成功',
                 type: 'success'
               });

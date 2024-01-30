@@ -66,7 +66,7 @@ export default {
       let params = this.form;
       PlusApi.cashSubmit(params, true)
         .then(data => {
-          ElMessage({
+          this.$ElMessage({
             message: '恭喜你，修改成功',
             type: 'success'
           });

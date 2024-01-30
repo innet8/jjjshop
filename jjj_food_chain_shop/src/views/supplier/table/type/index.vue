@@ -125,7 +125,7 @@ export default {
                 StoreApi.deleteType({
                     type_id: row.type_id
                 }).then(data => {
-                    ElMessage({
+                    this.$ElMessage({
                         message: '删除成功',
                         type: 'success'
                     });

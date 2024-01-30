@@ -335,7 +335,7 @@
             )
             .then(data => {
               self.loading = false;
-              ElMessage({
+              this.$ElMessage({
                 message: $t('操作成功'),
                 type: 'success'
               });
@@ -345,7 +345,7 @@
               self.loading = false;
             });
         }).catch(() => {
-         ElMessage({
+         this.$ElMessage({
             type: 'info',
             message: '已取消操作'
           });
@@ -366,7 +366,7 @@
             )
             .then(data => {
               self.loading = false;
-              ElMessage({
+              this.$ElMessage({
                 message: $t('操作成功'),
                 type: 'success'
               });
@@ -376,7 +376,7 @@
               self.loading = false;
             });
         }).catch(() => {
-          ElMessage({
+          this.$ElMessage({
             type: 'info',
             message: '已取消操作'
           });

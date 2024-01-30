@@ -110,7 +110,7 @@
 				LiveApi.pushProduct(params, true)
 					.then(res => {
 						if (res.code == 1) {
-							ElMessage({
+							this.$ElMessage({
 								message: '推送成功',
 								type: 'success'
 							});
@@ -128,7 +128,7 @@
 				LiveApi.onSale(params, true)
 					.then(res => {
 						if (res.code == 1) {
-							ElMessage({
+							this.$ElMessage({
 								message: '操作成功',
 								type: 'success'
 							});
@@ -189,7 +189,7 @@
 				let params = null;
 				let type = 'success';
 				if (self.multipleSelection.length < 1) {
-					ElMessage({
+					this.$ElMessage({
 						message: '请至少选择一件产品商品！',
 						type: 'error'
 					});
@@ -247,7 +247,7 @@
 				LiveApi.liveAddProduct(params, true)
 					.then(res => {
 						if (res.code == 1) {
-							ElMessage({
+							this.$ElMessage({
 								message: '导入成功',
 								type: 'success'
 							});
@@ -267,7 +267,7 @@
 						LiveApi.deleteLiveProduct({
 							live_product_id: row.live_product_id
 						}).then(data => {
-							ElMessage({
+							this.$ElMessage({
 								message: '删除成功',
 								type: 'success'
 							});

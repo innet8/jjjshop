@@ -138,7 +138,7 @@ export default {
                     Params.card_id = row.card_id,
                         CardApi.setStatus(Params, true)
                             .then(data => {
-                                ElMessage({
+                                this.$ElMessage({
                                     message: war + $t('成功'),
                                     type: 'success'
                                 });
@@ -239,7 +239,7 @@ export default {
                     .then(data => {
                         self.loading = false;
                         if (data.code == 1) {
-                            ElMessage({
+                            this.$ElMessage({
                                 message: data.msg,
                                 type: 'success'
                             });

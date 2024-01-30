@@ -133,7 +133,7 @@
           PointsApi.deleteCategory({
             category_id: row.category_id
           }).then(data => {
-            ElMessage({
+            this.$ElMessage({
               message: '删除成功',
               type: 'success'
             });

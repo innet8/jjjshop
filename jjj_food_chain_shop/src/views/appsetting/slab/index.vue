@@ -135,7 +135,7 @@ export default {
             self.loading = true;
             Terminal.saveTablet(params, true).then(data => {
                 self.loading = false;
-                ElMessage({
+                this.$ElMessage({
                     message: $t('保存成功'),
                     type: 'success'
                 });

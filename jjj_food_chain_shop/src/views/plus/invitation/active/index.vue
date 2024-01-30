@@ -169,7 +169,7 @@
             id: e
           }, true).then(data => {
             self.loading = false;
-            ElMessage({
+            this.$ElMessage({
               message: data.msg,
               type: 'success'
             });
@@ -192,7 +192,7 @@
           id: e
         }, true).then(data => {
           self.loading = false;
-          ElMessage({
+          this.$ElMessage({
             message: data.msg,
             type: 'success'
           });
@@ -210,7 +210,7 @@
           id: e
         }, true).then(data => {
           self.loading = false;
-          ElMessage({
+          this.$ElMessage({
             message: data.msg,
             type: 'success'
           });

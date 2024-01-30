@@ -419,7 +419,7 @@
           )
           .then(data => {
             self.loading = false;
-            ElMessage({
+            this.$ElMessage({
               message: '恭喜你，发货成功',
               type: 'success'
             });
@@ -442,7 +442,7 @@
           )
           .then(data => {
             self.loading = false;
-            ElMessage({
+            this.$ElMessage({
               message: $t('操作成功'),
               type: 'success'
             });

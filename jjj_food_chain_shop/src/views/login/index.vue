@@ -255,7 +255,7 @@ export default {
                     location.reload();
                 })
                 .catch(() => {
-                    ElMessage({
+                    this.$ElMessage({
                         type: 'info',
                         message: $t('已取消'),
                     });

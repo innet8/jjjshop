@@ -94,14 +94,14 @@
         let self = this;
         let params = self.form;
         if (!/^1[3456789]\d{9}$/.test(params.mobile)) {
-          ElMessage({
+          this.$ElMessage({
             message: '请输入正确手机号！',
             type: 'warning'
           });
           return;
         }
         if (params.password != '' && params.confirm_password && params.password != params.confirm_password) {
-          ElMessage({
+          this.$ElMessage({
             message: '两次输入密码不一致！',
             type: 'warning'
           });
@@ -112,7 +112,7 @@
             self.loading = true;
             CashierApi.editUser(params, true).then(data => {
               self.loading = false;
-              ElMessage({
+              this.$ElMessage({
                 message: '修改成功',
                 type: 'success'
               });

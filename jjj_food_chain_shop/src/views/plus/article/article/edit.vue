@@ -143,7 +143,7 @@ export default {
       // 取到路由带过来的参数
       ArticleApi.editArticle(params, true)
         .then(data => {
-          ElMessage({
+          this.$ElMessage({
             message: data.msg,
             type: 'success'
           });

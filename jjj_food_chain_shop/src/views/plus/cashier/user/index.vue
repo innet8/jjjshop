@@ -144,7 +144,7 @@
           CashierApi.deleteUser({
             cashier_id: row.cashier_id
           }).then(data => {
-            ElMessage({
+            this.$ElMessage({
               message: '删除成功',
               type: 'success'
             });

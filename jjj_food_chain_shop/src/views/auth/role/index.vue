@@ -139,7 +139,7 @@ export default {
                 AuthApi.roleDelete({role_id: row.role_id},true).then(data => {
                     self.loading = false;
                     if (data.code == 1) {
-                        ElMessage({
+                        this.$ElMessage({
                             message:  $t('删除成功'),
                             type: 'success'
                         });

@@ -153,7 +153,8 @@ export default {
                     }
                 });
             }else{
-                ElMessage({
+           
+                this.$ElMessage({
                         type: 'info',
                         message: $t('无权限'),
                     });

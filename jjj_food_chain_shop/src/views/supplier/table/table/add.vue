@@ -92,7 +92,7 @@ export default {
                     self.loading = true;
                     StoreApi.addTable(params).then(data => {
                         self.loading = false;
-                        ElMessage({
+                        this.$ElMessage({
                             message: '添加成功',
                             type: 'success'
                         });

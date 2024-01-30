@@ -13,7 +13,7 @@
                 </el-form-item>
             </template>
             <el-form-item :label="$t('规格排序')" prop="sort">
-                <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('接近0，排序等級越高')" v-model.number="form.sort" autocomplete="off"></el-input-number>
+                <el-input-number :controls="false" :precision="0" :min="0" :max="999" :placeholder="$t('接近0，排序等級越高')" v-model.number="form.sort" autocomplete="off"></el-input-number>
             </el-form-item>
 
         </el-form>
@@ -41,6 +41,7 @@ export default {
         for (let key in JSON.parse(languageData)) {
             specnameRules[key] = [{ required: true, message: $t('请输入规格名称'), trigger: 'blur'}]
         }
+
         return {
             languageList: languageList,
             form: {
@@ -86,7 +87,7 @@ export default {
                     self.loading = true;
                     PorductApi.addSpec(params).then(data => {
                         self.loading = false;
-                        ElMessage({
+                        this.$ElMessage({
                             message: '添加成功',
                             type: 'success'
                         });

@@ -75,7 +75,7 @@ export default {
             let self = this;
 
             if (self.form.isSpecLocked) {
-                ElMessage({
+                this.$ElMessage({
                     message: '本商品正在参加活动，不能删除规格！',
                     type: 'warning'
                 });

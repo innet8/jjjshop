@@ -124,7 +124,7 @@
               }, true)
               .then(data => {
                 self.save_loading = false;
-                ElMessage({
+                this.$ElMessage({
                   message: '保存成功',
                   type: 'success'
                 });
@@ -134,7 +134,7 @@
                 self.save_loading = false;
               });
           } else {
-            ElMessage({
+            this.$ElMessage({
               message: '请检查必填项是否填写完整',
               type: 'error'
             });

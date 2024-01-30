@@ -200,7 +200,7 @@
             PackageApi.savePackage(form, true).then(data => {
                form.coupon = JSON.parse(form.coupon);
                 if (data.code == 1) {
-                  ElMessage({
+                  this.$ElMessage({
                     message: data.msg,
                     type: 'success'
                   });

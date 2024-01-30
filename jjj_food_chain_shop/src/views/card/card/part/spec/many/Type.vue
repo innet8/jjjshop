@@ -79,7 +79,7 @@ export default {
     onSubmitAddGroup: function() {
       let self = this;
       if (self.addGroupFrom.specName === '' || self.addGroupFrom.specValue === '') {
-        ElMessage('请填写规则名或规则值');
+        this.$ElMessage('请填写规则名或规则值');
         return false;
       }
       // 添加到数据库
@@ -121,7 +121,7 @@ export default {
     onSubmitAddValue: function(specAttr) {
       let self = this;
       if (!specAttr.hasOwnProperty('tempValue') || specAttr.tempValue === '') {
-        ElMessage('规格值不能为空');
+        this.$ElMessage('规格值不能为空');
         return false;
       }
       // 添加到数据库
@@ -231,7 +231,7 @@ export default {
       let self = this;
 
       if(self.form.isSpecLocked){
-       ElMessage({
+       this.$ElMessage({
           message: '本商品正在参加活动，不能删除规格！',
           type: 'warning'
         });

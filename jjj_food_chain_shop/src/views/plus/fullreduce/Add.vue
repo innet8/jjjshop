@@ -80,7 +80,7 @@
             self.submit_loading = true;
             FullreduceApi.add(params, true).then(data => {
                 self.submit_loading = false;
-                ElMessage({
+                this.$ElMessage({
                   message: data.msg,
                   type: 'success'
                 });

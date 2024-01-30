@@ -105,7 +105,7 @@
               }, true)
               .then(data => {
                 self.loading = false;
-                ElMessage({
+                this.$ElMessage({
                   message: '添加成功',
                   type: 'success'
                 });
@@ -115,7 +115,7 @@
                 self.loading = false;
               });
           } else {
-            ElMessage({
+            this.$ElMessage({
               message: '请检查必填项是否填写完整',
               type: 'error'
             });

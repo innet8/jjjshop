@@ -130,7 +130,7 @@ export default {
             self.loading = true;
             Terminal.saveKitchen(params, true).then(data => {
                 self.loading = false;
-                ElMessage({
+                this.$ElMessage({
                     message: $t('保存成功'),
                     type: 'success'
                 });

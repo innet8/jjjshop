@@ -203,7 +203,7 @@ export default {
             product_id: row.product_id,
             state
           }).then(data => {
-            ElMessage({
+            this.$ElMessage({
               message: war_+'成功',
               type: 'success'
             });
@@ -232,7 +232,7 @@ export default {
           PorductApi.takeDelProduct({
             product_id: row.product_id
           }).then(data => {
-            ElMessage({
+            this.$ElMessage({
               message: '删除成功',
               type: 'success'
             });

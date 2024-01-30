@@ -170,7 +170,7 @@
           category_id: id,
           status: e
         }).then(data => {
-          ElMessage({
+          this.$ElMessage({
             message: data.msg,
             type: 'success'
           });
@@ -200,7 +200,7 @@
           PorductApi.takeCatDel({
             category_id: row.category_id
           }).then(data => {
-            ElMessage({
+            this.$ElMessage({
               message: '删除成功',
               type: 'success'
             });

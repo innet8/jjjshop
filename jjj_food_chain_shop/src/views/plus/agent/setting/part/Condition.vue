@@ -92,7 +92,7 @@ export default {
       PlusApi.condition(params, true)
         .then(data => {
           self.loading = false;
-          ElMessage({
+          this.$ElMessage({
             message: '恭喜你，设置成功',
             type: 'success'
           });
@@ -121,7 +121,7 @@ export default {
           this.form.become__buy_product_ids.push(e.params.product_id);
           this.form.product_image.push({ product_id: e.params.product_id, image: e.params.image,product_name: e.params.product_name });
         } else {
-          ElMessage({
+          this.$ElMessage({
             message: '已选择该商品',
             type: 'warning'
           });

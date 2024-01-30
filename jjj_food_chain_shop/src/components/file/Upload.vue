@@ -236,7 +236,7 @@ export default {
                     this.deleteCategory(e);
                 })
                 .catch(() => {
-                    ElMessage({
+                    this.$ElMessage({
                         type: "info",
                         message: "已取消删除",
                     });
@@ -250,7 +250,7 @@ export default {
                 group_id: e,
             })
                 .then((data) => {
-                    ElMessage({
+                    this.$ElMessage({
                         message: "删除成功",
                         type: "success",
                     });
@@ -311,7 +311,7 @@ export default {
                 }
             });
             if (fileIds.length == 0) {
-                ElMessage({
+                this.$ElMessage({
                     message: $t("请选择文件"),
                     type: "warning",
                 });
@@ -331,7 +331,7 @@ export default {
                         true
                     )
                         .then((data) => {
-                            ElMessage({
+                            this.$ElMessage({
                                 message: $t("移动成功"),
                                 type: "success",
                             });
@@ -376,7 +376,7 @@ export default {
                 .then((response) => {
                     loading.close();
                     self.getData();
-                    ElMessage({
+                    this.$ElMessage({
                         message: $t("本次上传图成功"),
                         type: "success",
                     });
@@ -384,7 +384,7 @@ export default {
                 })
                 .catch((response) => {
                     loading.close();
-                    ElMessage({
+                    this.$ElMessage({
                         message: $t("本次上传图片失败"),
                         type: "warning",
                     });
@@ -399,7 +399,7 @@ export default {
                 this.record--;
             } else {
                 if (this.record >= this.this_config.total) {
-                    ElMessage({
+                    this.$ElMessage({
                         message: $t("本次最多只能上传 ") + this.this_config.total +$t(" 个文件"),
                         type: "warning",
                     });
@@ -444,7 +444,7 @@ export default {
                     )
                         .then((data) => {
                             loading.close();
-                            ElMessage({
+                            this.$ElMessage({
                                 message: $t("删除成功"),
                                 type: "success",
                             });
@@ -456,7 +456,7 @@ export default {
                 })
                 .catch(() => {
                     loading.close();
-                    ElMessage({
+                    this.$ElMessage({
                         message: $t("删除失败"),
                         type: "warning",
                     });

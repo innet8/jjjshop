@@ -164,7 +164,7 @@ export default {
                     PorductApi.deleteLabel({
                         label_id: id
                     }).then(data => {
-                        ElMessage({
+                        this.$ElMessage({
                             message: $t('删除成功'),
                             type: 'success'
                         });
@@ -186,7 +186,7 @@ export default {
                     PorductApi.deleteLabel({
                         label_id: label_id
                     }).then(data => {
-                        ElMessage({
+                        this.$ElMessage({
                             message: $t('删除成功'),
                             type: 'success'
                         });

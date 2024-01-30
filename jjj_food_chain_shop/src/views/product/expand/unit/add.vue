@@ -82,7 +82,7 @@ export default {
                     self.loading = true;
                     PorductApi.addUnit(params).then(data => {
                         self.loading = false;
-                        ElMessage({
+                        this.$ElMessage({
                             message: $t('添加成功'),
                             type: 'success'
                         });

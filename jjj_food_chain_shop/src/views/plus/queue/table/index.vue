@@ -147,7 +147,7 @@
           QueueApi.deleteTable({
             table_id: row.table_id
           }).then(data => {
-           ElMessage({
+           this.$ElMessage({
               message: '删除成功',
               type: 'success'
             });

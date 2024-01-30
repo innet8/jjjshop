@@ -78,7 +78,7 @@ export default {
                         Terminal.editCashierPassword(form, true)
                             .then(data => {
                                 self.loading = false;
-                                ElMessage({
+                                this.$ElMessage({
                                     message: $t('修改成功'),
                                     type: 'success'
                                 });
@@ -102,7 +102,7 @@ export default {
                         Terminal.editCashierAdvancedPassword(form, true)
                             .then(data => {
                                 self.loading = false;
-                                ElMessage({
+                                this.$ElMessage({
                                     message: $t('修改成功'),
                                     type: 'success'
                                 });

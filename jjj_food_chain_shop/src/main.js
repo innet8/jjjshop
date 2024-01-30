@@ -24,6 +24,7 @@ import {
 import VueUeditorWrap from 'vue-ueditor-wrap'
 import filters from '@/filters/index.js' 
 import I18n from "./lang/index";
+import { message } from './utils/message.js'
 
 const app = createApp(App);
 /** 加载自定义指令 */
@@ -38,4 +39,5 @@ app.use(pinia)
 app.use(router)
 app.mount('#app')
 app.config.globalProperties.$filter = filters;
+app.config.globalProperties.$ElMessage = message;
 setupRouter(app);

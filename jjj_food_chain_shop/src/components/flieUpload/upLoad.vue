@@ -40,14 +40,14 @@ export default {
         /*选择图片之前*/
         onBeforeUploadImage(file) {
             if(file.size > (this.imgSize * 1024 *1024) && file.type.includes('image') ){
-                ElMessage({
+                this.$ElMessage({
                         message: $t("图片大小超出限制！"),
                         type: "warning",
                     });
                 return false;
             }
             if(file.size > (this.videoSize * 1024 *1024) && file.type.includes('video') ){
-                ElMessage({
+                this.$ElMessage({
                         message: $t("视频大小超出限制！"),
                         type: "warning",
                     });
@@ -77,7 +77,7 @@ export default {
             FileApi.uploadFile(formData)
                 .then((response) => {
                     loading.close();
-                    ElMessage({
+                    this.$ElMessage({
                         message: $t("本次上传成功"),
                         type: "success",
                     });
@@ -85,7 +85,7 @@ export default {
                 })
                 .catch((response) => {
                     loading.close();
-                    ElMessage({
+                    this.$ElMessage({
                         message: $t("本次上传失败"),
                         type: "warning",
                     });

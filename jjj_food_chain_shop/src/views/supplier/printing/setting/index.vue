@@ -89,7 +89,7 @@ export default {
             SettingApi.editPrinting(params, true)
                 .then(data => {
                     self.loading = false;
-                    ElMessage({
+                    this.$ElMessage({
                         message: $t('恭喜你，打印设置成功'),
                         type: 'success'
                     });

@@ -158,7 +158,7 @@
 						LiveApi.editProduct(param,true)
 							.then(data => {
 								self.loading = false;
-								ElMessage({
+								this.$ElMessage({
 									message: '编辑成功',
 									type: 'success'
 								});

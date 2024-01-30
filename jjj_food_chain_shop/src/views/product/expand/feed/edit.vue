@@ -95,7 +95,7 @@ export default {
                     self.loading = true;
                     PorductApi.editFeed(params).then(data => {
                         self.loading = false;
-                        ElMessage({
+                        this.$ElMessage({
                             message: $t('修改成功'),
                             type: 'success'
                         });

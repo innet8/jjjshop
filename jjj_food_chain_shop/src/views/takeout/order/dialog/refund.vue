@@ -64,7 +64,7 @@
               self.loading = true;
               OrderApi.takeRefund(form, true).then(data => {
                   self.loading = false;
-                 ElMessage({
+                 this.$ElMessage({
                     message: data.msg,
                     type: 'success'
                   });
@@ -74,7 +74,7 @@
                   self.loading = false;
                 });
             }).catch(() => {
-             ElMessage({
+             this.$ElMessage({
                 type: 'info',
                 message: '已取消退款'
               });

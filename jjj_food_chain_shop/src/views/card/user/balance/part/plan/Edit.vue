@@ -84,7 +84,7 @@
             self.submit_loading = true;
             planApi.editPlan(params, true).then(data => {
                 self.submit_loading = false;
-                ElMessage({
+                this.$ElMessage({
                   message: data.msg,
                   type: 'success'
                 });

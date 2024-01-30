@@ -183,7 +183,7 @@ export default {
             self.loading = true;
             Terminal.saveTerminal(params).then(data => {
                 self.loading = false;
-                ElMessage({
+                this.$ElMessage({
                     message: $t('保存成功'),
                     type: 'success'
                 });

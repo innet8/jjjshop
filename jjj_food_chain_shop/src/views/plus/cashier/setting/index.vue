@@ -92,7 +92,7 @@
         let self = this;
         let params = this.form;
         if (params.checkedPay.length < 1) {
-          ElMessage({
+          this.$ElMessage({
             message: '支付方式至少选择一种！',
             type: 'warning'
           });
@@ -100,7 +100,7 @@
         }
         CashierApi.editSetting(params, true)
           .then(data => {
-           ElMessage({
+           this.$ElMessage({
               message: '恭喜你，设置成功',
               type: 'success'
             });

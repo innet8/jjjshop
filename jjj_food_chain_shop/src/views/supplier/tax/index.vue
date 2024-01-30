@@ -74,7 +74,7 @@ export default {
                     self.loading = true;
                     SettingApi.setTaxRate(params, true).then(data => {
                         self.loading = false;
-                        ElMessage({
+                        this.$ElMessage({
                             message: $t('保存成功'),
                             type: 'success'
                         });

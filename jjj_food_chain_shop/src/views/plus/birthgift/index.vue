@@ -93,7 +93,7 @@
         }
         BirthGiftApi.editBirthGift(params, true)
           .then(data => {
-           ElMessage({
+           this.$ElMessage({
               message: data.msg,
               type: 'success'
             });

@@ -165,7 +165,7 @@ export default {
                     PorductApi.deleteFeed({
                         feed_id: id
                     }).then(data => {
-                        ElMessage({
+                        this.$ElMessage({
                             message: $t('删除成功'),
                             type: 'success'
                         });
@@ -187,7 +187,7 @@ export default {
                     PorductApi.deleteFeed({
                         feed_id: feed_id
                     }).then(data => {
-                        ElMessage({
+                        this.$ElMessage({
                             message: $t('删除成功'),
                             type: 'success'
                         });

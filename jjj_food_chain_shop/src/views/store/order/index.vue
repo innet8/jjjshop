@@ -345,7 +345,7 @@ export default {
                 )
                     .then(data => {
                         self.loading = false;
-                        ElMessage({
+                        this.$ElMessage({
                             message: $t('操作成功'),
                             type: 'success'
                         });
@@ -355,7 +355,7 @@ export default {
                         self.loading = false;
                     });
             }).catch(() => {
-                ElMessage({
+                this.$ElMessage({
                     type: 'info',
                     message: '已取消核销'
                 });
@@ -417,7 +417,7 @@ export default {
                     OrderApi.storedelete({
                         order_id: item.order_id
                     }).then(data => {
-                        ElMessage({
+                        this.$ElMessage({
                             message: $t('删除成功'),
                             type: 'success'
                         });

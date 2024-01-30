@@ -63,7 +63,7 @@
         let params = this.form;
         SettingApi.editCache(params, true)
           .then(data => {
-            ElMessage({
+            this.$ElMessage({
               message: $t('恭喜你，清理成功'),
               type: 'success'
             });

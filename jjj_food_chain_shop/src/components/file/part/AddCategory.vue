@@ -56,7 +56,7 @@ export default {
 		addCategory: function(categoryname) {
 			let self = this;
 			FileApi.addCategory({group_name: categoryname},).then(data => {
-				ElMessage({
+				this.$ElMessage({
 					message: '添加成功',
 					type: 'success'
 				});
@@ -75,7 +75,7 @@ export default {
 				group_id:model.group_id
 			};
 			FileApi.editCategory(param,).then(data => {
-				ElMessage({
+				this.$ElMessage({
 					message: '修改成功',
 					type: 'success'
 				});

@@ -198,7 +198,7 @@ export default {
                 StoreApi.deleteTable({
                     table_id: row.table_id
                 }).then(data => {
-                    ElMessage({
+                    this.$ElMessage({
                         message: $t('删除成功'),
                         type: 'success'
                     });

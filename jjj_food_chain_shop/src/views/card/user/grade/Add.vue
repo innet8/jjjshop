@@ -103,7 +103,7 @@ export default {
                     params.open_invite = params.open_invite == true ? 1 : 0;
                     UserApi.addgrade(params, true).then(data => {
                         self.submit_loading = false;
-                        ElMessage({
+                        this.$ElMessage({
                             message: data.msg,
                             type: 'success'
                         });

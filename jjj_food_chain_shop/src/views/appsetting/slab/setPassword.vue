@@ -76,7 +76,7 @@ export default {
                     Terminal.editAdvancedPassword(form, true)
                         .then(data => {
                             self.loading = false;
-                            ElMessage({
+                            this.$ElMessage({
                                 message: $t('修改成功'),
                                 type: 'success'
                             });

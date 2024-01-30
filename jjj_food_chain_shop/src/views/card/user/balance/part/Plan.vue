@@ -119,7 +119,7 @@ export default {
           planApi.deletePlan({
             plan_id: row.plan_id
           }).then(data => {
-            ElMessage({
+            this.$ElMessage({
               message: '删除成功',
               type: 'success'
             });

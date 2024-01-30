@@ -48,7 +48,7 @@
             CardApi.editcardtype(params, true)
               .then(data => {
                 self.submit_loading = false;
-                ElMessage({
+                this.$ElMessage({
                   message: '恭喜你，等级修改成功',
                   type: 'success'
                 });

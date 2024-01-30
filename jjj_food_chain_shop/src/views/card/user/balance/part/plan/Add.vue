@@ -82,7 +82,7 @@
             self.submit_loading = true;
             planApi.addPlan(params, true).then(data => {
                 self.submit_loading = false;
-                ElMessage({
+                this.$ElMessage({
                   message: data.msg,
                   type: 'success'
                 });

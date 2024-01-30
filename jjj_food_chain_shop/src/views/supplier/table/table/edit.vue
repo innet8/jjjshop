@@ -100,7 +100,7 @@ export default {
                     self.loading = true;
                     StoreApi.editTable(params, true).then(data => {
                         self.loading = false;
-                        ElMessage({
+                        this.$ElMessage({
                             message: '修改成功',
                             type: 'success'
                         });

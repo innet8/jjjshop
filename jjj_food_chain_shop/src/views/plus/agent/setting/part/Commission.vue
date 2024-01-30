@@ -62,7 +62,7 @@
         PlusApi.commission(params, true)
           .then(data => {
             self.loading = false;
-            ElMessage({
+            this.$ElMessage({
               message: '恭喜你，设置成功',
               type: 'success'
             });

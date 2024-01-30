@@ -285,7 +285,7 @@ export default {
                     }, true)
                         .then(data => {
                             self.save_loading = false;
-                            ElMessage({
+                            this.$ElMessage({
                                 message: '保存成功',
                                 type: 'success'
                             });

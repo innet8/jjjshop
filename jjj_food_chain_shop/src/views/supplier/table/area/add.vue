@@ -68,7 +68,7 @@ export default {
                     self.loading = true;
                     StoreApi.addArea(params).then(data => {
                         self.loading = false;
-                        ElMessage({
+                        this.$ElMessage({
                             message: $t('添加成功'),
                             type: 'success'
                         });

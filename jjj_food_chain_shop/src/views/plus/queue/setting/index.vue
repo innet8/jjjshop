@@ -106,7 +106,7 @@
         let params = this.form;
         QueueApi.editsetting(params, true)
           .then(data => {
-            ElMessage({
+            this.$ElMessage({
               message: '恭喜你，设置成功',
               type: 'success'
             });

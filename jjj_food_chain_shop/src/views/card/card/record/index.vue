@@ -192,7 +192,7 @@
             .then(data => {
               self.loading = false;
               if (data.code == 1) {
-                ElMessage({
+                this.$ElMessage({
                   message: data.msg,
                   type: 'success'
                 });

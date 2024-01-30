@@ -229,7 +229,7 @@
 					live_id: row.live_id,
 					is_top: row.is_top == 0 ? 1 : 0
 				}).then(data => {
-					ElMessage({
+					this.$ElMessage({
 						message: '置顶成功',
 						type: 'success'
 					});
@@ -247,7 +247,7 @@
 						LiveApi.deleteRoom({
 							live_id: row.live_id
 						}).then(data => {
-							ElMessage({
+							this.$ElMessage({
 								message: '删除成功',
 								type: 'success'
 							});
@@ -266,7 +266,7 @@
 				LiveApi.setSyn({
 					auto_syn: self.auto_syn
 				}).then(data => {
-					ElMessage({
+					this.$ElMessage({
 						message: '设置成功',
 						type: 'success'
 					});

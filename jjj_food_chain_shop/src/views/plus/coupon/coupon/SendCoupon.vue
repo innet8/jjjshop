@@ -141,7 +141,7 @@ export default {
       CouponApi.SendCoupon(params, true)
         .then(data => {
           self.loading = false;
-          ElMessage({
+          this.$ElMessage({
             message: '发送成功',
             type: 'success'
           });

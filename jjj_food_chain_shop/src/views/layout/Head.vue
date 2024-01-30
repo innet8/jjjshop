@@ -123,7 +123,7 @@ export default defineComponent({
                     this.logout();
                 })
                 .catch(() => {
-                    ElMessage({
+                    this.$ElMessage({
                         type: "info",
                         message: $t("已取消退出"),
                     });
@@ -149,7 +149,7 @@ export default defineComponent({
                     location.reload();
                 })
                 .catch(() => {
-                    ElMessage({
+                    this.$ElMessage({
                         type: 'info',
                         message: $t('已取消'),
                     });
@@ -189,7 +189,7 @@ export default defineComponent({
     width: 16px;
     height: 16px;
 }
-:deep(.language-div){
+.language-div{
     width: 90px;
     display: flex;
     align-items: center;
