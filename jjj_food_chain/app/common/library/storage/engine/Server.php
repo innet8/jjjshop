@@ -30,6 +30,8 @@ abstract class Server
      */
     public function setUploadFile($name)
     {
+        dump($name);
+        die;
         // 接收上传的文件
         $this->file = Request::file($name);
         if (empty($this->file)) {
