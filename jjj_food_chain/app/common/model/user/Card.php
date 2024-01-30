@@ -26,7 +26,7 @@ class Card extends BaseModel
      */
     public function cardRecord()
     {
-        return $this->hasOne('app\\common\\model\\user\\CardRecord', 'card_id', 'card_id');
+        return $this->hasOne('app\\common\\model\\user\\CardRecord', 'card_id', 'card_id')->where('is_delete', 0);
     }
 
     /**

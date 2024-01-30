@@ -64,11 +64,15 @@ class OrderProduct extends OrderProductModel
         $category_id = $params['category_id'] ?? 0;
 
         $query = $this->alias('op')
+            ->distinct(true)
+            ->join('order o', 'op.order_id = o.order_id', 'left')
             ->join('product p', 'op.product_id = p.product_id', 'left')
-            ->join('category c', 'p.category_id = c.category_id', 'left')
+            ->join('category c2', 'p.category_id = c2.category_id', 'left')
+            ->join('category c', 'c.category_id = c2.parent_id', 'left')
             ->where('op.is_send_kitchen', '=', 1)
             ->where('op.finish_num', '=', 0)
             ->where('c.parent_id', '=', 0) // 只查询一级分类
+            ->where('o.order_status', '=', OrderStatusEnum::NORMAL) // 订单状态
             ->order(['c.sort' => 'asc', 'c.create_time' => 'asc']); // 按照分类排序号和创建时间排序
 
         if ($shop_supplier_id > 0) {
@@ -76,11 +80,14 @@ class OrderProduct extends OrderProductModel
         }
 
         if ($category_id > 0) {
-            $query = $query->where('p.category_id', '=', $category_id);
+            $query = $query->where(function ($query) use ($category_id) {
+                            $query->where('c.category_id', '=', $category_id)
+                                ->whereOr('c2.category_id', '=', $category_id);
+                        });
         }
 
-        $list = $query->field('p.product_id, p.product_name, p.category_id, c.name as category_name, c.name as category_name_text, c.parent_id, c.sort as category_sort, op.product_id, op.is_send_kitchen, op.send_kitchen_time')
-            ->group('p.category_id')
+        $list = $query->field('p.product_id, p.product_name, c.category_id, c.name as category_name, c.name as category_name_text, c.parent_id, c.sort as category_sort, op.product_id, op.is_send_kitchen, op.send_kitchen_time')
+            ->group('c.category_id')
             ->paginate($params);
 
         foreach ($list as &$item) {
@@ -102,11 +109,14 @@ class OrderProduct extends OrderProductModel
 
             // 分类名称翻译
             $item['category_name_text'] = extractLanguage($item['category_name_text']);
-            $orderProducts = $this->field(['order_product_id', 'order_id', 'product_id', 'product_name', 'is_send_kitchen', 'send_kitchen_time', 'finish_num', 'finish_time', 'total_num', 'product_attr', 'remark'])
-                ->whereIn('product_id', $productIds)
-                ->where('is_send_kitchen', '=', 1)
-                ->where('finish_num', '=', 0)
-                ->order('send_kitchen_time', 'asc')
+            $orderProducts = $this->alias('op')
+                ->field(['op.order_product_id', 'op.order_id', 'op.product_id', 'op.product_name', 'op.is_send_kitchen', 'op.send_kitchen_time', 'op.finish_num', 'op.finish_time', 'op.total_num', 'op.product_attr', 'op.remark'])
+                ->join('order o', 'op.order_id = o.order_id', 'left')
+                ->whereIn('op.product_id', $productIds)
+                ->where('op.is_send_kitchen', '=', 1)
+                ->where('op.finish_num', '=', 0)
+                ->where('o.order_status', '=', OrderStatusEnum::NORMAL) // 订单状态
+                ->order('op.send_kitchen_time', 'asc')
                 ->select();
 
             // 流水号

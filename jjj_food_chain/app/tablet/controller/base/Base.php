@@ -28,23 +28,23 @@ class Base extends Controller
      *   @Apidoc\Param ("shop_supplier_id",type="string",desc="商户门店id"),
      * })
      */
-    public function bind()
-    {
-        $data = $this->postData();
-        if (empty($data['key']) || empty($data['address']) || empty($data['port'])) {
-            return $this->renderError('参数错误');
-        }
-        $shop = UserModel::getShopInfo();
-        $data = array_merge($data, [
-            'source' => BindRecordModel::SOURCE_TABLET,
-            'app_id' => $shop['app_id'],
-            'shop_supplier_id' => $shop['shop_supplier_id'],
-        ]);
-        if (!BindRecordModel::add($data)) {
-            return $this->renderError('绑定失败');
-        }
-        return $this->renderSuccess('', compact('shop'));
-    }
+//    public function bind()
+//    {
+//        $data = $this->postData();
+//        if (empty($data['key']) || empty($data['address']) || empty($data['port'])) {
+//            return $this->renderError('参数错误');
+//        }
+//        $shop = UserModel::getShopInfo();
+//        $data = array_merge($data, [
+//            'source' => BindRecordModel::SOURCE_TABLET,
+//            'app_id' => $shop['app_id'],
+//            'shop_supplier_id' => $shop['shop_supplier_id'],
+//        ]);
+//        if (!BindRecordModel::add($data)) {
+//            return $this->renderError('绑定失败');
+//        }
+//        return $this->renderSuccess('', compact('shop'));
+//    }
 
     /**
      * @Apidoc\Title("基础信息")
@@ -84,29 +84,29 @@ class Base extends Controller
      * @Apidoc\Url ("/index.php/tablet/base.base/lang")
      * @Apidoc\Returned()
      */
-    public function lang()
-    {
-        $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
-        $lang['language'] = $tablet['language'];
-        $lang['default_language'] = $tablet['default_language'];
-        return $this->renderSuccess('请求成功', $lang);
-    }
-
-    /**
-     * @Apidoc\Title("首页广告（废弃）")
-     * @Apidoc\Method ("POST")
-     * @Apidoc\Url ("/index.php/tablet/base.base/ad")
-     * @Apidoc\Returned()
-     */
-    public function ad()
-    {
-        $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
-        $list = [];
-        if (isset($tablet['carousel']) && !empty($tablet['carousel'])) {
-            $list = $tablet['carousel'];
-        }
-        return $this->renderSuccess('请求成功', $list);
-    }
+//    public function lang()
+//    {
+//        $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
+//        $lang['language'] = $tablet['language'];
+//        $lang['default_language'] = $tablet['default_language'];
+//        return $this->renderSuccess('请求成功', $lang);
+//    }
+//
+//    /**
+//     * @Apidoc\Title("首页广告（废弃）")
+//     * @Apidoc\Method ("POST")
+//     * @Apidoc\Url ("/index.php/tablet/base.base/ad")
+//     * @Apidoc\Returned()
+//     */
+//    public function ad()
+//    {
+//        $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
+//        $list = [];
+//        if (isset($tablet['carousel']) && !empty($tablet['carousel'])) {
+//            $list = $tablet['carousel'];
+//        }
+//        return $this->renderSuccess('请求成功', $list);
+//    }
 
     /**
      * @Apidoc\Title("校验高级密码")
@@ -123,21 +123,21 @@ class Base extends Controller
         }
         return $this->renderError('验证失败');
     }
-
-    /**
-     * @Apidoc\Title("设置服务连接地址（废弃）")
-     * @Apidoc\Method ("POST")
-     * @Apidoc\Url ("/index.php/tablet/base.base/setServer")
-     * @Apidoc\Param("ip", type="string", require=true, desc="ip地址")
-     * @Apidoc\Param("port", type="string", require=true, desc="端口号")
-     * @Apidoc\Returned()
-     */
-    public function setServer($ip, $port)
-    {
-        $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
-        $tablet['server']['ip'] = $ip;
-        $tablet['server']['port'] = $port;
-        SettingModel::updateSetting(SettingEnum::TABLET, $tablet, $this->table['shop_supplier_id']);
-        return $this->renderSuccess('设置成功');
-    }
+//
+//    /**
+//     * @Apidoc\Title("设置服务连接地址（废弃）")
+//     * @Apidoc\Method ("POST")
+//     * @Apidoc\Url ("/index.php/tablet/base.base/setServer")
+//     * @Apidoc\Param("ip", type="string", require=true, desc="ip地址")
+//     * @Apidoc\Param("port", type="string", require=true, desc="端口号")
+//     * @Apidoc\Returned()
+//     */
+//    public function setServer($ip, $port)
+//    {
+//        $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
+//        $tablet['server']['ip'] = $ip;
+//        $tablet['server']['port'] = $port;
+//        SettingModel::updateSetting(SettingEnum::TABLET, $tablet, $this->table['shop_supplier_id']);
+//        return $this->renderSuccess('设置成功');
+//    }
 }

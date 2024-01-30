@@ -88,7 +88,7 @@ class Controller extends JjjController
         }
         $data = checkToken($token, 'cashier');
         if ($data['code'] != 1) {
-            throw new BaseException(['msg' => $data['msg'], 'code' => -1]);
+            throw new BaseException(['msg' => $data['msg'], 'code' => -2]);
         }
         if ($data['data']['type'] != 'cashier') {
             throw new BaseException(['msg' => '用户信息错误', 'code' => -1]);
