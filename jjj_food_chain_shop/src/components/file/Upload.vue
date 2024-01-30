@@ -21,7 +21,7 @@
                             <el-button size="small" icon="CaretBottom">{{ $t('移动至') }}</el-button>
                         </template>
                     </el-popover>
-                    <el-button size="small" type="danger" icon="Delete" @click="deleteFileFunc(false)">{{ $t('批量删除') }}</el-button>
+                    <el-button v-if="this.this_config.total > 1" size="small" type="danger" icon="Delete" @click="deleteFileFunc(false)">{{ $t('批量删除') }}</el-button>
                 </div>
                 <div class="leval-item upload-btn">
                     <el-upload class="avatar-uploader" multiple ref="upload" action=""
