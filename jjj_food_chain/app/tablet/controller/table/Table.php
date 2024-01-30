@@ -2,6 +2,8 @@
 
 namespace app\tablet\controller\table;
 
+use app\common\enum\settings\SettingEnum;
+use app\common\model\settings\Setting as SettingModel;
 use app\tablet\model\store\Table as TableModel;
 use app\tablet\controller\Controller;
 use hg\apidoc\annotation as Apidoc;
@@ -71,6 +73,11 @@ class Table extends Controller
     public function getInfo($table_id)
     {
         $table = TableModel::detail($table_id);
+        // 平板端设置
+        $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
+        unset($tablet['advanced_password']);
+        unset($tablet['language_list']);
+        $table['tablet'] = $tablet;
         return $this->renderSuccess('桌台信息', $table);
     }
 }
