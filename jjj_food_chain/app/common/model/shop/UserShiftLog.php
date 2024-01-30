@@ -113,7 +113,8 @@ class UserShiftLog extends BaseModel
         $datas = OrderModel::alias('a')
             ->leftJoin('order_product rp','a.order_id = rp.order_id')
             ->leftJoin('product p','p.product_id = rp.product_id')
-            ->leftJoin('category c','c.category_id = p.category_id')
+            ->leftJoin('category c2', 'p.category_id = c2.category_id')
+            ->leftJoin('category c', 'c.category_id = IF(c2.parent_id = 0, c2.category_id, c2.parent_id)')
             ->where('a.pay_status', '=',  OrderPayStatusEnum::SUCCESS)
             ->where('a.order_status', '=', OrderStatusEnum::COMPLETED)
             ->where('a.eat_type', '<>', 0)
@@ -122,7 +123,7 @@ class UserShiftLog extends BaseModel
             ->where('a.cashier_id', '=', $shift_user_id)
             ->where('a.create_time', 'between', [strtotime($startTime), strtotime($endTime)])
             ->group("c.category_id")
-            ->field("c.name, count(a.order_id) as sales, sum(a.pay_price - a.refund_money) as prices")
+            ->field("c.name, count(DISTINCT a.order_id) as sales, sum(DISTINCT a.pay_price - a.refund_money) as prices")
             ->select()
             ->append([])?->toArray();
         //
@@ -163,8 +164,8 @@ class UserShiftLog extends BaseModel
         // 上一班遗留备用金
         $lastRecord = $this->order('id', 'desc')->find();
         $previous_shift_cash = $lastRecord ? $lastRecord->cash_left : 0;
-        // 当前钱箱现金总计(现金收入+上一班遗留备用金)
-        $cash_income = (clone $orderModel)->where('pay_type', 10)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0;
+        // 当前钱箱现金总计(现金收入+上一班遗留备用金) 10-余额收款 40-现金收款
+        $cash_income = (clone $orderModel)->where('pay_type', 40)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0;
         //
         $incomes = [];
         $payTypes = PayType::getEnableListAll($shop_user_id, self::$app_id);
@@ -238,8 +239,8 @@ class UserShiftLog extends BaseModel
         // 上一班遗留备用金
         $lastRecord = $this->order('id', 'desc')->find();
         $previous_shift_cash = $lastRecord ? $lastRecord->cash_left : 0;
-        // 当前钱箱现金总计(现金收入+上一班遗留备用金)
-        $cash_income = (clone $orderModel)->where('pay_type', 10)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0;
+        // 当前钱箱现金总计(现金收入+上一班遗留备用金) 10-余额收款 40-现金收款
+        $cash_income = (clone $orderModel)->where('pay_type', 40)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0;
         if ($cash_taken_out > $cash_income) {
             $this->error = '本班取出現金不能大于当前钱箱现金总额';
             return false;
@@ -288,7 +289,7 @@ class UserShiftLog extends BaseModel
             ];
             $this->save($data);
             // 更新收银员在线状态
-            // $shopUser->update(['cashier_online' => 0, 'cashier_login_time' => 0]);
+            $shopUser->update(['cashier_online' => 0, 'cashier_login_time' => 0]);
             $this->commit();
             // 打印
             $printerConfig = SettingModel::getSupplierItem('printer', $this->shop_supplier_id, $this->app_id);
