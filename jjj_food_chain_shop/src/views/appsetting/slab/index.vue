@@ -10,7 +10,16 @@
                         <el-table-column prop="real_name" :label="$t('图片名称')"></el-table-column>
                         <el-table-column prop="sort" :label="$t('排序')">
                             <template #default="scope">
-                                <el-input v-model="scope.row.sort" @blur="sortOne"></el-input>
+                                <el-form-item ref="form-item" style="margin-top: 16px;" :rules="[{
+                                    required: true,
+                                    validator: () => {
+                                        return scope.row.sort >= 0 && typeof scope.row.sort == 'number' ? true : false;
+                                    },
+                                    message: $t('请输入排序')
+                                }]" prop="scope.row.sort">
+                                    <el-input-number :controls="false" @blur="sortOne" :min="0" :max="999"
+                                        :placeholder="$t('接近0，排序等級越高')" v-model.number="scope.row.sort"></el-input-number>
+                                </el-form-item>
                             </template>
                         </el-table-column>
                         <el-table-column prop="file_path" :label="$t('链接地址')">
@@ -132,6 +141,10 @@ export default {
         onSubmit() {
             let self = this;
             let params = JSON.parse(JSON.stringify(self.form));
+            this.$refs["form-item"].validate()
+            for (let i = 0; i < params.carousel.length; i++) {
+                if(params.carousel[i].sort==null) {return};
+            }
             self.loading = true;
             Terminal.saveTablet(params, true).then(data => {
                 self.loading = false;
@@ -178,15 +191,11 @@ export default {
         deleteOne(scope) {
             this.form.carousel.splice(scope.$index, 1)
             this.form.carousel.sort((a, b) => {
-                if (a.sort == '') return 1; // 如果a为null，则将其排在后面
-                if (b.sort == '') return -1; // 如果b为null，则将其排在后面
                 return a.sort - b.sort; // 按照数值大小进行排序
             });
         },
         sortOne() {
             this.form.carousel.sort((a, b) => {
-                if (a.sort == '') return 1; // 如果a为null，则将其排在后面
-                if (b.sort == '') return -1; // 如果b为null，则将其排在后面
                 return a.sort - b.sort; // 按照数值大小进行排序
             });
         },

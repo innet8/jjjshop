@@ -126,7 +126,7 @@ export default {
         addAttr() {
             this.form.model.product_attr.push({
                 attribute_name: JSON.parse(languageData),
-                attribute_value: [JSON.parse(languageData), JSON.parse(languageData)],
+                attribute_value: [JSON.parse(languageData)],
                 much: 1,
             },
             )

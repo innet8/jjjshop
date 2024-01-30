@@ -197,26 +197,28 @@ export default {
             let self = this;
 
             self.$refs.form.validate(valid => {
-                let returnConditions = false
                 if (self.form.model.product_attr.length > 0) {
                     self.$refs.AttrRef.checkedForm();
-                    let checkArr = self.form.model.product_attr
-                    for (let i = 0; i < checkArr.length; i++) {
-                        if (!checkArr[i].attribute_name.en || !checkArr[i].attribute_name.th || !checkArr[i].attribute_name.zh || !checkArr[i].attribute_name.zhtw) { returnConditions  = true };
-                        for (let e = 0; e < checkArr[i].attribute_value.length; e++) {
-                            if (!checkArr[i].attribute_value[e].en || !checkArr[i].attribute_value[e].th || !checkArr[i].attribute_value[e].zh || !checkArr[i].attribute_value[e].zhtw)  { returnConditions  = true };
-                        }
-                    }
                 }
-
                 if (self.form.model.product_feed.length > 0) {
                     self.$refs.IngredientsRef.checkedForm();
-                    let checkArr = self.form.model.product_feed;
+                }
+                if (self.form.model.product_attr.length > 0) {
+                    let checkArr = self.form.model.product_attr
                     for (let i = 0; i < checkArr.length; i++) {
-                        if (!checkArr[i].feed_name.en || !checkArr[i].feed_name.th || !checkArr[i].feed_name.zh || !checkArr[i].feed_name.zhtw || !checkArr[i].price)  { returnConditions  = true };
+                        if (checkArr[i].attribute_name.en == '' || checkArr[i].attribute_name.th == '' || checkArr[i].attribute_name.zh == '' || checkArr[i].attribute_name.zhtw == '') return;
+                        for (let e = 0; e < checkArr[i].attribute_value.length; e++) {
+                            if (checkArr[i].attribute_value[e].en == '' || checkArr[i].attribute_value[e].th == '' || checkArr[i].attribute_value[e].zh == '' || checkArr[i].attribute_value[e].zhtw == '') return;
+                        }
+                    
                     }
                 }
-                if(returnConditions) return;
+                if (self.form.model.product_feed.length > 0) {
+                    let checkArr = self.form.model.product_feed;
+                    for (let i = 0; i < checkArr.length; i++) {
+                        if (checkArr[i].feed_name.en == '' || checkArr[i].feed_name.th == '' || checkArr[i].feed_name.zh == '' || checkArr[i].feed_name.zhtw == '' || checkArr[i].price == '' || checkArr[i].price == null) return;
+                    }
+                }
                 if (valid) {
                     let params = {}
                     params = JSON.parse(JSON.stringify(self.form.model));
