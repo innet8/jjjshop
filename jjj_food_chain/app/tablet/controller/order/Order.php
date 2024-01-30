@@ -32,6 +32,9 @@ class Order extends Controller
         $params = $this->postData();
         $params['eat_type'] = 10;
         $params['order_source'] = 10;
+        if ($params['meal_num'] > 999 || $params['meal_num'] < 1) {
+            return $this->renderError('请输入1-999的人数');
+        }
 //        // 商品结算信息
 //        $CartModel = new CartModel;
 //        // 购物车商品列表

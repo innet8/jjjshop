@@ -150,8 +150,8 @@ class Order extends Controller
         $params['eat_type'] = 10;
         $params['order_source'] = 10;
         $user = $this->cashier['user'];
-        if ($params['meal_num'] > 999) {
-            return $this->renderError('超过最大人数');
+        if ($params['meal_num'] > 999 || $params['meal_num'] < 1) {
+            return $this->renderError('请输入1-999的人数');
         }
         // 商品结算信息
         $CartModel = new CartModel();
