@@ -801,5 +801,6 @@
     "用户名4-16位纯数字": "Username 4-16 pure digits",
     "密码4-16位纯数字": "Password 4-16 pure digits",
     "20分钟及以上": "20 minutes and above",
-    "店铺名称": "Store Name"
+    "店铺名称": "Store Name",
+    "无权限": "No permission"
 }
