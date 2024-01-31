@@ -66,7 +66,12 @@ class Call extends BaseModel
     public function getUnSendList(int $shopSupplierId = 0)
     {
         $unSendList = $this->withoutGlobalScope()->where('is_send', 0)->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->limit(5)->order(['create_time' => 'asc'])->select();
-        $this->withoutGlobalScope()->where('is_send', 0)->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->limit(5)->order(['create_time' => 'asc'])->update(['is_send' => 1]);
+        // $this->withoutGlobalScope()->where('is_send', 0)->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->limit(5)->order(['create_time' => 'asc'])->update(['is_send' => 1]);
+        // 新增呼叫语音文字
+        foreach ($unSendList as &$item) {
+            $text = $item['call_type'] == 1 ? __('呼叫服务员') : __('呼叫结账');
+            $item['call_text'] = __('桌位') .$item['table_no'] . $text;
+        }
         return $unSendList;
     }
 }

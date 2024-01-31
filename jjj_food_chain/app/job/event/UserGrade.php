@@ -32,7 +32,7 @@ class UserGrade
             return false;
         }
         // 获取所有等级
-        $list = GradeModel::getUsableList($user['app_id']);
+        $list = GradeModel::getUsable($user['app_id']);
         if ($list->isEmpty()) {
             return false;
         }
@@ -45,12 +45,10 @@ class UserGrade
             $is_upgrade = $this->checkCanUpdate($user, $grade);
             if ($is_upgrade) {
                 $upgradeGrade = $grade;
-                continue;
-            } else {
                 break;
             }
         }
-        if ($upgradeGrade) {
+        if ($upgradeGrade &&  $user['grade_id'] != $upgradeGrade['grade_id']) {
             $this->dologs('setUserGrade', [
                 'user_id' => $user['user_id'],
                 'grade_id' => $upgradeGrade['grade_id'],
@@ -65,17 +63,37 @@ class UserGrade
      */
     public function checkCanUpdate($user, $grade)
     {
+//        // 按消费升级
+//        if ($grade['open_money'] == 1 && $user['expend_money'] >= $grade['upgrade_money']) {
+//            return true;
+//        }
+//        // 按积分升级
+//        if ($grade['open_points'] == 1 && $user['total_points'] >= $grade['upgrade_points']) {
+//            return true;
+//        }
+//        // 按消费升级
+//        if ($grade['open_invite'] == 1 && $user['total_invite'] >= $grade['upgrade_invite']) {
+//            return true;
+//        }
+//        return false;
+
+        // 按积分与消费升级
+        if ($grade['open_money'] == 1 && $grade['open_points'] == 1) {
+            if ($user['expend_money'] >= $grade['upgrade_money'] && $user['total_points'] >= $grade['upgrade_points']) {
+                return true;
+            }
+        }
         // 按消费升级
-        if ($grade['open_money'] == 1 && $user['expend_money'] >= $grade['upgrade_money']) {
-            return true;
+        if ($grade['open_money'] == 1) {
+            if ($user['expend_money'] >= $grade['upgrade_money']) {
+                return true;
+            }
         }
         // 按积分升级
-        if ($grade['open_points'] == 1 && $user['total_points'] >= $grade['upgrade_points']) {
-            return true;
-        }
-        // 按消费升级
-        if ($grade['open_invite'] == 1 && $user['total_invite'] >= $grade['upgrade_invite']) {
-            return true;
+        if ($grade['open_points'] == 1) {
+            if ($user['total_points'] >= $grade['upgrade_points']) {
+                return true;
+            }
         }
         return false;
     }
