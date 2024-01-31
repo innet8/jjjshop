@@ -41,10 +41,26 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="total_income" :label="$t('营业收入')"></el-table-column>
-                <el-table-column prop="cash_income" :label="$t('现金收入')"></el-table-column>
-                <el-table-column prop="previous_shift_cash" :label="$t('上一班遗留备用金')"></el-table-column>
-                <el-table-column prop="cash_left" :label="$t('本班遗留备用金')"></el-table-column>
+                <el-table-column prop="total_income" :label="$t('营业收入')">
+                    <template #default="scope">
+                        {{ currency.unit }}{{ scope.row.total_income }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="cash_income" :label="$t('现金收入')">
+                    <template #default="scope">
+                        {{ currency.unit }}{{ scope.row.cash_income }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="previous_shift_cash" :label="$t('上一班遗留备用金')">
+                    <template #default="scope">
+                        {{ currency.unit }}{{ scope.row.previous_shift_cash }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="cash_left" :label="$t('本班遗留备用金')">
+                    <template #default="scope">
+                        {{ currency.unit }}{{ scope.row.cash_left }}
+                    </template>
+                </el-table-column>
                 <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
                 <el-table-column fixed="right" :label="$t('操作')" width="120">
                     <template #default="scope">
@@ -72,6 +88,7 @@ import { useUserStore } from '@/store';
 import StatisticsApi from '@/api/statistics.js';
 import detail from './detail.vue'
 import { languageStore } from '@/store/model/language.js';
+const { currency } = useUserStore();
 const languageTag = languageStore().language
 const { token } = useUserStore();
 export default {
@@ -98,6 +115,7 @@ export default {
             detailId: {},
             open: false,
             languageTag:languageTag,
+            currency:currency,
         }
     },
 
