@@ -16,7 +16,7 @@
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
                     <el-table-column prop="name" :label="$t('等级名称')"></el-table-column>
-                    <el-table-column prop="weight" :label="$t('排序')"></el-table-column>
+                    <el-table-column prop="weight" :label="$t('等级权重')"></el-table-column>
                     <el-table-column prop="equity" :label="$t('折扣')" >
                         <template #default="scope">
                             <span class="red fb">{{ scope.row.equity }}%</span>
