@@ -49,7 +49,9 @@ class Call extends Controller
      * @Apidoc\Method("POST")
      * @Apidoc\Url("/index.php/cashier/call.call/unprocessed")
      * @Apidoc\Returned("count", type="int", desc="未处理数量")
-     * @Apidoc\Returned("list", type="int", desc="推送消息列表")
+     * @Apidoc\Returned("list", type="array", desc="推送消息列表", ref="app\common\model\call\Call\getUnSendList", children={
+     *    @Apidoc\Param("call_text", type="string", desc="呼叫文字"),
+     * })
      */
     public function unprocessed()
     {
