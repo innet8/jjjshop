@@ -165,7 +165,7 @@ class Card extends CardModel
             return false;
         }
         if ($this->checkUserConsumeRecord($detail['user_id'])) {
-            $this->error = "该用户已有余额/积分消费记录，无法撤销";
+            $this->error = "会员卡已使用，无法撤销";
             return false;
         }
         //
