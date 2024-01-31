@@ -95,31 +95,49 @@ class helper
         return $source;
     }
 
+    /**
+     * 减法计算
+     */
     public static function bcsub($leftOperand, $rightOperand, $scale = 2)
     {
         return \bcsub($leftOperand, $rightOperand, $scale);
     }
 
+    /**
+     * 加法计算
+     */
     public static function bcadd($leftOperand, $rightOperand, $scale = 2)
     {
         return \bcadd($leftOperand, $rightOperand, $scale);
     }
 
+    /**
+     * 乘法计算
+     */
     public static function bcmul($leftOperand, $rightOperand, $scale = 2)
     {
         return \bcmul($leftOperand, $rightOperand, $scale);
     }
 
+    /**
+     * 除法计算
+     */
     public static function bcdiv($leftOperand, $rightOperand, $scale = 2)
     {
         return \bcdiv($leftOperand, $rightOperand, $scale);
     }
 
+    /**
+     * 比较两个高精度数字的大小
+     */
     public static function bccomp($leftOperand, $rightOperand, $scale = 2)
     {
         return \bccomp($leftOperand, $rightOperand, $scale);
     }
 
+    /**
+     * 比较两个高精度数字是否相等
+     */
     public static function bcequal($leftOperand, $rightOperand, $scale = 2)
     {
         return self::bccomp($leftOperand, $rightOperand, $scale) === 0;
