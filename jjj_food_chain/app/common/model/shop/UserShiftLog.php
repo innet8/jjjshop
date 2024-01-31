@@ -245,7 +245,9 @@ class UserShiftLog extends BaseModel
             $this->error = '本班取出現金不能大于当前钱箱现金总额';
             return false;
         }
-        if ($cash_left > $cash_income) {
+        // 总钱箱现金
+        $current_cash_total = helper::bcadd($previous_shift_cash, $cash_income);
+        if ($cash_left > $current_cash_total) {
             $this->error = '本班遗留备用金不能大于当前钱箱现金总额';
             return false;
         }
@@ -274,7 +276,7 @@ class UserShiftLog extends BaseModel
                 'shift_user_id' => $params['shop_user_id'] ?? 0, // 交班人id
                 'shift_no' => generateNumber(), // 交班编号
                 'previous_shift_cash' => $previous_shift_cash, // 上一班遗留备用金
-                'current_cash_total' => $previous_shift_cash + $cash_income, // 当前钱箱现金总计(现金收入+上一班遗留备用金)
+                'current_cash_total' => $current_cash_total, // 当前钱箱现金总计(现金收入+上一班遗留备用金)
                 'incomes' => $incomes,
                 'total_income' => $totalIncome,
                 'refund_amount' => number_format((clone $orderModel)->sum("refund_money"), 2, '.', '') ?? 0, // 退款金额
