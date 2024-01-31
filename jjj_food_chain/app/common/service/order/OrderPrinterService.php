@@ -279,7 +279,7 @@ class OrderPrinterService
             $width = 48 - ($isThai ? 2 : 0);
             $leftWidth = 32;
             if ($isThai && $printers == PrinterTypeEnum::SUNMI_LAN ) {
-                $leftWidth =  26;
+                $leftWidth =  22;
             }
             $printer = new SunmiCloudPrinter(567);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
