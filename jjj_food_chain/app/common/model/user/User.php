@@ -53,6 +53,14 @@ class User extends BaseModel
     }
 
     /**
+     * 关联会员卡记录表
+     */
+    public function cardRecord()
+    {
+        return $this->hasOne('app\\common\\model\\user\\CardRecord', 'user_id', 'user_id')->where('is_delete', 0);
+    }
+
+    /**
      * 关联收货地址表
      */
     public function address()
@@ -101,7 +109,7 @@ class User extends BaseModel
             $filter['user_id'] = (int)$where;
         }
         //
-        $info = $model->where($filter)->with(['grade', 'card.cardRecord'])->find();
+        $info = $model->where($filter)->with(['grade', 'card', 'cardRecord'])->find();
         if ($info) {
             $info->password = '';
         }

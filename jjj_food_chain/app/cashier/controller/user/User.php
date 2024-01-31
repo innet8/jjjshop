@@ -52,7 +52,7 @@ class User extends Controller
 //            $where['mobile'] = $mobile;
 //        }
 //        $detail = UserModel::detail($where);
-        $detail = (new UserModel)->where('mobile', $mobile)->whereOr('user_id', $mobile)->where(['is_delete' => 0])->with(['grade', 'card.cardRecord'])->find();
+        $detail = (new UserModel)->where('mobile', $mobile)->whereOr('user_id', $mobile)->where(['is_delete' => 0])->with(['grade', 'card', 'cardRecord'])->find();
         if (!$detail) {
             return $this->renderError('用户不存在');
         }
