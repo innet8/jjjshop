@@ -8,7 +8,7 @@
         :close-on-press-escape="false">
         <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane :label="$t('充值余额')" name="first">
-                <el-form size="small" :model="form" ref="form" label-position="top">
+                <el-form size="small" :model="recharge" ref="form" label-position="top">
                     <el-form-item :label="$t('当前余额')" :label-width="formLabelWidth">
                         <el-input v-model="form.balance" autocomplete="off" disabled="disabled"></el-input>
                     </el-form-item>
@@ -23,8 +23,12 @@
                             <el-radio label="final">{{ $t('最终金额') }}</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item :label="$t('变更金额')" :label-width="formLabelWidth" prop="balance.money"
-                        :rules="[{ required: true, message: $t('请输入变更金额') }]">
+                    <el-form-item :label="$t('变更金额')" :label-width="formLabelWidth" prop="balance.money" :rules="[{
+                        validator: () => {
+                            return recharge.balance.money ? true : false;
+                        },
+                        message: $t('请输入变更金额')
+                    }]">
                         <el-input-number :controls="false" :min="0" :max="100000000" :placeholder="$t('请输入变更金额')"
                             v-model.number="recharge.balance.money"></el-input-number>
                     </el-form-item>
@@ -34,7 +38,7 @@
                 </el-form>
             </el-tab-pane>
             <el-tab-pane :label="$t('充值积分')" name="second">
-                <el-form size="small" :model="form" label-position="top">
+                <el-form size="small" :model="recharge" label-position="top">
                     <el-form-item :label="$t('积分')" :label-width="formLabelWidth">
                         <el-input v-model="form.points" autocomplete="off" disabled="disabled"></el-input>
                     </el-form-item>
@@ -48,8 +52,12 @@
                             <el-radio label="final">{{ $t('最终积分') }}</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item :label="$t('变更数量')" :label-width="formLabelWidth" prop="points.value"
-                        :rules="[{ required: true, message: $t('请输入变更数量') }]">
+                    <el-form-item :label="$t('变更数量')" :label-width="formLabelWidth" prop="points.value" :rules="[{
+                        validator: () => {
+                            return recharge.points.value ? true : false;
+                        },
+                        message: $t('请输入变更数量')
+                    }]">
                         <el-input-number :controls="false" :min="0" :max="100000000" :placeholder="$t('请输入变更数量')"
                             v-model.number="recharge.points.value"></el-input-number>
                     </el-form-item>

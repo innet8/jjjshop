@@ -38,7 +38,7 @@
         <div class="product-content">
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" style="width: 100%" v-loading="loading">
-                    <el-table-column prop="table_id" :label="$t('ID')"></el-table-column>
+                    <el-table-column prop="table_id" label="ID"></el-table-column>
                     <el-table-column prop="area_name" :label="$t('所属区域')"></el-table-column>
                     <el-table-column prop="type_name" :label="$t('所属类型')"></el-table-column>
                     <el-table-column prop="table_no" :label="$t('人数区间')">
