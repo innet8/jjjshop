@@ -1212,7 +1212,7 @@ class Order extends BaseModel
         $consume_fee = 0;
         $original_consume_fee = 0;
         if ($consumeFee['is_open']) {
-            $consume_rate = helper::bcdiv($consumeFee['tax_rate'], 100);
+            $consume_rate = helper::bcdiv($consumeFee['tax_rate'], 100, 4);
             $consume_fee = helper::bcmul($total_price, $consume_rate, 3);
             $original_consume_fee = helper::bcmul($order_price, $consume_rate, 3); // 原消费税
             $consume_fee = round($consume_fee, 2);
