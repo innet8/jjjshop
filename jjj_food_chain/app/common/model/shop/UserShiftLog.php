@@ -189,15 +189,15 @@ class UserShiftLog extends BaseModel
             }
         }
         //
-        $totalIncome = number_format($totalIncome, 2);
+        $totalIncome = helper::number2($totalIncome);
         return [
             'shift_user_id' => $params['shop_user_id'] ?? 0, // 交班人id
             'shift_no' => generateNumber(), // 交班编号
             'previous_shift_cash' => $previous_shift_cash, // 上一班遗留备用金
-            'current_cash_total' => number_format($previous_shift_cash + $cash_income, 2), // 当前钱箱现金总计(现金收入+上一班遗留备用金)
+            'current_cash_total' => helper::number2($previous_shift_cash + $cash_income), // 当前钱箱现金总计(现金收入+上一班遗留备用金)
             'incomes' => $incomes,
             'total_income' => $totalIncome,
-            'refund_amount' => number_format((clone $orderModel)->sum("refund_money"), 2, '.', '') ?? 0, // 退款金额
+            'refund_amount' => helper::number2((clone $orderModel)->sum("refund_money")) ?? 0, // 退款金额
             'cash_taken_out' => '0.00', // 本班取出现金
             'cash_left' => '0.00', // 本班遗留备用金
             'remark' => $params['remark'] ?? '', // 备注
