@@ -303,7 +303,7 @@ class Order extends Controller
      */
     public function detail($order_id)
     {
-        $detail = OrderModel::detail($order_id);
+        $detail = OrderModel::detailWithTrashed($order_id);
         return $this->renderSuccess('', compact('detail'));
     }
 
