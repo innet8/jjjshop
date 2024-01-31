@@ -277,10 +277,10 @@ class OrderPrinterService
         */
         if ($printers == PrinterTypeEnum::SUNMI_LAN || $printers['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
             $width = 48 - ($isThai ? 2 : 0);
-            if ($printers == PrinterTypeEnum::SUNMI_LAN ) {
-                $width = $width - 5;
-            }
             $leftWidth = 32;
+            if ($isThai && $printers == PrinterTypeEnum::SUNMI_LAN ) {
+                $leftWidth =  29;
+            }
             $printer = new SunmiCloudPrinter(567);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
             if ($printers == PrinterTypeEnum::SUNMI_LAN) {
