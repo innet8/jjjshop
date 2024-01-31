@@ -395,7 +395,7 @@ class Product extends BaseModel
         }
 
         // 兼容历史数据，如果找不到返回第一个
-        if (empty($result)) {
+        if (empty($result) && !empty($product['sku'][0] ?? '')) {
             $result[] = $product['sku'][0];
         }
 
