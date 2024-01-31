@@ -256,8 +256,8 @@ class UserShiftLog extends BaseModel
         }
         // 本班取出现金 + 本班遗留备用金 = 当前钱箱现金总计
         if (helper::bcadd($cash_taken_out, $cash_left) != $current_cash_total) {
-            $this->error = '输入的本班取出現金和本班遗留备用金总额与当前钱箱现金总计不符';
-            return false;
+            // $this->error = '输入的本班取出現金和本班遗留备用金总额与当前钱箱现金总计不符';
+            // return false;
         }
         $this->startTrans();
         try {
