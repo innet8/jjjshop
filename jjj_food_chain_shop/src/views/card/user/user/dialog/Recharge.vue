@@ -8,7 +8,7 @@
         :close-on-press-escape="false">
         <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane :label="$t('充值余额')" name="first">
-                <el-form size="small" :model="recharge" ref="form" label-position="top">
+                <el-form size="small" :model="recharge" ref="form0" label-position="top">
                     <el-form-item :label="$t('当前余额')" :label-width="formLabelWidth">
                         <el-input v-model="form.balance" autocomplete="off" disabled="disabled"></el-input>
                     </el-form-item>
@@ -38,7 +38,7 @@
                 </el-form>
             </el-tab-pane>
             <el-tab-pane :label="$t('充值积分')" name="second">
-                <el-form size="small" :model="recharge" label-position="top">
+                <el-form size="small" ref="form1" :model="recharge" label-position="top">
                     <el-form-item :label="$t('积分')" :label-width="formLabelWidth">
                         <el-input v-model="form.points" autocomplete="off" disabled="disabled"></el-input>
                     </el-form-item>
@@ -115,7 +115,7 @@ export default {
         /*充值*/
         addUser(e) {
             let self = this;
-            self.$refs.form.validate(valid => {
+            self.$refs[`form${this.source}`].validate(valid => {
                 if (valid) {
                     let params = self.recharge;
                     let user_id = e;
@@ -133,9 +133,6 @@ export default {
                                 type: 'success'
                             });
                             self.dialogFormVisible(true);
-                        } else {
-                            self.loading = false;
-                            ElMessage.error('错了哦，这是一条错误消息');
                         }
                     })
                         .catch(error => {

@@ -16,25 +16,25 @@
                 </p>
             </el-col>
             <el-col :span="12">
-                <p class="text">{{ $t('营业收入') }}:<span>{{ detail.total_income }}</span></p>
+                <p class="text">{{ $t('营业收入') }}:<span>{{ currency.unit }}{{ detail.total_income }}</span></p>
             </el-col>
 
             <el-col :span="12" v-if="!detail.incomes?.find(h=>h.pay_type == 40)">
-                <p class="text">{{ $t('现金收入') }}:<span>0.00</span></p>
+                <p class="text">{{ $t('现金收入') }}:<span>{{ currency.unit }}0.00</span></p>
             </el-col>
 
             <template v-for="item in detail.incomes">
                 <el-col :span="12">
-                    <p class="text">{{ item.pay_type_name }}:<span>{{ item.price }}</span></p>
+                    <p class="text">{{ item.pay_type_name }}:<span>{{ currency.unit }}{{ item.price }}</span></p>
                 </el-col>
             </template>
 
 
             <el-col :span="12">
-                <p class="text">{{ $t('上一班遗留备用金') }}:<span>{{ detail.previous_shift_cash }}</span></p>
+                <p class="text">{{ $t('上一班遗留备用金') }}:<span>{{ currency.unit }}{{ detail.previous_shift_cash }}</span></p>
             </el-col>
             <el-col :span="12">
-                <p class="text">{{ $t('本班遗留备用金') }}:<span>{{ detail.cash_left }}</span></p>
+                <p class="text">{{ $t('本班遗留备用金') }}:<span>{{ currency.unit }}{{ detail.cash_left }}</span></p>
             </el-col>
         </el-row>
 
@@ -55,6 +55,8 @@
 </template>
 <script>
 import StatisticsApi from '@/api/statistics.js';
+import { useUserStore } from '@/store';
+const { currency } = useUserStore();
 export default {
     props: ['open', 'detailId'],
 
@@ -67,9 +69,11 @@ export default {
     data() {
         return {
             dialogVisible: false,
+            loading: false,
             id: {},
             detail: {},
             tableData: [],
+            currency:currency,
         }
     },
 
