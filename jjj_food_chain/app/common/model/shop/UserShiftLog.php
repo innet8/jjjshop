@@ -244,12 +244,12 @@ class UserShiftLog extends BaseModel
         $previous_shift_cash = $lastRecord ? $lastRecord->cash_left : 0;
         // 当前钱箱现金总计(现金收入+上一班遗留备用金) 10-余额收款 40-现金收款
         $cash_income = (clone $orderModel)->where('pay_type', 40)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0;
-        if ($cash_taken_out > $cash_income) {
+        // 总钱箱现金
+        $current_cash_total = helper::bcadd($previous_shift_cash, $cash_income);
+        if ($cash_taken_out > $current_cash_total) {
             $this->error = '本班取出現金不能大于当前钱箱现金总额';
             return false;
         }
-        // 总钱箱现金
-        $current_cash_total = helper::bcadd($previous_shift_cash, $cash_income);
         if ($cash_left > $current_cash_total) {
             $this->error = '本班遗留备用金不能大于当前钱箱现金总额';
             return false;
