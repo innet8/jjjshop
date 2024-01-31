@@ -777,9 +777,17 @@ class Order extends OrderModel
         try {
             $detail = Order::detail($order_id);
             $force = $detail['extra_times'] <= 0;
-            OrderProduct::destroy(function ($query) use ($order_id) {
-                $query->where('order_id', '=', $order_id);
-            }, $force);
+            // 获取订单产品
+            $orderProducts = OrderProduct::where('order_id', '=', $order_id)->select();
+            foreach ($orderProducts as $orderProduct) {
+                // 如果未送厨，强制删除
+                if ($orderProduct['is_send_kitchen'] == 0) {
+                    $orderProduct->force()->delete();
+                } else {
+                    // 如果已送厨，软删除
+                    $orderProduct->delete();
+                }
+            }
             //
             if ($force) {
                 $detail->force()->delete();
@@ -789,7 +797,6 @@ class Order extends OrderModel
             $this->commit();
             return true;
         } catch (\Exception $e) {
-//            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
             $this->error = $e->getMessage();
             $this->rollback();
             return false;
