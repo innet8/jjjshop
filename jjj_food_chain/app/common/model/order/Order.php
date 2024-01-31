@@ -436,11 +436,11 @@ class Order extends BaseModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public static function detailWithTrashed($where, $with = ['user', 'address', 'product' => ['image'], 'extract', 'supplier', 'cashier'])
+    public static function detailWithTrashed($where)
     {
         $filter = is_array($where) ? $where : ['order_id' => (int)$where];
-        $query = self::with($with);
-        $query = $query->with([
+        $query =  self::with([
+            'user', 'address', 'extract', 'supplier', 'cashier',
             'product.image' => function($query){
                 $query->withTrashed();
             }

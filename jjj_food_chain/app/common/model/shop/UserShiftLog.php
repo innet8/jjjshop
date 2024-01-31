@@ -123,12 +123,15 @@ class UserShiftLog extends BaseModel
             ->where('a.cashier_id', '=', $shift_user_id)
             ->where('a.create_time', 'between', [strtotime($startTime), strtotime($endTime)])
             ->group("c.category_id")
+            // ->field("a.order_id, a.pay_price, a.refund_money, c.name, c.category_id, count(DISTINCT a.order_id) as sales")
             ->field("c.name, count(DISTINCT a.order_id) as sales, sum(DISTINCT a.pay_price - a.refund_money) as prices")
             ->select()
             ->append([])?->toArray();
+        trace($datas);
         //
         foreach ($datas as $key => $data){
             $datas[$key]['name_text'] = Category::getNameTextAttr($data['name'] ?: '');
+            // $datas[$key]['prices'] = number_format(helper::bcsub($data['pay_price'], $data['refund_money']), 2);
         }
         //
         return $datas;
@@ -249,6 +252,11 @@ class UserShiftLog extends BaseModel
         $current_cash_total = helper::bcadd($previous_shift_cash, $cash_income);
         if ($cash_left > $current_cash_total) {
             $this->error = '本班遗留备用金不能大于当前钱箱现金总额';
+            return false;
+        }
+        // 本班取出现金 + 本班遗留备用金 = 当前钱箱现金总计
+        if (helper::bcadd($cash_taken_out, $cash_left) != $current_cash_total) {
+            $this->error = '输入的本班取出現金和本班遗留备用金总额与当前钱箱现金总计不符';
             return false;
         }
         $this->startTrans();
