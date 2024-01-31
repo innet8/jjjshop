@@ -179,7 +179,8 @@ class User extends BaseModel
     public function onBatchIncPoints($data)
     {
         foreach ($data as $userId => $expendPoints) {
-            $this->where(['user_id' => $userId])->inc('points', $expendPoints)->update();
+            $this->where(['user_id' => $userId])->inc('points', $expendPoints)->inc('total_points', $expendPoints)->update();
+            event('UserGrade', $userId);
         }
         return true;
     }
