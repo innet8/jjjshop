@@ -164,7 +164,7 @@ class OrderPrinterService
         *商米打印机 
         *
         */
-        if ($printers == PrinterTypeEnum::SUNMI_LAN || $printers['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
+        if (!is_string($printers) && $printers['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
             $printer = new SunmiCloudPrinter(567);
             $printer->lineFeed();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
@@ -275,7 +275,7 @@ class OrderPrinterService
         *芯烨打印机 
         *
         */
-        if ($printers['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
+        if ($printers == PrinterTypeEnum::SUNMI_LAN || $printers['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
             $width = 48 - ($isThai ? 2 : 0);
             $leftWidth = 32;
             $printer = new SunmiCloudPrinter(567);
