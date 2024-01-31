@@ -112,11 +112,16 @@ class User extends UserModel
             return false;
         }
 
-        // 校验手机号格式
-        if (!checkMobile($mobile)) {
-            $this->error = '手机号格式不正确';
+        // 最长20位，不限制格式
+        if (strlen($mobile) > 20) {
+            $this->error = '手机号长度不能超过20位';
             return false;
         }
+        // 校验手机号格式
+        // if (!checkMobile($mobile)) {
+        //     $this->error = '手机号格式不正确';
+        //     return false;
+        // }
 
         $user = $this->where('mobile', '=', $mobile)
             ->where('is_delete', '=', 0)
