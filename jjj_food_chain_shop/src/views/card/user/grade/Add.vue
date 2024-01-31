@@ -11,9 +11,9 @@
                 :rules="[{ required: true, message: $t('请输入等级名称') }]">
                 <el-input v-model="form.name" :placeholder="$t('请输入等级名称')"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('排序')" :label-width="formLabelWidth" prop="weight"
-                :rules="[{ required: true, message: $t('接近0，排序等級越高') }]">
-                <el-input v-model="form.weight" type="number" :placeholder="$t('接近0，排序等級越高')"></el-input>
+            <el-form-item :label="$t('等级权重')" :label-width="formLabelWidth" prop="weight"
+                :rules="[{ required: true, message: $t('请输入等级权重') }]">
+                <el-input v-model="form.weight" type="number" :placeholder="$t('权重越大，等级越高')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('等级折扣')" :label-width="formLabelWidth" prop="equity"
                 :rules="[{ required: true, message: $t('请输入等级折扣') }]">
