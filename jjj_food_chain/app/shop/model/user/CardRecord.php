@@ -48,16 +48,15 @@ class CardRecord extends CardRecordModel
     public function delay($data)
     {
         $isExist = self::checkExistByUserId($this['user_id'], $data['order_id']);
-        if ($isExist) {
-            $this->error = "该会员已存在会员卡，请勿延期";
+        if (!$isExist) {
+            $this->error = "会员卡不存在";
             return false;
         }
         $update['expire_time'] = strtotime($data['expire_time']);
-        // if ($update['expire_time'] < $this['expire_time']) {
-        //     $this->error = "延期日期不能小于当前有效期";
-        //     return false;
-        // }
+        if ($update['expire_time'] < time()) {
+            $this->error = "有效期不能小于当前日期";
+            return false;
+        }
         return $this->save($update);
     }
-
 }

@@ -23,7 +23,12 @@ class Product extends ProductModel
                 ->whereOr('parent_id', '=', $params['category_id'])
                 ->column('category_id');
             $model = $model->whereIn('product.category_id', $categoryIds);
+        } else {
+            // 全部
+            $categoryIds = Category::where('status', '=', 1)->column('category_id');
+            $model = $model->whereIn('product.category_id', $categoryIds);
         }
+
         if (!empty($params['search'])) {
             $model = $model->like('product_name', trim($params['search']));
         }
