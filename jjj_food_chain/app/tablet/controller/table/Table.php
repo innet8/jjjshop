@@ -82,4 +82,14 @@ class Table extends Controller
         $table['tablet'] = $tablet;
         return $this->renderSuccess('桌台信息', $table);
     }
+
+    /**
+     * @Apidoc\Title("桌台")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/index.php/tablet/table.table/ping")
+     */
+    public function ping()
+    {
+        return $this->renderSuccess('请求成功');
+    }
 }
