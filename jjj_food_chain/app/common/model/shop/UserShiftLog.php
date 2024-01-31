@@ -180,7 +180,7 @@ class UserShiftLog extends BaseModel
                 ->find()
                 ->append([])['price'] ?? 0;
             if ($value > 0) {
-                $totalIncome = helper::bcadd($totalIncome, $value);
+                $totalIncome = helper::number2(helper::bcadd($totalIncome, $value));
                 $incomes[] = [
                     'pay_type' => $payType['value'],
                     'pay_type_name' => OrderPayTypeEnum::data($payType['value'],2)['name'],
@@ -189,15 +189,15 @@ class UserShiftLog extends BaseModel
             }
         }
         //
-        $totalIncome = number_format($totalIncome, 2);
+        $totalIncome = helper::number2($totalIncome, 2);
         return [
             'shift_user_id' => $params['shop_user_id'] ?? 0, // 交班人id
             'shift_no' => generateNumber(), // 交班编号
             'previous_shift_cash' => $previous_shift_cash, // 上一班遗留备用金
-            'current_cash_total' => number_format($previous_shift_cash + $cash_income, 2), // 当前钱箱现金总计(现金收入+上一班遗留备用金)
+            'current_cash_total' => helper::number2($previous_shift_cash + $cash_income, 2), // 当前钱箱现金总计(现金收入+上一班遗留备用金)
             'incomes' => $incomes,
             'total_income' => $totalIncome,
-            'refund_amount' => number_format((clone $orderModel)->sum("refund_money"), 2, '.', '') ?? 0, // 退款金额
+            'refund_amount' => helper::number2((clone $orderModel)->sum("refund_money"), 2, '.', '') ?? 0, // 退款金额
             'cash_taken_out' => '0.00', // 本班取出现金
             'cash_left' => '0.00', // 本班遗留备用金
             'remark' => $params['remark'] ?? '', // 备注
@@ -245,7 +245,7 @@ class UserShiftLog extends BaseModel
         // 当前钱箱现金总计(现金收入+上一班遗留备用金) 10-余额收款 40-现金收款
         $cash_income = (clone $orderModel)->where('pay_type', 40)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0;
         // 总钱箱现金
-        $current_cash_total = helper::bcadd($previous_shift_cash, $cash_income);
+        $current_cash_total = helper::number2(helper::bcadd($previous_shift_cash, $cash_income));
         if ($cash_taken_out > $current_cash_total) {
             $this->error = '本班取出現金不能大于当前钱箱现金总额';
             return false;
@@ -255,9 +255,9 @@ class UserShiftLog extends BaseModel
             return false;
         }
         // 本班取出现金 + 本班遗留备用金 = 当前钱箱现金总计
-        if (helper::bcadd($cash_taken_out, $cash_left) != $current_cash_total) {
-            // $this->error = '输入的本班取出現金和本班遗留备用金总额与当前钱箱现金总计不符';
-            // return false;
+        if (helper::number2(helper::bcadd($cash_taken_out, $cash_left)) != $current_cash_total) {
+            $this->error = '输入的本班取出現金和本班遗留备用金总额与当前钱箱现金总计不符';
+            return false;
         }
         $this->startTrans();
         try {
@@ -272,7 +272,7 @@ class UserShiftLog extends BaseModel
                     ->find()
                     ->append([])['price'] ?? 0;
                 if ($value > 0) {
-                    $totalIncome = helper::bcadd($totalIncome, $value);
+                    $totalIncome = helper::number2(helper::bcadd($totalIncome, $value));
                     $incomes[] = [
                         'pay_type' => $payType['value'],
                         'price' => $value,
