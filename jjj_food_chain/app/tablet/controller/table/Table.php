@@ -18,12 +18,14 @@ class Table extends Controller
      * @Apidoc\Title("桌台列表")
      * @Apidoc\Desc("桌台列表")
      * @Apidoc\Method("POST")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌号ID")
      * @Apidoc\Url("/index.php/tablet/table.table/index")
      */
-    public function index()
+    public function index($table_id = 0)
     {
         $list = (new TableModel)->getAll($this->table['shop_supplier_id']);
-        return $this->renderSuccess('', compact('list'));
+        $curTable = TableModel::where('table_id', $table_id)->find();
+        return $this->renderSuccess('', compact('list', 'curTable'));
     }
 
     /**
