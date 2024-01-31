@@ -294,8 +294,10 @@ class Order extends OrderModel
             // $OrderCompleteService->complete([$this], static::$app_id);
 
             // 更新账户积分
-            $setting = SettingModel::getItem('points');
-            $ratio = $setting['gift_ratio'] / 100; // 积分赠送比例
+            // $setting = SettingModel::getItem('points');
+            // $ratio = $setting['gift_ratio'] / 100; // 积分赠送比例
+            // points_bonus-积分赠送 pay_price-实际支付金额 积分比例计算
+            $ratio = helper::bcdiv($this['points_bonus'], $this['pay_price']);
             $points = helper::bcmul($data['refund_money'], $ratio, 2); // 应扣除积分
             UserModel::where('user_id', '=', $this['user_id'])->dec('points', $points)->dec('total_points', $points)->update();
             PointsLogModel::add([
