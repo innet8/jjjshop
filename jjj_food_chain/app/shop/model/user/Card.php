@@ -2,12 +2,14 @@
 
 namespace app\shop\model\user;
 
-use app\common\model\user\Card as CardModel;
 use app\shop\controller\plus\queue\Record;
+use app\common\model\user\Card as CardModel;
+use app\common\enum\user\pointsLog\PointsLogSceneEnum;
 use app\shop\model\user\CardRecord as CardRecordModel;
-use app\shop\model\plus\coupon\UserCoupon as UserCouponModel;
 use app\common\enum\user\balanceLog\BalanceLogSceneEnum;
 use app\common\model\user\BalanceLog as BalanceLogModel;
+use app\common\model\user\PointsLog as PointsLogModel;
+use app\shop\model\plus\coupon\UserCoupon as UserCouponModel;
 
 /**
  * 会员卡模型
@@ -137,6 +139,18 @@ class Card extends CardModel
         return true;
     }
 
+    // 检测用户是否有余额/积分消费记录
+    public function checkUserConsumeRecord($userId)
+    {
+        if ((new BalanceLogModel)->where('user_id', $userId)->where('scene', BalanceLogSceneEnum::CONSUME)->findOrEmpty())
+        {
+            return true;
+        }
+
+        return (new PointsLogModel)->where('user_id', $userId)->where('scene', PointsLogSceneEnum::CONSUME)->findOrEmpty();
+    }
+
+
     /**
      * 撤销
      */
@@ -145,10 +159,16 @@ class Card extends CardModel
         $CardRecordModel = new CardRecordModel;
         $detail = $CardRecordModel::detail($data['order_id']);
         $cardDetail = self::detail($detail['card_id']);
+        //
         if (!$detail || $detail['is_delete'] != 0) {
             $this->error = "记录不存在";
             return false;
         }
+        if ($this->checkUserConsumeRecord($detail['user_id'])) {
+            $this->error = "该用户已有余额/积分消费记录，无法撤销";
+            return false;
+        }
+        //
         $this->startTrans();
         try {
             $detail->save(['is_delete' => 1]);
