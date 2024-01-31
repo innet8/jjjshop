@@ -13,6 +13,7 @@ use app\common\enum\order\OrderPayStatusEnum;
 use app\common\model\order\Order as OrderModel;
 use app\common\model\settings\Setting as SettingModel;
 use app\common\service\order\OrderHandoverPrinterService;
+use app\common\model\order\OrderProduct as OrderProductModel;
 /**
  * 用户交班记录模型
  */
@@ -108,30 +109,29 @@ class UserShiftLog extends BaseModel
     /**
      * 获取销售信息
      */
-    public function getSalesInfo($shift_user_id, $shop_user_id, $startTime, $endTime)
+    public function getSalesInfo($shift_user_id, $shop_supplier_id, $startTime, $endTime)
     {
-        $datas = OrderModel::alias('a')
-            ->leftJoin('order_product rp','a.order_id = rp.order_id')
-            ->leftJoin('product p','p.product_id = rp.product_id')
-            ->leftJoin('category c2', 'p.category_id = c2.category_id')
-            ->leftJoin('category c', 'c.category_id = IF(c2.parent_id = 0, c2.category_id, c2.parent_id)')
+        $datas = OrderProductModel::alias('op')
+            ->distinct(true)
+            ->join('order a', 'op.order_id = a.order_id', 'left')
+            ->join('product p', 'op.product_id = p.product_id', 'left')
+            ->join('category c2', 'p.category_id = c2.category_id', 'left')
+            ->join('category c', 'c.category_id = IF(c2.parent_id = 0, c2.category_id, c2.parent_id)', 'left')
             ->where('a.pay_status', '=',  OrderPayStatusEnum::SUCCESS)
             ->where('a.order_status', '=', OrderStatusEnum::COMPLETED)
             ->where('a.eat_type', '<>', 0)
             ->where('a.extra_times', '>', 0) // 已送厨
-            ->where('a.shop_supplier_id', '=', $shop_user_id)
+            ->where('c.parent_id', '=', 0) // 只查询一级分类
+            ->where('a.shop_supplier_id', '=', $shop_supplier_id)
             ->where('a.cashier_id', '=', $shift_user_id)
             ->where('a.create_time', 'between', [strtotime($startTime), strtotime($endTime)])
             ->group("c.category_id")
-            // ->field("a.order_id, a.pay_price, a.refund_money, c.name, c.category_id, count(DISTINCT a.order_id) as sales")
-            ->field("c.name, count(DISTINCT a.order_id) as sales, sum(DISTINCT a.pay_price - a.refund_money) as prices")
+            ->field("c.name, count(a.order_id) as sales, sum(op.total_pay_price) as prices")
             ->select()
             ->append([])?->toArray();
-        trace($datas);
         //
         foreach ($datas as $key => $data){
             $datas[$key]['name_text'] = Category::getNameTextAttr($data['name'] ?: '');
-            // $datas[$key]['prices'] = number_format(helper::bcsub($data['pay_price'], $data['refund_money']), 2);
         }
         //
         return $datas;
@@ -180,7 +180,7 @@ class UserShiftLog extends BaseModel
                 ->find()
                 ->append([])['price'] ?? 0;
             if ($value > 0) {
-                $totalIncome = helper::bcadd($totalIncome, $value);
+                $totalIncome = helper::number2(helper::bcadd($totalIncome, $value));
                 $incomes[] = [
                     'pay_type' => $payType['value'],
                     'pay_type_name' => OrderPayTypeEnum::data($payType['value'],2)['name'],
@@ -245,7 +245,7 @@ class UserShiftLog extends BaseModel
         // 当前钱箱现金总计(现金收入+上一班遗留备用金) 10-余额收款 40-现金收款
         $cash_income = (clone $orderModel)->where('pay_type', 40)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0;
         // 总钱箱现金
-        $current_cash_total = helper::bcadd($previous_shift_cash, $cash_income);
+        $current_cash_total = helper::number2(helper::bcadd($previous_shift_cash, $cash_income));
         if ($cash_taken_out > $current_cash_total) {
             $this->error = '本班取出現金不能大于当前钱箱现金总额';
             return false;
@@ -255,7 +255,7 @@ class UserShiftLog extends BaseModel
             return false;
         }
         // 本班取出现金 + 本班遗留备用金 = 当前钱箱现金总计
-        if (helper::bcadd($cash_taken_out, $cash_left) != $current_cash_total) {
+        if (helper::number2(helper::bcadd($cash_taken_out, $cash_left)) != $current_cash_total) {
             $this->error = '输入的本班取出現金和本班遗留备用金总额与当前钱箱现金总计不符';
             return false;
         }
@@ -272,7 +272,7 @@ class UserShiftLog extends BaseModel
                     ->find()
                     ->append([])['price'] ?? 0;
                 if ($value > 0) {
-                    $totalIncome = helper::bcadd($totalIncome, $value);
+                    $totalIncome = helper::number2(helper::bcadd($totalIncome, $value));
                     $incomes[] = [
                         'pay_type' => $payType['value'],
                         'price' => $value,

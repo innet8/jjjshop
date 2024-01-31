@@ -81,9 +81,9 @@ class OrderProduct extends OrderProductModel
 
         if ($category_id > 0) {
             $query = $query->where(function ($query) use ($category_id) {
-                            $query->where('c.category_id', '=', $category_id)
-                                ->whereOr('c2.category_id', '=', $category_id);
-                        });
+                $query->where('c.category_id', '=', $category_id)
+                    ->whereOr('c2.category_id', '=', $category_id);
+            });
         }
 
         $list = $query->field('p.product_id, p.product_name, c.category_id, c.name as category_name, c.name as category_name_text, c.parent_id, c.sort as category_sort, op.product_id, op.is_send_kitchen, op.send_kitchen_time')
