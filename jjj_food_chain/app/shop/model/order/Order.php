@@ -2,19 +2,21 @@
 
 namespace app\shop\model\order;
 
-use app\common\model\order\Order as OrderModel;
 use app\common\library\helper;
 use app\common\enum\order\OrderTypeEnum;
-use app\common\service\message\MessageService;
-use app\common\service\order\OrderRefundService;
+use app\shop\service\order\ExportService;
+use app\common\model\user\User as UserModel;
 use app\common\enum\order\OrderPayStatusEnum;
+use app\common\enum\settings\DeliveryTypeEnum;
+use app\common\service\message\MessageService;
+use app\common\model\order\Order as OrderModel;
+use app\common\service\order\OrderRefundService;
+use app\common\service\order\OrderCompleteService;
+use app\shop\model\user\PointsLog as PointsLogModel;
+use app\common\enum\user\pointsLog\PointsLogSceneEnum;
+use app\common\model\settings\Setting as SettingModel;
 use app\common\service\product\factory\ProductFactory;
 use app\common\model\plus\coupon\UserCoupon as UserCouponModel;
-use app\common\model\user\User as UserModel;
-use app\common\enum\settings\DeliveryTypeEnum;
-use app\shop\service\order\ExportService;
-use app\common\model\settings\Setting as SettingModel;
-use app\common\service\order\OrderCompleteService;
 
 /**
  * 订单模型
@@ -286,9 +288,24 @@ class Order extends OrderModel
                 'order_status' => 30,
                 'refund_money' => $this['refund_money'] + $data['refund_money']
             ]);
+
             // 执行订单完成后的操作
-            $OrderCompleteService = new OrderCompleteService(OrderTypeEnum::MASTER);
-            $OrderCompleteService->complete([$this], static::$app_id);
+            // $OrderCompleteService = new OrderCompleteService(OrderTypeEnum::MASTER);
+            // $OrderCompleteService->complete([$this], static::$app_id);
+
+            // 更新账户积分
+            $setting = SettingModel::getItem('points');
+            $ratio = $setting['gift_ratio'] / 100; // 积分赠送比例
+            $points = helper::bcmul($data['refund_money'], $ratio, 2); // 应扣除积分
+            UserModel::where('user_id', '=', $this['user_id'])->dec('points', $points)->dec('total_points', $points)->update();
+            PointsLogModel::add([
+                'user_id' => $this['user_id'],
+                'scene' => PointsLogSceneEnum::REFUND,
+                'value' => $points,
+                'describe' => "退款扣除：{$this['order_no']}",
+                'remark' => '',
+            ]);
+
             return true;
         });
         return $status;
