@@ -53,6 +53,19 @@ class Grade extends BaseModel
     }
 
     /**
+     * 获取可用的会员等级列表(升级使用)
+     */
+    public static function getUsable($appId = null)
+    {
+        $model = new static;
+        $appId = $appId ? $appId : $model::$app_id;
+        return $model->where('is_delete', '=', '0')
+            ->where('app_id', '=', $appId)
+            ->order(['weight' => 'desc'])
+            ->select();
+    }
+
+    /**
      * 获取默认等级id
      */
     public static function getDefaultGradeId(){

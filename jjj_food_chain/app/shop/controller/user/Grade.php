@@ -49,7 +49,7 @@ class Grade extends Controller
         if ($model->add($this->postData())) {
             return $this->renderSuccess('添加成功');
         }
-        return $this->renderError('添加失败');
+        return $this->renderError($model->getError() ?: '添加失败');
     }
 
     /**

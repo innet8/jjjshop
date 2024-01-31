@@ -27,6 +27,19 @@ class Grade extends GradeModel
      */
     public function add($data)
     {
+        if (!$data['weight']) {
+            $this->error = "等级权重不能为空";
+            return false;
+        }
+        if ($data['weight'] < 1 || $data['weight'] > 99) {
+            $this->error = "等级权重范围1-99";
+            return false;
+        }
+        $exist = self::where('weight', $data['weight'])->count();
+        if ($exist > 0) {
+            $this->error = "等级权重不能重复";
+            return false;
+        }
         $data['app_id'] = self::$app_id;
         $data['is_default'] = 0;
         $data['remark'] = $this->setRemark($data);
