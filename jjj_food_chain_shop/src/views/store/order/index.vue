@@ -104,13 +104,18 @@
                     <el-table-column prop="order_price" :label="$t('订单金额')">
                         <template #default="scope">
 
-                            <p>{{ currency.unit }}{{ scope.row.order_price }}</p>
+                            <p>{{ currency.unit }}{{ scope.row.order_price }}
+                                <span>{{ currency.vices?.vice_unit }}{{ (Number(scope.row.order_price) * Number(currency.vices?.unit_rate)).toFixed(2) }}</span>
+                            </p>
                         </template>
                     </el-table-column>
                     <el-table-column prop="pay_price" :label="$t('实付金额')">
                         <template #default="scope">
                             <div>
-                                <div class="orange" v-if=" scope.row.order_status.value == 30 ">{{ currency.unit }}{{ scope.row.pay_price }}</div>
+                                <div class="orange" v-if=" scope.row.order_status.value == 30 ">
+                                    {{ currency.unit }}{{ scope.row.pay_price }}
+                     
+                                </div>
                                 <div v-else>-</div>
                                 <!-- <p class="gray9" v-if="scope.row.setting_service_money > 0">({{ $t('服务费') }}：{{
                                     scope.row.setting_service_money }})</p>
