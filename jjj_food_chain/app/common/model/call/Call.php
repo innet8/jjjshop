@@ -54,7 +54,10 @@ class Call extends BaseModel
      */
     public function getUnprocessedCount(int $shopSupplierId = 0)
     {
-        return $this->withoutGlobalScope()->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->count();
+//        return $this->withoutGlobalScope()->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->count();
+        return $this->withoutGlobalScope()->where('status', 0)->where('shop_supplier_id', $shopSupplierId)
+            ->group('table_id')
+            ->count();
     }
 
     /**
@@ -63,7 +66,7 @@ class Call extends BaseModel
     public function getUnSendList(int $shopSupplierId = 0)
     {
         $unSendList = $this->withoutGlobalScope()->where('is_send', 0)->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->limit(5)->order(['create_time' => 'asc'])->select();
-//        $this->withoutGlobalScope()->where('is_send', 0)->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->limit(5)->order(['create_time' => 'asc'])->update(['is_send' => 1]);
+        $this->withoutGlobalScope()->where('is_send', 0)->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->limit(5)->order(['create_time' => 'asc'])->update(['is_send' => 1]);
         return $unSendList;
     }
 }
