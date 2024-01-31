@@ -42,7 +42,7 @@ class Card extends CardModel
             $model = $model->like('card_name', $data['card_name']);
         }
         $list = $model->where('is_delete', '=', 1)
-            ->order(['sort' => 'asc', 'create_time' => 'asc'])
+            ->order(['create_time' => 'desc'])
             ->paginate($data);
         return $list;
     }
