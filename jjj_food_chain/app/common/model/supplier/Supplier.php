@@ -175,8 +175,10 @@ class Supplier extends BaseModel
         unset($tablet['advanced_password']);
         unset($tablet['language_list']);
         $detail['tablet'] = $tablet;
-
+        // 替换成商家后台设置的名称和logo
+        $shop = SettingModel::getSupplierItem(SettingEnum::STORE, $detail['shop_supplier_id'] ?? 0, $detail['app_id'] ?? 0);
+        $detail['name'] = $shop['name'];
+        $detail['logo'] = $shop['logoUrl'];
         return $detail;
     }
-
 }
