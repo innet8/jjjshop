@@ -78,11 +78,13 @@
 .el-table .cell{
     line-height: 32px !important;
     font-size: 14px !important;
-    text-transform: capitalize;
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+}
+.el-table th .cell{
+    text-transform: capitalize;
 }
 .el-table .cell.el-tooltip{
     display: block;
