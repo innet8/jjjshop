@@ -27,6 +27,11 @@
         <el-input v-model="formData.path" autocomplete="off" placeholder="请输入组件文件路径" :disabled="formData.path=='/plus'"></el-input>
         <p>提示：对应前端给的文件路径，例如：index/index</p>
       </el-form-item>
+                  <!--后台路径-->
+                  <el-form-item label="后台路径" prop="api_path" :label-width="formLabelWidth">
+                <el-input v-model="formData.api_path" autocomplete="off" placeholder="请输入组件文件路径"></el-input>
+                <p>提示：对应后台的路径，例如：/index/index</p>
+            </el-form-item>
       <!--图标-->
       <el-form-item label="图标" :label-width="formLabelWidth">
         <el-input v-model="formData.icon" autocomplete="off" placeholder="请输入icon"></el-input>
@@ -87,6 +92,7 @@ export default {
         name: '',
         /*路由地址*/
         path:'',
+        api_path:'',
         /*组件名*/
         views:'',
         /*别名*/
