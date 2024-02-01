@@ -1,1 +1,0 @@
-System.register(["./function-bind-legacy-a8d405fe.js"],(function(t,e){"use strict";var n;return{setters:[function(t){n=t.f}],execute:function(){t("s",n.call(Function.call,Object.prototype.hasOwnProperty))}}}));
