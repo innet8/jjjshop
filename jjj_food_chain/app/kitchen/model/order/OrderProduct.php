@@ -28,8 +28,10 @@ class OrderProduct extends OrderProductModel
             ->join('order o', 'op.order_id = o.order_id', 'left')
             ->where('op.is_send_kitchen', '=', 1)
             ->where('op.finish_num', '=', 0)
-            ->where('o.order_status', '=', OrderStatusEnum::NORMAL) // 订单状态 进行中
-            ->whereOr('o.order_status', '=', OrderStatusEnum::COMPLETED) // 订单状态 已完成
+            ->where(function ($query) {
+                $query->where('o.order_status', '=', OrderStatusEnum::NORMAL) // 订单状态 进行中
+                      ->whereOr('o.order_status', '=', OrderStatusEnum::COMPLETED); // 订单状态 已完成
+            })
             ->order(['op.send_kitchen_time' => 'asc']); // 按照送厨时间排序
 
         if ($shop_supplier_id > 0) {
@@ -73,8 +75,10 @@ class OrderProduct extends OrderProductModel
             ->where('op.is_send_kitchen', '=', 1)
             ->where('op.finish_num', '=', 0)
             ->where('c.parent_id', '=', 0) // 只查询一级分类
-            ->where('o.order_status', '=', OrderStatusEnum::NORMAL) // 订单状态
-            ->whereOr('o.order_status', '=', OrderStatusEnum::COMPLETED) // 订单状态 已完成
+            ->where(function ($query) {
+                $query->where('o.order_status', '=', OrderStatusEnum::NORMAL) // 订单状态 进行中
+                      ->whereOr('o.order_status', '=', OrderStatusEnum::COMPLETED); // 订单状态 已完成
+            })
             ->order(['c.sort' => 'asc', 'c.create_time' => 'asc']); // 按照分类排序号和创建时间排序
 
         if ($shop_supplier_id > 0) {
@@ -117,8 +121,10 @@ class OrderProduct extends OrderProductModel
                 ->whereIn('op.product_id', $productIds)
                 ->where('op.is_send_kitchen', '=', 1)
                 ->where('op.finish_num', '=', 0)
-                ->where('o.order_status', '=', OrderStatusEnum::NORMAL) // 订单状态
-                ->whereOr('o.order_status', '=', OrderStatusEnum::COMPLETED) // 订单状态 已完成
+                ->where(function ($query) {
+                    $query->where('o.order_status', '=', OrderStatusEnum::NORMAL) // 订单状态 进行中
+                          ->whereOr('o.order_status', '=', OrderStatusEnum::COMPLETED); // 订单状态 已完成
+                })
                 ->order('op.send_kitchen_time', 'asc')
                 ->select();
 
