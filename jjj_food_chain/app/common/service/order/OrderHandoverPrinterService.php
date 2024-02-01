@@ -6,13 +6,17 @@ use think\facade\Cache;
 use app\common\library\helper;
 use app\common\model\shop\User;
 use app\cashier\model\order\Order;
+use app\common\model\shop\UserShiftLog;
 use app\common\enum\settings\SettingEnum;
+use app\common\enum\order\OrderStatusEnum;
+use app\common\enum\order\OrderPayStatusEnum;
 use app\common\enum\settings\PrinterTypeEnum;
 use app\common\model\settings\Printer as PrinterModel;
 use app\common\model\settings\Setting as SettingModel;
 use app\common\library\printer\Driver as PrinterDriver;
 use app\common\library\printer\party\SunmiCloudPrinter;
 use app\common\model\product\Category as CategoryModel;
+use app\common\model\order\OrderProduct as OrderProductModel;
 
 /**
  * 交班数据打印服务类
@@ -61,31 +65,20 @@ class OrderHandoverPrinterService
     }
 
     /**
-     * 构建订单打印的内容
+     * 构建交班单打印的内容
      */
     private function getPrintContent($printers, $data)
     {
         $startTime = $data['shift_start_time'];
         $endTime = $data['shift_end_time'];
-        $totalIncome = number_format(helper::bcadd($data['total_income'] ?? 0, $data['refund_amount'] ?? 0), 2);
-        $previousShiftCash = number_format($data['previous_shift_cash'], 2);
-        $cashTakenOut = number_format($data['cash_taken_out'], 2);
-        $cashLeft = number_format($data['cash_left'], 2);
+        $totalIncome = number_format(helper::bcadd($data['total_income'] ?? 0, $data['refund_amount'] ?? 0), 2, '.', '');
+        $previousShiftCash = number_format($data['previous_shift_cash'] ?? 0, 2, '.', '');
+        $cashTakenOut = number_format($data['cash_taken_out'] ?? 0, 2, '.', '');
+        $cashLeft = number_format($data['cash_left'] ?? 0, 2, '.', '');
         $user = User::where('shop_user_id',$data['shift_user_id'])->find();
         $isThai =  preg_match('/[\p{Thai}]/u', __("金额"));
-        $categorys = Order::alias('a')
-            ->leftJoin('order_product rp','a.order_id = rp.order_id')
-            ->leftJoin('product p','p.product_id = rp.product_id')
-            ->leftJoin('category c','c.category_id = p.category_id')
-            ->where('a.pay_status', '=', 20)
-            ->where('a.order_status', '=', 30)
-            ->where('a.eat_type', '<>', 0)
-            ->where('a.shop_supplier_id', '=', $data['shop_supplier_id'])
-            ->where('a.create_time', 'between', [$startTime, $endTime])
-            ->group("c.category_id")
-            ->field("c.name, count(a.order_id) as sales, sum(a.pay_price - a.refund_money) as prices")
-            ->select()
-            ->append([])?->toArray();
+
+        $categorys = (new UserShiftLog)->getSalesInfo($data['shift_user_id'], $data['shop_supplier_id'], $startTime, $endTime);
 
         /* *
         *
@@ -144,19 +137,25 @@ class OrderHandoverPrinterService
             );
             if ($sales > 0) {
                 $printer->printInColumns(__("销售笔数"), "{$sales}");
+                $printer->lineFeed();
             }
             foreach ($data['incomes'] as $key => $income) {
                 $printer->printInColumns($income['pay_type_name'], $this->currencyUnit . "{$income['price']}");
+                $printer->lineFeed();
             }
             if ($data['refund_amount'] > 0) {
                 $printer->printInColumns(__("退款金额"), $this->currencyUnit . "{$data['refund_amount']}");
+                $printer->lineFeed();
             }
             //
             $printer->lineFeed();
             $printer->appendText("------------------------------------------------\n");
             $printer->printInColumns(__("本班营业总额"), $this->currencyUnit . "{$totalIncome}");
+            $printer->lineFeed();
             $printer->printInColumns(__("上一班遗留备用金"), $this->currencyUnit . "{$previousShiftCash}");
+            $printer->lineFeed();
             $printer->printInColumns(__("本班取出现金"), $this->currencyUnit . "{$cashTakenOut}");
+            $printer->lineFeed();
             $printer->printInColumns(__("本班遗留备用金"), $this->currencyUnit . "{$cashLeft}");
             //
             $printer->lineFeed();

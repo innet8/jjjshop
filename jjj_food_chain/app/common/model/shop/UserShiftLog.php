@@ -124,7 +124,7 @@ class UserShiftLog extends BaseModel
             ->where('c.parent_id', '=', 0) // 只查询一级分类
             ->where('a.shop_supplier_id', '=', $shop_supplier_id)
             ->where('a.cashier_id', '=', $shift_user_id)
-            ->where('a.create_time', 'between', [strtotime($startTime), strtotime($endTime)])
+            ->where('a.create_time', 'between', [ is_int($startTime) ? $startTime : strtotime($startTime),  is_int($endTime) ? $endTime : strtotime($endTime)])
             ->group("c.category_id")
             ->field("c.name, sum(op.total_num) as sales, sum(op.total_pay_price) as prices")
             ->select()
