@@ -42,7 +42,7 @@ class User extends Controller
     public function detail($user_id = 0, $mobile = '')
     {
         if (!$user_id && !$mobile) {
-            return $this->renderError('请输入用户信息');
+            return $this->renderError('请输入会员手机号/ID');
         }
 //        $where = [];
 //        if ($user_id) {
