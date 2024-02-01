@@ -568,7 +568,7 @@ function printText($leftText, $centerText="", $rightText="", $total = 32, $leftN
     if (preg_match('/[\p{Thai}]/u', $leftText) ) {
         preg_match_all('/[\p{Thai}]+/u', $leftText, $matches);
         $leftWidth = grapheme_strlen(implode('',$matches[0]));
-        $leftWidth += strlen(iconv("CP874", "GBK//IGNORE", iconv("UTF-8", "CP874//IGNORE", $leftText)));
+        $leftWidth += strlen(iconv("UTF-8", "GBK//IGNORE", $leftText));
     } else {
         $leftWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $leftText));
     }
@@ -576,7 +576,7 @@ function printText($leftText, $centerText="", $rightText="", $total = 32, $leftN
     if (preg_match('/[\p{Thai}]/u', $leftPadding) ) {
         preg_match_all('/[\p{Thai}]+/u', $leftPadding, $matches);
         $leftPaddingWidth = grapheme_strlen(implode('',$matches[0]));
-        $leftPaddingWidth += strlen(iconv("CP874", "GBK//IGNORE", iconv("UTF-8", "CP874//IGNORE", $leftPadding)));
+        $leftPaddingWidth += strlen(iconv("UTF-8", "GBK//IGNORE", $leftPadding));
     } else {
         $leftPaddingWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $leftPadding));
     }
@@ -584,25 +584,19 @@ function printText($leftText, $centerText="", $rightText="", $total = 32, $leftN
     if (preg_match('/[\p{Thai}]/u', $centerText) ) {
         preg_match_all('/[\p{Thai}]+/u', $centerText, $matches);
         $centerWidth = grapheme_strlen(implode('',$matches[0]));
-        $centerWidth += strlen(iconv("CP874", "GBK//IGNORE", iconv("UTF-8", "CP874//IGNORE", $centerText)));
+        $centerWidth += strlen(iconv("UTF-8", "GBK//IGNORE", $centerText));
     } else {
         $centerWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $centerText));
     }
     if (preg_match('/[\p{Thai}]/u', $rightText) || strpos($rightText, "฿") !== false) {
         preg_match_all('/[\p{Thai}]+/u', $rightText, $matches);
         $rightWidth = grapheme_strlen(implode('',$matches[0]));
-        $rightWidth += strlen(iconv("CP874", "GBK//IGNORE", iconv("UTF-8", "CP874//IGNORE", $rightText)));
+        $rightWidth += strlen(iconv("UTF-8", "GBK//IGNORE", $rightText));
     } else {
         $rightWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $rightText));
     }
     $centerPaddingWidth = ($total - $leftWidth - $leftPaddingWidth - $centerWidth - $rightWidth);
     $centerPadding = $centerPaddingWidth > 0 ? str_repeat(" ", $centerPaddingWidth ) : "";
-    // 
-    if (
-        strpos($leftText, "ยอดขายรวม") !== false 
-    ) {
-        $leftPadding .= ' ';
-    }
     // 
     $content = $leftText . $leftPadding . $centerText . $centerPadding . $rightText;
     if ($afterLeftText) {

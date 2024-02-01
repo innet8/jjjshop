@@ -27,25 +27,18 @@ class Xprinter extends Basics
             trace("连接打印机出错");
             return false;
         }
-        if ($shopName) {
-            if (preg_match('/[\p{Thai}]/u', $shopName)) {
+        // 
+        $content = iconv("UTF-8", "UTF-8//IGNORE", $content);
+        $segments = preg_split('/([\p{Thai}฿]+)/u', $content, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        foreach ($segments as $segment) {
+            if (preg_match('/[\p{Thai}]/u', $segment)  || strpos($segment, "฿") !== false) {
                 fwrite($fp, "\x1C\x2E");
+                fwrite($fp, iconv("UTF-8", "CP874//IGNORE",  $segment));
             } else {
                 fwrite($fp, "\x1C\x26");
+                fwrite($fp, iconv("UTF-8", "GBK//IGNORE",  $segment));
             }
-            fwrite($fp, iconv("UTF-8", "GBK//IGNORE", "***". $shopName . "***"));
         }
-        // 
-        $isThai = preg_match('/[\p{Thai}]/u', __("金额"));
-        if ($isThai) {
-            fwrite($fp, "\x1C\x2E");
-            $content = iconv("UTF-8", "CP874//IGNORE", $content);
-        } else {
-            fwrite($fp, "\x1C\x26");
-            $content = iconv("UTF-8", "GBK//IGNORE", $content);
-        }
-        // 
-        fwrite($fp, $content);
         //关闭打印机连接
         fclose($fp);
         // 

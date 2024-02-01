@@ -146,12 +146,10 @@ class OrderBusinessPrinterService
         *
         */
         if ($printers == PrinterTypeEnum::SUNMI_LAN || $printers['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
-            $width = 48  - ($isThai ? 2 : 0);
+            $width = 46;
             $printer = new SunmiCloudPrinter(567);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
-            if ($printers == PrinterTypeEnum::SUNMI_LAN) {
-                $printer->appendText("***{$data['supplier']['name']}***\n");
-            }
+            $printer->appendText("***{$data['supplier']['name']}***\n");
             $printer->lineFeed();
             $printer->setLineSpacing(80);
             $printer->setPrintModes(true, true, false);
@@ -175,7 +173,7 @@ class OrderBusinessPrinterService
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             // 
             $printer->appendText(printText(__("分类"), __("数量"), __("金额"), $width , 29));
-            $printer->appendText("------------------------------------------------\n");
+            $printer->appendText("\n------------------------------------------------\n");
             $printer->lineFeed();
             foreach ($data['categorys'] as $key => $category) {
                 $printer->appendText(printText((new CategoryModel)->getNameTextAttr($category['name']), $category['sales'] . '', $this->currencyUnit . $category['prices'], $width, 29));
@@ -192,14 +190,13 @@ class OrderBusinessPrinterService
             }
             // 
             foreach ($data['incomes'] as $key => $income) {
-                $printer->appendText(printText($income['pay_type_name'],' ', $this->currencyUnit . "{$income['price']}", $width));
+                $printer->appendText(printText($income['pay_type_name'],' ', $this->currencyUnit . "{$income['price']}", $width ));
                 $printer->lineFeed();
                 $printer->lineFeed();
             }
             // 
-            $data['refund_amount'] = '1.00';
             if ($data['refund_amount'] > 0) { 
-                $printer->appendText(printText(__("退款金额"),'', $this->currencyUnit . "{$data['refund_amount']}",$width));
+                $printer->appendText(printText(__("退款金额"),'', $this->currencyUnit . "{$data['refund_amount']}", $width ));
                 $printer->lineFeed();
                 $printer->lineFeed();
             }
