@@ -247,7 +247,7 @@ class UserShiftLog extends BaseModel
         // 总钱箱现金
         $current_cash_total = helper::number2(helper::bcadd($previous_shift_cash, $cash_income));
         if ($cash_taken_out > $current_cash_total) {
-            $this->error = '本班取出現金不能大于当前钱箱现金总额';
+            $this->error = '请输入本班取出现金正确金额';
             return false;
         }
         if ($cash_left > $current_cash_total) {
