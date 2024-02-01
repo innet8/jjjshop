@@ -8,7 +8,7 @@
         <!--form表单-->
         <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
 
-            <el-form-item :label="$t('默认语言')"  class="cashier-item">
+            <el-form-item :label="$t('默认语言')"  class="cashier-item" prop="default_language" :rules="[{ required: true, message: ' ' }]">
                 <el-select v-model="form.default_language" :placeholder="$t('请选择')">
                     <el-option v-for="(item, index) in langList" :key="index" :label="item.value"
                         :value="item.key">
@@ -18,7 +18,8 @@
             <div  class="cashier-desc">{{ $t('小票显示的语言将根据选择的语言打印') }}</div>
             <!--提交-->
             <div class="common-button-wrapper">
-                <el-button type="primary" @click="onSubmit" :loading="loading">{{ $t('提交') }}</el-button>
+                <el-button  @click="getData" :loading="loading">{{ $t('重置') }}</el-button>
+                <el-button type="primary" @click="onSubmit" :loading="loading">{{ $t('保存') }}</el-button>
             </div>
         </el-form>
     </div>

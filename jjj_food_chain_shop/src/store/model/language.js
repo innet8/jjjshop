@@ -15,7 +15,7 @@ export const languageStore = defineStore({
             },
             {
                 key: 'zhtw',
-                label: '繁体中文'
+                label: '繁體中文'
             },
             {
                 key: 'en',
