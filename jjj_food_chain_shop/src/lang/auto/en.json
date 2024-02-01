@@ -354,7 +354,7 @@
     "购物送积分": "Get points for shopping",
     "打开后订单完成后赠送用户积分": "After opening and completing the order, the user will be awarded points.",
     "注：退款后已赠送的订单积分对应扣除": "Note: After the refund, the gifted order points will be deducted accordingly.",
-    "注：请填写数字0~100；订单的运费不参与积分赠送": "Note: Please fill in the numbers 0~100; the shipping cost of the order does not participate in the points bonus",
+    "注：请填写数字0~100；": "Note: Please fill in the numbers 0~100;",
     "例：订单付款金额(100.00元) * 积分赠送比例(100%) = 实际赠送的积分(100积分)": "Example: Order payment amount (100.00 yuan) * Points gift ratio (100%) = Actual points given away (100 points)",
     "会员卡名称": "Membership card name",
     "会员卡信息": "Membership card information",
