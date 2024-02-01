@@ -28,10 +28,17 @@ class Product extends ProductModel
             $model = $model->whereIn('product.category_id', $categoryIds);
         } else {
             // 全部
-            $categoryIds = Category::alias('c')
-                    ->join('category cc', 'c.category_id = IF(cc.parent_id = 0, cc.category_id, cc.parent_id)')
-                    ->where('c.status', '=', 1)
-                    ->column('c.category_id');
+            $firstLevelCategoryIds = Category::alias('c')
+            ->where('c.status', '=', 1)
+            ->where('c.parent_id', '=', 0)
+            ->column('c.category_id');
+            $secondLevelCategoryIds = Category::alias('c')
+            ->join('category cc', 'c.parent_id = cc.category_id')
+            ->where('c.status', '=', 1)
+            ->whereIn('cc.category_id', $firstLevelCategoryIds)
+            ->column('c.category_id');
+            // 合并一级分类和二级分类
+            $categoryIds = array_merge($firstLevelCategoryIds, $secondLevelCategoryIds);
             $model = $model->whereIn('product.category_id', $categoryIds);
         }
 
