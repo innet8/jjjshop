@@ -49,7 +49,7 @@ class Store extends Controller
             'avatarUrl' => $data['avatarUrl'] ?? '',
             'logoUrl' => $data['logoUrl'] ?? '',
         ];
-        if ($model->edit(SettingEnum::STORE, $arr)) {
+        if ($model->edit(SettingEnum::STORE, $arr, $this->store['user']['shop_supplier_id'])) {
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model->getError() ?: '操作失败');
@@ -60,7 +60,7 @@ class Store extends Controller
      */
     public function fetchData()
     {
-        $vars['values'] = SettingModel::getItem(SettingEnum::STORE);
+        $vars['values'] = SettingModel::getSupplierItem(SettingEnum::STORE, $this->store['user']['shop_supplier_id']);
         return compact('vars');
     }
 
