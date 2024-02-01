@@ -7,7 +7,7 @@
     <div class="user">
         <!--添加管理员-->
         <div class="common-level-rail"><el-button size="small" type="primary" icon="Plus" @click="addClick"
-                v-auth="'/auth/user/add'">{{$t('添加管理员')}}</el-button></div>
+                v-auth="'/auth/user/add'">{{ $t('添加管理员') }}</el-button></div>
 
         <!--内容-->
         <div class="product-content">
@@ -30,19 +30,19 @@
                         <template #default="scope">
                             <el-switch
                                 :disabled="!(scope.row.is_super < 1 || (scope.row.is_super == 1 && scope.row.user_type == 1)) || !this.$filter.isAuth('/auth/user/state')"
-                                v-model="scope.row.is_status" :active-value="0" :inactive-value="1"
-                                @change="isShowFunc(scope.row)" active-color="#13ce66" inactive-color="#cccccc"></el-switch>
+                                :model-value="scope.row.is_status" :active-value="0" :inactive-value="1"
+                                @click="isShowFunc(scope.row)" active-color="#13ce66" inactive-color="#cccccc"></el-switch>
                         </template>
                     </el-table-column>
                     <el-table-column prop="create_time" label="添加时间"></el-table-column>
                     <el-table-column fixed="right" label="操作" width="120">
                         <template #default="scope">
                             <el-button v-if="scope.row.is_super < 1" @click="editClick(scope.row)" type="primary" link
-                                size="small" v-auth="'/auth/user/edit'">{{$t('编辑')}}</el-button>
+                                size="small" v-auth="'/auth/user/edit'">{{ $t('编辑') }}</el-button>
                             <el-button
                                 v-if="scope.row.is_super < 1 || (scope.row.is_super == 1 && scope.row.user_type == 1)"
                                 @click="deleteClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/auth/user/delete'">{{$t('删除')}}</el-button>
+                                v-auth="'/auth/user/delete'">{{ $t('删除') }}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -165,8 +165,16 @@ export default {
         },
         /*是否显示开关*/
         isShowFunc(e) {
+
+            if (e.cashier_online == 1) {
+                this.$ElMessage({
+                    message: $t('当前人员未交班，请先交班'),
+                    type: 'error'
+                });
+                return
+            }
             let self = this;
-            AuthApi.setStatus({ shop_user_id: e.shop_user_id, status: e.is_status }, true)
+            AuthApi.setStatus({ shop_user_id: e.shop_user_id, status: e.is_status == 1 ? 0 : 1 }, true)
                 .then(data => {
                     if (data.code == 1) {
                         this.$ElMessage({
