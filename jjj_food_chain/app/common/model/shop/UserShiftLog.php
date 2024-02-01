@@ -126,7 +126,7 @@ class UserShiftLog extends BaseModel
             ->where('a.cashier_id', '=', $shift_user_id)
             ->where('a.create_time', 'between', [strtotime($startTime), strtotime($endTime)])
             ->group("c.category_id")
-            ->field("c.name, count(a.order_id) as sales, sum(op.total_pay_price) as prices")
+            ->field("c.name, sum(op.total_num) as sales, sum(op.total_pay_price) as prices")
             ->select()
             ->append([])?->toArray();
         //
