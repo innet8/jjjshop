@@ -8,7 +8,7 @@
     <!--form表单-->
     <el-form size="small" ref="form" :model="form" label-position="top" label-width="150px">
       <!--添加门店-->
-      <el-form-item :label="$t('门店名称')" :rules="[{required: true,message: ' '}]" prop="name">
+      <el-form-item :label="$t('店铺名称')" :rules="[{required: true,message: ' '}]" prop="name">
         <el-input v-model="form.name" :placeholder="$t('商城名称')" class="max-w460"></el-input>
       </el-form-item>
       <el-form-item :label="$t('LOGO')" :rules="[{required: true,message: ' '}]" prop="name">
