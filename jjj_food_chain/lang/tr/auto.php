@@ -729,7 +729,7 @@ return [
     "身份证号码已存在" => "Kimlik numarası zaten mevcut",
     "收货地址不能为空" => "Teslimat adresi boş olamaz",
     "签到失败，请重试" => "Giriş başarısız oldu. Lütfen tekrar deneyiniz",
-    "新用户即为该等级" => "Yeni kullanıcılar bu seviyede",
+    "新会员即为该等级" => "Yeni kullanıcılar bu seviyede",
     "支持多种就餐模式" => "Birden fazla yemek modunu destekler",
     "此处显示资讯标题" => "Bilgi başlığını burada göster",
     "商家账号名已存在" => "Satıcı hesap adı zaten mevcut",

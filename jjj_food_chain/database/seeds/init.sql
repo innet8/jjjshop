@@ -17,9 +17,9 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
--- appid 
+-- appid
 SET @appid = CONCAT( LPAD(UNIX_TIMESTAMP(), 9, '0'), FLOOR(RAND() * 10));
--- 
+--
 DROP TABLE IF EXISTS `jjjfood_call`;
 DROP TABLE IF EXISTS `jjjfood_pay_type`;
 DROP TABLE IF EXISTS `jjjfood_shop_user_shift_log`;
@@ -7244,7 +7244,7 @@ CREATE TABLE `jjjfood_user_grade`  (
 -- ----------------------------
 -- Records of jjjfood_user_grade
 -- ----------------------------
-INSERT INTO `jjjfood_user_grade` VALUES (1, '普通会员', 0, 1000, 0, 0, 0, 0, 100, 1, '新用户即为该等级', 1, 0, @appid, 1592021560, 1607506616);
+INSERT INTO `jjjfood_user_grade` VALUES (1, '普通会员', 0, 1000, 0, 0, 0, 0, 100, 1, '新会员即为该等级', 1, 0, @appid, 1592021560, 1607506616);
 
 -- ----------------------------
 -- Table structure for jjjfood_user_grade_log

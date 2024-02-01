@@ -21,6 +21,14 @@ class Grade extends BaseModel
     }
 
     /**
+     * 备注信息翻译
+     */
+    public function getRemarkAttr($value)
+    {
+        return __($value);
+    }
+
+    /**
      * 获取详情
      */
     public static function detail($grade_id)
