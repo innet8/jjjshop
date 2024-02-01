@@ -43,7 +43,11 @@
         <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
             <el-table-column prop="name_text" :label="$t('分类')"></el-table-column>
             <el-table-column prop="sales" :label="$t('销售数量')"></el-table-column>
-            <el-table-column prop="prices" :label="$t('销售金额')"></el-table-column>
+            <el-table-column prop="prices" :label="$t('销售金额')">
+                <template #default="scope">
+                        {{ currency.unit }}{{ scope.row.prices }}
+                    </template>
+            </el-table-column>
         </el-table>
 
         <template #footer>

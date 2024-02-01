@@ -28,10 +28,16 @@
 </template>
 <script>
 import SettingApi from '@/api/setting.js';
+
 import { nextTick } from 'vue';
+import { useUserStore } from '@/store';
+import { setStorage } from '@/utils/storageData';
+
+const { currency } = useUserStore();
 export default {
     data() {
         return {
+            currency:currency,
             loading: false,
             form: {
                 unit: '',
@@ -96,6 +102,12 @@ export default {
                             message: $t('保存成功'),
                             type: 'success'
                         });
+
+                        self.currency.is_open = params.is_open;
+                        self.currency.unit = params.unit;
+                        self.currency.vices.unit_rate = params.unit_rate;
+                        self.currency.vices.vice_unit = params.vice_unit;
+                        setStorage(JSON.stringify(self.currency), 'currency');
                         self.dialogFormVisible(true);
                     }).catch(error => {
                         self.loading = false;
