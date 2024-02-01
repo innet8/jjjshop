@@ -3,9 +3,10 @@
 namespace app\shop\controller\setting;
 
 use app\shop\controller\Controller;
-use app\shop\model\settings\Setting as SettingModel;
-use app\shop\model\settings\Printer as PrinterModel;
 use hg\apidoc\annotation as Apidoc;
+use app\common\enum\settings\SettingEnum;
+use app\shop\model\settings\Printer as PrinterModel;
+use app\shop\model\settings\Setting as SettingModel;
 
 /**
  * 打印设置
@@ -32,8 +33,21 @@ class Printing extends Controller
         if ($this->request->isGet()) {
             return $this->fetchData();
         }
+
+        $postData = $this->postData();
+        $printerSettings = SettingModel::getSupplierItem(SettingEnum::PRINTER, $this->store['user']['shop_supplier_id']);
+        // 收银机设置
+        if (isset($postData['cashier_open']) && isset($postData['cashier_printer_id'])) {
+            $printerSettings['cashier_open'] = $postData['cashier_open'];
+            $printerSettings['cashier_printer_id'] = $postData['cashier_printer_id'];
+        }
+        // 语言
+        if (isset($postData['default_language'])) {
+            $printerSettings['default_language'] = $postData['default_language'];
+        }
+
         $model = new SettingModel;
-        if ($model->edit('printer', $this->postData(), $this->store['user']['shop_supplier_id'])) {
+        if ($model->edit(SettingEnum::PRINTER, $printerSettings, $this->store['user']['shop_supplier_id'])) {
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model->getError() ?: '操作失败');
@@ -46,7 +60,7 @@ class Printing extends Controller
     {
         // 获取打印机列表
         $vars['printerList'] = PrinterModel::getAll($this->store['user']['shop_supplier_id']);
-        $vars['values'] = SettingModel::getSupplierItem('printer', $this->store['user']['shop_supplier_id']);
+        $vars['values'] = SettingModel::getSupplierItem(SettingEnum::PRINTER, $this->store['user']['shop_supplier_id']);
         return $this->renderSuccess('', compact('vars'));
     }
 }
