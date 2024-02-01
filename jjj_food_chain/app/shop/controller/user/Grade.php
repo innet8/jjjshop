@@ -75,7 +75,7 @@ class Grade extends Controller
         if ($model->edit($this->postData())) {
             return $this->renderSuccess();
         }
-        return $this->renderError();
+        return $this->renderError($model->getError() ?: '修改失败');
     }
 
     /**

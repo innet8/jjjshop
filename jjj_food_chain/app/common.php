@@ -542,6 +542,10 @@ function langData($language = 'zh')
  * @return string
  */
 function printText($leftText, $centerText="", $rightText="", $total = 32, $leftNum=0) {
+    $leftText = trim($leftText);
+    $centerText = trim($centerText);
+    $rightText = trim($rightText);
+    // 
     $afterLeftText = "";
     if ($leftNum > 0 && $leftText) {
         $leftNums = $leftNum - 2;
@@ -555,37 +559,50 @@ function printText($leftText, $centerText="", $rightText="", $total = 32, $leftN
     }
     if (preg_match('/[\p{Thai}]/u', $leftText) ) {
         preg_match_all('/[\p{Thai}]+/u', $leftText, $matches);
-        $leftWidth = grapheme_strlen($matches[0][0]);
-        $leftWidth += strlen(iconv("CP874", "GBK//IGNORE", iconv("UTF-8", "CP874//IGNORE", $leftText) ));
+        $leftWidth = grapheme_strlen(implode('',$matches[0]));
+        $leftWidth += strlen(iconv("CP874", "GBK//IGNORE", iconv("UTF-8", "CP874//IGNORE", $leftText)));
     } else {
         $leftWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $leftText));
     }
     $leftPadding = $leftNum - $leftWidth > 0 ? str_repeat(" ", intval($leftNum - $leftWidth)) : "";
     if (preg_match('/[\p{Thai}]/u', $leftPadding) ) {
         preg_match_all('/[\p{Thai}]+/u', $leftPadding, $matches);
-        $leftPaddingWidth = grapheme_strlen($matches[0][0]);
-        $leftPaddingWidth += strlen(iconv("CP874", "GBK//IGNORE", iconv("UTF-8", "CP874//IGNORE", $leftPadding) ));
+        $leftPaddingWidth = grapheme_strlen(implode('',$matches[0]));
+        $leftPaddingWidth += strlen(iconv("CP874", "GBK//IGNORE", iconv("UTF-8", "CP874//IGNORE", $leftPadding)));
     } else {
         $leftPaddingWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $leftPadding));
     }
     //
     if (preg_match('/[\p{Thai}]/u', $centerText) ) {
         preg_match_all('/[\p{Thai}]+/u', $centerText, $matches);
-        $centerWidth = grapheme_strlen($matches[0][0]);
-        $centerWidth += strlen(iconv("CP874", "GBK//IGNORE", iconv("UTF-8", "CP874//IGNORE", $centerText) ));
+        $centerWidth = grapheme_strlen(implode('',$matches[0]));
+        $centerWidth += strlen(iconv("CP874", "GBK//IGNORE", iconv("UTF-8", "CP874//IGNORE", $centerText)));
     } else {
         $centerWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $centerText));
     }
-    if (preg_match('/[\p{Thai}]/u', $rightText) ) {
+    if (preg_match('/[\p{Thai}]/u', $rightText) || strpos($rightText, "฿") !== false) {
         preg_match_all('/[\p{Thai}]+/u', $rightText, $matches);
-        $rightWidth = grapheme_strlen($matches[0][0]);
-        $rightWidth += strlen(iconv("CP874", "GBK//IGNORE", iconv("UTF-8", "CP874//IGNORE", $rightText) ));
+        $rightWidth = grapheme_strlen(implode('',$matches[0]));
+        $rightWidth += strlen(iconv("CP874", "GBK//IGNORE", iconv("UTF-8", "CP874//IGNORE", $rightText)));
     } else {
         $rightWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $rightText));
     }
     $centerPaddingWidth = ($total - $leftWidth - $leftPaddingWidth - $centerWidth - $rightWidth);
     $centerPadding = $centerPaddingWidth > 0 ? str_repeat(" ", $centerPaddingWidth ) : "";
-    //
+    // 
+    if (
+        strpos($leftText, "ยอดขายรวม") !== false 
+        // strpos($leftText, "รวมเป็นเงิน") !== false ||
+        // strpos($leftText, "ค่าบริการ") !== false || 
+        // strpos($leftText, "ภาษีมูลค่าเพิ่ม") !== false || 
+        // strpos($leftText, "ส่วนลด") !== false || 
+        // strpos($leftText, "ค่าจัดส่ง") !== false 
+        // strpos($leftText, "ค่าบรรจุภัณฑ์") !== false 
+        
+    ) {
+        $leftPadding .= ' ';
+    }
+    // 
     $content = $leftText . $leftPadding . $centerText . $centerPadding . $rightText;
     if ($afterLeftText) {
         $length = mb_strlen($afterLeftText);

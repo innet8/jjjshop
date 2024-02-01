@@ -49,7 +49,6 @@ class UserGrade
             }
         }
         if ($upgradeGrade &&  $user['grade_id'] != $upgradeGrade['grade_id']) {
-            trace('会员有等级变动');
             $this->dologs('setUserGrade', [
                 'user_id' => $user['user_id'],
                 'grade_id' => $upgradeGrade['grade_id'],

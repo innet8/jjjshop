@@ -2,7 +2,6 @@
 
 namespace app\cashier\model\order;
 
-use app\common\model\settings\Setting as SettingModel;
 use think\facade\Log;
 use app\common\library\helper;
 use app\common\model\store\PayType;
@@ -13,15 +12,18 @@ use app\common\enum\order\OrderTypeEnum;
 use app\common\enum\order\OrderSourceEnum;
 use app\common\enum\order\OrderStatusEnum;
 use app\common\enum\order\OrderPayTypeEnum;
+use app\common\model\user\User as UserModel;
 use app\common\enum\order\OrderPayStatusEnum;
 use app\common\model\order\OrderProductReturn;
 use app\common\model\order\Order as OrderModel;
 use app\cashier\model\store\Table as TableModel;
-use app\common\model\user\User as UserModel;
-use app\common\model\order\OrderProduct as OrderProductModel;
 use app\common\service\order\OrderRefundService;
 use app\common\service\order\OrderCompleteService;
+use app\shop\model\user\PointsLog as PointsLogModel;
+use app\common\enum\user\pointsLog\PointsLogSceneEnum;
+use app\common\model\settings\Setting as SettingModel;
 use app\common\service\product\factory\ProductFactory;
+use app\common\model\order\OrderProduct as OrderProductModel;
 use app\cashier\service\order\paysuccess\type\MasterPaySuccessService;
 
 /**
@@ -578,6 +580,7 @@ class Order extends OrderModel
      */
     public function refund($data)
     {
+        trace('用户取消订单', 'info');
         // 判断订单是否有效
 //        if ($this['pay_status']['value'] != 20 || $this['order_status']['value'] != 10) {
         if ($this['pay_status']['value'] != 20 ) {
@@ -600,6 +603,17 @@ class Order extends OrderModel
                 $update['receipt_time'] = time();
                 $update['order_status'] = 30;
             }
+            // 更新账户积分
+            $ratio = helper::bcdiv($this['points_bonus'], $this['pay_price']);
+            $points = helper::bcmul($data['refund_money'], $ratio, 2); // 应扣除积分
+            UserModel::where('user_id', '=', $this['user_id'])->dec('points', $points)->dec('total_points', $points)->update();
+            PointsLogModel::add([
+                'user_id' => $this['user_id'],
+                'scene' => PointsLogSceneEnum::REFUND,
+                'value' => $points,
+                'describe' => "退款扣除：{$this['order_no']}",
+                'remark' => '',
+            ]);
             // 更新订单状态
             return $this->save($update);
         });

@@ -72,7 +72,7 @@ class Card extends CardModel
         $userIdsArr = array_unique(explode(',', $userIds));
         foreach ($userIdsArr as $userId) {
             $isExist = (new CardRecord())->checkExistByUserId($userId);
-            if ($isExist) {
+            if (!$isExist->isEmpty()) {
                 if ($data['card_id'] == $isExist['card_id']) {
                     $this->error = "会员已拥有此会员卡";
                     return false;
@@ -142,12 +142,12 @@ class Card extends CardModel
     // 检测用户是否有余额/积分消费记录
     public function checkUserConsumeRecord($userId)
     {
-        if ((new BalanceLogModel)->where('user_id', $userId)->where('scene', BalanceLogSceneEnum::CONSUME)->findOrEmpty())
+        if (!(new BalanceLogModel)->where('user_id', $userId)->where('scene', BalanceLogSceneEnum::CONSUME)->findOrEmpty()->isEmpty())
         {
             return true;
         }
 
-        return (new PointsLogModel)->where('user_id', $userId)->where('scene', PointsLogSceneEnum::CONSUME)->findOrEmpty();
+        return (new PointsLogModel)->where('user_id', $userId)->where('scene', PointsLogSceneEnum::CONSUME)->findOrEmpty()->isEmpty();
     }
 
 
@@ -165,7 +165,7 @@ class Card extends CardModel
             return false;
         }
         if ($this->checkUserConsumeRecord($detail['user_id'])) {
-            $this->error = "该用户已有余额/积分消费记录，无法撤销";
+            $this->error = "会员卡已使用，无法撤销";
             return false;
         }
         //

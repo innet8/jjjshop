@@ -146,6 +146,9 @@ class OrderBusinessPrinterService
             $width = 48  - ($isThai ? 2 : 0);
             $printer = new SunmiCloudPrinter(567);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
+            if ($printers == PrinterTypeEnum::SUNMI_LAN) {
+                $printer->appendText("***{$data['supplier']['name']}***\n");
+            }
             $printer->lineFeed();
             $printer->setLineSpacing(80);
             $printer->setPrintModes(true, true, false);
@@ -186,22 +189,19 @@ class OrderBusinessPrinterService
             }
             // 
             foreach ($data['incomes'] as $key => $income) {
-                $printer->appendText(printText($income['pay_type_name'],'', $this->currencyUnit . "{$income['price']}", $width));
+                $printer->appendText(printText($income['pay_type_name'],' ', $this->currencyUnit . "{$income['price']}", $width));
                 $printer->lineFeed();
                 $printer->lineFeed();
             }
             // 
+            $data['refund_amount'] = '1.00';
             if ($data['refund_amount'] > 0) { 
-                $printer->appendText(printText(__("退款金额"),'', $this->currencyUnit . "{$data['zfrefund_amountb_pay']}",$width));
+                $printer->appendText(printText(__("退款金额"),'', $this->currencyUnit . "{$data['refund_amount']}",$width));
                 $printer->lineFeed();
                 $printer->lineFeed();
             }
             $printer->appendText(printText(__("营业总额"),'', $this->currencyUnit . "{$data['total_amount']}",$width));
-            $printer->lineFeed();
-            $printer->lineFeed();
-            $printer->lineFeed();
-            $printer->lineFeed();
-            $printer->lineFeed();
+            $printer->lineFeed(5);
             // Print and exit page mode
             $printer->printAndExitPageMode();
             $printer->lineFeed(4);

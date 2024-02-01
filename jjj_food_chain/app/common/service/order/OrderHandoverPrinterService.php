@@ -98,8 +98,8 @@ class OrderHandoverPrinterService
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
             $printer->appendText("***{$user['supplier']['name']}***\n");
             $printer->lineFeed();
-            $printer->setLineSpacing(80);
             $printer->setPrintModes(true, true, false);
+            $printer->setLineSpacing(80);
             $printer->appendText(__("交班单") . "\n");
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
@@ -110,9 +110,13 @@ class OrderHandoverPrinterService
             );
             $printer->printInColumns(__("交班编号"), $data['shift_no']);
             $printer->printInColumns(__("交班人"), $user->real_name);
-            $printer->printInColumns(__("当班时间"),  date('Y-m-d H:i:s', $startTime) . " " . __("至") . " " . date('Y-m-d H:i:s', $endTime));
+            $printer->printInColumns(__("当班时间"),  date('Y-m-d H:i:s', $startTime) . " " . __("至"));
+            $printer->setAlignment(SunmiCloudPrinter::ALIGN_RIGHT);
+            $printer->appendText(date('Y-m-d H:i:s', $endTime));
+            $printer->lineFeed();
             $printer->lineFeed();
             //
+            $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
@@ -173,6 +177,9 @@ class OrderHandoverPrinterService
             $leftWidth = 32;
             $printer = new SunmiCloudPrinter(567);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
+            if ($printers == PrinterTypeEnum::SUNMI_LAN) {
+                $printer->appendText("***{$user['supplier']['name']}***\n");
+            }
             $printer->lineFeed();
             $printer->setLineSpacing(80);
             $printer->setPrintModes(true, true, false);
@@ -188,10 +195,14 @@ class OrderHandoverPrinterService
             $printer->lineFeed();
             $printer->appendText(printText(__("交班人"), '', $user->real_name, $width));
             $printer->lineFeed();
-            $printer->appendText(printText(__("当班时间"), '  ', date('Y-m-d H:i:s', $startTime) . " " . __("至") . " " . date('Y-m-d H:i:s', $endTime), $width));
+            $printer->appendText(printText(__("当班时间"), '', date('Y-m-d H:i:s', $startTime) . " " . __("至"), $width));
+            $printer->lineFeed();
+            $printer->setAlignment(SunmiCloudPrinter::ALIGN_RIGHT);
+            $printer->appendText(date('Y-m-d H:i:s', $endTime));
             $printer->lineFeed();
             $printer->lineFeed();
             //
+            $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);

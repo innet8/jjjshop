@@ -173,10 +173,10 @@ class OrderPrinterService
             $printer->setLineSpacing(80);
             $printer->setPrintModes(true, true, false);
             if ($order['table_no']) {
-                $printer->appendText(__("桌号")."：{$order['table_no']}\n");
+                $printer->appendText(__("桌号").": {$order['table_no']}\n");
             }
             if ($order['callNo']) {
-                $printer->appendText(__("取单号")."：{$order['callNo']}\n");
+                $printer->appendText(__("取单号").": {$order['callNo']}\n");
             }
             // 
             $printer->restoreDefaultLineSpacing();
@@ -278,16 +278,22 @@ class OrderPrinterService
         if ($printers == PrinterTypeEnum::SUNMI_LAN || $printers['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
             $width = 48 - ($isThai ? 2 : 0);
             $leftWidth = 32;
+            if ($isThai && $printers == PrinterTypeEnum::SUNMI_LAN ) {
+                $leftWidth =  22;
+            }
             $printer = new SunmiCloudPrinter(567);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
+            if ($printers == PrinterTypeEnum::SUNMI_LAN) {
+                $printer->appendText("***{$order['supplier']['name']}***\n");
+            }
             $printer->lineFeed();
             $printer->setLineSpacing(80);
             $printer->setPrintModes(true, true, false);
             if ($order['table_no']) {
-                $printer->appendText(__("桌号")."：{$order['table_no']}\n");
+                $printer->appendText(__("桌号").": {$order['table_no']}\n");
             }
             if ($order['callNo']) {
-                $printer->appendText(__("取单号")."：{$order['callNo']}\n");
+                $printer->appendText(__("取单号").": {$order['callNo']}\n");
             }
             if ($printers != PrinterTypeEnum::SUNMI_LAN) {
                 $printer->lineFeed();
@@ -324,15 +330,15 @@ class OrderPrinterService
             $printer->appendText(printText(__("合计金额"),'', $this->currencyUnit . strval($order['total_price']) ,$width, $leftWidth));
             $printer->lineFeed();
             if ($order['setting_service_money'] > 0) { 
-                $printer->appendText(printText(__("服务费"),'', $this->currencyUnit . strval($order['setting_service_money']) ,$width, $leftWidth));
+                $printer->appendText(printText(__("服务费"),'', $this->currencyUnit . strval($order['setting_service_money']) ,$width + ($isThai ? 1 : 0), $leftWidth));
                 $printer->lineFeed();
             }
             if ($order['consumption_tax_money'] > 0) { 
-                $printer->appendText(printText(__("消费税"),'', $this->currencyUnit . strval($order['consumption_tax_money']) ,$width, $leftWidth));
+                $printer->appendText(printText(__("消费税"),'', $this->currencyUnit . strval($order['consumption_tax_money']) ,$width + ($isThai ? 1 : 0), $leftWidth));
                 $printer->lineFeed();
             }
             if ($order['discount_money'] > 0) { 
-                $printer->appendText(printText(__("优惠折扣"),'', $this->currencyUnit . strval($order['discount_money']) ,$width, $leftWidth));
+                $printer->appendText(printText(__("优惠折扣"),'', $this->currencyUnit . strval($order['discount_money']) ,$width + ($isThai ? 1 : 0), $leftWidth));
                 $printer->lineFeed();
             }
             if ($order['user_discount_money'] > 0) { 
@@ -340,23 +346,23 @@ class OrderPrinterService
                 $printer->lineFeed();
             }
             if ($order['delivery_type']['value'] == DeliveryTypeEnum::EXPRESS) {
-                $printer->appendText(printText(__("配送费"),'', $this->currencyUnit . strval($order['express_price']) ,$width, $leftWidth));
+                $printer->appendText(printText(__("配送费"),'', $this->currencyUnit . strval($order['express_price']) ,$width + ($isThai ? 1 : 0), $leftWidth));
                 $printer->lineFeed();
             }
             if ($order['bag_price'] > 0) {
-                $printer->appendText(printText(__("包装费"),'', $this->currencyUnit . strval($order['bag_price']) ,$width, $leftWidth));
+                $printer->appendText(printText(__("包装费"),'', $this->currencyUnit . strval($order['bag_price']) ,$width  + ($isThai ? 1 : 0), $leftWidth));
                 $printer->lineFeed();
             }
             if ($order['coupon_money'] > 0) {
-                $printer->appendText(printText(__("优惠券优惠"),'', $this->currencyUnit . strval($order['coupon_money']) ,$width, $leftWidth));
+                $printer->appendText(printText(__("优惠券优惠"),'', $this->currencyUnit . strval($order['coupon_money']) ,$width  + ($isThai ? 1 : 0), $leftWidth));
                 $printer->lineFeed();
             }
             if ($order['fullreduce_money'] > 0) {
-                $printer->appendText(printText(__("满减优惠"),'', $this->currencyUnit . strval($order['fullreduce_money']) ,$width, $leftWidth));
+                $printer->appendText(printText(__("满减优惠"),'', $this->currencyUnit . strval($order['fullreduce_money']) ,$width , $leftWidth));
                 $printer->lineFeed();
             }
             $printer->setPrintModes(true, false, false);
-            $printer->appendText(printText(__("应收"),'', $this->currencyUnit . strval($order['pay_price']) ,$width, $leftWidth));
+            $printer->appendText(printText(__("应收"),'', $this->currencyUnit . strval($order['pay_price']) , $width + ($isThai ? 1 : 0), $leftWidth));
             $printer->lineFeed();
             $printer->setPrintModes(false, false, false);
             // 
@@ -364,7 +370,7 @@ class OrderPrinterService
                 $printer->lineFeed();
                 $printer->appendText("------------------------------------------------\n");
                 $printer->appendText(printText(__("支付方式"),'', $order['pay_type']['text'] ,$width, $leftWidth));
-                $printer->appendText(printText(__("实付金额"),'', $this->currencyUnit . strval($order['pay_price']) ,$width, $leftWidth));
+                $printer->appendText(printText(__("实付金额"),'', $this->currencyUnit . strval($order['pay_price']) , $width + ($isThai ? 1 : 0) , $leftWidth));
                 $printer->lineFeed();
             }
             // 
@@ -587,6 +593,7 @@ class OrderPrinterService
                 $printer->lineFeed();
             }
             // 
+            $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->setupColumns(

@@ -13,7 +13,6 @@ use app\common\enum\order\OrderPayStatusEnum;
 use app\common\model\order\Order as OrderModel;
 use app\common\model\settings\Setting as SettingModel;
 use app\common\service\order\OrderHandoverPrinterService;
-use app\common\model\order\OrderProduct as OrderProductModel;
 /**
  * 用户交班记录模型
  */
@@ -109,29 +108,30 @@ class UserShiftLog extends BaseModel
     /**
      * 获取销售信息
      */
-    public function getSalesInfo($shift_user_id, $shop_supplier_id, $startTime, $endTime)
+    public function getSalesInfo($shift_user_id, $shop_user_id, $startTime, $endTime)
     {
-        $datas = OrderProductModel::alias('op')
-            ->distinct(true)
-            ->join('order a', 'op.order_id = a.order_id', 'left')
-            ->join('product p', 'op.product_id = p.product_id', 'left')
-            ->join('category c2', 'p.category_id = c2.category_id', 'left')
-            ->join('category c', 'c.category_id = IF(c2.parent_id = 0, c2.category_id, c2.parent_id)', 'left')
+        $datas = OrderModel::alias('a')
+            ->leftJoin('order_product rp','a.order_id = rp.order_id')
+            ->leftJoin('product p','p.product_id = rp.product_id')
+            ->leftJoin('category c2', 'p.category_id = c2.category_id')
+            ->leftJoin('category c', 'c.category_id = IF(c2.parent_id = 0, c2.category_id, c2.parent_id)')
             ->where('a.pay_status', '=',  OrderPayStatusEnum::SUCCESS)
             ->where('a.order_status', '=', OrderStatusEnum::COMPLETED)
             ->where('a.eat_type', '<>', 0)
             ->where('a.extra_times', '>', 0) // 已送厨
-            ->where('c.parent_id', '=', 0) // 只查询一级分类
-            ->where('a.shop_supplier_id', '=', $shop_supplier_id)
+            ->where('a.shop_supplier_id', '=', $shop_user_id)
             ->where('a.cashier_id', '=', $shift_user_id)
             ->where('a.create_time', 'between', [strtotime($startTime), strtotime($endTime)])
             ->group("c.category_id")
-            ->field("c.name, count(a.order_id) as sales, sum(op.total_pay_price) as prices")
+            // ->field("a.order_id, a.pay_price, a.refund_money, c.name, c.category_id, count(DISTINCT a.order_id) as sales")
+            ->field("c.name, count(DISTINCT a.order_id) as sales, sum(DISTINCT a.pay_price - a.refund_money) as prices")
             ->select()
             ->append([])?->toArray();
+        trace($datas);
         //
         foreach ($datas as $key => $data){
             $datas[$key]['name_text'] = Category::getNameTextAttr($data['name'] ?: '');
+            // $datas[$key]['prices'] = number_format(helper::bcsub($data['pay_price'], $data['refund_money']), 2);
         }
         //
         return $datas;
@@ -189,15 +189,15 @@ class UserShiftLog extends BaseModel
             }
         }
         //
-        $totalIncome = number_format($totalIncome, 2);
+        $totalIncome = helper::number2($totalIncome, 2);
         return [
             'shift_user_id' => $params['shop_user_id'] ?? 0, // 交班人id
             'shift_no' => generateNumber(), // 交班编号
             'previous_shift_cash' => $previous_shift_cash, // 上一班遗留备用金
-            'current_cash_total' => number_format($previous_shift_cash + $cash_income, 2), // 当前钱箱现金总计(现金收入+上一班遗留备用金)
+            'current_cash_total' => helper::number2($previous_shift_cash + $cash_income, 2), // 当前钱箱现金总计(现金收入+上一班遗留备用金)
             'incomes' => $incomes,
             'total_income' => $totalIncome,
-            'refund_amount' => number_format((clone $orderModel)->sum("refund_money"), 2, '.', '') ?? 0, // 退款金额
+            'refund_amount' => helper::number2((clone $orderModel)->sum("refund_money"), 2, '.', '') ?? 0, // 退款金额
             'cash_taken_out' => '0.00', // 本班取出现金
             'cash_left' => '0.00', // 本班遗留备用金
             'remark' => $params['remark'] ?? '', // 备注

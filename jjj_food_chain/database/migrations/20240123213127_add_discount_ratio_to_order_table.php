@@ -30,7 +30,7 @@ class AddDiscountRatioToOrderTable extends Migrator
     {
         $table = $this->table('order');
         $table->addColumn(Column::integer('discount_ratio')->setNull(false)->setDefault(0)->setComment('优惠折扣比例 如：50-百分之五十')->setAfter('discount_money'));
-        $table->addColumn(Column::decimal('original_price', 11, 2)->setNull(false)->setDefault(0)->setComment('订单原始价格')->setAfter('pay_price'));
+        $table->addColumn(Column::decimal('original_price', 12, 2)->setNull(false)->setDefault(0)->setComment('订单原始价格')->setAfter('pay_price'));
         $table->update();
     }
 }
