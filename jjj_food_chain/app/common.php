@@ -592,13 +592,6 @@ function printText($leftText, $centerText="", $rightText="", $total = 32, $leftN
     // 
     if (
         strpos($leftText, "ยอดขายรวม") !== false 
-        // strpos($leftText, "รวมเป็นเงิน") !== false ||
-        // strpos($leftText, "ค่าบริการ") !== false || 
-        // strpos($leftText, "ภาษีมูลค่าเพิ่ม") !== false || 
-        // strpos($leftText, "ส่วนลด") !== false || 
-        // strpos($leftText, "ค่าจัดส่ง") !== false 
-        // strpos($leftText, "ค่าบรรจุภัณฑ์") !== false 
-        
     ) {
         $leftPadding .= ' ';
     }

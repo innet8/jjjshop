@@ -200,7 +200,7 @@ class OrderBusinessPrinterService
                 $printer->lineFeed();
                 $printer->lineFeed();
             }
-            $printer->appendText(printText(__("营业总额"),'', $this->currencyUnit . "{$data['total_amount']}",$width));
+            $printer->appendText(printText(__("营业总额"),'', $this->currencyUnit . "{$data['total_amount']}", $width ));
             $printer->lineFeed(5);
             // Print and exit page mode
             $printer->printAndExitPageMode();
