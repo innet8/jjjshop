@@ -149,6 +149,16 @@ class Setting extends BaseModel
         if (isset($userData['store']['values']['checkedPay'])) {
             unset($defaultData['store']['values']['checkedPay']);
         }
+        // 语言 不需要合并
+        if (isset($userData['cashier']['values']['language'])) {
+            unset($defaultData['cashier']['values']['language']);
+        }
+        if (isset($userData['tablet']['values']['language'])) {
+            unset($defaultData['tablet']['values']['language']);
+        }
+        if (isset($userData['kitchen']['values']['language'])) {
+            unset($defaultData['kitchen']['values']['language']);
+        }
         return array_merge_multiple($defaultData, $userData);
     }
 

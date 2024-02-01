@@ -276,13 +276,11 @@ class OrderPrinterService
         *
         */
         if ($printers == PrinterTypeEnum::SUNMI_LAN || $printers['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
-            $width = 48 - ($isThai ? 2 : 0);
-            $leftWidth = 32;
+            $width = 47;
+            $leftWidth = 29;
             $printer = new SunmiCloudPrinter(567);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
-            if ($printers == PrinterTypeEnum::SUNMI_LAN) {
-                $printer->appendText("***{$order['supplier']['name']}***\n");
-            }
+            $printer->appendText("***{$order['supplier']['name']}***\n");
             $printer->lineFeed();
             $printer->setLineSpacing(80);
             $printer->setPrintModes(true, true, false);
@@ -292,29 +290,30 @@ class OrderPrinterService
             if ($order['callNo']) {
                 $printer->appendText(__("取单号").": {$order['callNo']}\n");
             }
-            if ($printers != PrinterTypeEnum::SUNMI_LAN) {
-                $printer->lineFeed();
-            }
+            $printer->lineFeed();
             // 
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->appendText(printText(__("订单号"), '', $order->order_no ,$width));
+            $printer->lineFeed();
             $printer->appendText(printText(__("收银员"), '', $order->cashier?->real_name ,$width));
+            $printer->lineFeed();
             if ($order->pay_time) {
                 $printer->appendText(printText(__("时间"), '', date('Y-m-d H:i:s', $order->pay_time) ,$width));
             }
             $printer->lineFeed();
             $printer->lineFeed();
             // 
+            $width = 46;
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->appendText(printText(__("分类"), __("数量"), __("金额"), $width, $leftWidth));
-            $printer->appendText("------------------------------------------------\n");
+            $printer->appendText("\n------------------------------------------------\n");
             foreach ($order['product'] as $key => $product) {
                 $productName = $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : '');
-                $printer->appendText(printText($productName, $product['total_num'] . '', $this->currencyUnit . $product['total_price'] ,$width, $leftWidth + 2));
+                $printer->appendText(printText($productName, $product['total_num'] . '', $this->currencyUnit . $product['total_price'] , $width, $leftWidth + 2));
                 if ($product['remark']) {
                     $printer->appendText(printText($product['remark'],'','' ,$width, $leftWidth + 2));
                 }else {
@@ -324,18 +323,18 @@ class OrderPrinterService
             }
             // 
             $printer->appendText("------------------------------------------------\n");
-            $printer->appendText(printText(__("合计金额"),'', $this->currencyUnit . strval($order['total_price']) ,$width, $leftWidth));
+            $printer->appendText(printText(__("合计金额"),'', $this->currencyUnit . strval($order['total_price']) , $width, $leftWidth));
             $printer->lineFeed();
             if ($order['setting_service_money'] > 0) { 
-                $printer->appendText(printText(__("服务费"),'', $this->currencyUnit . strval($order['setting_service_money']) ,$width + ($isThai ? 1 : 0), $leftWidth));
+                $printer->appendText(printText(__("服务费"),'', $this->currencyUnit . strval($order['setting_service_money']) ,$width, $leftWidth));
                 $printer->lineFeed();
             }
             if ($order['consumption_tax_money'] > 0) { 
-                $printer->appendText(printText(__("消费税"),'', $this->currencyUnit . strval($order['consumption_tax_money']) ,$width + ($isThai ? 1 : 0), $leftWidth));
+                $printer->appendText(printText(__("消费税"),'', $this->currencyUnit . strval($order['consumption_tax_money']) ,$width, $leftWidth));
                 $printer->lineFeed();
             }
             if ($order['discount_money'] > 0) { 
-                $printer->appendText(printText(__("优惠折扣"),'', $this->currencyUnit . strval($order['discount_money']) ,$width + ($isThai ? 1 : 0), $leftWidth));
+                $printer->appendText(printText(__("优惠折扣"),'', $this->currencyUnit . strval($order['discount_money']) ,$width, $leftWidth));
                 $printer->lineFeed();
             }
             if ($order['user_discount_money'] > 0) { 
@@ -343,15 +342,15 @@ class OrderPrinterService
                 $printer->lineFeed();
             }
             if ($order['delivery_type']['value'] == DeliveryTypeEnum::EXPRESS) {
-                $printer->appendText(printText(__("配送费"),'', $this->currencyUnit . strval($order['express_price']) ,$width + ($isThai ? 1 : 0), $leftWidth));
+                $printer->appendText(printText(__("配送费"),'', $this->currencyUnit . strval($order['express_price']) ,$width, $leftWidth));
                 $printer->lineFeed();
             }
             if ($order['bag_price'] > 0) {
-                $printer->appendText(printText(__("包装费"),'', $this->currencyUnit . strval($order['bag_price']) ,$width  + ($isThai ? 1 : 0), $leftWidth));
+                $printer->appendText(printText(__("包装费"),'', $this->currencyUnit . strval($order['bag_price']) ,$width, $leftWidth));
                 $printer->lineFeed();
             }
             if ($order['coupon_money'] > 0) {
-                $printer->appendText(printText(__("优惠券优惠"),'', $this->currencyUnit . strval($order['coupon_money']) ,$width  + ($isThai ? 1 : 0), $leftWidth));
+                $printer->appendText(printText(__("优惠券优惠"),'', $this->currencyUnit . strval($order['coupon_money']) ,$leftWidth, $leftWidth));
                 $printer->lineFeed();
             }
             if ($order['fullreduce_money'] > 0) {
@@ -359,15 +358,15 @@ class OrderPrinterService
                 $printer->lineFeed();
             }
             $printer->setPrintModes(true, false, false);
-            $printer->appendText(printText(__("应收"),'', $this->currencyUnit . strval($order['pay_price']) , $width + ($isThai ? 1 : 0), $leftWidth));
+            $printer->appendText(printText(__("应收"),'', $this->currencyUnit . strval($order['pay_price']) , $width, $leftWidth));
             $printer->lineFeed();
             $printer->setPrintModes(false, false, false);
             // 
             if ($order->pay_status['value'] == OrderPayStatusEnum::SUCCESS){
                 $printer->lineFeed();
                 $printer->appendText("------------------------------------------------\n");
-                $printer->appendText(printText(__("支付方式"),'', $order['pay_type']['text'] ,$width, $leftWidth));
-                $printer->appendText(printText(__("实付金额"),'', $this->currencyUnit . strval($order['pay_price']) , $width + ($isThai ? 1 : 0) , $leftWidth));
+                $printer->appendText(printText(__("支付方式"),'', $order['pay_type']['text'] , $width, $leftWidth)."\n");
+                $printer->appendText(printText(__("实付金额"),'', $this->currencyUnit . strval($order['pay_price']) , $width , $leftWidth));
                 $printer->lineFeed();
             }
             // 
@@ -608,9 +607,9 @@ class OrderPrinterService
             $printer->lineFeed();
             // 
             $printer->appendText(printText(__("商品"), '',__("数量"), $width));
-            $printer->appendText("------------------------------------------------\n");
+            $printer->appendText("\n------------------------------------------------\n");
             $printer->setupColumns(
-                [220 , SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [360 , SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
             );
             foreach ($order['product'] as $key => $product) {

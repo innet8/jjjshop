@@ -150,6 +150,9 @@ class Index extends Controller
      */
     public function verifyPassword($password)
     {
+        if (empty($password)) {
+            return $this->renderError('请输入密码');
+        }
         $cashier = SettingModel::getSupplierItem(SettingEnum::CASHIER, $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
         if ($password == $cashier['cashier_password']) {
             return $this->renderSuccess('验证成功');

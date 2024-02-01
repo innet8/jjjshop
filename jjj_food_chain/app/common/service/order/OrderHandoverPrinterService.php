@@ -176,9 +176,7 @@ class OrderHandoverPrinterService
             $leftWidth = 32;
             $printer = new SunmiCloudPrinter(567);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
-            if ($printers == PrinterTypeEnum::SUNMI_LAN) {
-                $printer->appendText("***{$user['supplier']['name']}***\n");
-            }
+            $printer->appendText("***{$user['supplier']['name']}***\n");
             $printer->lineFeed();
             $printer->setLineSpacing(80);
             $printer->setPrintModes(true, true, false);
