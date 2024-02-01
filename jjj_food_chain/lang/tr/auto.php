@@ -536,6 +536,7 @@ return [
     "请选择数据" => "Lütfen verileri seçin",
     "POS刷卡收入" => "POS kartı geliri",
     "呼叫服务员" => "garsonu çağır",
+    "请输入密码" => "Lütfen şifre giriniz",
     "顺丰-美国件" => "SF Express - Amerika gönderileri",
     "用户充值：%s" => "Kullanıcı yüklemesi: %s",
     "用户消费：%s" => "Kullanıcı tüketimi: %s",

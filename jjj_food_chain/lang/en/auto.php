@@ -535,6 +535,7 @@ return [
     "请选择数据" => "Please select data",
     "POS刷卡收入" => "POS card income",
     "呼叫服务员" => "call waiter",
+    "请输入密码" => "Please enter password",
     "顺丰-美国件" => "SF Express - American parcel",
     "用户充值：%s" => "User recharge: %s",
     "用户消费：%s" => "User consumption: %s",
