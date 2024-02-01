@@ -50,12 +50,16 @@ class Business extends Controller
     {
         $data = $this->postData();
         $data['shop_supplier_id'] = $this->cashier['user']['shop_supplier_id'];
+        // 打印机设置
+        $printerConfig = SettingModel::getSupplierItem('printer', $this->cashier['user']['shop_supplier_id'] , $this->cashier['user']['app_id']);
+        // 
+        request()->language = $printerConfig['default_language'] ?? '';
         // 
         $data = (new OrderModel)->businessData($data);
-        // 打印机设置
-        $printerConfig = SettingModel::getSupplierItem('printer', $data['supplier']['shop_supplier_id'], $data['supplier']['app_id']);
-        //发送打印
+        // 发送打印
         $res = (new OrderBusinessPrinterService)->cashierPrint($printerConfig, $data);
+        // 
+        request()->language = '';
         // 
         return $res ? $this->renderSuccess('打印成功') : $this->renderError('打印失败，未连接打印机');
     }

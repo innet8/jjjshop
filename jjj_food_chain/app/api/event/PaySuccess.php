@@ -37,10 +37,15 @@ class PaySuccess
     {
         // 发送消息通知
         (new MessageService)->payment($this->order, $this->orderType);
+        // 
+        $printerConfig = SettingModel::getSupplierItem('printer', $this->order['shop_supplier_id'], $this->order['app_id']);
+        request()->language = $printerConfig['default_language'] ?? '';
         // 小票打印
         (new OrderPrinterService)->printTicket($this->order);
         // 菜品打印
         (new OrderPrinterService)->printProductTicket($this->order, 10);
+        // 
+        request()->language = '';
     }
 
     /**

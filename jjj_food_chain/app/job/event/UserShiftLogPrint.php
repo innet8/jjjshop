@@ -37,10 +37,12 @@ class UserShiftLogPrint
     {
         $list = $this->model->where('is_printed', 0)->select();
         foreach ($list as $item) {
-            $GLOBALS['EVENT_SHIFT_LANGUAGE'] = true;
-            $GLOBALS['SHIFT_LANGUAGE'] = Cache::get('language_' . $item->shop_supplier_id . '_' . $item->app_id);
             //
             $printerConfig = SettingModel::getSupplierItem('printer', $item->shop_supplier_id, $item->app_id);
+            // 
+            $GLOBALS['EVENT_SHIFT_LANGUAGE'] = true;
+            $GLOBALS['SHIFT_LANGUAGE'] = $printerConfig['default_language'] ?? '';
+            // 
             $res = (new OrderHandoverPrinterService)->cashierPrint($printerConfig, $item);
             log_write('UserShiftLogPrint TASK : ' . '__ init __' . $item->id, 'task');
             if ($res) {

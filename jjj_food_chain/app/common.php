@@ -441,6 +441,14 @@ function strExists($string, $find)
  */
 function checkDetect(): string
 {
+
+    if ($langSet = request()->language) {
+        if ($langSet == 'zh-tw') {
+            $langSet = 'zhtw';
+        }
+        return $langSet;
+    }
+
     if ($langSet = Request::get("language")) {
         // url中设置了语言变量
         return $langSet;

@@ -501,6 +501,9 @@ class OrderPrinterService
      */
     public function printProductTicket($order, $print_type)
     {
+        // 打印机设置
+        $printerConfig = SettingModel::getSupplierItem('printer', $order['shop_supplier_id'], $order['app_id']);
+        request()->language = $printerConfig['default_language'] ?? '';
         //打印列表
         $list = (new PrintingModel)->getList($print_type, $order['shop_supplier_id'], $order['order_type']);
         if (count($list) > 0) {
@@ -508,6 +511,7 @@ class OrderPrinterService
                 // 获取当前的打印机
                 $printer = PrinterModel::detail($item['printer_id']);
                 if (empty($printer) || $printer['is_delete']) {
+                    request()->language = '';
                     return false;
                 }
                 // 实例化打印机驱动
@@ -552,9 +556,11 @@ class OrderPrinterService
                     $this->getPrintTagProductContent($item, $order, $printer);
                 }
             }
+            request()->language = '';
             return true;
-
         }
+
+        request()->language = '';
         return false;
 
     }

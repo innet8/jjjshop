@@ -2,6 +2,7 @@
 
 namespace app\common\service\order;
 
+use think\facade\Request;
 use think\facade\Cache;
 use app\common\enum\settings\SettingEnum;
 use app\common\enum\settings\PrinterTypeEnum;
@@ -33,13 +34,13 @@ class OrderBusinessPrinterService
             $this->currencyUnit = $currency['unit'];
         }
         // 商米一体机打印
+        $res = true;
         if (($printerConfig['cashier_printer_id'] ?? '0') == '0') {
             $content = $this->getPrintContent(PrinterTypeEnum::SUNMI_LAN, $data);
             $content = hex2bin($content);
             $content = iconv("UTF-8", "UTF-8//IGNORE", $content);
             $content = bin2hex($content);
             Cache::set("printer_data_cache", array_unique(array_merge(Cache::get("printer_data_cache",[]),[$content])), 60 * 60 * 24);
-            return true;
         } else {
             // 获取当前的打印机
             $printer = PrinterModel::detail($printerConfig['cashier_printer_id']);
@@ -51,8 +52,10 @@ class OrderBusinessPrinterService
             // 获取订单打印内容
             $content = $this->getPrintContent($printer, $data);
             // 执行打印请求
-            return $printerDriver->printTicket($content, $data['supplier']['name']);
+            $res = $printerDriver->printTicket($content, $data['supplier']['name']);
         }
+        // 
+        return $res;
     }
 
     /**

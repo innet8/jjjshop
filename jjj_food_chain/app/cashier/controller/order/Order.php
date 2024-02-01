@@ -354,7 +354,10 @@ class Order extends Controller
             return $this->renderError('订单不存在');
         }
         //发送打印
+        $printerConfig = SettingModel::getSupplierItem('printer', $order['shop_supplier_id'], $order['app_id']);
+        request()->language = $printerConfig['default_language'] ?? '';
         $res = (new OrderPrinterService)->printTicket($order);
+        request()->language = '';
         //
         return  $res ? $this->renderSuccess('打印成功') : $this->renderError('打印失败，未连接打印机');
     }
