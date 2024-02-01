@@ -18,7 +18,8 @@
             <div  class="cashier-desc">{{ $t('小票显示的语言将根据选择的语言打印') }}</div>
             <!--提交-->
             <div class="common-button-wrapper">
-                <el-button type="primary" @click="onSubmit" :loading="loading">{{ $t('提交') }}</el-button>
+                <el-button  @click="getData" :loading="loading">{{ $t('重置') }}</el-button>
+                <el-button type="primary" @click="onSubmit" :loading="loading">{{ $t('保存') }}</el-button>
             </div>
         </el-form>
     </div>
