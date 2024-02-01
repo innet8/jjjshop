@@ -678,7 +678,7 @@ class Order extends OrderModel
                     $q->field('c.category_id, c.name');
                 }   
             })
-            ->field("sum(rp.total_num) as sales, sum(rp.total_price) as prices")
+            ->field("sum(rp.total_num) as sales, sum(rp.total_pay_price) as prices")
             ->select()
             ->append([])?->toArray();
         foreach ($categorys as $key => $data){
