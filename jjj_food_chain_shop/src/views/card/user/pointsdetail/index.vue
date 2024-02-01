@@ -16,8 +16,8 @@
                     </el-select>
                 </el-form-item>
 
-                <el-form-item :label="$t('昵称/手机号/用户ID')">
-                    <el-input v-model="formInline.keyword" :placeholder="$t('昵称/手机号/用户ID')"></el-input>
+                <el-form-item :label="$t('昵称/手机号/会员ID')">
+                    <el-input v-model="formInline.keyword" :placeholder="$t('昵称/手机号/会员ID')"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('变动时间')">
                     <div class="block">
@@ -44,7 +44,7 @@
                     </el-table-column>
                     <el-table-column prop="user.mobile" :label="$t('手机号')" width="160">
                     </el-table-column>
-                    <el-table-column prop="user_id" :label="$t('用户ID')" width="80">
+                    <el-table-column prop="user_id" :label="$t('会员ID')" width="80">
                     </el-table-column>
 
                     <el-table-column prop="value" :label="$t('变动数量')"></el-table-column>

@@ -17,7 +17,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('昵称/手机号/ID')"><el-input v-model="formInline.keyword"
-                    :placeholder="$t('请输入昵称/手机号/ID')"></el-input></el-form-item>
+                    :placeholder="$t('昵称/手机号/ID')"></el-input></el-form-item>
                 <el-form-item :label="$t('添加时间')">
                     <div class="block">
                         <span class="demonstration"></span>

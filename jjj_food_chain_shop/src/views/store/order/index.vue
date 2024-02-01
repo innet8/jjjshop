@@ -26,7 +26,7 @@
                 <el-form-item :label="$t('订单号')">
                     <el-input size="small" v-model="searchForm.order_no" :placeholder="$t('请输入订单号')"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('配送方式')">
+                <el-form-item :label="$t('用餐方式')">
                     <el-select size="small" v-model="searchForm.style_id" :placeholder="$t('请选择')">
                         <el-option :label="$t('全部')" value=""></el-option>
                         <el-option v-for="(item, index) in exStyle" :key="index" :label="item.name"

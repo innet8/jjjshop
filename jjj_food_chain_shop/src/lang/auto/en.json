@@ -354,7 +354,7 @@
     "购物送积分": "Get points for shopping",
     "打开后订单完成后赠送用户积分": "After opening and completing the order, the user will be awarded points.",
     "注：退款后已赠送的订单积分对应扣除": "Note: After the refund, the gifted order points will be deducted accordingly.",
-    "注：请填写数字0~100；订单的运费不参与积分赠送": "Note: Please fill in the numbers 0~100; the shipping cost of the order does not participate in the points bonus",
+    "注：请填写数字0~100；": "Note: Please fill in the numbers 0~100;",
     "例：订单付款金额(100.00元) * 积分赠送比例(100%) = 实际赠送的积分(100积分)": "Example: Order payment amount (100.00 yuan) * Points gift ratio (100%) = Actual points given away (100 points)",
     "会员卡名称": "Membership card name",
     "会员卡信息": "Membership card information",
@@ -513,6 +513,7 @@
     "实付款金额：": "Actual payment amount:",
     "支付方式：": "Payment method:",
     "用餐方式：": "Dining options:",
+    "用餐方式": "Dining options",
     "取餐时间：": "Meal pick-up time:",
     "交易状态：": "Trading status:",
     "商品信息": "Commodity information",
@@ -804,5 +805,8 @@
     "20分钟及以上": "20 minutes and above",
     "店铺名称": "Store Name",
     "无权限": "No permission",
-    "常规设置": "General settings"
+    "常规设置": "General settings",
+    "当前人员未交班，请先交班": "The current staff has not handed over the shift, please hand over the shift first",
+    "会员ID": "Member ID",
+    "昵称/手机号/会员ID": "Nick name/Phone number/Member ID"
 }
