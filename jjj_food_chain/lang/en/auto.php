@@ -728,7 +728,7 @@ return [
     "身份证号码已存在" => "ID number already exists",
     "收货地址不能为空" => "Shipping address cannot be empty",
     "签到失败，请重试" => "Sign-in failed, please try again",
-    "新用户即为该等级" => "New users are at this level",
+    "新会员即为该等级" => "New member is at this level",
     "支持多种就餐模式" => "Supports multiple dining modes",
     "此处显示资讯标题" => "Show title of information here",
     "商家账号名已存在" => "Merchant account name already exists",

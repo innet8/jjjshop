@@ -18,7 +18,7 @@ class Grade extends GradeModel
         $data = [
             'name' => '普通会员',
             'is_default' => 1,
-            'remark' => '新用户即为该等级',
+            'remark' => '新会员即为该等级',
             'app_id' => $app_id
         ];
         return self::save($data);
