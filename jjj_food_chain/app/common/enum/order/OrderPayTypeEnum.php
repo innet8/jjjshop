@@ -68,14 +68,14 @@ class OrderPayTypeEnum extends Enum
                 'img' => '/image/pay/qr_prompt_pay.png'
             ],
             self::QRCODE => [
-                'name' => "QR code",
+                'name' => "QR Code",
                 'value' => self::QRCODE,
                 'status' => 0,
                 'sort' => 2,
                 'img' => '/image/pay/qr_code.png'
             ],
             self::SCBEASY => [
-                'name' => "SCB easy",
+                'name' => "SCB EASY",
                 'value' => self::SCBEASY,
                 'status' => 1,
                 'sort' => 3,
@@ -103,7 +103,7 @@ class OrderPayTypeEnum extends Enum
                 'img' => '/image/pay/cross_border_qr.png'
             ],
             self::TRUEMONEYWALLET => [
-                'name' => "TrueMoney Wallet",
+                'name' => "TrueMoney",
                 'value' => self::TRUEMONEYWALLET,
                 'status' => 1,
                 'sort' => 7,
