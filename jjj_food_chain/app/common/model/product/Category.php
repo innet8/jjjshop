@@ -193,7 +193,9 @@ class Category extends BaseModel
             $shop_supplier_id = $detail['shop_supplier_id'];
         }
         // TODO 干掉缓存
-        return $model->with(['images', 'child'])
+        return $model->with(['images', 'child' => function ($query) {
+                $query->where('status', '=', 1);
+            }])
             ->where('parent_id', '=', 0)
             ->where('type', '=', $type)
             ->where('status', '=', 1)

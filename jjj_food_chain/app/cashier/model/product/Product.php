@@ -19,13 +19,19 @@ class Product extends ProductModel
         if (isset($params['is_special']) && $params['is_special'] > 0) {
             $model = $model->where('product.special_id', '=', $params['category_id']);
         } else if (isset($params['category_id']) && $params['category_id'] > 0) {
-            $categoryIds = Category::where('category_id', '=', $params['category_id'])
-                ->whereOr('parent_id', '=', $params['category_id'])
+            $categoryIds = Category::where(function ($query) use ($params) {
+                    $query->where('category_id', '=', $params['category_id'])
+                        ->whereOr('parent_id', '=', $params['category_id']);
+                })
+                ->where('status', '=', 1)
                 ->column('category_id');
             $model = $model->whereIn('product.category_id', $categoryIds);
         } else {
             // 全部
-            $categoryIds = Category::where('status', '=', 1)->column('category_id');
+            $categoryIds = Category::alias('c')
+                    ->join('category cc', 'c.category_id = IF(cc.parent_id = 0, cc.category_id, cc.parent_id)')
+                    ->where('c.status', '=', 1)
+                    ->column('c.category_id');
             $model = $model->whereIn('product.category_id', $categoryIds);
         }
 
@@ -43,5 +49,4 @@ class Product extends ProductModel
         $list = $model->paginate($params);
         return $list;
     }
-
 }
