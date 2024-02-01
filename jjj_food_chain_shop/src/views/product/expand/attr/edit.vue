@@ -58,7 +58,7 @@ export default {
             form: {
                 sort: 100,
                 attribute_name: JSON.parse(languageData),
-                attribute_value: [],
+                attribute_value: [JSON.parse(languageData)],
             },
             formRules: {
 

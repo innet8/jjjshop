@@ -8,7 +8,7 @@
             <template v-for="(item, index) in languageList" :key="index">
                 <el-form-item :label="$t('加料名称') + `(${item.label})`" :prop="`feed_name.${[item.key]}`"
                     :rules="[{ required: true, message: $t('请输入加料名称') }]">
-                    <el-input type="text" v-model="form.feed_name[item.key]"></el-input>
+                    <el-input type="text" v-model="form.feed_name[item.key]" :placeholder="$t('如：番茄酱')"></el-input>
                 </el-form-item>
             </template>
 
@@ -16,7 +16,7 @@
                 <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('请输入加料排序')" v-model.number="form.sort"></el-input-number>
             </el-form-item>
             <el-form-item :label="$t('价格')" prop="price">
-                <el-input type="number" v-model="form.price"></el-input>
+                <el-input type="number" v-model="form.price" :placeholder="$t('请输入价格')"></el-input>
             </el-form-item>
         </el-form>
         <template #footer>
