@@ -21,7 +21,7 @@
         </el-form-item>
 
         <el-form-item :label="$t('特色分类：')">
-            <el-select v-model="form.model.special_id" :placeholder="$t('请选择特色分类')">
+            <el-select v-model="form.model.special_id"  class="max-w460" size="default" :placeholder="$t('请选择特色分类')">
                 <template v-for="cat in form.special" :key="cat.category_id">
                     <el-option :value="cat.category_id" :label="cat.name_text"></el-option>
                     <template v-for="cat_c in cat.child" :key="cat_c.category_id">

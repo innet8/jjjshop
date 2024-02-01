@@ -33,7 +33,7 @@
             <div class="gray9">{{ $t('每单/每桌购买的最大数量，0为不限购') }}</div>
         </el-form-item>
         <el-form-item :label="$t('打印标签：')" prop="model.label_id" >
-            <el-select v-model="form.model.label_id">
+            <el-select v-model="form.model.label_id" class="max-w460" size="default">
                 <el-option :value="0" :label="$t('无')"></el-option>
                 <template v-for="cat in form.labelList" :key="cat.label_id">
                     <el-option :value="cat.label_id" :label="cat.label_name_text"></el-option>

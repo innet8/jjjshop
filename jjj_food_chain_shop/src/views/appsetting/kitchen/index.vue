@@ -17,14 +17,14 @@
             <el-form-item v-if="form.is_wait_color == 1" label="" :rules="[{ required: true, message: '' }]">
                 <div class="max-w460 color-box">
                     <el-input v-model="input1" disabled></el-input>
-                    <el-select v-model="form.wait_color[0]">
+                    <el-select v-model="form.wait_color[0]"  size="default">
                         <el-option value="red" :label="$t('红色')">{{ $t('红色') }}</el-option>
                         <el-option value="yellow" :label="$t('黄色')">{{ $t('黄色') }}</el-option>
                     </el-select>
                 </div>
                 <div class="max-w460 color-box">
                     <el-input v-model="input2" disabled></el-input>
-                    <el-select v-model="form.wait_color[1]">
+                    <el-select v-model="form.wait_color[1]"  size="default">
                         <el-option value="red" :label="$t('红色')">{{ $t('红色') }}</el-option>
                         <el-option value="yellow" :label="$t('黄色')">{{ $t('黄色') }}</el-option>
                     </el-select>

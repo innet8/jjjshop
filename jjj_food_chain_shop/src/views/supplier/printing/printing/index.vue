@@ -81,12 +81,6 @@ export default {
             // activeIndex: '1',
             /*form表单数据*/
             form: {
-                buyer_open: '0',
-                room_open: '0',
-                seller_open: '0',
-                buyer_printer_id: '',
-                room_printer_id: '',
-                seller_printer_id: '',
                 cashier_open: '0',
                 cashier_printer_id: '0'
             },
@@ -107,13 +101,7 @@ export default {
             SettingApi.printingDetail({}, true)
                 .then(data => {
                     let vars = data.data.vars.values;
-                    self.form.buyer_open = vars.buyer_open;
-                    self.form.seller_open = vars.seller_open;
-                    self.form.room_open = vars.room_open;
                     self.form.cashier_open = vars.cashier_open;
-                    self.form.buyer_printer_id = '' + vars.buyer_printer_id;
-                    self.form.room_printer_id = '' + vars.room_printer_id;
-                    self.form.seller_printer_id = '' + vars.seller_printer_id;
                     self.form.cashier_printer_id = '' + vars.cashier_printer_id;
                     self.printerList = data.data.vars.printerList;
 

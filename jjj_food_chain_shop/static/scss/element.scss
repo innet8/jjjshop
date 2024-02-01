@@ -58,7 +58,7 @@
         margin: 0 6px;
     }
     label span{
-        margin: 0 !important;
+        margin: 1px !important;
     }
     .el-input span{
         margin: 0;
@@ -225,4 +225,8 @@
 }
 .el-select-dropdown__item{
     max-width: 50vw;
+}
+.el-select--small .el-select__wrapper{
+    min-width: 180px;
+    height: 30px;
 }

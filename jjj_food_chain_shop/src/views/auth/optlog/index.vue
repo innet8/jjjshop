@@ -21,7 +21,7 @@
         <div class="product-content">
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-                    <el-table-column prop="opt_log_id" label="id" width="70"></el-table-column>
+                    <el-table-column prop="opt_log_id" label="ID" width="70"></el-table-column>
                     <el-table-column prop="user_name" :label="$t('用户名')"></el-table-column>
                     <el-table-column prop="real_name" :label="$t('姓名')"></el-table-column>
                     <el-table-column prop="url" label="URL" width="300">

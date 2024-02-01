@@ -231,7 +231,7 @@ export default {
     font-style: normal;
     font-weight: 400;
     margin-bottom: 16px;
-    text-transform: capitalize;
+
 }
 
 .grid-content h3 {
@@ -268,7 +268,7 @@ export default {
     align-items: center;
     width: 100%;
     margin-bottom: 16px;
-    text-transform: capitalize;
+
 }
 
 .center-r-box-t h4 {
@@ -316,7 +316,7 @@ export default {
 .data-box-title {
     display: flex;
     justify-content: space-between;
-    text-transform: capitalize;
+   
 }
 
 .data-box-title h3 {

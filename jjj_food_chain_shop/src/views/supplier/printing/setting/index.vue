@@ -9,7 +9,7 @@
         <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
 
             <el-form-item :label="$t('默认语言')"  class="cashier-item" prop="default_language" :rules="[{ required: true, message: ' ' }]">
-                <el-select v-model="form.default_language" :placeholder="$t('请选择')">
+                <el-select class="max-w460" v-model="form.default_language" :placeholder="$t('请选择')">
                     <el-option v-for="(item, index) in langList" :key="index" :label="item.value"
                         :value="item.key">
                     </el-option>
