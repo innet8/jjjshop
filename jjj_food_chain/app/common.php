@@ -565,36 +565,36 @@ function printText($leftText, $centerText="", $rightText="", $total = 32, $leftN
             $leftText = mb_substr($leftText, 0, $leftNums, 'UTF-8');
         }
     }
-    if (preg_match('/[\p{Thai}]/u', $leftText) ) {
-        preg_match_all('/[\p{Thai}]+/u', $leftText, $matches);
-        $leftWidth = grapheme_strlen(implode('',$matches[0]));
-        $leftWidth += strlen(iconv("UTF-8", "GBK//IGNORE", $leftText));
-    } else {
-        $leftWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $leftText));
-    }
+    // if (preg_match('/[\p{Thai}]/u', $leftText) ) {
+    //     preg_match_all('/[\p{Thai}]+/u', $leftText, $matches);
+    //     $leftWidth = grapheme_strlen(implode('',$matches[0]));
+    //     $leftWidth += strlen(iconv("UTF-8", "GBK//IGNORE", $leftText));
+    // } else {
+        $leftWidth = strlen(iconv("UTF-8", "UTF-8//IGNORE", $leftText));
+    // }
     $leftPadding = $leftNum - $leftWidth > 0 ? str_repeat(" ", intval($leftNum - $leftWidth)) : "";
-    if (preg_match('/[\p{Thai}]/u', $leftPadding) ) {
-        preg_match_all('/[\p{Thai}]+/u', $leftPadding, $matches);
-        $leftPaddingWidth = grapheme_strlen(implode('',$matches[0]));
-        $leftPaddingWidth += strlen(iconv("UTF-8", "GBK//IGNORE", $leftPadding));
-    } else {
-        $leftPaddingWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $leftPadding));
-    }
+    // if (preg_match('/[\p{Thai}]/u', $leftPadding) ) {
+    //     preg_match_all('/[\p{Thai}]+/u', $leftPadding, $matches);
+    //     $leftPaddingWidth = grapheme_strlen(implode('',$matches[0]));
+    //     $leftPaddingWidth += strlen(iconv("UTF-8", "GBK//IGNORE", $leftPadding));
+    // } else {
+        $leftPaddingWidth = strlen(iconv("UTF-8", "UTF-8//IGNORE", $leftPadding));
+    // }
     //
-    if (preg_match('/[\p{Thai}]/u', $centerText) ) {
-        preg_match_all('/[\p{Thai}]+/u', $centerText, $matches);
-        $centerWidth = grapheme_strlen(implode('',$matches[0]));
-        $centerWidth += strlen(iconv("UTF-8", "GBK//IGNORE", $centerText));
-    } else {
-        $centerWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $centerText));
-    }
-    if (preg_match('/[\p{Thai}]/u', $rightText) || strpos($rightText, "฿") !== false) {
-        preg_match_all('/[\p{Thai}]+/u', $rightText, $matches);
-        $rightWidth = grapheme_strlen(implode('',$matches[0]));
-        $rightWidth += strlen(iconv("UTF-8", "GBK//IGNORE", $rightText));
-    } else {
-        $rightWidth = strlen(iconv("UTF-8", "GBK//IGNORE", $rightText));
-    }
+    // if (preg_match('/[\p{Thai}]/u', $centerText) ) {
+    //     preg_match_all('/[\p{Thai}]+/u', $centerText, $matches);
+    //     $centerWidth = grapheme_strlen(implode('',$matches[0]));
+    //     $centerWidth += strlen(iconv("UTF-8", "GBK//IGNORE", $centerText));
+    // } else {
+        $centerWidth = strlen(iconv("UTF-8", "UTF-8//IGNORE", $centerText));
+    // }
+    // if (preg_match('/[\p{Thai}]/u', $rightText) || strpos($rightText, "฿") !== false) {
+    //     preg_match_all('/[\p{Thai}]+/u', $rightText, $matches);
+    //     $rightWidth = grapheme_strlen(implode('',$matches[0]));
+    //     $rightWidth += strlen(iconv("UTF-8", "GBK//IGNORE", $rightText));
+    // } else {
+        $rightWidth = strlen(iconv("UTF-8", "UTF-8//IGNORE", $rightText));
+    // }
     $centerPaddingWidth = ($total - $leftWidth - $leftPaddingWidth - $centerWidth - $rightWidth);
     $centerPadding = $centerPaddingWidth > 0 ? str_repeat(" ", $centerPaddingWidth ) : "";
     // 
