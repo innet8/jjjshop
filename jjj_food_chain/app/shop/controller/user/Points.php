@@ -3,9 +3,10 @@
 namespace app\shop\controller\user;
 
 use app\shop\controller\Controller;
+use hg\apidoc\annotation as Apidoc;
+use app\common\enum\settings\SettingEnum;
 use app\shop\model\settings\Setting as SettingModel;
 use app\shop\model\user\PointsLog as PointsLogModel;
-use hg\apidoc\annotation as Apidoc;
 
 /**
  * 积分设置
@@ -33,11 +34,11 @@ class Points extends Controller
     public function setting()
     {
         if ($this->request->isGet()) {
-            $values = SettingModel::getItem('points');
+            $values = SettingModel::getSupplierItem(SettingEnum::POINTS, $this->store['user']['shop_supplier_id']);
             return $this->renderSuccess('', compact('values'));
         }
         $model = new SettingModel;
-        if ($model->edit('points', $this->postData())) {
+        if ($model->edit(SettingEnum::POINTS, $this->postData(), $this->store['user']['shop_supplier_id'])) {
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model->getError() ?: '操作失败');
