@@ -284,7 +284,7 @@ class Cart extends Controller
         if ($model->sendKitchen($order_id)) {
             return $this->renderSuccess('送厨成功');
         }
-        return $this->renderError($model->getError() ?: '送厨失败');
+        return $this->renderError($model->getError() ?: '送厨失败', $model->getErrorData());
     }
 
     /**

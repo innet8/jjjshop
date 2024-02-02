@@ -2,10 +2,11 @@
 
 namespace app\common\service\product\factory;
 
-use app\common\service\product\factory\ProductService;
-use app\common\model\product\Product as ProductModel;
-use app\common\model\product\ProductSku as ProductSkuModel;
+use app\common\exception\BaseException;
 use app\common\enum\product\DeductStockTypeEnum;
+use app\common\model\product\Product as ProductModel;
+use app\common\service\product\factory\ProductService;
+use app\common\model\product\ProductSku as ProductSkuModel;
 use app\common\model\plus\discount\DiscountProduct as DiscountProductModel;
 
 /**
@@ -157,9 +158,20 @@ class MasterProductService extends ProductService
     {
         $productData = [];
         $productSkuData = [];
+        $error = [];
         foreach ($productList as $product) {
             // 下单减库存
             if ($product['deduct_stock_type'] == DeductStockTypeEnum::CREATE) {
+                $stockStatus = $product->getStockState($product['product_id'], $product['product_sku_id'], $product['total_num']);
+                if (!$stockStatus) {
+                    $error[] = [
+                        'product_id' => $product['product_id'],
+                        'product_sku_id' => $product['product_sku_id'],
+                        'total_num' => $product['total_num'],
+                        'product_name_text' => $product['product_name_text'],
+                    ];
+                    continue;
+                }
                 // 总库存
                 $productData[] = [
                     'data' => [
@@ -167,8 +179,7 @@ class MasterProductService extends ProductService
                             'dec',
                             $product['total_num']
                         ]
-                    ]
-                    ,
+                    ],
                     'where' => [
                         'product_id' => $product['product_id'],
                     ],
@@ -186,11 +197,15 @@ class MasterProductService extends ProductService
                     ],
                 ];
             }
-            //更新第二件半价商品库存
+            // 更新第二件半价商品库存
             if ($product['product_num'] > 1) {
                 $discountProduct = DiscountProductModel::getDiscountProduct($product['product_id']);
                 $discountProduct && $discountProduct->dec('stock', 1)->update();
             }
+        }
+
+        if (!empty($error)) {
+            return $error;
         }
 
         try {

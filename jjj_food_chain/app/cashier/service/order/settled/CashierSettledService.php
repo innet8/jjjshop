@@ -117,7 +117,7 @@ abstract class CashierSettledService extends BaseService
      * @return bool
      */
     abstract function validateProductList();
-
+    
     /**
      * 创建新订单
      */

@@ -9,6 +9,7 @@ use think\model\concern\SoftDelete;
 use app\common\enum\order\OrderStatusEnum;
 use app\common\model\order\Order as OrderModel;
 use app\common\service\order\OrderPrinterService;
+use app\common\model\plus\discount\DiscountProduct;
 use app\common\model\product\Product as ProductModel;
 use app\common\service\product\factory\ProductFactory;
 use app\common\model\product\ProductSku as ProductSkuModel;
@@ -256,7 +257,6 @@ class OrderProduct extends BaseModel
             $this->commit();
             return true;
         } catch (\Exception $e) {
-//            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
             $this->error = $e->getMessage();
             $this->rollback();
             return false;
@@ -305,7 +305,6 @@ class OrderProduct extends BaseModel
                 return false;
             }
         } catch (\Exception $e) {
-//            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
             $this->error = $e->getMessage();
             $this->rollback();
             return false;
@@ -320,10 +319,18 @@ class OrderProduct extends BaseModel
             $this->error = "订单不存在";
             return false;
         }
+
         $this->startTrans();
         try {
+            // 
+            $res = ProductFactory::getFactory($order['order_source'])->updateOrderProductStock($order['unSendKitchenProduct']);
+            if ($res !== true) {
+                $this->error = "商品库存不足";
+                $this->errorData = $res;
+                return false;
+            }
+            // 
             $order->where('order_id', $order_id)->inc('extra_times', 1)->update();
-            ProductFactory::getFactory($order['order_source'])->updateOrderProductStock($order['unSendKitchenProduct']);
             // 送厨更新取单号
             if ($order->table_id == 0){
                 $order->callNo = getTableNumber();
@@ -338,13 +345,12 @@ class OrderProduct extends BaseModel
             $this->commit();
             //
         } catch (\Exception $e) {
-//            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
             $this->error = $e->getMessage();
             $this->rollback();
             return false;
         }
         // 菜品打印
-         (new OrderPrinterService)->printProductTicket($printOrder, 30);
+        (new OrderPrinterService)->printProductTicket($printOrder, 30);
         //
         return true;
     }
