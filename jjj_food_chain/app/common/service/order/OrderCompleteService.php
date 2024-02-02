@@ -5,6 +5,7 @@ namespace app\common\service\order;
 use app\common\library\helper;
 use app\common\enum\order\OrderTypeEnum;
 use app\common\model\user\User as UserModel;
+use app\common\model\settings\Setting as SettingModel;
 use app\common\enum\user\pointsLog\PointsLogSceneEnum;
 use app\common\model\user\PointsLog as PointsLogModel;
 use app\common\model\supplier\Supplier as SupplierModel;
@@ -156,6 +157,11 @@ class OrderCompleteService
         $logData = [];
         foreach ($orderList as $order) {
             if ($order['user_id'] == 0) {
+                continue;
+            }
+            // 积分设置 是否开启购物送积分
+            $setting = SettingModel::getSupplierItem('points', $order['shop_supplier_id'], $order['app_id']);
+            if (!$setting['is_shopping_gift']) {
                 continue;
             }
             // 计算用户所得积分
