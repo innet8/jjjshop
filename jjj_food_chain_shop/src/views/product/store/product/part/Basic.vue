@@ -49,7 +49,7 @@
                         </div>
                     </transition-group>
                 </draggable>
-                <div class="item img-select" @click="openProductUpload">
+                <div v-if="form.model.image.length == 0" class="item img-select" @click="openProductUpload">
                     <el-icon>
                         <Plus />
                     </el-icon>
