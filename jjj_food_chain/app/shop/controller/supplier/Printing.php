@@ -109,7 +109,7 @@ class Printing extends Controller
             return $this->renderSuccess('', compact('model', 'printerList', 'printerTagList', 'storeList', 'takeList', 'labelList'));
         }
         //
-        if (strlen($param['name'] ?? '') > 50) {
+        if (mb_strlen($param['name'] ?? '') > 50) {
             return $this->renderError('名称限制输入50字符');
         }
         //
