@@ -270,6 +270,7 @@ class OrderPrinterService
             return $printer->orderData;
         }
 
+
         /* *
         *
         *芯烨打印机 
@@ -319,9 +320,7 @@ class OrderPrinterService
                 }else {
                     $printer->lineFeed();
                 }
-                if ($printers != PrinterTypeEnum::SUNMI_LAN){
-                    $printer->lineFeed();
-                }
+                $printer->lineFeed();
             }
             // 
             $printer->appendText("------------------------------------------------\n");
