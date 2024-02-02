@@ -290,9 +290,7 @@ class OrderPrinterService
             if ($order['callNo']) {
                 $printer->appendText(__("取单号").": {$order['callNo']}\n");
             }
-            // if ($printers != PrinterTypeEnum::SUNMI_LAN){
-                $printer->lineFeed();
-            // }
+            $printer->lineFeed();
             // 
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
@@ -321,7 +319,9 @@ class OrderPrinterService
                 }else {
                     $printer->lineFeed();
                 }
-                $printer->lineFeed();
+                if ($printers != PrinterTypeEnum::SUNMI_LAN){
+                    $printer->lineFeed();
+                }
             }
             // 
             $printer->appendText("------------------------------------------------\n");
