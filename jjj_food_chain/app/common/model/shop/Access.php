@@ -119,8 +119,6 @@ class Access extends BaseModel
                 continue;
             }
             $adminMenu = array_filter($menu['children'], function ($val) use($name) {
-                trace($val['name']);
-                trace($name);
                 return $val['name'] == $name;
             });
             if (!empty($adminMenu)) {
