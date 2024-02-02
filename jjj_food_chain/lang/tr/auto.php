@@ -439,6 +439,7 @@ return [
     "桌台订单" => "Tablo siparişleri",
     "收银订单" => "Kasiyer siparişleri",
     "呼叫结账" => "Arama Ödemesi",
+    "登录失效" => "Giriş geçersiz",
     "操作失败:" => "operasyon başarısız:",
     "顺丰-繁体" => "SF Express-Geleneksel",
     "按钮文字1" => "düğme metni 1",

@@ -438,6 +438,7 @@ return [
     "桌台订单" => "Table order",
     "收银订单" => "Cashier order",
     "呼叫结账" => "Call Checkout",
+    "登录失效" => "Login invalid",
     "操作失败:" => "Operation failed:",
     "顺丰-繁体" => "SF Express-Traditional",
     "按钮文字1" => "Button text 1",
