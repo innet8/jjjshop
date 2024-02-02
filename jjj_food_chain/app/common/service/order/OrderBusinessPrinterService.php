@@ -37,9 +37,6 @@ class OrderBusinessPrinterService
         $res = true;
         if (($printerConfig['cashier_printer_id'] ?? '0') == '0') {
             $content = $this->getPrintContent(PrinterTypeEnum::SUNMI_LAN, $data);
-            $content = hex2bin($content);
-            $content = iconv("UTF-8", "UTF-8//IGNORE", $content);
-            $content = bin2hex($content);
             Cache::set("printer_data_cache", array_unique(array_merge(Cache::get("printer_data_cache",[]),[$content])), 60 * 60 * 24);
         } else {
             // 获取当前的打印机
@@ -72,16 +69,18 @@ class OrderBusinessPrinterService
         *商米打印机
         *
         */
-        if (!is_string($printers) && $printers['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
+        if ($printers == PrinterTypeEnum::SUNMI_LAN || $printers['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
             $printer = new SunmiCloudPrinter(567);
             $printer->lineFeed();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
             $printer->appendText("***{$data['supplier']['name']}***\n");
             $printer->lineFeed();
-            $printer->setLineSpacing(80);
+            $printer->setLineSpacing(50);
             $printer->setPrintModes(true, true, false);
             $printer->appendText(__("营业数据"));
             $printer->lineFeed();
+            $printer->lineFeed();
+            $printer->setLineSpacing(50);
             // 
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
@@ -104,14 +103,12 @@ class OrderBusinessPrinterService
             );
             $printer->printInColumns(__("分类"), __("数量"), __("金额"));
             $printer->appendText("------------------------------------------------\n");
-            $printer->lineFeed();
             foreach ($data['categorys'] as $key => $category) {
                 $printer->printInColumns( (new CategoryModel)->getNameTextAttr($category['name']) .'' , "{$category['sales']}",  $this->currencyUnit . "{$category['prices']}" );
                 $printer->lineFeed();
             }
             $printer->appendText("------------------------------------------------\n");
             // 
-            $printer->lineFeed();
             $printer->setupColumns(
                 [360, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
@@ -145,19 +142,18 @@ class OrderBusinessPrinterService
         *芯烨打印机 
         *
         */
-        if ($printers == PrinterTypeEnum::SUNMI_LAN || $printers['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
+        if ($printers['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
             $width = 46;
             $printer = new SunmiCloudPrinter(567);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
             $printer->appendText("***{$data['supplier']['name']}***\n");
             $printer->lineFeed();
-            $printer->setLineSpacing(80);
+            $printer->setLineSpacing(50);
             $printer->setPrintModes(true, true, false);
             $printer->appendText(__("营业数据"));
             $printer->lineFeed();
-            if ($printers != PrinterTypeEnum::SUNMI_LAN) {
-                $printer->lineFeed();
-            }
+            $printer->lineFeed();
+            $printer->setLineSpacing(50);
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
