@@ -60,6 +60,11 @@ class Table extends TableModel
         if (!$this->validateForm($data, self::FORM_SCENE_EDIT)) {
             return false;
         }
+        $areaInfo = (new TableArea)->where('area_id','=',$data['area_id'])->findOrEmpty();
+        if ($areaInfo->isEmpty()) {
+            $this->error = '区域不存在';
+            return false;
+        }
         $data = $this->sortData($data);
         return $this->save($data);
     }
