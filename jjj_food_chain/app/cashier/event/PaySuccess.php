@@ -35,9 +35,9 @@ class PaySuccess
         // die;
 
         // 小票打印
-        (new OrderPrinterService)->printTicket($this->order);
+        (new OrderPrinterService)->printTicket($order);
         // 菜品打印
-        (new OrderPrinterService)->printProductTicket($this->order, 10);
+        (new OrderPrinterService)->printProductTicket($order, 10);
         // 
         request()->language = '';
     }
