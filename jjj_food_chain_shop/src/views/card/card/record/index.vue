@@ -16,7 +16,7 @@
             <el-option :label="$t('有效')" :value="1"></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item :label="$t('会员卡名称')"><el-input v-model="formInline.search" :placeholder="$t('请输入会员卡名称')"></el-input></el-form-item>
+        <el-form-item :label="$t('会员卡名称')"><el-input v-model="formInline.card_name" :placeholder="$t('请输入会员卡名称')"></el-input></el-form-item>
         <el-form-item><el-button class="search-button" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button></el-form-item>
       </el-form>
     </div>
@@ -92,7 +92,7 @@
         curPage: 1,
         /*横向表单数据模型*/
         formInline: {
-          search: '',
+            card_name: '',
           status: -1
         },
         open_edit:false,
