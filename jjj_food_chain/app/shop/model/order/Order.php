@@ -306,7 +306,7 @@ class Order extends OrderModel
             PointsLogModel::add([
                 'user_id' => $this['user_id'],
                 'scene' => PointsLogSceneEnum::REFUND,
-                'value' => $points,
+                'value' => -$points,
                 'describe' => "退款扣除：{$this['order_no']}",
                 'remark' => '',
             ]);

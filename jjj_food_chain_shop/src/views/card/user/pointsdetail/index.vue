@@ -47,7 +47,14 @@
                     <el-table-column prop="user_id" :label="$t('会员ID')" width="80">
                     </el-table-column>
 
-                    <el-table-column prop="value" :label="$t('变动数量')"></el-table-column>
+                    <el-table-column prop="value" :label="$t('变动数量')">
+                        <template #default="scope">
+                            <p v-if="scope.row.value > 0">+{{ scope.row.value }}</p>
+                            <p v-else>{{ scope.row.value }}</p>
+                            </template>
+
+           
+                    </el-table-column>
                     <el-table-column prop="scene.text" :label="$t('变动场景')">
                         <template #default="scope">
                             <span v-if="!scope.row.scene" >-</span>
