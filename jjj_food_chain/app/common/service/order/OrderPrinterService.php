@@ -689,7 +689,7 @@ class OrderPrinterService
             }
             $productAttr = (new OrderProduct)->getProductAttrAttr($product['product_attr']);
             $productName = $prodcutDetail['product_name_text'] . ($productAttr ?  ' (' . $productAttr . ')'  : '');
-            $content .= printText($productName, '', ''.$product['total_num'], $width, 28);
+            $content .= printText($productName, '', ''.$product['total_num'], $width, 26);
             if ($product['remark'] ?? '') {
                 $content .= '<TEXT x="10" y="180" font="10" w="-1" h="-1" r="0">' . $product['remark'] . '</TEXT><BR><BR>';
             }
