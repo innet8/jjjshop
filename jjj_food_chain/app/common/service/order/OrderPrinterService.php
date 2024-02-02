@@ -156,7 +156,6 @@ class OrderPrinterService
             $this->currencyUnit = $currency['unit'];
         }
 
-
         $isThai =  preg_match('/[\p{Thai}]/u', __("金额"));
 
         /* *
@@ -170,7 +169,7 @@ class OrderPrinterService
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
             $printer->appendText("***{$order['supplier']['name']}***\n");
             $printer->lineFeed();
-            $printer->setLineSpacing(80);
+            $printer->setLineSpacing(50);
             $printer->setPrintModes(true, true, false);
             if ($order['table_no']) {
                 $printer->appendText(__("桌号").": {$order['table_no']}\n");
@@ -178,12 +177,13 @@ class OrderPrinterService
             if ($order['callNo']) {
                 $printer->appendText(__("取单号").": {$order['callNo']}\n");
             }
+            $printer->setLineSpacing(50);
             // 
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->setupColumns(
-                [160, SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [260, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
             );
             $printer->printInColumns(__("订单号"), $order->order_no);
@@ -413,7 +413,6 @@ class OrderPrinterService
         $content .= "--------------------------------<BR>";
         foreach ($order['product'] as $key => $product) {
             $productName = $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : '');
-            
             $content .= printText($productName, $product['total_num'], $this->currencyUnit . strval($product['total_price']), $width, $leftWidth);
             if ($product['remark']) {
                 $content .= '<TEXT x="10" y="180" font="10" w="-1" h="-1" r="0">' . $product['remark'] . '</TEXT><BR><BR>';
@@ -585,7 +584,6 @@ class OrderPrinterService
                 $printer->lineFeed();
             }
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
-            $printer->setLineSpacing(80);
             $printer->setPrintModes(true, true, false);
             if ($order['table_no']) {
                 $printer->appendText(__("桌号")."：{$order['table_no']}\n");
@@ -596,12 +594,13 @@ class OrderPrinterService
             if($printerType == PrinterTypeEnum::XPRINTER_LAN){
                 $printer->lineFeed();
             }
+            $printer->setLineSpacing(50);
             // 
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->setupColumns(
-                [220, SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [260, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
             );
             $printer->printInColumns(__("订单号"), $order->order_no);
