@@ -536,27 +536,6 @@ class Cart extends CartModel
             $this->error = '商品已下架';
             return false;
         }
-//        if ($param['type'] == 'down') {
-//            if ($this['product_num'] <= 1) {
-//                return $this->delete();
-//            }
-//            return $this->where('cart_id', '=', $this['cart_id'])->dec('product_num', 1)->update();
-//        } elseif ($param['type'] == 'up') {
-//            $stockStatus = $this->productStockState($this['product_id'], $this['product_sku_id']);
-//            if (!$stockStatus) {
-//                $this->error = '商品库存不足';
-//                return false;
-//            }
-//            return $this->where('cart_id', '=', $this['cart_id'])->inc('product_num', 1)->update();
-//        } elseif ($param['type'] == 'mid') {
-//            $stockStatus = $this->getStockState($this['product_id'], $this['product_sku_id'], $param['product_num']);
-//            if (!$stockStatus) {
-//                $this->error = '商品库存不足';
-//                return false;
-//            }
-//            return $this->save(['product_num' => $param['product_num']]);
-//        }
-
         $stockStatus = $this->getStockState($this['product_id'], $this['product_sku_id'], $param['product_num']);
         if (!$stockStatus) {
             $this->error = '商品库存不足';

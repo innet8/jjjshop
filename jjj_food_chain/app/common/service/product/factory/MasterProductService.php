@@ -162,7 +162,7 @@ class MasterProductService extends ProductService
         foreach ($productList as $product) {
             // 下单减库存
             if ($product['deduct_stock_type'] == DeductStockTypeEnum::CREATE) {
-                $stockStatus = $product->getStockState($product['product_id'], $product['product_sku_id'], $product['total_num']);
+                $stockStatus = $product->getStockState($product['total_num']);
                 if (!$stockStatus) {
                     $error[] = [
                         'product_id' => $product['product_id'],

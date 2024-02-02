@@ -1480,15 +1480,6 @@ class Order extends BaseModel
             ->count();
     }
 
-    //判断商品库存
-    public function getStockState($product_id, $product_sku_id, $product_num)
-    {
-        return (new ProductSkuModel)->where('product_id', '=', $product_id)
-            ->where('product_sku_id', '=', $product_sku_id)
-            ->where('stock_num', '>', $product_num)
-            ->count();
-    }
-
     //查询桌号订单未送厨商品
     public function getUnSendKitchen($table_id)
     {

@@ -2,17 +2,17 @@
 
 namespace app\common\model\order;
 
-use think\facade\Log;
 use app\common\library\helper;
 use app\common\model\BaseModel;
 use think\model\concern\SoftDelete;
 use app\common\enum\order\OrderStatusEnum;
 use app\common\model\order\Order as OrderModel;
+use app\common\enum\product\DeductStockTypeEnum;
 use app\common\service\order\OrderPrinterService;
-use app\common\model\plus\discount\DiscountProduct;
 use app\common\model\product\Product as ProductModel;
 use app\common\service\product\factory\ProductFactory;
 use app\common\model\product\ProductSku as ProductSkuModel;
+use app\common\model\order\OrderProduct as OrderProductModel;
 
 /**
  * 订单商品模型
@@ -165,11 +165,23 @@ class OrderProduct extends BaseModel
     }
 
     //判断商品库存
-    public function getStockState($product_id, $product_sku_id, $product_num)
+    public function getStockState($product_num)
     {
-        return (new ProductSkuModel)->where('product_id', '=', $product_id)
-            ->where('product_sku_id', '=', $product_sku_id)
-            ->where('stock_num', '>', $product_num)
+        $deductStockType = ProductModel::where('product_id', $this->product_id)->value('deduct_stock_type');
+        $orderProductNum = !$this->order_id ? 0 : OrderProductModel::where('order_id', $this->order_id)
+            // 下单减库存
+            ->when( $deductStockType == DeductStockTypeEnum::CREATE , function($q){
+                $q->where('is_send_kitchen', 0);
+            })
+            // 
+            ->where('order_product_id', '<>', $this->order_product_id)
+            ->where('product_id', '=', $this->product_id)
+            ->where('product_sku_id', '=', $this->product_sku_id)
+            ->sum('total_num');
+        // 
+        return (new ProductSkuModel)->where('product_id', '=', $this->product_id)
+            ->where('product_sku_id', '=', $this->product_sku_id)
+            ->where('stock_num', '>', $orderProductNum + $product_num - 1)
             ->count();
     }
 
@@ -191,27 +203,30 @@ class OrderProduct extends BaseModel
             $this->error = '商品已下架';
             return false;
         }
-        $stockStatus = $this->getStockState($this['product_id'], $this['product_sku_id'], $param['product_num']);
-        if (!$stockStatus) {
-            $this->error = '商品库存不足';
-            return false;
+        // 
+        if ($param['type'] != 'down') {
+            // 
+            $stockStatus = $this->getStockState($param['product_num']);
+            if (!$stockStatus) {
+                $this->error = '商品库存不足';
+                return false;
+            }
+            // 判断限购
+            $limitNum = ProductModel::getProductLimitNum($this['product_id']);
+            if ($limitNum && $param['product_num'] > $limitNum) {
+                $this->error = '超过限购数量';
+                return false;
+            }
+            // 判断当前订单
+            $curNum = (new self)->where([
+                'order_id' => $this['order_id'],
+                'product_id' => $this['product_id'],
+            ])->sum('total_num');
+            if ($limitNum && (($param['product_num'] - $this['total_num'] + $curNum) > $limitNum)) {
+                $this->error = '超过限购数量';
+                return false;
+            }
         }
-        // 判断限购
-        $limitNum = ProductModel::getProductLimitNum($this['product_id']);
-        if ($limitNum && $param['product_num'] > $limitNum) {
-            $this->error = '超过限购数量';
-            return false;
-        }
-        // 判断当前订单
-        $curNum = (new self)->where([
-            'order_id' => $this['order_id'],
-            'product_id' => $this['product_id'],
-        ])->sum('total_num');
-        if ($limitNum && (($param['product_num'] - $this['total_num'] + $curNum) > $limitNum)) {
-            $this->error = '超过限购数量';
-            return false;
-        }
-
         if ($param['product_num'] <= 0) {
             return $this->delete();
         }
