@@ -42,9 +42,13 @@ class Operate extends Controller
      */
     public function orderCancel($order_id)
     {
+        $data = $this->postData();
+        if ( strlen($data['cancel_remark'] ?? '') > 100 ) {
+            return $this->renderError('备注最长200个字符');
+        }
         // 订单信息
         $model = OrderModel::detail($order_id);
-        if ($model->orderCancel($this->postData())) {
+        if ($model->orderCancel($data)) {
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model->getError() ?: '操作失败');

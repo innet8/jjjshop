@@ -6,7 +6,6 @@ use app\cashier\controller\Controller;
 use app\cashier\model\order\Cart as CartModel;
 use app\cashier\model\order\Order as OrderModel;
 use app\cashier\model\store\Table as TableModel;
-use app\common\enum\order\OrderStatusEnum;
 use app\common\model\order\OrderProduct;
 use hg\apidoc\annotation as Apidoc;
 
