@@ -264,9 +264,16 @@ export default {
                     //处理数据
                     params.product_name = JSON.stringify(params.product_name)
                     params.product_unit = JSON.stringify(params.product_unit)
-                    params.sku.map((item, index) => {
-                        params.sku[index].spec_name = JSON.stringify(item.spec_name)
-                    })
+
+                    if (params.spec_type == 10) {
+                        params.sku = params.sku.slice(0, 1);
+                        params.sku[0].spec_name = ''
+                    } else {
+                        params.sku.map((item, index) => {
+                            params.sku[index].spec_name = JSON.stringify(item.spec_name)
+                        })
+                    }
+                    
                     params.product_attr.map((item, index) => {
                         params.product_attr[index].attribute_name = JSON.stringify(item.attribute_name)
                         item.attribute_value.map((items, indexs) => {
