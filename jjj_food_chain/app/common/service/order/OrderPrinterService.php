@@ -588,9 +588,7 @@ class OrderPrinterService
             if ($order['callNo']) {
                 $printer->appendText(__("取单号")."：{$order['callNo']}\n");
             }
-            if($printerType == PrinterTypeEnum::XPRINTER_LAN){
-                $printer->lineFeed();
-            }
+            $printer->lineFeed();
             $printer->setLineSpacing(50);
             // 
             $printer->restoreDefaultLineSpacing();
