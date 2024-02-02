@@ -6,7 +6,7 @@
                 <el-form-item :label="$t('分类名称')"><el-input size="small" v-model="searchForm.name"
                         :placeholder="$t('请输入分类名称')"></el-input></el-form-item>
                 <el-form-item>
-                    <el-button size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
+                    <el-button class="search-button" size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
                 </el-form-item>
             </el-form>
             <el-button size="small" type="primary" @click="addClick" icon="Plus" v-auth="'/product/store/category/add'">{{ $t('添加分类') }}</el-button>

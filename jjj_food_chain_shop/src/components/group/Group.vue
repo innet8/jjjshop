@@ -11,7 +11,7 @@
 				<el-form-item label="团购名称">
 					<el-input placeholder="请输入团购名称" v-model="formInline.search">
 						<template #append>
-							<el-button icon="Search" @click="getData">
+							<el-button class="search-button" icon="Search" @click="getData">
 								查询
 							</el-button>
 						</template>

@@ -33,7 +33,7 @@
                 <el-option v-for="(item,index) in status" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>-->
              <template #append>
-            <el-button icon="Search" @click="getData">
+            <el-button class="search-button" icon="Search" @click="getData">
               查询
             </el-button>
             </template>

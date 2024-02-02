@@ -21,7 +21,7 @@
                 </el-form-item>
 
                 <el-form-item>
-                    <el-button type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
+                    <el-button class="search-button" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
                 </el-form-item>
             </el-form>
             <!--添加等级-->

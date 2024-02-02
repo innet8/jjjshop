@@ -25,7 +25,7 @@
                         :range-separator="$t('至')" :start-placeholder="$t('开始日期')" :end-placeholder="$t('结束日期')"></el-date-picker>
                     </div>
                 </el-form-item>
-                <el-form-item><el-button type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button></el-form-item>
+                <el-form-item><el-button class="search-button" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button></el-form-item>
 
             </el-form>
             <div class="common-level-rail"> <el-button type="primary" v-auth="'/card/user/user/add'" icon="Plus" @click="addMenber">{{ $t('添加会员') }}</el-button></div>

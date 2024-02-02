@@ -8,7 +8,7 @@
     <div class="common-seach-wrap">
       <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label=""><el-input v-model="formInline.nick_name" placeholder="请输入昵称/姓名/手机号"></el-input></el-form-item>
-        <el-form-item><el-button type="primary" @click="onSubmit">查询</el-button></el-form-item>
+        <el-form-item><el-button class="search-button" type="primary" @click="onSubmit">查询</el-button></el-form-item>
       </el-form>
     </div>
 

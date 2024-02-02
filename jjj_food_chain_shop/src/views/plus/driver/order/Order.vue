@@ -21,7 +21,7 @@
           <el-input size="small" v-model="formInline.order_no" placeholder="请输入订单号"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
+          <el-button class="search-button" type="primary" @click="onSubmit">查询</el-button>
         </el-form-item>
       </el-form>
     </div>

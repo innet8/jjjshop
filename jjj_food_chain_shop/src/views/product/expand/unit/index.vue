@@ -10,7 +10,7 @@
                     <el-input size="small" v-model="searchForm.name" :placeholder="$t('单位名称')"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button size="small" type="primary" icon="Search" @click="getData">{{ $t('查询') }}</el-button>
+                    <el-button class="search-button" size="small" type="primary" icon="Search" @click="getData">{{ $t('查询') }}</el-button>
                 </el-form-item>
             </el-form>
             <div>

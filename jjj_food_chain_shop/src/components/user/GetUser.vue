@@ -21,7 +21,7 @@
         </el-form-item>
         <el-form-item :label="$t('昵称/手机号/ID')"><el-input :placeholder="$t('昵称/手机号/ID')" v-model="formInline.keyword"></el-input></el-form-item>
         <el-form-item>
-          <el-button  type="primary" icon="Search" @click="search">{{ $t('查询') }}</el-button>
+          <el-button class="search-button" type="primary" icon="Search" @click="search">{{ $t('查询') }}</el-button>
         </el-form-item>
       </el-form>
     </div>

@@ -13,7 +13,7 @@
 				<el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
 					<el-form-item label=""><el-input v-model="searchForm.search"
 							placeholder="请输入直播间名称/主播昵称"></el-input></el-form-item>
-					<el-form-item><el-button type="primary" icon="Search"
+					<el-form-item><el-button class="search-button" type="primary" icon="Search"
 							@click="onSubmit">查询</el-button></el-form-item>
 				</el-form>
 			</div>

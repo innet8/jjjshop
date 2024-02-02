@@ -7,7 +7,7 @@
                     <h3 class="title" style="margin-bottom: 40px;"><img src="/src/assets/logo.svg" />{{ $t('点餐管理系统') }}</h3>
                     <!--用户名-->
                     <el-form-item prop="account">
-                        <div class="left-img-input"><img class="l-img" src="/src/assets/img/user.png">
+                        <div class="left-img-input"><img class="l-img" src="/src/assets/img/user.svg">
                             <el-input class="l-input" type="text" v-model="ruleForm.account" auto-complete="off"
                                 :placeholder="$t('请输入用户名')">
                             </el-input>
@@ -16,7 +16,7 @@
                     </el-form-item>
                     <!--密码-->
                     <el-form-item prop="checkPass">
-                        <div class="left-img-input"><img class="l-img" src="/src/assets/img/password.png">
+                        <div class="left-img-input"><img class="l-img" src="/src/assets/img/lock.svg">
                             <el-input type="password" class="l-input" v-model="ruleForm.checkPass" auto-complete="off"
                                 :placeholder="$t('请输入登录密码')">
                             </el-input>
@@ -297,7 +297,7 @@ export default {
     border-radius: 16px;
     -moz-border-radius: 16px;
     background-clip: padding-box;
-    width: 480px;
+    width: 510px;
     margin: auto;
     background-color: #FFFFFF;
 
@@ -334,19 +334,19 @@ export default {
 
 .left-img-input {
     width: 100%;
-    height: 44px;
-    line-height: 44px;
+    height: 46px;
+    line-height: 46px;
     background: #FFFFFF;
     border: 1px solid #EEEEEE;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 14px;
-
+    padding: 0 16px;
+    border-radius: 4px;
     .l-img {
         width: 20px;
         height: 20px;
-        margin-right: 10px;
+        margin-right: 5px;
         flex-shrink: 0;
     }
 
@@ -357,8 +357,9 @@ export default {
         font-size: 14px;
         color: #666666;
 
-        .el-input__wrapper {
+        :deep(.el-input__wrapper) {
             box-shadow: none;
+            border: none ;
         }
     }
 

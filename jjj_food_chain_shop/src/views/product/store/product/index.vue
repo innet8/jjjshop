@@ -31,7 +31,7 @@
                 <el-form-item :label="$t('商品名称')"><el-input size="small" v-model="searchForm.product_name"
                         :placeholder="$t('请输入商品名称')"></el-input></el-form-item>
                 <el-form-item>
-                    <el-button size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
+                    <el-button class="search-button" size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
                 </el-form-item>
             </el-form>
             <el-button size="small" type="primary" icon="Plus" v-auth="'/product/store/product/add'" @click="addClick">{{

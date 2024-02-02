@@ -7,7 +7,7 @@
           <el-input v-model="formInline.search" placeholder="请输入活动名称"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="Search" @click="onSubmit">查询</el-button>
+          <el-button class="search-button" type="primary" icon="Search" @click="onSubmit">查询</el-button>
           <el-button type="primary" @click="addClick" icon="Plus" v-auth="'/plus/package/add'">添加活动</el-button>
         </el-form-item>
       </el-form>

@@ -17,7 +17,7 @@
             </el-select>
         </el-form-item>
         <el-form-item :label="$t('会员卡名称')"><el-input v-model="formInline.search" :placeholder="$t('请输入会员卡名称')"></el-input></el-form-item>
-        <el-form-item><el-button type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button></el-form-item>
+        <el-form-item><el-button class="search-button" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button></el-form-item>
       </el-form>
     </div>
     <!--内容-->

@@ -28,7 +28,7 @@
           <el-input v-model="formInline.user_id" placeholder="请输入用户ID"></el-input>
         </el-form-item>
         <el-form-item label=""><el-input v-model="formInline.search" placeholder="请输入昵称/姓名/手机号"></el-input></el-form-item>
-        <el-form-item><el-button type="primary" @click="onSubmit">查询</el-button></el-form-item>
+        <el-form-item><el-button class="search-button" type="primary" @click="onSubmit">查询</el-button></el-form-item>
         <el-form-item>
           <el-button size="small" type="success" @click="onExport" v-auth="'/user/cash/export'">导出</el-button>
         </el-form-item>

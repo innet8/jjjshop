@@ -7,7 +7,7 @@
           <el-input v-model="formInline.search" placeholder="请输入用户昵称/手机号"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
+          <el-button class="search-button" type="primary" @click="onSubmit">查询</el-button>
           <el-button type="info" icon="Back" @click="gotoBack">返回</el-button>
         </el-form-item>
       </el-form>

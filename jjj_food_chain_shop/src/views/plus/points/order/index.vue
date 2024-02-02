@@ -27,7 +27,7 @@
           <el-input v-model="formInline.nickName" placeholder="请输入用户昵称"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="Search" @click="onSubmit">查询</el-button>
+          <el-button class="search-button" type="primary" icon="Search" @click="onSubmit">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button size="small" type="success" @click="onExport" v-auth="'/plus/points/order/export'">导出</el-button>

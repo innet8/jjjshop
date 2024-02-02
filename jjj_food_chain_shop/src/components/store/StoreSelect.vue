@@ -31,7 +31,7 @@
               <el-option label="全部" value="-1"></el-option>
                 <el-option v-for="(item,index) in status" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>-->
-            <el-button icon="el-icon-search" @click="getData">查询</el-button>
+            <el-button class="search-button" icon="el-icon-search" @click="getData">查询</el-button>
           </el-input>
         </el-form-item>
       </el-form>

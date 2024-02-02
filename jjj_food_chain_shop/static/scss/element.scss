@@ -232,3 +232,11 @@
     min-width: 180px;
     height: 30px;
 }
+input{
+    outline: none;
+}
+.el-button--primary.search-button{
+    background: var(--el-color-black);
+    border: var(--el-color-black);
+    color: white;
+}
