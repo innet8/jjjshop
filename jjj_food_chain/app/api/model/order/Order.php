@@ -2,22 +2,23 @@
 
 namespace app\api\model\order;
 
-use app\api\service\order\paysuccess\type\MasterPaySuccessService;
-use app\api\service\order\PaymentService;
-use app\common\enum\order\OrderPayTypeEnum;
-use app\common\enum\order\OrderSourceEnum;
-use app\common\enum\order\OrderTypeEnum;
-use app\common\enum\order\OrderPayStatusEnum;
-use app\common\enum\order\OrderStatusEnum;
+use app\common\library\helper;
 use app\common\exception\BaseException;
+use app\common\enum\order\OrderTypeEnum;
+use app\api\service\order\PaymentService;
+use app\common\enum\settings\SettingEnum;
+use app\common\enum\order\OrderSourceEnum;
+use app\common\enum\order\OrderStatusEnum;
+use app\common\enum\order\OrderPayTypeEnum;
+use app\common\enum\order\OrderPayStatusEnum;
 use app\common\model\order\Order as OrderModel;
-use app\api\service\order\checkpay\CheckPayFactory;
 use app\common\service\order\OrderPrinterService;
+use app\common\service\order\OrderCompleteService;
+use app\api\service\order\checkpay\CheckPayFactory;
+use app\common\model\settings\Setting as SettingModel;
 use app\common\service\product\factory\ProductFactory;
 use app\common\model\plus\coupon\UserCoupon as UserCouponModel;
-use app\common\model\settings\Setting as SettingModel;
-use app\common\service\order\OrderCompleteService;
-use app\common\library\helper;
+use app\api\service\order\paysuccess\type\MasterPaySuccessService;
 
 /**
  * 普通订单模型
@@ -252,7 +253,7 @@ class Order extends OrderModel
                 $this->error = '门店不一致';
                 return false;
             }
-            $setting = SettingModel::getItem('points');
+            $setting = SettingModel::getSupplierItem(SettingEnum::POINTS, $order['shop_supplier_id'], $order['app_id']);
             // 条件：后台开启开启购物送积分
             $points_bonus = 0;
             if ($setting['is_shopping_gift']) {

@@ -12,6 +12,7 @@ use app\common\model\supplier\Supplier as SupplierModel;
 use app\common\model\plus\agent\Order as AgentOrderModel;
 use app\common\model\plus\driver\User as DriverUserModel;
 use app\api\model\order\OrderFinance as OrderFinanceModel;
+use app\common\enum\settings\SettingEnum;
 use app\common\model\order\OrderSettled as OrderSettledModel;
 use app\common\model\supplier\Capital as SupplierCapitalModel;
 
@@ -160,7 +161,7 @@ class OrderCompleteService
                 continue;
             }
             // 积分设置 是否开启购物送积分
-            $setting = SettingModel::getSupplierItem('points', $order['shop_supplier_id'], $order['app_id']);
+            $setting = SettingModel::getSupplierItem(SettingEnum::POINTS, $order['shop_supplier_id'], $order['app_id']);
             if (!$setting['is_shopping_gift']) {
                 continue;
             }

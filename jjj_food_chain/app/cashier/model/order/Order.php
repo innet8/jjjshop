@@ -9,6 +9,7 @@ use app\shop\model\product\Category;
 use app\api\model\order\OrderProduct;
 use app\common\model\supplier\Supplier;
 use app\common\enum\order\OrderTypeEnum;
+use app\common\enum\settings\SettingEnum;
 use app\common\enum\order\OrderSourceEnum;
 use app\common\enum\order\OrderStatusEnum;
 use app\common\enum\order\OrderPayTypeEnum;
@@ -383,7 +384,7 @@ class Order extends OrderModel
                 }
                 $pay_price = round($o['order_price'] - $discount_money, 2);
                 // 积分奖励按照应付计算
-                $setting = SettingModel::getItem('points');
+                $setting = SettingModel::getSupplierItem(SettingEnum::POINTS, $detail['shop_supplier_id'], $detail['app_id']);
                 if ($setting['is_shopping_gift']) {
                     // 积分赠送比例
                     $ratio = $setting['gift_ratio'] / 100;
@@ -405,7 +406,7 @@ class Order extends OrderModel
 
                 if ($data['type'] == 1) {
                     // 积分奖励按照应付计算
-                    $setting = SettingModel::getItem('points');
+                    $setting = SettingModel::getSupplierItem(SettingEnum::POINTS, $detail['shop_supplier_id'], $detail['app_id']);
                     if ($setting['is_shopping_gift']) {
                         // 积分赠送比例
                         $ratio = $setting['gift_ratio'] / 100;
