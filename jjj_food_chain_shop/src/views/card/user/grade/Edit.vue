@@ -28,13 +28,13 @@
                     <el-checkbox v-model="form.open_money">{{ $t('累计消费满') }}</el-checkbox>
                     <el-input v-model="form.upgrade_money" type="number" :disabled="form.open_money == 0"
                         style="width: 160px; margin-left: 10px;"></el-input>
-                    <span class="ml10">{{ $t('元') }}</span>
+                    <span class="ml10">{{ $t('金额') }}</span>
                 </div>
                 <div class="d-s-c mt16">
                     <el-checkbox v-model="form.open_points">{{ $t('累计积分满') }}</el-checkbox>
                     <el-input v-model="form.upgrade_points" type="number" :disabled="form.open_points == 0"
                         style="width: 160px;margin-left: 10px;"></el-input>
-                    <span class="ml10">{{ $t('个') }}</span>
+                    <span class="ml10"></span>
                 </div>
                 <!-- <div class="d-s-c mt16">
                     <el-checkbox v-model="form.open_invite">推荐人数满</el-checkbox>
