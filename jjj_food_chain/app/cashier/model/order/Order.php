@@ -686,17 +686,13 @@ class Order extends OrderModel
         }
         //
         $incomes = [];
-        $payTypes = PayType::getEnableListAll($params['shop_supplier_id'], self::$app_id);
-        foreach ($payTypes as $payType){
-            $value = $model->clone()->where('pay_type', $payType['value'])
-                ->field("sum(a.pay_price - a.refund_money) as price")
-                ->find()
-                ->append([])['price'] ?? "0.00";
-            if ($value > 0) {
+        $values = $model->clone()->group("a.pay_type")->field("a.pay_type,sum(a.pay_price - a.refund_money) as price")->select()?->append([]) ?? [];
+        foreach ($values as $value){
+            if ($value['price'] > 0) {
                 $incomes[] = [
-                    'pay_type' => $payType['value'],
-                    'pay_type_name' => OrderPayTypeEnum::data($payType['value'], 2)['name'],
-                    'price' => $value,
+                    'pay_type' => $value['pay_type']['value'],
+                    'pay_type_name' => $value['pay_type']['text'],
+                    'price' => $value['price'],
                 ];
             }
         }
