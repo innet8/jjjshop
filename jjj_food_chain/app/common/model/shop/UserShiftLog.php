@@ -168,23 +168,18 @@ class UserShiftLog extends BaseModel
         $lastRecord = $this->order('id', 'desc')->find();
         $previous_shift_cash = $lastRecord ? $lastRecord->cash_left : 0;
         // 当前钱箱现金总计(现金收入+上一班遗留备用金) 10-余额收款 40-现金收款
-        $cash_income = (clone $orderModel)->where('pay_type', 40)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0;
+        $cash_income = $orderModel->clone()->where('pay_type', 40)->field("sum(pay_price - refund_money) as price")->find()->append([])['price'] ?? 0;
         //
         $incomes = [];
-        $payTypes = PayType::getEnableListAll($shop_user_id, self::$app_id);
+        $values = $orderModel->clone()->group("a.pay_type")->field("a.pay_type,sum(a.pay_price - a.refund_money) as price")->select()?->append([]) ?? [];
         $totalIncome = 0;
-        foreach ($payTypes as $payType){
-            $value = (clone $orderModel)
-                ->where('pay_type', $payType['value'])
-                ->field("sum(pay_price - refund_money) as price")
-                ->find()
-                ->append([])['price'] ?? 0;
-            if ($value > 0) {
-                $totalIncome = helper::number2(helper::bcadd($totalIncome, $value));
+        foreach ($values as $value){
+            if ($value['price'] > 0) {
+                $totalIncome = helper::number2(helper::bcadd($totalIncome, $value['price']));
                 $incomes[] = [
-                    'pay_type' => $payType['value'],
-                    'pay_type_name' => OrderPayTypeEnum::data($payType['value'],2)['name'],
-                    'price' => $value,
+                    'pay_type' => $value['pay_type']['value'],
+                    'pay_type_name' => $value['pay_type']['text'],
+                    'price' => $value['price'],
                 ];
             }
         }
@@ -197,7 +192,7 @@ class UserShiftLog extends BaseModel
             'current_cash_total' => helper::number2($previous_shift_cash + $cash_income), // 当前钱箱现金总计(现金收入+上一班遗留备用金)
             'incomes' => $incomes,
             'total_income' => $totalIncome,
-            'refund_amount' => helper::number2((clone $orderModel)->sum("refund_money")) ?? 0, // 退款金额
+            'refund_amount' => helper::number2($orderModel->clone()->sum("refund_money")) ?? 0, // 退款金额
             'cash_taken_out' => '0.00', // 本班取出现金
             'cash_left' => '0.00', // 本班遗留备用金
             'remark' => $params['remark'] ?? '', // 备注
@@ -263,19 +258,15 @@ class UserShiftLog extends BaseModel
         try {
             //
             $incomes = [];
-            $payTypes = PayType::getEnableListAll($shop_user_id, self::$app_id);
             $totalIncome = 0;
-            foreach ($payTypes as $payType){
-                $value = (clone $orderModel)
-                    ->where('pay_type', $payType['value'])
-                    ->field("sum(pay_price - refund_money) as price")
-                    ->find()
-                    ->append([])['price'] ?? 0;
-                if ($value > 0) {
-                    $totalIncome = helper::number2(helper::bcadd($totalIncome, $value));
+            $values = $orderModel->clone()->group("a.pay_type")->field("a.pay_type,sum(a.pay_price - a.refund_money) as price")->select()?->append([]) ?? [];
+            foreach ($values as $value){
+                if ($value['price'] > 0) {
+                    $totalIncome = helper::number2(helper::bcadd($totalIncome, $value['price']));
                     $incomes[] = [
-                        'pay_type' => $payType['value'],
-                        'price' => $value,
+                        'pay_type' => $value['pay_type']['value'],
+                        'pay_type_name' => $value['pay_type']['text'],
+                        'price' => $value['price'],
                     ];
                 }
             }
