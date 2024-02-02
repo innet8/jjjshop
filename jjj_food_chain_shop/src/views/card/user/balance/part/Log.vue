@@ -16,8 +16,8 @@
                             :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item :label="$t('昵称/手机号/用户ID')">
-                    <el-input v-model="formInline.keyword" :placeholder="$t('昵称/手机号/用户ID')"></el-input>
+                <el-form-item :label="$t('昵称/手机号/会员ID')">
+                    <el-input v-model="formInline.keyword" :placeholder="$t('昵称/手机号/会员ID')"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('起始日期')">
                     <div class="block">
