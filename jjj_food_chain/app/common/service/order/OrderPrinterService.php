@@ -568,6 +568,7 @@ class OrderPrinterService
     {
         $printerType = $printer['printer_type']['value'];
         $isThai =  preg_match('/[\p{Thai}]/u', __("金额"));
+
         /* *
         *
         *商米 和 芯烨 打印机 
@@ -771,7 +772,6 @@ class OrderPrinterService
      */
     private function LR($str_left, $str_right, $length)
     {
-//        if (empty($str_left) || empty($str_right) || empty($length)) return '请输入正确的参数';
         $kw = '';
         $str_left_lenght = strlen(iconv("UTF-8", "GBK//IGNORE", $str_left));
         $str_right_lenght = strlen(iconv("UTF-8", "GBK//IGNORE", $str_right));

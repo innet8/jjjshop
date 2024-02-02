@@ -62,7 +62,6 @@ class OrderBusinessPrinterService
     {
         $startTime = date('Y-m-d H:i:s', $data['times'][0]);
         $endTime = $data['times'][1] ? date('Y-m-d H:i:s', $data['times'][1]) : date('Y-m-d H:i:s');
-        $isThai =  preg_match('/[\p{Thai}]/u', __("金额"));
 
         /* *
         *
