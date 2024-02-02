@@ -5,7 +5,7 @@
         <el-form size="small" ref="form" :model="form" label-position="top">
             <!--添加门店-->
             <el-form-item :label="$t('打印机名称')" prop="printer_name" :rules="[{ required: true, message: ' ' }]">
-                <el-input v-model="form.printer_name" :placeholder="$t('请输入打印机名称')"></el-input>
+                <el-input v-model="form.printer_name" :maxlength="50" :placeholder="$t('请输入打印机名称')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('打印机类型')" prop="printer_type" :rules="[{ required: true, message: ' ' }]">
                 <el-select v-model="form.printer_type" :placeholder="$t('请选择类型')" style="width: 100%;">
@@ -13,7 +13,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-
+            
 
             <!-- 飞鹅打印机 -->
             <div v-if="form.printer_type == 'FEI_E_YUN'">
