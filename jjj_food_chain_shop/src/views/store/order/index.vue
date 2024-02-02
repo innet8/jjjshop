@@ -487,7 +487,7 @@ export default {
 
 .radio-search {
     :deep(.el-radio-button) {
-        margin-right: -1px;
+        margin-right: -3px;
         margin-bottom: 0;
 
         .el-radio-button__inner {

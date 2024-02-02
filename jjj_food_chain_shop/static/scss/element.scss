@@ -13,7 +13,7 @@
 /* 搜索表单 */
 .common-seach-wrap{
     .el-input__wrapper{
-        padding: 0 15px;
+        padding: 1px 15px;
     }
     .el-form-item__label{
         --el-text-color-regular: #606266;
@@ -230,7 +230,7 @@
 }
 .el-select--small .el-select__wrapper{
     min-width: 180px;
-    height: 30px;
+    height: 32px;
 }
 input{
     outline: none;
