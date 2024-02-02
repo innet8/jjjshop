@@ -100,7 +100,7 @@ class Clear extends Controller
                     Cache::has('app_wx_' . $app_id) && Cache::delete('app_wx_' . $app_id);
                 }
             } elseif ($item['type'] === 'file') {
-                $this->deltree($item['dirPath']);
+                // $this->deltree($item['dirPath']);
             }
         }
     }
