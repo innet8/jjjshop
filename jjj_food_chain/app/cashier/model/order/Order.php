@@ -164,7 +164,7 @@ class Order extends OrderModel
                 $this->errorData = $model->getErrorData();
                 return false;
             }
-            // 
+            //
             $status = $PaySuccess->onPaySuccess($pay_type);
             if (!$status) {
                 $this->error = $PaySuccess->getError();
@@ -176,7 +176,7 @@ class Order extends OrderModel
             $this->rollback();
             return false;
         }
-        // 
+        //
         return $status;
     }
 
@@ -612,7 +612,7 @@ class Order extends OrderModel
             PointsLogModel::add([
                 'user_id' => $this['user_id'],
                 'scene' => PointsLogSceneEnum::REFUND,
-                'value' => $points,
+                'value' => -$points,
                 'describe' => "退款扣除：{$this['order_no']}",
                 'remark' => '',
             ]);
@@ -629,7 +629,7 @@ class Order extends OrderModel
     {
         $categoryType = $params['category_type'] ?? 1;
         $shopSupplierId = $params['shop_supplier_id'] ?? 0;
-        // 
+        //
         $startTime = 0;
         $endTime = 0;
         //查询时间
@@ -651,7 +651,7 @@ class Order extends OrderModel
             $startTime = strtotime($params['time'][0]);
             $endTime = strtotime($params['time'][0]) + 86399;
         }
-        // 
+        //
         $model = $this->alias('a')
             ->where('a.pay_status', '=', OrderPayStatusEnum::SUCCESS)
             ->where('a.order_status', '=', OrderStatusEnum::COMPLETED)
@@ -662,7 +662,7 @@ class Order extends OrderModel
             ->when( $startTime && $endTime , function($q) use($startTime, $endTime) {
                 $q->where('a.create_time', 'between', [$startTime, $endTime]);
             });
-        
+
         //
         $categorys = $model->clone()
             ->leftJoin('order_product rp','a.order_id = rp.order_id')
@@ -678,7 +678,7 @@ class Order extends OrderModel
                     $q->where('c.parent_id', '>', 0);
                     $q->group('c.category_id');
                     $q->field('c.category_id, c.name');
-                }   
+                }
             })
             ->field("sum(rp.total_num) as sales, sum(rp.total_pay_price) as prices")
             ->select()
