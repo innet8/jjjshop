@@ -10,6 +10,7 @@ use app\shop\model\user\User as UserModel;
  */
 class Grade extends GradeModel
 {
+
     /**
      * 获取列表记录
      */

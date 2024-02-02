@@ -773,6 +773,7 @@ return [
     "等级权重不能重复" => "Sınıf ağırlığı tekrarlanamaz",
     "元可升级到此等级" => "Yuan bu seviyeye yükseltilebilir",
     "备注最长200个字符" => "Açıklamalar en fazla 200 karakter uzunluğunda olabilir",
+    "新用户即为该等级" => "Yeni kullanıcılar bu seviyede",
     "密码为4-16位纯数字" => "Şifre 4-16 basamaklı saf sayıdır",
     "价格不能超过1000000" => "Fiyat 1.000.000'u geçemez",
     "获取微信mediaID失败:" => "WeChat mediaID alınamadı:",

@@ -772,6 +772,7 @@ return [
     "等级权重不能重复" => "Grade weight cannot be repeated",
     "元可升级到此等级" => "Yuan can be upgraded to this level",
     "备注最长200个字符" => "Remarks can be up to 200 characters long",
+    "新用户即为该等级" => "New users are at this level",
     "密码为4-16位纯数字" => "The password is 4-16 pure digits",
     "价格不能超过1000000" => "The price cannot exceed 1,000,000",
     "获取微信mediaID失败:" => "Failed to obtain WeChat mediaID:",

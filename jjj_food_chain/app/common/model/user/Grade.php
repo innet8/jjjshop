@@ -23,9 +23,30 @@ class Grade extends BaseModel
     /**
      * 备注信息翻译
      */
-    public function getRemarkAttr($value)
+    public function getRemarkAttr($value, $data)
     {
-        return __($value);
+        if ($data['is_default'] == 1) {
+            return __($value);
+        }
+        // 
+        $remark = '';
+        if($data['open_money'] == 1){
+            $money = sprintf('%.2f',$data['upgrade_money']);
+            $remark .= __("会员消费满") . " {$money} " . __("可升级到此等级");
+        }
+        if($data['open_points'] == 1){
+            if(!empty($remark)){
+                $remark .= '\r\n';
+            }
+            $remark .= __("会员积分满") . " {$data['upgrade_points']} " . __("可升级到此等级");
+        }
+        if($data['open_invite'] == 1){
+            if(!empty($remark)){
+                $remark .= '\r\n';
+            }
+            $remark .= __("会员邀请人数满") . " {$data['upgrade_invite']} " . __("可升级到此等级");
+        }
+        return $remark;
     }
 
     /**
