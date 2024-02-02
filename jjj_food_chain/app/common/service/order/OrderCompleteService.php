@@ -175,6 +175,7 @@ class OrderCompleteService
             $logData[] = [
                 'scene' => PointsLogSceneEnum::CONSUME,
                 'user_id' => $order['user_id'],
+                'card_id' => UserModel::detail($order['user_id'])?->card_id,
                 'value' => $pointsBonus,
                 'describe' => "订单赠送：{$order['order_no']}",
                 'order_id' => $order['order_id'],

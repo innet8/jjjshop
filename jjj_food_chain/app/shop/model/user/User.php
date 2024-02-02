@@ -258,6 +258,7 @@ class User extends UserModel
             // 新增余额变动记录
             BalanceLogModel::add(SceneEnum::ADMIN, [
                 'user_id' => $this['user_id'],
+                'card_id' => $this['user_id'],
                 'money' => $money,
                 'remark' => $data['remark'],
             ], [$storeUserName]);
@@ -306,6 +307,7 @@ class User extends UserModel
             // 新增积分变动记录
             PointsLogModel::add([
                 'user_id' => $this['user_id'],
+                'card_id' => $this['user_id'],
                 'scene' => PointsLogSceneEnum::ADMIN,
                 'value' => $points,
                 'describe' => "后台管理员 [{$storeUserName}] 操作",

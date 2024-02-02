@@ -48,7 +48,7 @@ class CardRecord extends CardRecordModel
     public function delay($data)
     {
         $isExist = self::checkExistByUserId($this['user_id'], $data['order_id']);
-        if ($isExist->isEmpty()) {
+        if ($isExist?->isEmpty()) {
             $this->error = "会员卡不存在";
             return false;
         }
