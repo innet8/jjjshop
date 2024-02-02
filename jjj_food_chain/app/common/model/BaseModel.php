@@ -19,6 +19,8 @@ class BaseModel extends Model
 
     protected $error = '';
 
+    protected $errorData = [];
+
     // 定义全局的查询范围
     protected $globalScope = ['app_id'];
 
@@ -198,6 +200,14 @@ class BaseModel extends Model
     public function getError()
     {
         return $this->error;
+    }
+
+    /**
+     * 返回模型的错误信息
+     */
+    public function getErrorData()
+    {
+        return $this->errorData;
     }
 
     /**

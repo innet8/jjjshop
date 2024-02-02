@@ -157,6 +157,14 @@ class Order extends OrderModel
         // 发起余额支付
         $this->startTrans();
         try {
+            // 订单商品送厨
+            $model = new OrderProductModel();
+            if (!$model->sendKitchen($this['order_id'])) {
+                $this->error = $model->getError();
+                $this->errorData = $model->getErrorData();
+                return false;
+            }
+            // 
             $status = $PaySuccess->onPaySuccess($pay_type);
             if (!$status) {
                 $this->error = $PaySuccess->getError();
@@ -164,15 +172,11 @@ class Order extends OrderModel
             }
             $this->commit();
         } catch (\Exception $e) {
-//            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
             $this->error = $e->getMessage();
             $this->rollback();
             return false;
         }
-
-        // 订单商品送厨
-        (new OrderProductModel())->sendKitchen($this['order_id']);
-
+        // 
         return $status;
     }
 

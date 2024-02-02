@@ -2,33 +2,34 @@
 
 namespace app\common\model\order;
 
-use app\api\model\user\CardRecord as CardRecordModel;
-use app\cashier\service\order\settled\CashierOrderSettledService;
+use think\facade\Log;
+use app\common\library\helper;
+use app\common\model\BaseModel;
+use think\model\concern\SoftDelete;
+use app\common\exception\BaseException;
+use app\common\enum\order\OrderTypeEnum;
+use app\common\enum\settings\SettingEnum;
+use app\common\service\deliveryapi\UuApi;
 use app\common\enum\order\OrderSourceEnum;
 use app\common\enum\order\OrderStatusEnum;
-use app\common\enum\settings\SettingEnum;
-use app\common\model\BaseModel;
-use app\common\enum\settings\DeliveryTypeEnum;
-use app\common\enum\order\OrderPayStatusEnum;
-use app\common\enum\order\OrderTypeEnum;
-use app\common\enum\order\OrderPayTypeEnum;
-use app\common\library\helper;
-use app\common\model\order\OrderProduct as OrderProductModel;
-use app\common\model\product\Product as ProductModel;
-use app\common\model\product\ProductSku as ProductSkuModel;
-use app\common\model\plus\discount\DiscountProduct;
-use app\common\model\settings\Setting as SettingModel;
-use app\common\service\order\OrderPrinterService;
 use app\common\service\order\OrderService;
-use app\common\service\order\OrderCompleteService;
+use app\common\enum\order\OrderPayTypeEnum;
 use app\common\service\deliveryapi\DadaApi;
-use app\common\exception\BaseException;
-use app\common\service\deliveryapi\MeTuanApi;
-use app\common\service\deliveryapi\UuApi;
-use app\common\service\product\factory\ProductFactory;
-use think\facade\Log;
-use think\model\concern\SoftDelete;
 use app\common\model\user\User as UserModel;
+use app\common\enum\order\OrderPayStatusEnum;
+use app\common\service\deliveryapi\MeTuanApi;
+use app\common\enum\settings\DeliveryTypeEnum;
+use app\common\enum\product\DeductStockTypeEnum;
+use app\common\service\order\OrderPrinterService;
+use app\common\service\order\OrderCompleteService;
+use app\common\model\plus\discount\DiscountProduct;
+use app\api\model\user\CardRecord as CardRecordModel;
+use app\common\model\product\Product as ProductModel;
+use app\common\model\settings\Setting as SettingModel;
+use app\common\service\product\factory\ProductFactory;
+use app\common\model\product\ProductSku as ProductSkuModel;
+use app\common\model\order\OrderProduct as OrderProductModel;
+use app\cashier\service\order\settled\CashierOrderSettledService;
 
 /**
  * 订单模型模型
@@ -1272,13 +1273,41 @@ class Order extends BaseModel
     public function addToOrder($data, $user)
     {
         $param = $data;
+        $orderId = 0;
+        // 
+        if (isset($data['order_id']) && $data['order_id'] > 0) {
+            // 检查订单状态
+            $detail = self::detail([
+                ['order_id', '=', $data['order_id']],
+                ['order_status', '=', OrderStatusEnum::NORMAL]
+            ]);
+            if (!$detail) {
+                $this->error = '订单不存在';
+                return false;
+            }
+            $orderId = $detail['order_id'];
+        }
+        // 
+        if(isset($data['table_id']) && $data['table_id'] > 0) {
+            // 检查订单状态
+            $detail = self::detail([
+                ['table_id', '=', $data['table_id']],
+                ['order_status', '=', OrderStatusEnum::NORMAL]
+            ]);
+            if (!$detail) {
+                $this->error = '订单不存在';
+                return false;
+            }
+            $orderId = $detail['order_id'];
+        }
         //判断商品是否下架
         $product = $this->productState($data['product_id']);
         if (!$product) {
             $this->error = '商品已下架';
             return false;
         }
-        $stockStatus = $this->productStockState($data['product_id'], $data['product_sku_id']);
+        // 判断库存
+        $stockStatus = $this->productStockState($data['product_id'], $data['product_sku_id'], $orderId);
         if (!$stockStatus) {
             $this->error = '商品库存不足';
             return false;
@@ -1289,33 +1318,23 @@ class Order extends BaseModel
             $this->error = '超过限购数量';
             return false;
         }
+        if ($orderId > 0) {
+            $curNum = (new OrderProduct())->where([
+                'order_id' => $orderId,
+                'product_id' => $data['product_id'],
+            ])->sum('total_num');
+            if ($limitNum && (($param['product_num'] + $curNum) > $limitNum)) {
+                $this->error = '超过限购数量';
+                return false;
+            } 
+        }
+        // 
         $this->startTrans();
         try {
 
             // 已存在order_id，直接添加到订单
             if (isset($data['order_id']) && $data['order_id'] > 0) {
-                // 检查订单状态
-                $detail = self::detail([
-                    ['order_id', '=', $data['order_id']],
-                    ['order_status', '=', OrderStatusEnum::NORMAL]
-                ]);
-                if (!$detail) {
-                    $this->error = '订单不存在';
-                    return false;
-                }
-
-                // 判断当前订单
-                $curNum = (new OrderProduct())->where([
-                    'order_id' => $data['order_id'],
-                    'product_id' => $data['product_id'],
-                ])->sum('total_num');
-                if ($limitNum && (($param['product_num'] + $curNum) > $limitNum)) {
-                    $this->error = '超过限购数量';
-                    return false;
-                }
-
                 $orderProduct = new OrderProductModel;
-//                $order_product_id = $orderProduct->isExist($data);
                 $order_product_id = 0;
                 // 存在修改数量、否则新增
                 if ($order_product_id) {
@@ -1345,31 +1364,10 @@ class Order extends BaseModel
                 $return_order = $data['order_id'];
 
             } else if(isset($data['table_id']) && $data['table_id'] > 0) {
-                // 检查订单状态
-                $detail = self::detail([
-                    ['table_id', '=', $data['table_id']],
-                    ['order_status', '=', OrderStatusEnum::NORMAL]
-                ]);
-                if (!$detail) {
-                    $this->error = '订单不存在';
-                    return false;
-                }
-                $order_id = $detail['order_id'];
-                $data['order_id'] = $order_id;
-
-
-                // 判断当前订单
-                $curNum = (new OrderProduct())->where([
-                    'order_id' => $data['order_id'],
-                    'product_id' => $data['product_id'],
-                ])->sum('total_num');
-                if ($limitNum && (($param['product_num'] + $curNum) > $limitNum)) {
-                    $this->error = '超过限购数量';
-                    return false;
-                }
+                
+                $data['order_id'] = $orderId;
 
                 $orderProduct = new OrderProductModel;
-//                $order_product_id = $orderProduct->isExist($data);
                 $order_product_id = 0;
                 // 存在修改数量、否则新增
                 if ($order_product_id) {
@@ -1377,7 +1375,7 @@ class Order extends BaseModel
                 } else {
                     $productDetail = ProductModel::where('product_id', '=', $data['product_id'])->find();
                     $inArr = [
-                        'order_id' => $order_id,
+                        'order_id' => $data['order_id'],
                         'app_id' => self::$app_id,
                         'product_id' => $data['product_id'],
                         'product_name' => $productDetail['product_name'],
@@ -1397,6 +1395,7 @@ class Order extends BaseModel
                     $orderProduct->save($inArr);
                 }
                 $return_order = $data['order_id'];
+                
             } else {
                 // order_id不存在创建新订单再加入商品
 
@@ -1443,7 +1442,6 @@ class Order extends BaseModel
             return $return_order;
 
         } catch (\Exception $e) {
-//            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
             $this->error = $e->getMessage();
             $this->rollback();
             return false;
@@ -1461,11 +1459,24 @@ class Order extends BaseModel
     }
 
     //判断商品库存
-    public function productStockState($product_id, $product_sku_id)
+    public function productStockState($product_id, $product_sku_id, $order_id)
     {
+
+        $deductStockType = ProductModel::where('product_id', $product_id)->value('deduct_stock_type');
+        $orderProductNum = !$order_id ? 0 : OrderProductModel::where('order_id', $order_id)
+            // 下单减库存
+            ->when( $deductStockType == DeductStockTypeEnum::CREATE , function($q){
+                $q->where('is_send_kitchen', 0);
+            })
+            // 
+            ->where('product_id', '=', $product_id)
+            ->where('product_sku_id', '=', $product_sku_id)
+            ->sum('total_num');
+
+        // 
         return (new ProductSkuModel)->where('product_id', '=', $product_id)
             ->where('product_sku_id', '=', $product_sku_id)
-            ->where('stock_num', '>', 0)
+            ->where("stock_num", '>', $orderProductNum)
             ->count();
     }
 

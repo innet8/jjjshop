@@ -220,6 +220,6 @@ class Order extends Controller
         if ($model->sendKitchen($order_id)) {
             return $this->renderSuccess('下单成功');
         }
-        return $this->renderError($model->getError() ?: '下单失败');
+        return $this->renderError($model->getError() ?: '下单失败', $model->getErrorData());
     }
 }
