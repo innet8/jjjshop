@@ -27,7 +27,7 @@ class OrderStatusEnum extends Enum
     {
         $arr = [
             self::NORMAL => [
-                'name' => __('进行中'),
+                'name' => __('待付款'),
                 'value' => self::NORMAL,
             ],
             self::CANCELLED => [
