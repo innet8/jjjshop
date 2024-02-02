@@ -115,12 +115,14 @@ class Index extends Controller
      * @Apidoc\Title("语言获取")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/cashier/index/lang")
-     * @Apidoc\Param("shop_supplier_id", type="int", require=true, desc="商户id")
-     * @Apidoc\Param("app_id", type="int", require=true, desc="门店id")
      * @Apidoc\Returned()
      */
-    public function lang($shop_supplier_id, $app_id)
+    public function lang()
     {
+        $shop_supplier_id = Request()->header('sid');
+        if (empty($shop_supplier_id)) {
+            return $this->renderError('sid不能为空');
+        }
         $cashier = SettingModel::detail(SettingEnum::CASHIER, $shop_supplier_id);
         $lang['language'] = $cashier['values']['language'] ?? [];
         $lang['default_language'] = $cashier['values']['default_language'] ?? '';

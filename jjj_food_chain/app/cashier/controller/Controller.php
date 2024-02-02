@@ -6,6 +6,7 @@ use app\JjjController;
 use app\common\exception\BaseException;
 use app\common\enum\settings\SettingEnum;
 use app\cashier\model\cashier\User as UserModel;
+use app\common\model\shop\Access as AccessModel;
 use app\common\model\settings\Setting as SettingModel;
 
 /**
@@ -31,6 +32,7 @@ class Controller extends JjjController
     ];
     /** @var array $allowCashierAction 收银机验证白名单 */
     protected $allowCashierAction = [
+        '/index/lang', // 语言获取
         '/passport/login', // 登录页面
         '/index/base', // 登录信息
     ];
@@ -76,7 +78,7 @@ class Controller extends JjjController
         }
         $sid = Request()->header('sid');
         if (!$sid) {
-            throw new BaseException(['msg' => '缺少必要的参数：Sid', 'code' => -1]);
+            throw new BaseException(['msg' => '登录失效', 'code' => -1]);
         }
 
         // 验证当前请求是否在白名单
@@ -86,7 +88,7 @@ class Controller extends JjjController
 
         $token = Request()->header('token');
         if (!$token) {
-            throw new BaseException(['msg' => '缺少必要的参数：token', 'code' => -2]);
+            throw new BaseException(['msg' => '登录失效', 'code' => -2]);
         }
         $data = checkToken($token, 'cashier');
         if ($data['code'] != 1) {
@@ -100,6 +102,13 @@ class Controller extends JjjController
         }
         // 商家后台设置的名称
         $shop = SettingModel::getSupplierItem(SettingEnum::STORE, $user['shop_supplier_id'] ?? 0, $user['app_id'] ?? 0);
+        // 权限
+        $supplier = [
+            'name' => isset($user['supplier']) && $user['supplier'] ? $user['supplier']['name'] : '',
+            'category_set' => isset($user['supplier']) && $user['supplier'] ? $user['supplier']['category_set'] : 10,
+            'is_main' => isset($user['supplier']) && $user['supplier'] ? $user['supplier']['is_main'] : 1,
+        ];
+        $permission = (new AccessModel)->getPermission(AccessModel::CASHIER_ROUTE_NAME, $user['shop_supplier_id'], $user['user_type'], $supplier);
         $this->cashier = [
             'user' => [
                 'cashier_id' => $user['shop_user_id'],
@@ -109,6 +118,7 @@ class Controller extends JjjController
                 'shop_supplier_id' => $user['shop_supplier_id'],
                 'name' => $shop['name'],
                 'app_id' => $user['app_id'],
+                'permission' => $permission,
             ],
             'app' => $user['app']->toArray(),
         ];

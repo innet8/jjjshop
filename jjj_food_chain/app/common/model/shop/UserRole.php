@@ -20,4 +20,14 @@ class UserRole extends BaseModel
     public function role(){
         return $this->belongsTo('Role', 'role_id', 'role_id');
     }
+
+    /**
+     * 获取指定管理员的所有角色id
+     * @param $shop_user_id
+     * @return array
+     */
+    public static function getRoleIds($shop_user_id)
+    {
+        return (new self)->where('shop_user_id', '=', $shop_user_id)->column('role_id');
+    }
 }
