@@ -198,7 +198,6 @@ export default {
 
             self.$refs.form.validate(valid => {
 
-                this.scrollToInvalidField();
                 if (self.form.model.product_attr.length > 0) {
                     self.$refs.AttrRef.checkedForm();
                 }
@@ -262,20 +261,6 @@ export default {
 
         },
 
-
-        scrollToInvalidField() {
-            const formContainer = this.$refs.formContainer;
-            const formItems = Array.from(this.$refs.form.fields);
-            console.log(formItems);
-            const invalidField = formItems.find(item => item.validateState === 'error');
-
-            if (invalidField) {
-                invalidField.$el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } else {
-                // 如果没有校验失败的表单项，则将整个表单容器滚动到顶部
-                formContainer.scrollIntoView({ behavior: 'smooth' });
-            }
-        },
 
         /*保存为草稿*/
         Draft() {
