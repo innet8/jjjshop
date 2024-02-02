@@ -45,7 +45,7 @@
                     </el-table-column>
                     <el-table-column prop="user.mobile" :label="$t('手机号')" width="160">
                     </el-table-column>
-                    <el-table-column prop="user_id" :label="$t('用户ID')" width="80"></el-table-column>
+                    <el-table-column prop="user_id" :label="$t('会员ID')" width="80"></el-table-column>
                     <el-table-column prop="money" :label="$t('变动数量')">
                         <template #default="scope">
                             <p v-if="scope.row.money > 0">+{{ scope.row.money }}</p>

@@ -27,13 +27,12 @@
           <el-table-column prop="order_id" label="ID"></el-table-column>
           <el-table-column prop="card_name" :label="$t('昵称')">
             <template #default="scope">
-              <img :src="scope.row.user.avatarUrl" width="30px" height="30px" />
               <span>{{scope.row.user.nickName}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="user.mobile" :label="$t('手机号')">
           </el-table-column>
-          <el-table-column prop="user.user_id" :label="$t('用户ID')">
+          <el-table-column prop="user.user_id" :label="$t('会员ID')">
           </el-table-column>
           <el-table-column prop="card.card_name" :label="$t('会员卡名称')">
           </el-table-column>
