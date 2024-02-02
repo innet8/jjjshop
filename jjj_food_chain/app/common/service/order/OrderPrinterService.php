@@ -156,8 +156,6 @@ class OrderPrinterService
             $this->currencyUnit = $currency['unit'];
         }
 
-        $isThai =  preg_match('/[\p{Thai}]/u', __("金额"));
-
         /* *
         *
         *商米打印机 
@@ -691,6 +689,8 @@ class OrderPrinterService
             $content .= printText($productName, '', ''.$product['total_num'], $width, 26);
             if ($product['remark'] ?? '') {
                 $content .= '<TEXT x="10" y="180" font="10" w="-1" h="-1" r="0">' . $product['remark'] . '</TEXT><BR><BR>';
+            } else {
+                $content .= '<BR>';
             }
         }
         return $content. '<BR><BR>';
