@@ -241,7 +241,7 @@ class OrderProduct extends BaseModel
                 $this->error = '商品已送厨，禁止删除';
                 return false;
             }
-            $model->delete();
+            $model->force()->delete();
             // 收银台订单副表为空删除主订单
             if (self::where('order_id', '=', $order_id)->count() == 0) {
                 $order = OrderModel::where('order_id', '=', $order_id)->find();
