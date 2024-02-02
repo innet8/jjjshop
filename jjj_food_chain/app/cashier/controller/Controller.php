@@ -2,9 +2,11 @@
 
 namespace app\cashier\controller;
 
-use app\cashier\model\cashier\User as UserModel;
-use app\common\exception\BaseException;
 use app\JjjController;
+use app\common\exception\BaseException;
+use app\common\enum\settings\SettingEnum;
+use app\cashier\model\cashier\User as UserModel;
+use app\common\model\settings\Setting as SettingModel;
 
 /**
  * 商户后台控制器基类
@@ -96,6 +98,8 @@ class Controller extends JjjController
         if (!$user = UserModel::getUser($data['data'])) {
             throw new BaseException(['msg' => '没有找到用户信息', 'code' => -1]);
         }
+        // 商家后台设置的名称
+        $shop = SettingModel::getSupplierItem(SettingEnum::STORE, $user['shop_supplier_id'] ?? 0, $user['app_id'] ?? 0);
         $this->cashier = [
             'user' => [
                 'cashier_id' => $user['shop_user_id'],
@@ -103,7 +107,7 @@ class Controller extends JjjController
                 'account' => $user['user_name'],
                 'mobile' => $user['mobile'],
                 'shop_supplier_id' => $user['shop_supplier_id'],
-                'name' => $user['supplier']['name'],
+                'name' => $shop['name'],
                 'app_id' => $user['app_id'],
             ],
             'app' => $user['app']->toArray(),
