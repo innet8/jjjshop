@@ -691,7 +691,7 @@ class Order extends OrderModel
             if ($value['price'] > 0) {
                 $incomes[] = [
                     'pay_type' => $value['pay_type']['value'],
-                    'pay_type_name' => $value['pay_type']['text'],
+                    'pay_type_name' => OrderPayTypeEnum::data($value['pay_type']['value'], 2)['name'],
                     'price' => $value['price'],
                 ];
             }
