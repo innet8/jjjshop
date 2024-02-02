@@ -135,7 +135,7 @@ class Access extends BaseModel
     public function getPermission($name, $shop_user_id, $user_type, $supplier)
     {
         $model = new self;
-        $menus = $model->getCashierListByUser(10031, 1, $supplier);
+        $menus = $model->getCashierListByUser($shop_user_id, $user_type, $supplier);
         foreach ($menus as $key => $val) {
             if (!isset($val['children'][0]['path'])) {
                 continue;
