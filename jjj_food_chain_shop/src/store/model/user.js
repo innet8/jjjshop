@@ -61,7 +61,12 @@ export const useUserStore = defineStore('main', {
 			this.token = token;
             this.currency = currency;
 			this.renderMenus = renderMenusList;
-			this.menus = menusList;
+            if(this.menus.length != menusList.length){
+                this.menus = menusList;
+                location.reload()
+            }else{
+                this.menus = menusList;
+            }
 			setStorage(JSON.stringify(currency), 'currency');
 			setStorage(JSON.stringify(token), strongToken);
 			setStorage(JSON.stringify(this.userInfo), 'userInfo');

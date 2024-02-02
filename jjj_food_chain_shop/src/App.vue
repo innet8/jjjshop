@@ -17,12 +17,14 @@ import {
 import { useRoute ,useRouter } from 'vue-router';
 // import { useLockscreenStore } from "../src/store/model/lockscreen"
 import { languageStore } from './store/model/language';
-
+import { useUserStore } from '@/store';
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import zhTw from "element-plus/es/locale/lang/zh-tw";
 import en from "element-plus/es/locale/lang/en";
 import th from "element-plus/es/locale/lang/th";
 
+
+const { afterLogin ,userInfo ,token ,currency } = useUserStore();
 // const useLockscreen = useLockscreenStore();
 // const isLock = computed(() => useLockscreen.isLock);
 // const lockTime = computed(() => useLockscreen.lockTime);
@@ -64,8 +66,22 @@ const state = reactive({});
 //     }, 1000);
 // };
 
-onMounted(() => {
-    
+onMounted( () => {
+    const data = {
+        data:{
+            app_id:userInfo.AppID,
+            shop_name:userInfo.shopName,
+            shop_supplier_id:userInfo.shop_supplier_id,
+            supplier_name:userInfo.supplier_name,
+            token:token,
+            user_name:userInfo.userName,
+            user_type:userInfo.user_type,
+            version:userInfo.version,
+            logoUrl:userInfo.logoUrl,
+            currency:currency
+        },
+    }
+    afterLogin(data);
 });
 
 onUnmounted(() => {
