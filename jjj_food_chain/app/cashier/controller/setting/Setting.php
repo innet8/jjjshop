@@ -26,8 +26,8 @@ class Setting extends Controller
     public function index()
     {
         $shop_supplier_id = $this->cashier['user']['shop_supplier_id'];
-        $cashier = SettingModel::getSupplierItem(SettingEnum::TABLET, $shop_supplier_id);
-        $tablet = SettingModel::getSupplierItem(SettingEnum::CASHIER, $shop_supplier_id);
+        $cashier = SettingModel::getSupplierItem(SettingEnum::CASHIER, $shop_supplier_id);
+        $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $shop_supplier_id);
         if($this->request->isGet()){
             $vars['values']['is_show_sold_out'] = $tablet['is_show_sold_out'];
             $vars['values']['default_language'] = $cashier['default_language'];
