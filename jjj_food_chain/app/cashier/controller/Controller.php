@@ -108,7 +108,7 @@ class Controller extends JjjController
             'category_set' => isset($user['supplier']) && $user['supplier'] ? $user['supplier']['category_set'] : 10,
             'is_main' => isset($user['supplier']) && $user['supplier'] ? $user['supplier']['is_main'] : 1,
         ];
-        $permission = (new AccessModel)->getPermission(AccessModel::CASHIER_ROUTE_NAME, $user, $user['shop_supplier_id'], $supplier);
+        $permission = (new AccessModel)->getPermission(AccessModel::CASHIER_ROUTE_NAME, $user, $supplier);
         $this->cashier = [
             'user' => [
                 'cashier_id' => $user['shop_user_id'],

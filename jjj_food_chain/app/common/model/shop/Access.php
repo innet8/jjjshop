@@ -132,13 +132,13 @@ class Access extends BaseModel
      * 获取权限
      * @return array
      */
-    public function getPermission($name, $user, $shop_user_id, $supplier)
+    public function getPermission($name, $user, $supplier)
     {
         $model = new self;
         if ($user['is_super'] == 1) {
             $menus = $model->getList($user['user_type'], $supplier);
         }else{
-            $menus = $model->getCashierListByUser($shop_user_id, $user['user_type'], $supplier);
+            $menus = $model->getCashierListByUser($user['shop_user_id'], $user['user_type'], $supplier);
             foreach ($menus as $key => $val) {
                 if (!isset($val['children'][0]['path'])) {
                     continue;
