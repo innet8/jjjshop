@@ -23,7 +23,19 @@ import zhTw from "element-plus/es/locale/lang/zh-tw";
 import en from "element-plus/es/locale/lang/en";
 import th from "element-plus/es/locale/lang/th";
 
+import {
+	getSessionStorage,
+	setSessionStorage
+} from '@/utils/base.js'
+import configObj from "@/config"; 
+import {
+	getStorage
+} from '@/utils/storageData';
+import {
+	createdAuth
+} from '@/utils/createdAuth.js'
 
+const { menu } = configObj;
 const { afterLogin, userInfo, token, currency } = useUserStore();
 // const useLockscreen = useLockscreenStore();
 // const isLock = computed(() => useLockscreen.isLock);
@@ -83,8 +95,16 @@ onMounted(() => {
             },
         }
         afterLogin(data);
-    }
 
+        let auth = getSessionStorage('authlist');
+  
+            let authlist = {}
+            auth = getStorage(menu);
+            createdAuth(auth, authlist);
+            setSessionStorage('authlist', authlist);
+            auth = authlist;
+        
+    }
 });
 
 onUnmounted(() => {
