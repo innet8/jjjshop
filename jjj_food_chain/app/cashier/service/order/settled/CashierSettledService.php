@@ -117,7 +117,7 @@ abstract class CashierSettledService extends BaseService
      * @return bool
      */
     abstract function validateProductList();
-    
+
     /**
      * 创建新订单
      */
@@ -424,7 +424,7 @@ abstract class CashierSettledService extends BaseService
     private function setOrderPointsBonus()
     {
         // 积分设置
-        $setting = SettingModel::getItem('points');
+        $setting = SettingModel::getSupplierItem(SettingEnum::POINTS, $this->user['shop_supplier_id'], $this->app_id);
         // 条件：后台开启开启购物送积分
         if (!$setting['is_shopping_gift']) {
             return false;

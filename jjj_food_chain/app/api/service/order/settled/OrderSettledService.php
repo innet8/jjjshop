@@ -2,27 +2,28 @@
 
 namespace app\api\service\order\settled;
 
-use app\api\model\order\Order as OrderModel;
-use app\api\model\order\OrderProduct;
-use app\api\model\order\OrderAddress as OrderAddress;
-use app\api\model\plus\coupon\UserCoupon as UserCouponModel;
-use app\api\model\user\CardRecord as CardRecordModel;
-use app\common\enum\order\OrderPayTypeEnum;
-use app\common\enum\order\OrderSourceEnum;
-use app\common\enum\order\OrderTypeEnum;
-use app\common\model\plus\discount\DiscountProduct;
-use app\common\model\settings\Setting as SettingModel;
-use app\api\service\coupon\ProductDeductService;
-use app\api\service\user\UserService;
-use app\common\enum\settings\DeliveryTypeEnum;
 use app\common\library\helper;
 use app\common\service\BaseService;
-use app\common\service\order\OrderPrinterService;
-use app\common\service\product\factory\ProductFactory;
-use app\api\model\shop\FullReduce as FullReduceModel;
-use app\api\service\fullreduce\FullDeductService;
-use app\api\model\supplier\Supplier as SupplierModel;
+use app\api\model\order\OrderProduct;
+use app\api\service\user\UserService;
+use app\common\enum\order\OrderTypeEnum;
+use app\common\enum\settings\SettingEnum;
+use app\common\enum\order\OrderSourceEnum;
+use app\common\enum\order\OrderPayTypeEnum;
+use app\api\model\order\Order as OrderModel;
 use app\api\model\store\Table as TableModel;
+use app\common\enum\settings\DeliveryTypeEnum;
+use app\api\service\coupon\ProductDeductService;
+use app\api\service\fullreduce\FullDeductService;
+use app\common\service\order\OrderPrinterService;
+use app\common\model\plus\discount\DiscountProduct;
+use app\api\model\order\OrderAddress as OrderAddress;
+use app\api\model\shop\FullReduce as FullReduceModel;
+use app\api\model\supplier\Supplier as SupplierModel;
+use app\api\model\user\CardRecord as CardRecordModel;
+use app\common\model\settings\Setting as SettingModel;
+use app\common\service\product\factory\ProductFactory;
+use app\api\model\plus\coupon\UserCoupon as UserCouponModel;
 use app\api\model\plus\driver\Setting as DriverSettingModel;
 
 /**
@@ -546,7 +547,7 @@ abstract class OrderSettledService extends BaseService
     private function setOrderPointsBonus()
     {
         // 积分设置
-        $setting = SettingModel::getItem('points');
+        $setting = SettingModel::getSupplierItem(SettingEnum::POINTS, $this->params['shop_supplier_id'], $this->app_id);
         // 条件：后台开启开启购物送积分
         if (!$setting['is_shopping_gift']) {
             return false;
