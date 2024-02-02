@@ -59,7 +59,9 @@ class Call extends Controller
         $count = (new CallModel)->getUnprocessedCount($this->cashier['user']['shop_supplier_id'] ?? 0);
         // 未发送消息列表
         $list = (new CallModel)->getUnSendList($this->cashier['user']['shop_supplier_id'] ?? 0);
-
-        return $this->renderSuccess('', compact('count', 'list'));
+        // 
+        $time = time();
+        // 
+        return $this->renderSuccess('', compact('count', 'list', 'time'));
     }
 }
