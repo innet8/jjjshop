@@ -1075,7 +1075,7 @@ class Order extends BaseModel
     public function reloadPrice($order_id, $re_order_no = false)
     {
         $order = self::detail($order_id);
-        $setting = SettingModel::getItem('points');
+        $setting = SettingModel::getSupplierItem(SettingEnum::POINTS, $order['shop_supplier_id'], $order['app_id']);
         $pay_money = 0;
         $order_price = 0;
         $points_bonus = 0;
@@ -1274,7 +1274,7 @@ class Order extends BaseModel
     {
         $param = $data;
         $orderId = 0;
-        // 
+        //
         if (isset($data['order_id']) && $data['order_id'] > 0) {
             // 检查订单状态
             $detail = self::detail([
@@ -1287,7 +1287,7 @@ class Order extends BaseModel
             }
             $orderId = $detail['order_id'];
         }
-        // 
+        //
         if(isset($data['table_id']) && $data['table_id'] > 0) {
             // 检查订单状态
             $detail = self::detail([
@@ -1326,9 +1326,9 @@ class Order extends BaseModel
             if ($limitNum && (($param['product_num'] + $curNum) > $limitNum)) {
                 $this->error = '超过限购数量';
                 return false;
-            } 
+            }
         }
-        // 
+        //
         $this->startTrans();
         try {
 
@@ -1364,7 +1364,7 @@ class Order extends BaseModel
                 $return_order = $data['order_id'];
 
             } else if(isset($data['table_id']) && $data['table_id'] > 0) {
-                
+
                 $data['order_id'] = $orderId;
 
                 $orderProduct = new OrderProductModel;
@@ -1395,7 +1395,7 @@ class Order extends BaseModel
                     $orderProduct->save($inArr);
                 }
                 $return_order = $data['order_id'];
-                
+
             } else {
                 // order_id不存在创建新订单再加入商品
 
@@ -1468,12 +1468,12 @@ class Order extends BaseModel
             ->when( $deductStockType == DeductStockTypeEnum::CREATE , function($q){
                 $q->where('is_send_kitchen', 0);
             })
-            // 
+            //
             ->where('product_id', '=', $product_id)
             ->where('product_sku_id', '=', $product_sku_id)
             ->sum('total_num');
 
-        // 
+        //
         return (new ProductSkuModel)->where('product_id', '=', $product_id)
             ->where('product_sku_id', '=', $product_sku_id)
             ->where("stock_num", '>', $orderProductNum)

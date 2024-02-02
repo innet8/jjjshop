@@ -20,7 +20,7 @@
 			<template #footer>
 				<div class="dialog-footer">
 					<el-button @click="dialogFormVisible">{{ $t('取消') }}</el-button>
-					<el-button type="primary" @click="qrcodeClick">{{ $t('确定') }}</el-button>
+					<el-button type="primary" @click="qrcodeClick">{{ $t('下载') }}</el-button>
 				</div>
 			</template>
 		</el-dialog>
@@ -68,13 +68,13 @@
         },
 		methods: {
 			qrcodeClick() {
-				// let baseUrl = window.location.protocol + '//' + window.location.host;
-				// let params = {
-				// 	id: this.code_id,
-				// 	source: this.source,
-				// 	token: this.token
-				// };
-				// window.location.href = baseUrl + '/index.php/shop/store.table.table/qrcode?' + qs.stringify(params);
+				let baseUrl = window.location.protocol + '//' + window.location.host;
+				let params = {
+					id: this.code_id,
+					source: this.source,
+					token: this.token
+				};
+				window.location.href = baseUrl + '/index.php/shop/store.table.table/qrcode?' + qs.stringify(params);
                 this.$emit('close', false);
 			},
 
