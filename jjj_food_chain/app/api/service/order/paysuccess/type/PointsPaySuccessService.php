@@ -131,6 +131,7 @@ class PointsPaySuccessService extends BaseService
                 ->update();
             BalanceLogModel::add(BalanceLogSceneEnum::CONSUME, [
                 'user_id' => $this->user['user_id'],
+                'card_id' => $this->user['card_id'],
                 'money' => -$this->model['balance'],
                 'app_id' => $this->model['app_id']
             ], ['order_no' => $this->model['order_no']]);

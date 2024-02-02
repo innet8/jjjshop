@@ -136,6 +136,7 @@ class DriverPaySuccessService extends BaseService
             // 余额日志
             BalanceLogModel::add(BalanceLogSceneEnum::CONSUME, [
                 'user_id' => $this->user['user_id'],
+                'card_id' => $this->user['card_id'],
                 'money' => -$this->model['balance'],
                 'app_id' => $this->model['app_id']
             ], ['order_no' => '申请骑手押金']);

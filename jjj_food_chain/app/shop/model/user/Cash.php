@@ -102,6 +102,7 @@ class Cash extends CashModel
             //添加余额记录
             BalanceLogModel::add(BalanceLogSceneEnum::CASH, [
                 'user_id' => $this['user_id'],
+                'card_id' => User::detail($this['user_id'])?->card_id,
                 'money' => -$this['money'],
                 'app_id' => self::$app_id,
             ], '');
