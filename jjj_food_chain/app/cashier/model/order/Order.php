@@ -580,9 +580,7 @@ class Order extends OrderModel
      */
     public function refund($data)
     {
-        trace('用户取消订单', 'info');
         // 判断订单是否有效
-//        if ($this['pay_status']['value'] != 20 || $this['order_status']['value'] != 10) {
         if ($this['pay_status']['value'] != 20 ) {
             $this->error = '该订单不合法';
             return false;
@@ -691,7 +689,7 @@ class Order extends OrderModel
             if ($value['price'] > 0) {
                 $incomes[] = [
                     'pay_type' => $value['pay_type']['value'],
-                    'pay_type_name' => $value['pay_type']['text'],
+                    'pay_type_name' => OrderPayTypeEnum::data($value['pay_type']['value'], 2)['name'],
                     'price' => $value['price'],
                 ];
             }

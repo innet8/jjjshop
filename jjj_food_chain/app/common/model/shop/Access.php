@@ -14,7 +14,7 @@ class Access extends BaseModel
 
     // 路由筛选名称
     const SHOP_ROUTE_NAME = '管理后台';
-    const CASHIER_ROUTE_NAME = '收银台';
+    const CASHIER_ROUTE_NAME = '收银机';
 
     /*
      * 获取所有权限
@@ -82,6 +82,17 @@ class Access extends BaseModel
             ->select();
     }
 
+    /**
+     * 获取收银机权限url集
+     */
+    public static function getCashierAccessList($accessIds, $user_type, $supplier)
+    {
+        $model = (new static)::withoutGlobalScope();
+        return $model->where('access_id', 'in', $accessIds)
+            ->order(['sort' => 'asc', 'create_time' => 'asc'])
+            ->select();
+    }
+
 
     /**
      * 通过插件分类id查询
@@ -97,6 +108,9 @@ class Access extends BaseModel
 
     /**
      * 根据名称获取菜单的子菜单
+     * @param array $menus
+     * @param string $name
+     * @return array
      */
     public function getRouteMenu(array $menus, string $name): array
     {
@@ -112,5 +126,70 @@ class Access extends BaseModel
             }
         }
         return [];
+    }
+
+    /**
+     * 获取权限
+     * @return array
+     */
+    public function getPermission($name, $shop_user_id, $user_type, $supplier)
+    {
+        $model = new self;
+        $menus = $model->getCashierListByUser(10031, 1, $supplier);
+        foreach ($menus as $key => $val) {
+            if (!isset($val['children'][0]['path'])) {
+                continue;
+            }
+            if ($val['redirect_name'] != $val['children'][0]['path']) {
+                $menus[$key]['redirect_name'] = $menus[$key]['children'][0]['path'];
+            }
+        }
+        return $this->getRouteMenu($menus, $name);
+    }
+
+    /**
+     * 获取后台用户权限列表
+     */
+    public function getListByUser($shop_user_id, $user_type, $supplier)
+    {
+        // 获取当前用户的角色集
+        $roleIds = UserRole::getRoleIds($shop_user_id);
+        // 根据已分配的权限
+        $accessIds = RoleAccess::getAccessIds($roleIds);
+        // 获取当前角色所有权限链接
+        $menus_list = self::getAccessList($accessIds, $user_type, $supplier);
+        // 格式化
+        return $this->formatTreeData($menus_list, 0);
+    }
+
+    /**
+     * 获取收银机权限列表
+     */
+    public function getCashierListByUser($shop_user_id, $user_type, $supplier)
+    {
+        // 获取当前用户的角色集
+        $roleIds = UserRole::getRoleIds($shop_user_id);
+        // 根据已分配的权限
+        $accessIds = RoleAccess::getAccessIds($roleIds);
+        // 获取当前角色所有权限链接
+        $menus_list = self::getCashierAccessList($accessIds, $user_type, $supplier);
+        // 格式化
+        return $this->formatTreeData($menus_list, 0);
+    }
+
+    /**
+     * 循环获取分类
+     */
+    private function formatTreeData($all, $parent_id = 0)
+    {
+        $tree = array();
+        foreach ($all as $k => $v) {
+            if ($v['parent_id'] == $parent_id) {
+                //父亲找到儿子
+                $v['children'] = $this->formatTreeData($all, $v['access_id']);
+                $tree[] = $v;
+            }
+        }
+        return $tree;
     }
 }

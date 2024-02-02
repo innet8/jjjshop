@@ -93,11 +93,11 @@ class Clear extends Controller
         foreach ($keys as $key) {
             $item = $cacheList[$key];
             if ($item['type'] === 'cache') {
-                Cache::has($item['key']) && Cache::delete($item['key']);
+                Cache::has($item['key']) && Cache::set($item['key'], null);
                 //如果是app，则多删除
                 if($item['key'] == 'app'){
-                    Cache::has('app_mp_' . $app_id) && Cache::delete('app_mp_' . $app_id);
-                    Cache::has('app_wx_' . $app_id) && Cache::delete('app_wx_' . $app_id);
+                    Cache::has('app_mp_' . $app_id) && Cache::set('app_mp_' . $app_id, null);
+                    Cache::has('app_wx_' . $app_id) && Cache::set('app_wx_' . $app_id, null);
                 }
             } elseif ($item['type'] === 'file') {
                 $this->deltree($item['dirPath']);
