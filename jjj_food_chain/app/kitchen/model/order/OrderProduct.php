@@ -170,6 +170,7 @@ class OrderProduct extends OrderProductModel
                 ->field(['order_product_id', 'order_id', 'product_id', 'product_name', 'is_send_kitchen', 'send_kitchen_time', 'finish_num', 'finish_time', 'total_num', 'product_attr', 'remark'])
                 ->where('is_send_kitchen', '=', 1)
                 ->where('finish_num', '>', 0)
+                ->where('finish_time', '>=', strtotime('-24 hours')) // 只显示24小时以内的上菜历史
                 ->order('send_kitchen_time', 'asc')
                 ->select();
             // 处理时间

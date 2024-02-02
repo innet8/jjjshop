@@ -23,8 +23,8 @@ class CardRecord extends CardRecordModel
             // ->where('r.is_delete', '=', 0)
             ->order(['r.create_time' => 'desc']);
 
-        if (!empty($data['search'])) {
-            $model = $model->like('card_name|nickName', $data['search']);
+        if (!empty($data['card_name'])) {
+            $model = $model->like('c.card_name', $data['card_name']);
         }
 
         if (isset($data['status']) && $data['status'] >= 0) {
