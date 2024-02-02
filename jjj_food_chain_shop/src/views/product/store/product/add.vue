@@ -3,7 +3,7 @@
         <!--form表单-->
         <el-form size="small" ref="form" class="product-form" :model="form" label-position="top" label-width="180px">
             <!--基础信息-->
-            <div class="product-form-flex">
+            <div class="product-form-flex" ref="formContainer">
                 <Basic @validateField="validateField"></Basic>
 
                 <!--规格设置-->
@@ -197,6 +197,8 @@ export default {
             let self = this;
 
             self.$refs.form.validate(valid => {
+
+                this.scrollToInvalidField();
                 if (self.form.model.product_attr.length > 0) {
                     self.$refs.AttrRef.checkedForm();
                 }
@@ -210,7 +212,7 @@ export default {
                         for (let e = 0; e < checkArr[i].attribute_value.length; e++) {
                             if (checkArr[i].attribute_value[e].en == '' || checkArr[i].attribute_value[e].th == '' || checkArr[i].attribute_value[e].zh == '' || checkArr[i].attribute_value[e].zhtw == '') return;
                         }
-                    
+
                     }
                 }
                 if (self.form.model.product_feed.length > 0) {
@@ -258,6 +260,21 @@ export default {
                 }
             });
 
+        },
+
+
+        scrollToInvalidField() {
+            const formContainer = this.$refs.formContainer;
+            const formItems = Array.from(this.$refs.form.fields);
+            console.log(formItems);
+            const invalidField = formItems.find(item => item.validateState === 'error');
+
+            if (invalidField) {
+                invalidField.$el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                // 如果没有校验失败的表单项，则将整个表单容器滚动到顶部
+                formContainer.scrollIntoView({ behavior: 'smooth' });
+            }
         },
 
         /*保存为草稿*/
