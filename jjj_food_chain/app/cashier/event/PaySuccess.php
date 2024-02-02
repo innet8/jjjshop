@@ -31,9 +31,7 @@ class PaySuccess
         request()->language = $printerConfig['default_language'] ?? '';
         $order = Order::find($this->order->id);
         $order['product'] = $this->order['product'];
-        // dump( $this->order['product']->toArray()  );
-        // die;
-
+        $order['pay_time'] = $this->order['pay_time'];
         // 小票打印
         (new OrderPrinterService)->printTicket($order);
         // 菜品打印
