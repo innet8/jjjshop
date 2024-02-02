@@ -290,7 +290,9 @@ class OrderPrinterService
             if ($order['callNo']) {
                 $printer->appendText(__("取单号").": {$order['callNo']}\n");
             }
-            $printer->lineFeed();
+            if ($printers != PrinterTypeEnum::SUNMI_LAN){
+                $printer->lineFeed();
+            }
             // 
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
@@ -309,7 +311,7 @@ class OrderPrinterService
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
-            $printer->appendText(printText(__("分类"), __("数量"), __("金额"), $width, $leftWidth));
+            $printer->appendText(printText(__("商品"), __("数量"), __("金额"), $width, $leftWidth));
             $printer->appendText("\n------------------------------------------------\n");
             foreach ($order['product'] as $key => $product) {
                 $productName = $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : '');
