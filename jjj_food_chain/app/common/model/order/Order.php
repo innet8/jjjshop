@@ -197,16 +197,21 @@ class Order extends BaseModel
     }
 
     /**
-     * 付款状态
+     * 支付方式
      * @param $value
      * @return array
      */
-    public function getPayTypeAttr($value)
+    public function getPayTypeAttr($value, $data)
     {
-        return [
+        $result = [
             'text' => OrderPayTypeEnum::data($value)['name'],
             'value' => $value
         ];
+        if (isset($data['order_status']) && $data['order_status'] == OrderStatusEnum::CANCELLED) {
+            $result['text'] = '-';
+            $result['value'] = 0;
+        }
+        return $result;
     }
 
     /**

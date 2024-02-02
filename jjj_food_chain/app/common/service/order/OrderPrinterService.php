@@ -282,7 +282,6 @@ class OrderPrinterService
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
             $printer->appendText("***{$order['supplier']['name']}***\n");
             $printer->lineFeed();
-            $printer->setLineSpacing(80);
             $printer->setPrintModes(true, true, false);
             if ($order['table_no']) {
                 $printer->appendText(__("桌号").": {$order['table_no']}\n");
@@ -291,6 +290,7 @@ class OrderPrinterService
                 $printer->appendText(__("取单号").": {$order['callNo']}\n");
             }
             $printer->lineFeed();
+            $printer->setLineSpacing(50);
             // 
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
@@ -309,7 +309,7 @@ class OrderPrinterService
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
-            $printer->appendText(printText(__("分类"), __("数量"), __("金额"), $width, $leftWidth));
+            $printer->appendText(printText(__("商品"), __("数量"), __("金额"), $width, $leftWidth));
             $printer->appendText("\n------------------------------------------------\n");
             foreach ($order['product'] as $key => $product) {
                 $productName = $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : '');
@@ -319,7 +319,9 @@ class OrderPrinterService
                 }else {
                     $printer->lineFeed();
                 }
-                $printer->lineFeed();
+                if ($printers != PrinterTypeEnum::SUNMI_LAN){
+                    $printer->lineFeed();
+                }
             }
             // 
             $printer->appendText("------------------------------------------------\n");
@@ -687,7 +689,7 @@ class OrderPrinterService
             }
             $productAttr = (new OrderProduct)->getProductAttrAttr($product['product_attr']);
             $productName = $prodcutDetail['product_name_text'] . ($productAttr ?  ' (' . $productAttr . ')'  : '');
-            $content .= printText($productName, '', ''.$product['total_num'], $width, 28);
+            $content .= printText($productName, '', ''.$product['total_num'], $width, 26);
             if ($product['remark'] ?? '') {
                 $content .= '<TEXT x="10" y="180" font="10" w="-1" h="-1" r="0">' . $product['remark'] . '</TEXT><BR><BR>';
             }

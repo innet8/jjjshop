@@ -153,6 +153,7 @@ class OrderProduct extends OrderProductModel
             ->join('order o', 'op.order_id = o.order_id', 'left')
             ->where('op.is_send_kitchen', '=', 1)
             ->where('op.finish_num', '>', 0)
+            ->where('op.finish_time', '>=', strtotime('-24 hours')) // 只显示24小时以内的上菜历史
             ->order(['op.finish_time' => 'desc']); // 按照厨房完成时间倒序
 
         if ($shop_supplier_id > 0) {
@@ -161,7 +162,7 @@ class OrderProduct extends OrderProductModel
 
         $list = $query->field('o.table_no, o.callNo, op.product_name, op.order_id, op.is_send_kitchen, op.send_kitchen_time')
             ->group('o.order_id')
-            ->paginate($params);
+            ->select();
 
         foreach ($list as &$item) {
             $item['serial_no'] = $item['callNo'] ? $item['callNo'] : $item['table_no']; // 流水号
