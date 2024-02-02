@@ -14,7 +14,7 @@ import {
 import {
     ElConfigProvider
 } from 'element-plus';
-import { useRoute ,useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 // import { useLockscreenStore } from "../src/store/model/lockscreen"
 import { languageStore } from './store/model/language';
 import { useUserStore } from '@/store';
@@ -24,7 +24,7 @@ import en from "element-plus/es/locale/lang/en";
 import th from "element-plus/es/locale/lang/th";
 
 
-const { afterLogin ,userInfo ,token ,currency } = useUserStore();
+const { afterLogin, userInfo, token, currency } = useUserStore();
 // const useLockscreen = useLockscreenStore();
 // const isLock = computed(() => useLockscreen.isLock);
 // const lockTime = computed(() => useLockscreen.lockTime);
@@ -32,17 +32,17 @@ const language = languageStore().language
 
 const route = useRoute();
 const router = useRouter();
-const locale = ref(zhCn) ;
-if(language == 'zh'){
+const locale = ref(zhCn);
+if (language == 'zh') {
     locale.value = zhCn;
 }
-if(language == 'zhtw'){
+if (language == 'zhtw') {
     locale.value = zhTw;
 }
-if(language == 'en'){
+if (language == 'en') {
     locale.value = en;
 }
-if(language == 'th'){
+if (language == 'th') {
     locale.value = th;
 }
 const state = reactive({});
@@ -66,22 +66,25 @@ const state = reactive({});
 //     }, 1000);
 // };
 
-onMounted( () => {
-    const data = {
-        data:{
-            app_id:userInfo.AppID,
-            shop_name:userInfo.shopName,
-            shop_supplier_id:userInfo.shop_supplier_id,
-            supplier_name:userInfo.supplier_name,
-            token:token,
-            user_name:userInfo.userName,
-            user_type:userInfo.user_type,
-            version:userInfo.version,
-            logoUrl:userInfo.logoUrl,
-            currency:currency
-        },
+onMounted(() => {
+    if (userInfo) {
+        const data = {
+            data: {
+                app_id: userInfo.AppID,
+                shop_name: userInfo.shopName,
+                shop_supplier_id: userInfo.shop_supplier_id,
+                supplier_name: userInfo.supplier_name,
+                token: token,
+                user_name: userInfo.userName,
+                user_type: userInfo.user_type,
+                version: userInfo.version,
+                logoUrl: userInfo.logoUrl,
+                currency: currency
+            },
+        }
+        afterLogin(data);
     }
-    afterLogin(data);
+
 });
 
 onUnmounted(() => {
@@ -101,7 +104,8 @@ onUnmounted(() => {
 
 .common-level-rail {
     text-align: right;
-    &.flex{
+
+    &.flex {
         display: flex;
         justify-content: space-between;
         margin-bottom: 0;
