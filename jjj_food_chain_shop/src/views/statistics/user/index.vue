@@ -32,7 +32,7 @@
                
                 <el-table-column prop="shift_no" :label="$t('交班编号')" width="180"></el-table-column>
                 <el-table-column prop="user.real_name" :label="$t('收银员')"></el-table-column>
-                <el-table-column prop="" :label="$t('当班时间')" width="170">
+                <el-table-column prop="" :label="$t('当班时间')" width="200">
                     <template #default="scope">
                         <div>
                             {{ scope.row.shift_start_time }}

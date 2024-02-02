@@ -105,7 +105,7 @@
                         <template #default="scope">
 
                             <p>{{ currency.unit }}{{ scope.row.order_price }}
-                                <span>{{ currency.vices?.vice_unit }}{{ (Number(scope.row.order_price) * Number(currency.vices?.unit_rate)).toFixed(2) }}</span>
+                                <span v-if="currency.is_open ==1">{{ currency.vices?.vice_unit }}{{ (Number(scope.row.order_price) * Number(currency.vices?.unit_rate)).toFixed(2) }}</span>
                             </p>
                         </template>
                     </el-table-column>

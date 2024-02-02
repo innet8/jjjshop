@@ -43,10 +43,10 @@ export default {
     data() {
         return {
             form: {
-                table_id: 0,
+                table_id: '',
                 table_no: '',
-                area_id: 1,
-                type_id: 1,
+                area_id: '',
+                type_id: '',
                 sort: null,
             },
             file_path: '',
@@ -83,11 +83,22 @@ export default {
     },
     props: ['open_edit', 'editform', 'type', 'area_list'],
     created() {
+        console.log(this.area_list);
         this.dialogVisible = this.open_edit;
         this.form.table_id = this.editform.model.table_id;
         this.form.table_no = this.editform.model.table_no;
-        this.form.area_id = this.editform.model.area_id;
-        this.form.type_id = this.editform.model.type_id;
+
+        this.type.map(item=>{
+            if(item.type_id == this.editform.model.type_id){
+                this.form.type_id = this.editform.model.type_id;
+            }
+        })
+        this.area_list.map(item=>{
+            if(item.area_id == this.editform.model.area_id){
+                this.form.area_id = this.editform.model.area_id;
+            }
+        })      
+ 
         this.form.sort = this.editform.model.sort;
     },
     methods: {

@@ -33,7 +33,7 @@
                         <div class="pb16">
                             <span class="gray9">{{ $t('订单金额：') }}</span>
                             {{ currency.unit }}{{ detail.order_price }}
-                            {{ currency.vices?.vice_unit }}{{ (Number(detail.order_price) * Number(currency.vices?.unit_rate)).toFixed(2) }}
+                            <template v-if="currency.is_open ==1">{{ currency.vices?.vice_unit }}{{ (Number(detail.order_price) * Number(currency.vices?.unit_rate)).toFixed(2) }}</template>
                         </div>
                     </el-col>
                     <el-col :span="6" v-if="detail.express_price > 0">
@@ -172,7 +172,7 @@
                     <el-table-column prop="total_price" :label="$t('商品总价')">
                         <template #default="scope">
                             <p>{{ currency.unit }}{{ scope.row.total_price }}
-                            <span>{{ currency.vices?.vice_unit }}{{ (Number(scope.row.total_price) * Number(currency.vices?.unit_rate)).toFixed(2) }}</span>
+                            <span v-if="currency.is_open ==1">{{ currency.vices?.vice_unit }}{{ (Number(scope.row.total_price) * Number(currency.vices?.unit_rate)).toFixed(2) }}</span>
                             </p>
                         </template>
                     </el-table-column>
