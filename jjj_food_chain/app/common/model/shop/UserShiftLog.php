@@ -290,7 +290,7 @@ class UserShiftLog extends BaseModel
             ];
             $this->save($data);
             // 更新收银员在线状态
-            $shopUser->update(['cashier_online' => 0, 'cashier_login_time' => 0]);
+            $shopUser->save(['cashier_online' => 0, 'cashier_login_time' => 0]);
             $this->commit();
             // 打印
             $printerConfig = SettingModel::getSupplierItem('printer', $this->shop_supplier_id, $this->app_id);
