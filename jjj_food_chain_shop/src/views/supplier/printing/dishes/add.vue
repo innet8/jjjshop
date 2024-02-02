@@ -6,7 +6,7 @@
             <!--添加门店-->
             <el-form-item :label="$t('名称')" prop="name" :rules="[{ required: true, message: $t('请输入名称') }]"><el-input
                     v-model="form.name" :placeholder="$t('请输入名称')" :maxlength="50"></el-input></el-form-item>
-            <el-form-item :label="$t('是否开启')">
+            <el-form-item :label="$t('是否开启')" prop="is_open" :rules="[{ required: true, message: '' }]">
                 <div>
                     <el-radio v-model="form.is_open" :label="1">{{ $t('开启') }}</el-radio>
                     <el-radio v-model="form.is_open" :label="0">{{ $t('关闭') }}</el-radio>
@@ -26,14 +26,14 @@
                         :label="1">{{ $t('店内打印') }}</el-radio>
                 </div>
             </el-form-item> -->
-            <el-form-item :label="$t('打印模式')">
+            <el-form-item :label="$t('打印模式')" prop="print_type" :rules="[{ required: true, message: '' }]">
                 <div>
                     <el-radio v-model="form.print_type" :label="10">{{ $t('付款打印') }}</el-radio>
                     <el-radio v-model="form.print_type" :label="30">{{ $t('送厨打印') }}</el-radio>
                     <!-- <el-radio v-model="form.print_type" :label="20">{{ $t('下单打印') }}</el-radio> -->
                 </div>
             </el-form-item>
-            <el-form-item :label="$t('打印方式')">
+            <el-form-item :label="$t('打印方式')" prop="print_method" :rules="[{ required: true, message: '' }]">
                 <div>
                     <el-radio v-model="form.print_method" :label="10">{{ $t('整单打印') }}</el-radio>
                     <el-radio v-model="form.print_method" :label="20">{{ $t('按商品分类打印') }}</el-radio>

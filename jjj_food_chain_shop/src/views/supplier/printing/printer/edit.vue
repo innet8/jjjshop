@@ -7,7 +7,7 @@
             <el-form-item :label="$t('打印机名称')" prop="printer_name" :rules="[{ required: true, message: ' ' }]">
                 <el-input v-model="form.printer_name" :placeholder="$t('请输入打印机名称')"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('打印机类型')">
+            <el-form-item :label="$t('打印机类型')" prop="printer_type" :rules="[{ required: true, message: ' ' }]">
                 <el-select v-model="form.printer_type" placeholder="请选择" style="width: 100%;">
                     <el-option v-for="(item, index) in type" :key="index" :label="item" :value="index">
                     </el-option>

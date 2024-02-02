@@ -15,7 +15,7 @@ axios.interceptors.request.use((config) => {
     //在发送请求之前做某件事
     const userStore = useUserStore();
     const { token, userInfo } = userStore;
-    let lang = 'th'
+    let lang = 'en'
     if (JSON.parse(localStorage.getItem("Language"))) {
         lang = JSON.parse(localStorage.getItem("Language")).language
     }
