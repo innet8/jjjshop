@@ -17,10 +17,10 @@ class User extends UserModel
     {
         $where['user_name'] = $user['user_name'];
         $where['password'] = $user['password'];
-        // 
+        //
         $user = $this->where($where)->with(['app', 'supplier'])->find();
         if (!$user = $this->where($where)->with(['app', 'supplier'])->find()) {
-            $this->error = '账号或密码错误，请重新输入';
+            $this->error = '账号或密码错误';
             return false;
         }
         if ($user['is_delete'] == 1) {
@@ -92,7 +92,7 @@ class User extends UserModel
      */
     public static function getUser($data)
     {
-        return (new static())->where(['shop_user_id' => $data['uid']])->find();
+        return (new static())->where(['shop_user_id' => $data['uid']])->with(['app'])->find();
     }
 
 }

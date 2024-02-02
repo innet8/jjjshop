@@ -704,6 +704,7 @@ return [
     "不能大于100000000" => "1000000000'den büyük olamaz",
     "库存不能超过999" => "Envanter 999'u geçemez",
     "税率必须为数字" => "Vergi oranı sayısal olmalıdır",
+    "账号或密码错误" => "Yanlış kullanıcı adı ya da parola",
     "未找到用户open_id" => "Kullanıcı open_id bulunamadı",
     "商城logo不能为空" => "AVM logosu boş olamaz",
     "等级权重范围1-99" => "Seviye ağırlık aralığı 1-99",

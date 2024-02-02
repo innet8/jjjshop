@@ -703,6 +703,7 @@ return [
     "不能大于100000000" => "The value cannot be greater than 100000000",
     "库存不能超过999" => "The stock cannot exceed 999",
     "税率必须为数字" => "The tax rate must be numerical",
+    "账号或密码错误" => "Incorrect username or password",
     "未找到用户open_id" => "User open_id not found",
     "商城logo不能为空" => "Mall logo cannot be empty",
     "等级权重范围1-99" => "Level weight range 1-99",
