@@ -7,16 +7,15 @@ use app\common\enum\order\OrderTypeEnum;
 use app\shop\service\order\ExportService;
 use app\common\model\user\User as UserModel;
 use app\common\enum\order\OrderPayStatusEnum;
-use app\common\enum\settings\DeliveryTypeEnum;
 use app\common\service\message\MessageService;
 use app\common\model\order\Order as OrderModel;
 use app\common\service\order\OrderRefundService;
-use app\common\service\order\OrderCompleteService;
 use app\shop\model\user\PointsLog as PointsLogModel;
 use app\common\enum\user\pointsLog\PointsLogSceneEnum;
 use app\common\model\settings\Setting as SettingModel;
 use app\common\service\product\factory\ProductFactory;
 use app\common\model\plus\coupon\UserCoupon as UserCouponModel;
+use app\cashier\model\store\Table as TableModel;
 
 /**
  * 订单模型
@@ -240,6 +239,10 @@ class Order extends OrderModel
 
         $this->startTrans();
         try {
+            // 关闭桌台
+            if ($this->table_id) {
+                TableModel::close($this->table_id);
+            }
             // 执行退款操作
             $this['pay_type']['value'] < 40 && (new OrderRefundService)->execute($this);
             // 回退商品库存
