@@ -301,7 +301,6 @@ class OrderPrinterService
                 $printer->appendText(printText(__("时间"), '', date('Y-m-d H:i:s', $order->pay_time) ,$width));
             }
             $printer->lineFeed();
-            $printer->lineFeed();
             // 
             $width = 46;
             $printer->restoreDefaultLineSpacing();
@@ -673,7 +672,12 @@ class OrderPrinterService
         foreach ($order['product'] as $key => $product) {
             $prodcutDetail = ProductModel::detail($product['product_id']);
             if ($data['print_method'] == 20) {
-                if ($data['category_id'] && !in_array($prodcutDetail['special_id'], $data['category_id']) && !in_array($prodcutDetail['category_id'], $data['category_id'])) {
+                if (
+                    $data['category_id'] 
+                    && !in_array($prodcutDetail->special_id, $data['category_id']) 
+                    && !in_array($prodcutDetail->category_id, $data['category_id'])
+                    && !in_array($prodcutDetail->category?->parent_id ?? 0, $data['category_id'])
+                ) {
                     continue;
                 }
             } elseif ($data['print_method'] == 30) {
