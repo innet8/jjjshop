@@ -207,7 +207,7 @@ class Order extends BaseModel
             'text' => OrderPayTypeEnum::data($value)['name'],
             'value' => $value
         ];
-        if ($data['order_status'] == OrderStatusEnum::CANCELLED) {
+        if (isset($data['order_status']) && $data['order_status'] == OrderStatusEnum::CANCELLED) {
             $result['text'] = '-';
             $result['value'] = 0;
         }
