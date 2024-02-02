@@ -273,7 +273,7 @@ class Order extends Controller
             TableModel::close($detail['table_id']);
             return $this->renderSuccess('结账成功');
         }
-        return $this->renderError($detail->getError() ?: '结账失败');
+        return $this->renderError($detail->getError() ?: '结账失败', $detail->getErrorData());
     }
 
     /**
