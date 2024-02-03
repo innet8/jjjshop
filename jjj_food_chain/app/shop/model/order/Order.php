@@ -302,7 +302,7 @@ class Order extends OrderModel
             UserModel::where('user_id', '=', $this['user_id'])->dec('points', $points)->dec('total_points', $points)->update();
             PointsLogModel::add([
                 'user_id' => $this['user_id'],
-                'card_id' => UserModel::detail($this['user_id'])?->card_id,
+                'card_id' => UserModel::detail($this['user_id'])?->card_id ?? 0,
                 'scene' => PointsLogSceneEnum::REFUND,
                 'value' => -$points,
                 'describe' => "退款扣除：{$this['order_no']}",
