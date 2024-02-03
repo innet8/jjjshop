@@ -10,8 +10,12 @@
 
             <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
                 <el-form-item :label="$t('商品分类')">
-                    <el-cascader :options="categoryList" :props="{ checkStrictly: true, }" v-model="searchForm.category_id"
-                        clearable :placeholder="$t('请选择分类')"></el-cascader>
+                    <el-cascader :options="categoryList" :props="{ checkStrictly: true, expandTrigger: 'hover' }"
+                        v-model="searchForm.category_id" clearable :placeholder="$t('请选择分类')">
+                        <template #default="{ data }">
+                            <span @click="handleValue(data)">{{ data.label }}</span>
+                        </template>
+                    </el-cascader>
                 </el-form-item>
                 <el-form-item :label="$t('商品库存')">
                     <el-select size="small" v-model="stock" :placeholder="$t('全部库存')">
@@ -31,7 +35,8 @@
                 <el-form-item :label="$t('商品名称')"><el-input size="small" v-model="searchForm.product_name"
                         :placeholder="$t('请输入商品名称')"></el-input></el-form-item>
                 <el-form-item>
-                    <el-button class="search-button" size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
+                    <el-button class="search-button" size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询')
+                    }}</el-button>
                 </el-form-item>
             </el-form>
             <el-button size="small" type="primary" icon="Plus" v-auth="'/product/store/product/add'" @click="addClick">{{
@@ -88,6 +93,7 @@
 
 <script>
 import PorductApi from '@/api/product.js';
+
 export default {
     components: {},
     data() {
@@ -263,6 +269,11 @@ export default {
                         self.getData();
                     });
                 });
+        },
+
+        handleValue(data){
+            this.searchForm.category_id =[]
+            this.searchForm.category_id = data.value;
         }
     }
 };
