@@ -63,7 +63,7 @@ class OrderBusinessPrinterService
     {
         $startTime = date('Y-m-d H:i:s', $data['times'][0]);
         $endTime = $data['times'][1] ? date('Y-m-d H:i:s', $data['times'][1]) : date('Y-m-d H:i:s');
-
+   
         // 
         $currency = SettingModel::getSupplierItem(SettingEnum::STORE, $data['supplier']['shop_supplier_id'], $data['supplier']['app_id']);
         $shopName = $currency['name'] ?? $data['supplier']['name'];

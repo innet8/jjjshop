@@ -152,6 +152,9 @@ class OrderPrinterService
         if ($currency['unit'] ?? '') {
             $this->currencyUnit = $currency['unit'];
         }
+
+        dump(111);
+        die;
         // 
         $shop = SettingModel::getSupplierItem(SettingEnum::STORE, $order['shop_supplier_id'], $order['app_id']);
         $shopName = $shop['name'] ?? $order['supplier']['name'];
