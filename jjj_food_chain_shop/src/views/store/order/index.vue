@@ -229,7 +229,7 @@ export default {
                 order_no: '',
                 style_id: '',
                 create_time: '',
-                time_type: '',
+                time_type: 1,
                 order_source: 0,
             },
             /*配送方式*/
