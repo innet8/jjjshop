@@ -165,6 +165,7 @@ class MasterProductService extends ProductService
                 $stockStatus = $product->getStockState($product['total_num']);
                 if (!$stockStatus) {
                     $error[] = [
+                        'order_product_id' => $product['order_product_id'],
                         'product_id' => $product['product_id'],
                         'product_sku_id' => $product['product_sku_id'],
                         'total_num' => $product['total_num'],

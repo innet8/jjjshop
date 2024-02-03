@@ -35,10 +35,6 @@ class Order extends Controller
         if ($params['meal_num'] > 999 || $params['meal_num'] < 1) {
             return $this->renderError('请输入1-999的人数');
         }
-//        // 商品结算信息
-//        $CartModel = new CartModel;
-//        // 购物车商品列表
-//        $productList = $CartModel->getCartList($this->table['shop_supplier_id'], $params['table_id'], 10);
         $table = TableModel::detail($params['table_id']);
         if (!$table) {
             return $this->renderError('桌台不存在');
@@ -68,7 +64,7 @@ class Order extends Controller
         // 移出购物车中已下单的商品
         $CartModel = new CartModel;
         $CartModel->deleteTableAll($this->table['shop_supplier_id'], $params['table_id']);
-//        // 修改桌台状态
+       // 修改桌台状态
         TableModel::open($params['table_id']);
         // 返回结算信息
         return $this->renderSuccess('开台成功', ['order_id' => $order_id]);
@@ -103,12 +99,6 @@ class Order extends Controller
      */
     public function getSendKitchen($table_id)
     {
-//        $model = new OrderModel();
-//        $detail = $model->getSendKitchen($table_id);
-//        if ($detail) {
-//            $detail['sendKitchenProductTotalPrice'] = helper::getArrayColumnSum($detail['sendKitchenProduct'], 'total_price');
-//        }
-//        return $this->renderSuccess('', compact('detail'));
         $model = new OrderModel();
         $order = $model->getSendKitchen($table_id);
         $sendKitchenProductTotalPrice = 0;
@@ -175,33 +165,6 @@ class Order extends Controller
         return $this->renderError($model->getError() ?: '添加商品失败');
     }
 
-//    /**
-//     * @Apidoc\Title("桌台下单")
-//     * @Apidoc\Method("POST")
-//     * @Apidoc\Url ("/index.php/tablet/order.Order/addMeal")
-//     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
-//     * @Apidoc\Param("order_id", type="int", require=true, desc="订单ID")
-//     * @Apidoc\Returned()
-//     */
-//    public function addMeal()
-//    {
-//        // 获取加菜商品列表
-//        $params = $this->postData();
-//        $params['eat_type'] = 10;
-//        // 商品结算信息
-//        $CartModel = new CartModel();
-//        // 购物车商品列表
-//        $productList = $CartModel->getCartList($this->table['shop_supplier_id'], $params['table_id'], 10);
-//        // 加餐订单提交
-//        $orderModel = new OrderModel;
-//        if ($orderModel->mealHallOrder($productList, $params)) {
-//            // 移出购物车中已下单的商品
-//            $CartModel->deleteTableAll($this->table['shop_supplier_id'], $params['table_id']);
-//            return $this->renderSuccess('协助点餐成功');
-//        }
-//        return $this->renderError($orderModel->getError() ?: '协助点餐失败');
-//    }
-
     /**
      * @Apidoc\Title("桌台下单(送厨)")
      * @Apidoc\Method("POST")
@@ -222,4 +185,21 @@ class Order extends Controller
         }
         return $this->renderError($model->getError() ?: '下单失败', $model->getErrorData());
     }
+
+    /**
+     * @Apidoc\Title("删除商品")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/tablet/order.cart/delProduct")
+     * @Apidoc\Param("order_product_id", type="int|array", require=true, desc="订单商品ID, 多个传数组: [1,2]")
+     * @Apidoc\Returned()
+     */
+    public function delProduct($order_product_id)
+    {
+        $model = new OrderProduct();
+        if ($model->delProduct($order_product_id)) {
+            return $this->renderSuccess('删除成功');
+        };
+        return $this->renderError($model->getError() ?: '删除失败');
+    }
+
 }

@@ -238,36 +238,39 @@ class OrderProduct extends BaseModel
     {
         $this->startTrans();
         try {
-            $model = $this->where('order_product_id', '=', $order_product_id)->find();
-            $order_id = $model['order_id'];
-            if (!$model) {
-                $this->error = '记录不存在';
-                return false;
-            }
-            // 检查订单状态
-            $detail = OrderModel::detail([
-                ['order_id', '=', $order_id],
-                ['order_status', '=', OrderStatusEnum::NORMAL]
-            ]);
-            if (!$detail) {
-                $this->error = '当前订单不可修改';
-                return false;
-            }
-            if ($model->is_send_kitchen == 1) {
-                $this->error = '商品已送厨，禁止删除';
-                return false;
-            }
-            $model->force()->delete();
-            // 收银台订单副表为空删除主订单
-            if (self::where('order_id', '=', $order_id)->count() == 0) {
-                $order = OrderModel::where('order_id', '=', $order_id)->find();
-                if ($order['table_id'] == 0) {
-                    $order->force()->delete();
+            $orderProductIds = is_array($order_product_id) ? $order_product_id : [$order_product_id];
+            $models = $this->where('order_product_id', 'in', $orderProductIds)->select();
+            foreach($models as $model){
+                $order_id = $model['order_id'];
+                if (!$model) {
+                    $this->error = '记录不存在';
+                    return false;
+                }
+                // 检查订单状态
+                $detail = OrderModel::detail([
+                    ['order_id', '=', $order_id],
+                    ['order_status', '=', OrderStatusEnum::NORMAL]
+                ]);
+                if (!$detail) {
+                    $this->error = '当前订单不可修改';
+                    return false;
+                }
+                if ($model->is_send_kitchen == 1) {
+                    $this->error = '商品已送厨，禁止删除';
+                    return false;
+                }
+                $model->force()->delete();
+                // 收银台订单副表为空删除主订单
+                if (self::where('order_id', '=', $order_id)->count() == 0) {
+                    $order = OrderModel::where('order_id', '=', $order_id)->find();
+                    if ($order['table_id'] == 0) {
+                        $order->force()->delete();
+                    } else {
+                        (new OrderModel)->reloadPrice($order_id);
+                    }
                 } else {
                     (new OrderModel)->reloadPrice($order_id);
                 }
-            } else {
-                (new OrderModel)->reloadPrice($order_id);
             }
             $this->commit();
             return true;
