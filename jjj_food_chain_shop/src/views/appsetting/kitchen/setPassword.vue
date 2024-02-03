@@ -7,10 +7,10 @@
                 <el-input type="password" v-model="form.advanced_password"></el-input>
             </el-form-item> -->
             <el-form-item :label="have ? $t('新密码') : $t('密码')" prop="new_advanced_password" >
-                <el-input v-model="form.new_advanced_password" type="password"></el-input>
+                <el-input v-model="form.new_advanced_password" type="password" :placeholder="$t('请输入密码')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('确认密码')" prop="confirm_advanced_password" >
-                <el-input v-model="form.confirm_advanced_password" type="password"></el-input>
+                <el-input v-model="form.confirm_advanced_password" type="password" :placeholder="$t('请确认密码')"></el-input>
             </el-form-item>
         </el-form>
         <template #footer>
