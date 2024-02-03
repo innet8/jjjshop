@@ -15,7 +15,7 @@ class Access extends Controller
     public function index()
     {
         $model = new AccesscModel;
-        $list = $model->getList();
+        $list = $model->getAdminList();
         return $this->renderSuccess('', $list);
     }
 

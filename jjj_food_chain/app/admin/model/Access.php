@@ -14,7 +14,7 @@ class Access extends AccessModel
     /**
      * 获取权限列表
      */
-    public function getList()
+    public function getAdminList()
     {
         $all = static::getAll(-1);
         $res = $this->recursiveMenuArray($all, 0);
