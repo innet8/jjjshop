@@ -34,6 +34,7 @@ class AuthService
         '/index/index',
         '/order/cart/list',
         '/product/product/index',
+        '/product/product/detail',
         '/product/category/index',
     ];
 
