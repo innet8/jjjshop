@@ -24,7 +24,7 @@
                     </div>
                 </div>
             </el-form-item>
-            <el-form-item :label="$t('排序')" prop="name" :rules="[{ required: true, message: $t('接近0，排序等級越高') }]">
+            <el-form-item :label="$t('排序')" prop="name" :rules="[{ required: true, message: $t('接近0，排序等级越高') }]">
                 <el-input v-model="form.name"></el-input>
             </el-form-item>
         </el-form>

@@ -18,7 +18,7 @@
                                     message: $t('请输入排序')
                                 }]" prop="scope.row.sort">
                                     <el-input-number :controls="false" :min="0" :max="999"
-                                        :placeholder="$t('接近0，排序等級越高')" v-model.number="scope.row.sort"></el-input-number>
+                                        :placeholder="$t('接近0，排序等级越高')" v-model.number="scope.row.sort"></el-input-number>
                                 </el-form-item>
                             </template>
                         </el-table-column>
