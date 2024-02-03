@@ -102,7 +102,7 @@ export default {
 
         /*换行*/
         keepTextStyle(val) {
-            let str = val.replace(/(\\r\\n)/g, '');
+            let str = val.replace(/(\\r\\n)/g, '，');
             return str;
         },
 

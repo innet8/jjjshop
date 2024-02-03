@@ -29,7 +29,7 @@
                         </el-table-column>
                         <el-table-column prop="file_path" width="100" :label="$t('操作')">
                             <template #default="scope">
-                                <div class="delete-box">
+                                <div class="delete-box " :class="form.carousel.length == 1 ? 'delete-box-one':''">
                                     <el-icon size="24">
                                         <Delete @click="deleteOne(scope)" />
                                     </el-icon>
@@ -225,6 +225,7 @@ export default {
             )
         },
         deleteOne(scope) {
+            if(this.form.carousel.length == 1) return;
             this.form.carousel.splice(scope.$index, 1)
             this.form.carousel.sort((a, b) => {
                 return a.sort - b.sort; // 按照数值大小进行排序
@@ -244,5 +245,9 @@ export default {
     display: flex;
     align-items: center;
     cursor: pointer;
+}
+.delete-box-one{
+    color: var(--el-color-tips);
+    cursor: not-allowed;
 }
 </style>
