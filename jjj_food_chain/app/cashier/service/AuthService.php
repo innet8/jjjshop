@@ -36,6 +36,8 @@ class AuthService
         '/product/product/index',
         '/product/product/detail',
         '/product/category/index',
+        '/order/HallCart/add/',
+        '/order/HallCart/tableProductList',
     ];
 
     /** @var array $accessUrls 商家用户权限url */
