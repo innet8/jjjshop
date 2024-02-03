@@ -35,6 +35,11 @@
                     </el-table-column>
                     <el-table-column prop="ip" label="IP" width="120"></el-table-column>
                     <el-table-column prop="browser" :label="$t('来源')" width="120"></el-table-column>
+                    <el-table-column prop="title" :label="$t('操作内容')">
+                        <template #default="scope">
+                            {{ $t(scope.row.title) }}
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="create_time" :label="$t('操作时间')"></el-table-column>
                     <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">
