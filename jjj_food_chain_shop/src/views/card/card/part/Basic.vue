@@ -33,7 +33,7 @@
       </div>
     </el-form-item>
     <el-form-item :label="$t('排序：')" :rules="[{ required: true, message: $t('请填写排序') }]" prop="model.sort">
-      <el-input-number :controls="false" :min="0" :max="999" class="max-w460" :placeholder="$t('接近0，排序等級越高')" v-model.number="form.model.sort"></el-input-number>
+      <el-input-number :controls="false" :min="0" :max="999" class="max-w460" :placeholder="$t('接近0，排序等级越高')" v-model.number="form.model.sort"></el-input-number>
     </el-form-item>
     <el-form-item :label="$t('会员权益：')">
       <el-radio-group v-model="form.model.is_discount">

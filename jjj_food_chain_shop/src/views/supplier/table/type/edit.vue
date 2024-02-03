@@ -17,7 +17,7 @@
                 <el-input v-model.number="form.max_num" autocomplete="off" type="number" :placeholder="$t('请输入最多人数')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('排序')" prop="sort" :label-width="formLabelWidth">
-                <el-input v-model.number="form.sort" autocomplete="off" :placeholder="$t('接近0，排序等級越高')"></el-input>
+                <el-input v-model.number="form.sort" autocomplete="off" :placeholder="$t('接近0，排序等级越高')"></el-input>
             </el-form-item>
         </el-form>
         <template #footer>

@@ -18,7 +18,7 @@
                     :default-checked-keys="select_menu" :props="defaultProps" @check="handleCheckChange"></el-tree>
             </el-form-item>
 
-            <!-- <el-form-item :label="$t('排序：')"><el-input type="number" v-model="form.sort" :placeholder="$t('接近0，排序等級越高')"
+            <!-- <el-form-item :label="$t('排序：')"><el-input type="number" v-model="form.sort" :placeholder="$t('接近0，排序等级越高')"
                     class="max-w460"></el-input></el-form-item> -->
 
             <!--提交-->

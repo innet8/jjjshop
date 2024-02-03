@@ -23,7 +23,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item :label="$t('排序')" prop="sort" :label-width="formLabelWidth">
-                <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('接近0，排序等級越高')" v-model.number="form.sort"></el-input-number>
+                <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('接近0，排序等级越高')" v-model.number="form.sort"></el-input-number>
             </el-form-item>
         </el-form>
         <template #footer>
