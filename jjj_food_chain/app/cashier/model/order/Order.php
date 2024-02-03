@@ -335,13 +335,6 @@ class Order extends OrderModel
                     $discount_money = max($discount_money, 0);
                     break;
                 case '2'://折扣
-//                    if ($data['rate'] > 10) {
-//                        $this->error = "请输入合理的折扣";
-//                        return false;
-//                    }
-//                    if ($detail['pay_price'] > 0) {
-//                        $discount_money = round($detail['order_price'] * (10 - $data['rate']) / 10, 2);
-//                    }
                     if ($data['rate'] < 0 || $data['rate'] > 100) {
                         $this->error = "请输入合理的折扣";
                         return false;
@@ -354,15 +347,15 @@ class Order extends OrderModel
 
                     break;
                 case '3'://抹零
-//                    if ($data['discountType'] == 1) {//抹分
-//                        $discount_money = round($detail['order_price'] - intval($detail['pay_price'] * 10) / 10, 2);
-//                    } elseif ($data['discountType'] == 2) {//抹角
-//                        $discount_money = round($detail['order_price'] - intval($detail['pay_price']), 2);
-//                    } elseif ($data['discountType'] == 3) {//四舍五入到角
-//                        $discount_money = round($detail['order_price'] - round($detail['pay_price'], 1), 2);
-//                    } elseif ($data['discountType'] == 4) {//四舍五入到元
-//                        $discount_money = round($detail['order_price'] - round($detail['pay_price'], 0), 2);
-//                    }
+                    // if ($data['discountType'] == 1) {//抹分
+                    //     $discount_money = round($detail['order_price'] - intval($detail['pay_price'] * 10) / 10, 2);
+                    // } elseif ($data['discountType'] == 2) {//抹角
+                    //     $discount_money = round($detail['order_price'] - intval($detail['pay_price']), 2);
+                    // } elseif ($data['discountType'] == 3) {//四舍五入到角
+                    //     $discount_money = round($detail['order_price'] - round($detail['pay_price'], 1), 2);
+                    // } elseif ($data['discountType'] == 4) {//四舍五入到元
+                    //     $discount_money = round($detail['order_price'] - round($detail['pay_price'], 0), 2);
+                    // }
                     break;
             }
 
@@ -373,15 +366,16 @@ class Order extends OrderModel
                 // 折扣抹零重置 （恢复旧版抹零就把这个判断删了。上面的case 3 注释恢复）
                 $detail->save(['discount_ratio' => 0, 'discount_money' => 0]);
                 $o = (new OrderModel())->reloadPrice($detail['order_id']);
-                if ($data['discountType'] == 1) {//抹分
+                if ($data['discountType'] == 1) { //抹分
                     $discount_money = round($o['order_price'] - intval($o['pay_price'] * 10) / 10, 2);
-                } elseif ($data['discountType'] == 2) {//抹角
+                } elseif ($data['discountType'] == 2) { //抹角
                     $discount_money = round($o['order_price'] - intval($o['pay_price']), 2);
-                } elseif ($data['discountType'] == 3) {//四舍五入到角
+                } elseif ($data['discountType'] == 3) { //四舍五入到角
                     $discount_money = round($o['order_price'] - round($o['pay_price'], 1), 2);
-                } elseif ($data['discountType'] == 4) {//四舍五入到元
+                } elseif ($data['discountType'] == 4) { //四舍五入到元
                     $discount_money = round($o['order_price'] - round($o['pay_price'], 0), 2);
                 }
+                // 
                 $pay_price = round($o['order_price'] - $discount_money, 2);
                 // 积分奖励按照应付计算
                 $setting = SettingModel::getSupplierItem(SettingEnum::POINTS, $detail['shop_supplier_id'], $detail['app_id']);
@@ -393,7 +387,13 @@ class Order extends OrderModel
                 }
                 $points_bonus = helper::bcmul($pay_price, $ratio, 3);
                 $points_bonus = round($points_bonus, 2);
-                $o->save(['discount_money' => $discount_money, 'pay_price' => $pay_price, 'points_bonus' => $points_bonus]);
+                // 
+                $o->save([
+                    'discount_money' => $discount_money < 0 ? 0 : $discount_money, 
+                    'pay_price' => $pay_price, 
+                    'points_bonus' => $points_bonus
+                ]);
+                
             } else {
                 if ($data['money'] > $detail['order_price']) {
                     $pay_price = $data['money'];
@@ -403,7 +403,8 @@ class Order extends OrderModel
                 if ($pay_price <= 0) {
                     $pay_price = 0;
                 }
-
+               
+                // 
                 if ($data['type'] == 1) {
                     // 积分奖励按照应付计算
                     $setting = SettingModel::getSupplierItem(SettingEnum::POINTS, $detail['shop_supplier_id'], $detail['app_id']);
@@ -415,9 +416,18 @@ class Order extends OrderModel
                     }
                     $points_bonus = helper::bcmul($pay_price, $ratio, 3);
                     $points_bonus = round($points_bonus, 2);
-                    $detail->save(['discount_money' => $discount_money, 'pay_price' => $pay_price, 'discount_ratio' => $discount_ratio, 'user_discount_money' => 0, 'points_bonus' => $points_bonus]);
+                    $detail->save([
+                        'discount_money' => $discount_money < 0 ? 0 : $discount_money, 
+                        'pay_price' => $pay_price, 
+                        'discount_ratio' => $discount_ratio, 
+                        'user_discount_money' => 0, 
+                        'points_bonus' => $points_bonus
+                    ]);
                 } else {
-                    $detail->save(['discount_money' => $discount_money, 'pay_price' => $pay_price]);
+                    $detail->save([
+                        'discount_money' => $discount_money < 0 ? 0 : $discount_money, 
+                        'pay_price' => $pay_price
+                    ]);
                 }
 
             }
@@ -472,7 +482,6 @@ class Order extends OrderModel
             $this->commit();
             return true;
         } catch (\Exception $e) {
-//            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
             $this->error = $e->getMessage();
             $this->rollback();
             return false;
@@ -510,10 +519,10 @@ class Order extends OrderModel
             return false;
         }
 
-//        if (count($this['product']) <= 1 && $orderProduct['total_num'] <= $num) {
-//            $this->error = "仅剩一个商品，不允许退菜，请选择退单";
-//            return false;
-//        }
+        // if (count($this['product']) <= 1 && $orderProduct['total_num'] <= $num) {
+        //     $this->error = "仅剩一个商品，不允许退菜，请选择退单";
+        //     return false;
+        // }
 
         if ($orderProduct['total_num'] < $num) {
             $this->error = "退菜数量不能大于当前商品数量";
@@ -741,7 +750,6 @@ class Order extends OrderModel
                 return false;
             }
         } catch (\Exception $e) {
-//            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
             $this->error = $e->getMessage();
             $this->rollback();
             return false;
