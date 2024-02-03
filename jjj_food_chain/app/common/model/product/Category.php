@@ -55,7 +55,7 @@ class Category extends BaseModel
 
     public function child()
     {
-        return $this->hasMany('app\\common\\model\\product\\Category', 'parent_id', 'category_id')->order(['sort' => 'asc', 'create_time' => 'asc'])->with(['images', 'child']);
+        return $this->hasMany('app\\common\\model\\product\\Category', 'parent_id', 'category_id')->order(['sort' => 'asc', 'create_time' => 'desc'])->with(['images', 'child']);
     }
 
     /**
@@ -184,7 +184,7 @@ class Category extends BaseModel
     /**
      * 获取收银台分类
      */
-    public static function getCashierALL($type, $shop_supplier_id)
+    public static function getCashierALL($type, $shop_supplier_id, $is_special = 0)
     {
         $model = new static;
         $supplier = SupplierModel::detail($shop_supplier_id);
