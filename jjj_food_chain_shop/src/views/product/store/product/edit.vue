@@ -196,17 +196,20 @@ export default {
                     self.form.model.product_status = res.data.model.product_status.value;
                     self.form.model.product_name = JSON.parse(self.form.model.product_name)
                     self.form.model.product_unit = JSON.parse(self.form.model.product_unit)
-
+               
                     self.form.model.sku.map((item, index) => {
-                        self.form.model.sku[index].spec_name = JSON.parse(item.spec_name)
+                        if(item.spec_name){
+                            self.form.model.sku[index].spec_name = JSON.parse(item.spec_name)
+                        }
                     })
-
+               
                     self.form.model.product_attr.map((item, index) => {
                         self.form.model.product_attr[index].attribute_name = JSON.parse(item.attribute_name)
                         item.attribute_value.map((items, indexs) => {
                             self.form.model.product_attr[index].attribute_value[indexs] = JSON.parse(items)
                         })
                     })
+                    
                     self.form.model.product_feed.map((item, index) => {
                         self.form.model.product_feed[index].feed_name = JSON.parse(item.feed_name)
                     })

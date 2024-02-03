@@ -41,7 +41,7 @@
                             <template #label>
                                 {{ $t('属性：') }}<span class="product-tips">({{ items.label }})</span>
                             </template>
-                            <el-form-item v-for="(aitem, aindex) in item.much" :key="aindex"
+                            <el-form-item v-for="(aitem, aindex) in item.attribute_value" :key="aindex"
                                 :prop="`item.attribute_value[aindex][items.key]`" :rules="[{
                                     validator: () => {
                                         return item.attribute_value[aindex][items.key] ? true : false;
@@ -127,7 +127,6 @@ export default {
             this.form.model.product_attr.push({
                 attribute_name: JSON.parse(languageData),
                 attribute_value: [JSON.parse(languageData)],
-                much: 1,
             },
             )
         },
@@ -135,12 +134,10 @@ export default {
             this.form.model.product_attr.splice(index, 1);
         },
         handleAdd(index) {
-            this.form.model.product_attr[index].much++;
             this.form.model.product_attr[index].attribute_value.push(JSON.parse(languageData));
         },
         handleDecrease(index) {
-            if (this.form.model.product_attr[index].much > 1) {
-                this.form.model.product_attr[index].much--;
+            if (this.form.model.product_attr[index].attribute_value.length > 1) {
                 this.form.model.product_attr[index].attribute_value.pop();
             }
         },
