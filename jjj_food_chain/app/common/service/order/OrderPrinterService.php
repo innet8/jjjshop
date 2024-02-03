@@ -152,6 +152,9 @@ class OrderPrinterService
         if ($currency['unit'] ?? '') {
             $this->currencyUnit = $currency['unit'];
         }
+        // 
+        $shop = SettingModel::getSupplierItem(SettingEnum::STORE, $order['shop_supplier_id'], $order['app_id']);
+        $shopName = $shop['name'] ?? $order['supplier']['name'];
 
         /* *
         *
@@ -162,7 +165,7 @@ class OrderPrinterService
             $printer = new SunmiCloudPrinter(567);
             $printer->lineFeed();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
-            $printer->appendText("***{$order['supplier']['name']}***\n");
+            $printer->appendText("***{$shopName}***\n");
             $printer->lineFeed();
             $printer->setLineSpacing(50);
             $printer->setPrintModes(true, true, false);
@@ -242,10 +245,10 @@ class OrderPrinterService
             }
             $printer->setPrintModes(true, false, false);
             $printer->printInColumns(__("应收"), $this->currencyUnit . strval($order['pay_price']));
-            $printer->lineFeed();
             $printer->setPrintModes(false, false, false);
             // 
             if ($order->pay_status['value'] == OrderPayStatusEnum::SUCCESS){
+                $printer->lineFeed();
                 $printer->appendText("------------------------------------------------\n");
                 $printer->printInColumns(__("支付方式"),  $order['pay_type']['text']);
                 $printer->printInColumns(__("实付金额"), $this->currencyUnit . strval($order['pay_price']));
@@ -278,7 +281,7 @@ class OrderPrinterService
             $leftWidth = 29;
             $printer = new SunmiCloudPrinter(567);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
-            $printer->appendText("***{$order['supplier']['name']}***\n");
+            $printer->appendText("***{$shopName}***\n");
             $printer->lineFeed();
             $printer->setPrintModes(true, true, false);
             if ($order['table_no']) {
@@ -392,7 +395,7 @@ class OrderPrinterService
         */
         $width = 32;
         $leftWidth = 16;
-        $content = "<C>***{$order['supplier']['name']}***</C><BR>";
+        $content = "<C>***{$shopName}***</C><BR>";
         if ($order['table_no']) {
             $content .= "<CB>".__('桌号')."：{$order['table_no']}</CB><BR>";
         }
