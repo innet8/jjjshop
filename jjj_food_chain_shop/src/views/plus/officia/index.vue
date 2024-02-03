@@ -90,7 +90,7 @@ export default {
           self.loading = false;
           if (data.code == 1) {
             this.$ElMessage({
-              message: '恭喜你，保存成功',
+              message: $t('保存成功'),
               type: 'success'
             });
             self.getData();

@@ -80,7 +80,7 @@
                         {
                             self.loading = false;
                             this.$ElMessage({
-                                message: '修改成功',
+                                message: '保存成功',
                                 type: 'success'
                             });
                             self.dialogFormVisible(true);

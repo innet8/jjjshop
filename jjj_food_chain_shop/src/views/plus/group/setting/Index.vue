@@ -88,7 +88,7 @@
             GroupApi.editGroupSetting(params, true)
               .then(data => {
                 this.$ElMessage({
-                  message: '恭喜你，保存成功',
+                  message: $t('保存成功'),
                   type: 'success'
                 });
                 self.getData();

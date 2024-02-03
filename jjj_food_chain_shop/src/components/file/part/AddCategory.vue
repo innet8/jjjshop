@@ -76,7 +76,7 @@ export default {
 			};
 			FileApi.editCategory(param,).then(data => {
 				this.$ElMessage({
-					message: '修改成功',
+					message: '保存成功',
 					type: 'success'
 				});
 				self.handleClose({status:'success'});

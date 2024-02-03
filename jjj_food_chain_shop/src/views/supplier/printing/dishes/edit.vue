@@ -210,7 +210,7 @@ export default {
                     SupplierApi.EditPrinting(form, true).then(data => {
                         self.loading = false;
                         this.$ElMessage({
-                            message: $t('恭喜你，修改成功'),
+                            message: $t($t('保存成功')),
                             type: 'success'
                         });
                         this.$emit('close', 1)

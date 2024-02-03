@@ -119,14 +119,14 @@ export default {
         /*删除分类*/
         deleteClick(row) {
             let self = this;
-            ElMessageBox.confirm('删除后不可恢复，确认删除吗？', '提示', {
+            ElMessageBox.confirm($t('删除后不可恢复，确认删除吗？'), $t('提示'), {
                 type: 'warning'
             }).then(() => {
                 StoreApi.deleteType({
                     type_id: row.type_id
                 }).then(data => {
                     this.$ElMessage({
-                        message: '删除成功',
+                        message: $t('删除成功'),
                         type: 'success'
                     });
                     self.getData();

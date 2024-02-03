@@ -83,7 +83,7 @@ export default {
                     PorductApi.editLabel(params).then(data => {
                         self.loading = false;
                         this.$ElMessage({
-                            message: '修改成功',
+                            message: $t('保存成功'),
                             type: 'success'
                         });
                         self.dialogFormVisible(true);
