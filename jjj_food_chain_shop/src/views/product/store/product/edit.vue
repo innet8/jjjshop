@@ -41,6 +41,8 @@ import Ingredients from './part/Ingredients.vue';
 import Spec from './part/Spec.vue';
 import Content from './part/Content.vue';
 import Buyset from './part/Buyset.vue';
+import { languageStore } from '@/store/model/language.js';
+const languageData = JSON.stringify(languageStore().languageData)
 import {
     formatModel
 } from '@/utils/base.js';
@@ -200,6 +202,8 @@ export default {
                     self.form.model.sku.map((item, index) => {
                         if(item.spec_name){
                             self.form.model.sku[index].spec_name = JSON.parse(item.spec_name)
+                        }else{
+                            self.form.model.sku[index].spec_name =  JSON.parse(languageData)
                         }
                     })
                
@@ -209,7 +213,7 @@ export default {
                             self.form.model.product_attr[index].attribute_value[indexs] = JSON.parse(items)
                         })
                     })
-                    
+
                     self.form.model.product_feed.map((item, index) => {
                         self.form.model.product_feed[index].feed_name = JSON.parse(item.feed_name)
                     })
