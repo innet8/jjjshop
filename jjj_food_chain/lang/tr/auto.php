@@ -927,6 +927,7 @@ return [
     "请输入本班取出現金正确金额" => "Lütfen bu sınıf tarafından çekilen nakit miktarını doğru girin",
     "桌台已关闭，请重新开台：Tid" => "Masa kapatıldı, lütfen yeniden açın: Tid",
     "请输入本班取出现金正确金额" => "Lütfen bu sınıf tarafından çekilen nakit miktarını doğru girin",
+    "退款金额不能大于可退款金额" => "İade tutarı iade edilecek tutardan fazla olamaz",
     "该会员已存在会员卡，请勿延期" => "Bu üyenin zaten üyelik kartı var, lütfen uzatmayın",
     "您还不是分销商，请先提交申请" => "Henüz distribütör değilsiniz, lütfen önce başvurunuzu gönderin",
     "退菜数量不能大于当前商品数量" => "İade edilecek miktar, malın mevcut miktarından fazla olamaz",
