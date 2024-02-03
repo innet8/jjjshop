@@ -38,6 +38,7 @@ class AuthService
         '/order/cart/add',
         '/order/cart/sub',
         '/order/cart/list',
+        '/order/cart/pick',
         '/order/cart/stayList',
         '/order/order/useMember',
 
