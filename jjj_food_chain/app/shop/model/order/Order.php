@@ -270,7 +270,7 @@ class Order extends OrderModel
             $this->error = '该订单不合法';
             return false;
         }
-        if ($data['refund_money'] + $this['refund_money'] > $this['pay_price']) {
+        if ( (float)helper::bcadd($data['refund_money'],$this['refund_money']) > (float)$this['pay_price']) {
             $this->error = '退款金额不能超过支付金额';
             return false;
         }
