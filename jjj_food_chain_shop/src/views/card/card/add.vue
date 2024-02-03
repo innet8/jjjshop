@@ -106,7 +106,7 @@
               .then(data => {
                 self.loading = false;
                 this.$ElMessage({
-                  message: '添加成功',
+                  message: $t('添加成功'),
                   type: 'success'
                 });
                 self.$router.push('/card/card/index');

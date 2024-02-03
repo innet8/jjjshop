@@ -153,11 +153,9 @@
                                         {{ scope.row.refund.type.text }}-{{ scope.row.refund.status.text }}
                                     </div>
                                     <div class="price">
-                                        <span
-                                            :class="{ 'text-d-line': scope.row.is_user_grade == 1, 'gray6': scope.row.is_user_grade != 1 }">￥
-                                            {{ scope.row.line_price }}</span>
-                                        <span class="ml10" v-if="scope.row.is_user_grade == 1">
-                                            {{ $t('会员折扣价：') }}{{ scope.row.grade_product_price }}
+                                        <span class="ml10">
+                                            {{ currency.unit }}{{ scope.row.product_price }}
+                                            <template v-if="currency.is_open ==1">{{ currency.vices?.vice_unit }}{{ (Number(scope.row.product_price) * Number(currency.vices?.unit_rate)).toFixed(2) }}</template>
                                         </span>
                                     </div>
                                 </div>
@@ -169,10 +167,10 @@
                             <p> {{ scope.row.total_num }}</p>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="total_price" :label="$t('商品总价')">
+                    <el-table-column prop="product_price" :label="$t('商品总价')">
                         <template #default="scope">
-                            <p>{{ currency.unit }}{{ scope.row.total_price }}
-                            <span v-if="currency.is_open ==1">{{ currency.vices?.vice_unit }}{{ (Number(scope.row.total_price) * Number(currency.vices?.unit_rate)).toFixed(2) }}</span>
+                            <p>{{ currency.unit }}{{ (Number(scope.row.product_price)*Number(scope.row.total_num)).toFixed(2) }}
+                            <span v-if="currency.is_open ==1">{{ currency.vices?.vice_unit }}{{ (Number(scope.row.product_price)*Number(scope.row.total_num) * Number(currency.vices?.unit_rate)).toFixed(2) }}</span>
                             </p>
                         </template>
                     </el-table-column>

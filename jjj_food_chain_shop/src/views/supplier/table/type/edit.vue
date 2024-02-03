@@ -93,7 +93,7 @@ export default {
                     StoreApi.editType(params, true).then(data => {
                         self.loading = false;
                         this.$ElMessage({
-                            message: $t('修改成功'),
+                            message: $t('保存成功'),
                             type: 'success'
                         });
                         self.dialogFormVisible(true);

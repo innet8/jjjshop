@@ -213,7 +213,7 @@ export default {
                         .then(data => {
                             self.loading = false;
                             this.$ElMessage({
-                                message: '恭喜你，修改成功',
+                                message: $t('保存成功'),
                                 type: 'success'
                             });
                             this.$emit('close', 1)

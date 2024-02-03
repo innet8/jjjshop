@@ -82,7 +82,7 @@ export default {
                         UserApi.edituser(params, true).then(data => {
                             self.loading = false;
                             this.$ElMessage({
-                                message: '编辑成功',
+                                message: $t('保存成功'),
                                 type: 'success'
                             });
                             self.dialogFormVisible(1);
@@ -99,7 +99,7 @@ export default {
                         UserApi.adduser(params, true).then(data => {
                             self.loading = false;
                             this.$ElMessage({
-                                message: '添加成功',
+                                message: $t('添加成功'),
                                 type: 'success'
                             });
                             self.dialogFormVisible(1);
