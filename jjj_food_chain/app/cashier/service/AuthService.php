@@ -45,6 +45,9 @@ class AuthService
         '/product/product/index',
         '/product/product/detail',
         '/product/category/index',
+
+        '/store/table/table',
+        '/store/table/tableType',
     ];
 
     /** @var array $accessUrls 商家用户权限url */
