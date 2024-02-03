@@ -24,7 +24,7 @@
                     </el-table-column>
                     <el-table-column prop="remark" :label="$t('升级条件')" show-overflow-tooltip>
                         <template #default="scope">
-                           {{ keepTextStyle(scope.row.remark)}}
+                           <span v-html="keepTextStyle(scope.row.remark)"></span>
                         </template>
                     </el-table-column>
                     <el-table-column fixed="right" :label="$t('操作')" width="120">
@@ -102,7 +102,7 @@ export default {
 
         /*换行*/
         keepTextStyle(val) {
-            let str = val.replace(/(\\r\\n)/g, '，');
+            let str = val.replace(/(\\r\\n)/g, '</br>');
             return str;
         },
 
