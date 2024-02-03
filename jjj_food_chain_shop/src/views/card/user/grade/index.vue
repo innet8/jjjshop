@@ -15,16 +15,16 @@
         <div class="product-content">
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-                    <el-table-column prop="name" :label="$t('等级名称')"></el-table-column>
-                    <el-table-column prop="weight" :label="$t('等级权重')"></el-table-column>
-                    <el-table-column prop="equity" :label="$t('折扣')" >
+                    <el-table-column prop="name" :label="$t('等级名称')" width="200"></el-table-column>
+                    <el-table-column prop="weight" :label="$t('等级权重')" width="200"></el-table-column>
+                    <el-table-column prop="equity" :label="$t('折扣')" width="200">
                         <template #default="scope">
                             <span class="red fb">{{ scope.row.equity }}%</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="remark" :label="$t('升级条件')">
+                    <el-table-column prop="remark" :label="$t('升级条件')" show-overflow-tooltip>
                         <template #default="scope">
-                            <div v-html="keepTextStyle(scope.row.remark)"></div>
+                           {{ keepTextStyle(scope.row.remark)}}
                         </template>
                     </el-table-column>
                     <el-table-column fixed="right" :label="$t('操作')" width="120">
@@ -102,7 +102,7 @@ export default {
 
         /*换行*/
         keepTextStyle(val) {
-            let str = val.replace(/(\\r\\n)/g, '<br/>');
+            let str = val.replace(/(\\r\\n)/g, '');
             return str;
         },
 
