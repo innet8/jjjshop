@@ -35,6 +35,7 @@ class AuthService
         '/user/user/detail',
         '/user/user/OrderUseCard',
 
+        '/order/cart/add',
         '/order/cart/list',
         '/order/order/useMember',
 
