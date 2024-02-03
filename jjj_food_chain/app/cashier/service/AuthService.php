@@ -53,6 +53,7 @@ class AuthService
 
         '/store/table/table',
         '/store/table/tableType',
+        '/store/paytype/index'
     ];
 
     /** @var array $accessUrls 商家用户权限url */
