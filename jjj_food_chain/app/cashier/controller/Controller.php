@@ -74,11 +74,11 @@ class Controller extends JjjController
 
         $appid = Request()->header('appid');
         if (!$appid) {
-            throw new BaseException(['msg' => '登录失效', 'code' => -1]);
+            throw new BaseException(['msg' => '登录失效', 'code' => -2]);
         }
         $sid = Request()->header('sid');
         if (!$sid) {
-            throw new BaseException(['msg' => '登录失效', 'code' => -1]);
+            throw new BaseException(['msg' => '登录失效', 'code' => -2]);
         }
 
         // 验证当前请求是否在白名单
