@@ -32,7 +32,7 @@
                                 message: $t('请输入加料名称')
                             }]">
                             <template #label>
-                                {{ $t('加料名称：') }}<span class="product-tips">({{ items.label }})</span>
+                                <span style="color: var(--el-color-danger);margin: 0  4px 0 0 !important;">*</span>{{ $t('加料名称：') }}<span class="product-tips">({{ items.label }})</span>
                             </template>
                             <el-autocomplete :fetch-suggestions="(e, h) => querySearch(e, h, items.key)"
                                 @select="(e) => selectChange(e, index)" class="inline-input"
@@ -45,6 +45,9 @@
                                 },
                                 message: $t('请输入价格')
                             }]">
+                                 <template #label>
+                                <span style="color: var(--el-color-danger);margin: 0  4px 0 0 !important;">*</span>{{ $t('价格：') }}
+                            </template>
                             <el-input class="inline-input" :placeholder="$t('价格')" type="number" size="small"
                                 v-model="item.price" placeholder="">
                             </el-input>

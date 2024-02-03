@@ -30,7 +30,7 @@
                             message: $t('请输入属性名称')
                         }]">
                             <template #label>
-                                {{ $t('属性名称：') }}<span class="product-tips">（{{ items.label }}）</span>
+                                <span style="color: var(--el-color-danger);margin: 0  4px 0 0 !important;">*</span>{{ $t('属性名称：') }}<span class="product-tips">（{{ items.label }}）</span>
                             </template>
                             <el-autocomplete :fetch-suggestions="(e, h) => querySearch(e, h, items.key)"
                                 @select="(e) => selectChange(e, index)" class="inline-input"
@@ -39,7 +39,7 @@
                         </el-form-item>
                         <el-form-item class="product-attr-item">
                             <template #label>
-                                {{ $t('属性：') }}<span class="product-tips">({{ items.label }})</span>
+                                <span style="color: var(--el-color-danger);margin: 0  4px 0 0 !important;">*</span>{{ $t('属性：') }}<span class="product-tips">({{ items.label }})</span>
                             </template>
                             <el-form-item v-for="(aitem, aindex) in item.attribute_value" :key="aindex"
                                 :prop="`item.attribute_value[aindex][items.key]`" :rules="[{

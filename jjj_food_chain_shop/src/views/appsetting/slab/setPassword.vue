@@ -1,6 +1,6 @@
 <template>
     <el-dialog class="" @close="handleClose" v-model="dialogVisible" :close-on-click-modal="false"
-        :close-on-press-escape="false" :title="$t('设置平板密码')">
+        :close-on-press-escape="false" :title="$t('修改高级密码')">
         <el-form size="small" ref="form" :model="form" label-position="top" :rules="rules">
             <!-- <el-form-item v-if="have" :label="$t('原密码')" prop="advanced_password"
                 :rules="[{ required: true, message: $t('请输入原密码') }]">

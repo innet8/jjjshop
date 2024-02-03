@@ -4,15 +4,15 @@
 		<el-form size="small" :model="form" label-position="top" ref="form" :rules="rules">
 			<el-form-item :label="$t('原始密码')" :label-width="formLabelWidth" prop="oldpass"
 				>
-				<el-input type="password" v-model="form.oldpass" autocomplete="off"></el-input>
+				<el-input type="password" v-model="form.oldpass" autocomplete="off" :placeholder="$t('请输入登录密码')"></el-input>
 			</el-form-item>
 			<el-form-item :label="$t('新密码')" :label-width="formLabelWidth" prop="password"
 				>
-				<el-input type="password" v-model="form.password" autocomplete="off"></el-input>
+				<el-input type="password" v-model="form.password" autocomplete="off" :placeholder="$t('请输入确认新密码')"></el-input>
 			</el-form-item>
 			<el-form-item :label="$t('确认新密码')" :label-width="formLabelWidth" prop="confirmPass"
 				>
-				<el-input type="password" v-model="form.confirmPass" autocomplete="off"></el-input>
+				<el-input type="password" v-model="form.confirmPass" autocomplete="off" :placeholder="$t('请输入确认新密码')"></el-input>
 			</el-form-item>
 		</el-form>
 		<template #footer>

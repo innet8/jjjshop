@@ -219,6 +219,16 @@
 .el-input-number--small{
     width: 100% !important;
 }
+.el-button--primary.is-link{
+    border: none;
+}
+.el-button--primary.is-link:hover{
+    color: var(--el-color-black);
+}
+.el-button--danger.is-link{
+    border: none;
+    color:var(--el-color-danger);
+}
 .el-button--primary.is-link.is-disabled{
     color: var(--el-color-tips);
 }
