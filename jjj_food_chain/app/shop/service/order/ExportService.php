@@ -242,7 +242,7 @@ class ExportService
             $content .= ($key + 1) . ".".__("商品名称")."：{$product['product_name_text']}\n";
             !empty($product['product_attr']) && $content .= "　".__("商品规格")."：{$product['product_attr']}\n";
             $content .= "　".__("购买数量")."：{$product['total_num']}\n";
-            $content .= "　".__("商品总价")."：{$product['total_price']}元\n\n";
+            $content .= "　".__("商品总价")."：{$product['total_price']}\n\n";
         }
         return $content;
     }
@@ -366,7 +366,7 @@ class ExportService
         $sheet->setCellValue('B1', __('商品名称'));
         $sheet->setCellValue('C1', __('商品价格'));
         $sheet->setCellValue('D1', __('销量'));
-        $sheet->setCellValue('E1', __('销售额(元)'));
+        $sheet->setCellValue('E1', __('销售额'));
 
         //填充数据
         $index = 0;

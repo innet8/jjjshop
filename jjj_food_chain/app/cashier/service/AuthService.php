@@ -33,12 +33,24 @@ class AuthService
         // 首页
         '/index/index',
         '/user/user/detail',
+        '/user/user/OrderUseCard',
+
+        '/order/cart/add',
+        '/order/cart/sub',
         '/order/cart/list',
+        '/order/cart/pick',
+        '/order/cart/stayList',
+        '/order/order/useMember',
+
+        '/order/hallcart/add',
+        '/order/hallcart/tableProductList',
+
         '/product/product/index',
         '/product/product/detail',
         '/product/category/index',
-        '/order/hallcart/add/',
-        '/order/hallcart/tableProductList',
+
+        '/store/table/table',
+        '/store/table/tableType',
     ];
 
     /** @var array $accessUrls 商家用户权限url */
@@ -117,8 +129,6 @@ class AuthService
         }
 
         // 获取当前用户的权限url列表
-    trace("checkAccess");
-    trace($url);
         if (!in_array($url, $this->getAccessUrls())) {
             return false;
         }

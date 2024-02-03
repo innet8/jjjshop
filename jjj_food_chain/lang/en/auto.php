@@ -926,6 +926,7 @@ return [
     "请输入本班取出現金正确金额" => "Please enter the correct amount of withdraw cash on duty",
     "桌台已关闭，请重新开台：Tid" => "The table has been closed, please reopen it: Tid",
     "请输入本班取出现金正确金额" => "Please enter the correct amount of cash withdrawn by this class",
+    "退款金额不能大于可退款金额" => "The refund amount cannot be greater than the refundable amount",
     "该会员已存在会员卡，请勿延期" => "This member already has a membership card, please do not extend it",
     "您还不是分销商，请先提交申请" => "You are not a distributor yet, please submit an application first",
     "退菜数量不能大于当前商品数量" => "The quantity to be returned cannot be greater than the current quantity of commodity",

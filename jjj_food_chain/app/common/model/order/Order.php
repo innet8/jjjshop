@@ -633,9 +633,9 @@ class Order extends BaseModel
             case 'order_refund_total': // 退款订单数
                 return $model->where('refund_money', '>', 0)->count();
             case 'order_discount_money': // 折扣总金额
-                return $model->sum('discount_money') + $model->sum('user_discount_money');;
+                return Helper::bcadd($model->sum('discount_money'), $model->sum('user_discount_money'));
             case 'income_price': // 预计收入
-                return $model->sum('pay_price') - $model->sum('refund_money');
+                return Helper::bcsub($model->sum('pay_price'), $model->sum('refund_money'));
             default:
                 return 0;
         }
@@ -740,18 +740,18 @@ class Order extends BaseModel
             ->where('order_status', '<>', 20)
             ->where('order_type', '=', $order_type)
             ->where('is_delete', '=', 0);
-        $detail['express_price'] = helper::number2($model->sum('express_price') ? $model->sum('express_price') : 0); //配送费
-        $detail['bag_price'] = helper::number2($model->sum('bag_price') ? $model->sum('bag_price') : 0); //包装费
-        $detail['product_price'] = helper::number2($model->sum('total_price') ? $model->sum('total_price') : 0); //商品总金额
-        $detail['refund_money'] = helper::number2($model->sum('refund_money') ? $model->sum('refund_money') : 0); //退款金额
-        $detail['total_price'] = helper::number2($model->sum('pay_price') ? $model->sum('pay_price') : 0); //订单总金额（营业总额）
+        $detail['express_price'] = helper::number2($model->sum('express_price') ?: 0); //配送费
+        $detail['bag_price'] = helper::number2($model->sum('bag_price') ?: 0); //包装费
+        $detail['product_price'] = helper::number2($model->sum('total_price') ?: 0); //商品总金额
+        $detail['refund_money'] = helper::number2($model->sum('refund_money') ?: 0); //退款金额
+        $detail['total_price'] = helper::number2($model->sum('pay_price') ?: 0); //订单总金额（营业总额）
         $detail['income_money'] = helper::number2(round($detail['total_price'] - $detail['refund_money'], 2)); //预计收入
         $detail['order_count'] = $model->count(); //有效订单数量
         // 有效用户数量
         $detail['user_count'] = $userModel->count();
         // 折扣总额(优惠折扣 + 会员折扣)
-        $discount_money = $model->sum('discount_money') ? $model->sum('discount_money') : 0;
-        $user_discount_money = $model->sum('user_discount_money') ? $model->sum('user_discount_money') : 0;
+        $discount_money = $model->sum('discount_money') ?: 0;
+        $user_discount_money = $model->sum('user_discount_money') ?: 0;
         $detail['total_discount_money'] = helper::bcadd($discount_money, $user_discount_money, 2);
         return $detail;
     }
