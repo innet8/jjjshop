@@ -43,6 +43,8 @@ class AuthService
         '/order/order/useMember',
 
         '/order/hallcart/add',
+        '/order/hallcart/delProduct',
+        '/order/hallcart/getSendKitchen',
         '/order/hallcart/tableProductList',
 
         '/product/product/index',
