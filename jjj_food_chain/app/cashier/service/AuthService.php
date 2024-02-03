@@ -36,6 +36,7 @@ class AuthService
         '/user/user/OrderUseCard',
 
         '/order/cart/add',
+        '/order/cart/sub',
         '/order/cart/list',
         '/order/order/useMember',
 
@@ -126,8 +127,6 @@ class AuthService
         }
 
         // 获取当前用户的权限url列表
-    trace("checkAccess");
-    trace($url);
         if (!in_array($url, $this->getAccessUrls())) {
             return false;
         }
