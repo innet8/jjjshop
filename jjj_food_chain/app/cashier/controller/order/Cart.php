@@ -57,24 +57,6 @@ class Cart extends Controller
      */
     public function list($delivery = 40, $order_id = 0)
     {
-//        $model = new CartModel();
-//        // 挂单数量
-//        $stayNum = $model->stayNum($this->cashier['user']);
-//        // 购物车商品列表
-//        $productList = $model->getList($this->cashier['user']);
-//        if (!empty($productList) && isset($productList[0])) {
-//            $order_id = $order_id ? $order_id : $productList[0]['order_id'];
-//        }
-//        // 送厨商品列表
-//        $orderProductList = [];
-//        if ($order_id) {
-//            $orderProductList = OrderModel::detail($order_id)['product'];
-//        }
-//        // 购物车金额
-//        $cartInfo = $model->getCartPrice($this->cashier['user'], $delivery);
-//
-//        return $this->renderSuccess('', compact('orderProductList','productList', 'cartInfo', 'delivery', 'stayNum', 'order_id'));
-
         $model = new CartModel();
         // 挂单数量
         $stayNum = (new OrderModel)->stayOrderNum();
@@ -105,7 +87,7 @@ class Cart extends Controller
      * @Apidoc\Title("删除商品")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.cart/delProduct")
-     * @Apidoc\Param("order_product_id", type="int", require=true, desc="订单商品ID")
+     * @Apidoc\Param("order_product_id", type="int|array", require=true, desc="订单商品ID, 多个传数组: [1,2]")
      * @Apidoc\Returned()
      */
     public function delProduct($order_product_id)
@@ -180,22 +162,6 @@ class Cart extends Controller
         return $this->renderError($model->getError() ?: '取单失败');
     }
 
-//    /**
-//     * @Apidoc\Title("删掉挂单（购物车）")
-//     * @Apidoc\Method("POST")
-//     * @Apidoc\Url ("/index.php/cashier/order.cart/delCart")
-//     * @Apidoc\Param("cart_no", type="string", require=true, desc="挂起单号")
-//     * @Apidoc\Returned()
-//     */
-//    public function delCart($cart_no)
-//    {
-//        $model = new CartModel();
-//        if ($model->delCart($cart_no)) {
-//            return $this->renderSuccess('删除成功');
-//        };
-//        return $this->renderError($model->getError() ?: '删除失败');
-//    }
-
     /**
      * @Apidoc\Title("折扣抹零")
      * @Apidoc\Method("POST")
@@ -257,12 +223,6 @@ class Cart extends Controller
      */
     public function remark($order_product_id, $remark)
     {
-//        $model = new CartModel();
-//        if ($model->updateRemark($cart_id, $remark)) {
-//            return $this->renderSuccess('备注成功');
-//        }
-//        return $this->renderError($model->getError() ?: '备注失败');
-
         $model = new OrderProduct();
         if ($model->updateKitchenRemark($order_product_id, $remark)) {
             return $this->renderSuccess('备注成功');
