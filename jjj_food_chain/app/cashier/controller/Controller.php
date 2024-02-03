@@ -2,11 +2,15 @@
 
 namespace app\cashier\controller;
 
+use think\facade\Env;
 use app\JjjController;
+use app\cashier\service\AuthService;
 use app\common\exception\BaseException;
 use app\common\enum\settings\SettingEnum;
+use app\common\model\settings\Setting;
 use app\cashier\model\cashier\User as UserModel;
 use app\common\model\shop\Access as AccessModel;
+use app\common\model\shop\OptLog as OptLogModel;
 use app\common\model\settings\Setting as SettingModel;
 
 /**
@@ -46,6 +50,10 @@ class Controller extends JjjController
         $this->getRouteInfo();
         // 验证状态
         $this->checkAuth();
+        // 写入操作日志
+        $this->saveOptLog();
+        // 验证当前页面权限
+        $this->checkPrivilege();
     }
 
     /**
@@ -111,6 +119,7 @@ class Controller extends JjjController
         $permission = (new AccessModel)->getPermission(AccessModel::CASHIER_ROUTE_NAME, $user, $supplier);
         $this->cashier = [
             'user' => [
+                'shop_user_id' => $user['shop_user_id'],
                 'cashier_id' => $user['shop_user_id'],
                 'user_name' => $user['user_name'],
                 'account' => $user['user_name'],
@@ -131,5 +140,65 @@ class Controller extends JjjController
     protected function getCashierId()
     {
         return $this->cashier['user']['cashier_id'];
+    }
+
+    /**
+     * 验证当前页面权限
+     */
+    private function checkPrivilege()
+    {
+        if ($this->cashier == null) {
+            return false;
+        }
+        $AuthService = new AuthService($this->cashier);
+        if (!$AuthService->checkPrivilege($this->routeUri)) {
+            throw new BaseException(['msg' => '很抱歉，没有访问权限']);
+        }
+        return true;
+    }
+
+    /**
+     * 操作日志
+     */
+    private function saveOptLog()
+    {
+        // 过滤循环请求
+        $allowLoopUrl = [
+            '/call/call/unprocessed',
+            '/store/table/tableType',
+            '/product/product/index',
+            '/product/category/index',
+            '/order/cart/add',
+        ];
+        if (in_array($this->routeUri, $allowLoopUrl)) {
+            return;
+        }
+        if (Env::get('env') == 'uat'){
+            return;
+        }
+        if ($this->cashier == null) {
+            return;
+        }
+        $shop_user_id = $this->cashier['user']['shop_user_id'];
+        if (!$shop_user_id) {
+            return;
+        }
+        // 如果不记录查询日志
+        $config = Setting::getItem('store');
+        if (!$config || !$config['is_get_log']) {
+            return;
+        }
+        $model = new OptLogModel();
+        $model->save([
+            'shop_user_id' => $shop_user_id,
+            'ip' => \request()->ip(),
+            'request_type' => $this->request->isGet() ? 'Get' : 'Post',
+            'url' => $this->routeUri,
+            'content' => json_encode($this->request->param(), JSON_UNESCAPED_UNICODE),
+            'browser' => get_client_browser(),
+            'agent' => $_SERVER['HTTP_USER_AGENT'],
+            'title' => (new AuthService($this->cashier))::getAccessNameByApiPath($this->routeUri, $this->cashier['app']['app_id']),
+            'app_id' => $this->cashier['app']['app_id']
+        ]);
     }
 }
