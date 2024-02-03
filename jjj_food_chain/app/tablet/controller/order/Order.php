@@ -189,7 +189,7 @@ class Order extends Controller
     /**
      * @Apidoc\Title("删除商品")
      * @Apidoc\Method("POST")
-     * @Apidoc\Url ("/index.php/tablet/order.cart/delProduct")
+     * @Apidoc\Url ("/index.php/tablet/order.Order/delProduct")
      * @Apidoc\Param("order_product_id", type="int|array", require=true, desc="订单商品ID, 多个传数组: [1,2]")
      * @Apidoc\Returned()
      */
