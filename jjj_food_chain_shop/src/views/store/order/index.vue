@@ -10,8 +10,8 @@
             <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
                 <el-form-item label="">
                     <el-radio-group v-model="searchForm.time_type" class="radio-search">
-                        <el-radio-button label="2">{{ $t('昨天') }}</el-radio-button>
                         <el-radio-button label="1">{{ $t('今天') }}</el-radio-button>
+                        <el-radio-button label="2">{{ $t('昨天') }}</el-radio-button>
                         <el-radio-button label="3">{{ $t('一周') }}</el-radio-button>
                         <el-radio-button label="0">{{ $t('全部') }}</el-radio-button>
                     </el-radio-group>

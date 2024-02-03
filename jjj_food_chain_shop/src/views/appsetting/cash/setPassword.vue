@@ -44,7 +44,7 @@ export default {
         let validatePass2 = (rule, value, callback) => {
             if (!value) {
                 callback(new Error($t('请输入确认密码')))
-            } else if (value !== this.form.new_advanced_password) {
+            } else if (value !== this.form.new_cashier_password) {
                 callback(new Error($t('两次密码不一致！')))
             } else {
                 callback()
