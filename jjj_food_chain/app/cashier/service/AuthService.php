@@ -33,12 +33,17 @@ class AuthService
         // 首页
         '/index/index',
         '/user/user/detail',
+        '/user/user/OrderUseCard',
+
         '/order/cart/list',
+        '/order/order/useMember',
+
+        '/order/hallcart/add',
+        '/order/hallcart/tableProductList',
+
         '/product/product/index',
         '/product/product/detail',
         '/product/category/index',
-        '/order/hallcart/add/',
-        '/order/hallcart/tableProductList',
     ];
 
     /** @var array $accessUrls 商家用户权限url */
