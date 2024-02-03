@@ -9,6 +9,7 @@
     --el-color-primary-light-5: #FFBE00;
     --el-color-primary-light-8: #FFBE00;
     --el-color-primary-light-9: #FFFAEB;
+    
 }
 /* 搜索表单 */
 .common-seach-wrap{
@@ -36,9 +37,7 @@
     }
 }
 
-.el-button--primary{
-    --el-button-text-color:var(--el-color-black);
-}
+
 /* 普通表单 */
 .el-form-item__content{
     width: 100%;
@@ -102,6 +101,8 @@
 /* 按钮 */
 .el-button{
     text-transform: capitalize;
+    color: var(--el-color-black);
+    border-color: var(--el-color-border);
 }
 .el-button:focus{
     outline: none;
@@ -118,6 +119,15 @@
 	.el-button--small{
 		padding: 5px 22px !important;
 	}
+}
+
+.el-button--primary{
+    --el-button-text-color:var(--el-color-black);
+    border-color: var(--el-color-primary);
+}
+.el-button--primary:hover{
+    color: white;
+    border-color: var(--el-color-black);
 }
 /* 弹框 */
 .el-dialog__body{
@@ -150,7 +160,7 @@
 }
 .el-table{
     --el-table-border-color: #EEEEEE !important;
-    --el-table-header-bg-color:#EAEDF4 !important;
+    --el-table-header-bg-color:#F7F9FB !important;
     --el-table-header-text-color:#101010 !important;
     width: 100% !important;
     .el-table__cell{

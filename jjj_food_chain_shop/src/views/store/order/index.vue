@@ -45,7 +45,7 @@
                     <el-button class="search-button" size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-button v-auth="'/store/operate/export'" size="small" type="success" @click="onExport">{{ $t('导出')
+                    <el-button v-auth="'/store/operate/export'" size="small" type="primary" @click="onExport">{{ $t('导出')
                     }}</el-button>
                 </el-form-item>
             </el-form>

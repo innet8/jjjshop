@@ -172,7 +172,7 @@
       </div>
     </div>
     <div class="common-button-wrapper">
-      <el-button size="small" type="info" @click="cancelFunc">返回上一页</el-button>
+      <el-button size="small"  @click="cancelFunc">返回上一页</el-button>
     </div>
   </div>
 </template>

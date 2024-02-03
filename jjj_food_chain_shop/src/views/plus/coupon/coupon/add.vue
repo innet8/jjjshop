@@ -80,7 +80,7 @@
 
 			<!--提交-->
 			<div class="common-button-wrapper">
-				<el-button type="info" size="small" @click="cancelFunc" :loading="loading">取消</el-button>
+				<el-button  size="small" @click="cancelFunc" :loading="loading">取消</el-button>
 				<el-button type="primary" size="small" @click="onSubmit" :loading="loading">提交</el-button>
 			</div>
 		</el-form>

@@ -124,6 +124,6 @@ export default {
 .right-box-t>div.active {
     color: var(--el-color-black);
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 600;
 }
 </style>

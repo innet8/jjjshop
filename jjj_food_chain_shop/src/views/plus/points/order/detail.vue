@@ -307,7 +307,7 @@
 
     </div>
     <div class="common-button-wrapper">
-      <el-button size="small" type="info" @click="cancelFunc">返回上一页</el-button>
+      <el-button size="small"  @click="cancelFunc">返回上一页</el-button>
       <!--确认发货-->
       <template
         v-if="detail.pay_status.value == 20 && detail.delivery_type.value == 10 && [20, 21].indexOf(detail.order_status.value) === -1">

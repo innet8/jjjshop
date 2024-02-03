@@ -33,7 +33,7 @@
         </el-form>
         <template #footer>
             <div class="dialog-footer">
-                <el-button size="small" type="info" @click="dialogFormVisible">{{ $t('取消') }}</el-button>
+                <el-button size="small"  @click="dialogFormVisible">{{ $t('取消') }}</el-button>
                 <el-button size="small" type="primary" @click="onSubmit" :loading="loading">{{ $t('确定') }}</el-button>
             </div>
         </template>

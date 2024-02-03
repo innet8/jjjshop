@@ -331,7 +331,7 @@
       </div>
     </div>
     <div class="common-button-wrapper">
-      <el-button size="small" type="info" @click="cancelFunc">返回上一页</el-button>
+      <el-button size="small"  @click="cancelFunc">返回上一页</el-button>
       <!--确认送达-->
       <template v-if="deliver.status == 10">
         <el-button size="small" type="primary" @click="onSubmit">确认送达

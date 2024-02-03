@@ -87,7 +87,7 @@
             </el-form-item>
         </el-form>
         <div class="common-button-wrapper">
-            <el-button size="small" type="info" @click="getData">{{ $t('重置') }}</el-button>
+            <el-button size="small"  @click="getData">{{ $t('重置') }}</el-button>
             <el-button size="small" type="primary" @click="onSubmit" :loading="loading">{{ $t('保存') }}</el-button>
         </div>
 

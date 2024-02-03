@@ -28,7 +28,7 @@
           <el-button class="search-button" size="small" type="primary" icon="Search" @click="onSubmit">查询</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button size="small" type="success" @click="onExport">导出</el-button>
+          <el-button size="small" type="primary" @click="onExport">导出</el-button>
         </el-form-item>
       </el-form>
     </div>

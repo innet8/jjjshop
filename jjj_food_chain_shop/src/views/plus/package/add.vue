@@ -72,7 +72,7 @@
       </el-form>
       <!--提交-->
       <div class="common-button-wrapper">
-        <el-button type="info" @click="gotoBack">返回</el-button>
+        <el-button  @click="gotoBack">返回</el-button>
         <el-button type="primary" @click="onSubmit" :loading="loading">提交</el-button>
       </div>
     </div>

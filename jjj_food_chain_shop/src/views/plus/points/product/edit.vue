@@ -17,7 +17,7 @@
       <Buyset></Buyset>
       <!--提交-->
       <div class="common-button-wrapper">
-        <el-button size="small" type="info" @click="cancelFunc">取消</el-button>
+        <el-button size="small"  @click="cancelFunc">取消</el-button>
         <el-button size="small" type="primary" @click="onSubmit" :loading="loading">修改</el-button>
       </div>
     </el-form>

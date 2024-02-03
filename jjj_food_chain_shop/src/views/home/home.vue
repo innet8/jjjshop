@@ -287,7 +287,7 @@ export default {
 .operation-title {
     color: var(--el-color-black);
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 600;
     text-transform: capitalize;
 }
 

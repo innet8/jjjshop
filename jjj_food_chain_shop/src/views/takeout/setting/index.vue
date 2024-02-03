@@ -7,7 +7,7 @@
         </el-form>
         <!--提交-->
         <!-- <div class="common-button-wrapper">
-            <el-button  @click="" type="info" :loading="loading">{{ $t('重置') }}</el-button>
+            <el-button  @click=""  :loading="loading">{{ $t('重置') }}</el-button>
             <el-button type="primary" @click="onSubmit" :loading="loading">{{ $t('保存') }}</el-button>
         </div> -->
 

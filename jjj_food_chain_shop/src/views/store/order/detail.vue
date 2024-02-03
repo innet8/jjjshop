@@ -315,7 +315,7 @@
             </div>
         </div>
         <div class="common-button-wrapper">
-            <el-button size="small" type="info" @click="cancelFunc">{{ $t('返回') }}</el-button>
+            <el-button size="small"  @click="cancelFunc">{{ $t('返回') }}</el-button>
             <el-button v-if="detail.order_status.value == 30" @click="refundClick(detail)" type="danger" size="small"
                 v-auth="'/store/operate/refund'">{{ $t('退款')
                 }}</el-button>

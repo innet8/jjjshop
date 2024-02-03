@@ -38,7 +38,7 @@
       <el-form-item label="排序"><el-input type="number" v-model="form.article_sort" placeholder="请输入数字" class="max-w460"></el-input></el-form-item>
       <!--提交-->
       <div class="common-button-wrapper">
-        <el-button size="small" type="info" @click="cancelFunc">取消</el-button>
+        <el-button size="small"  @click="cancelFunc">取消</el-button>
         <el-button size="small" type="primary" @click="onSubmit" :loading="loading">提交</el-button>
       </div>
     </el-form>

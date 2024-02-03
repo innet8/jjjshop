@@ -8,7 +8,7 @@
         </el-form-item>
         <el-form-item>
           <el-button class="search-button" type="primary" @click="onSubmit">查询</el-button>
-          <el-button type="info" icon="Back" @click="gotoBack">返回</el-button>
+          <el-button  icon="Back" @click="gotoBack">返回</el-button>
         </el-form-item>
       </el-form>
     </div>
