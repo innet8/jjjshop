@@ -32,12 +32,13 @@ class AuthService
         '/call/call/unprocessed',
         // 首页
         '/index/index',
+        '/user/user/detail',
         '/order/cart/list',
         '/product/product/index',
         '/product/product/detail',
         '/product/category/index',
-        '/order/HallCart/add/',
-        '/order/HallCart/tableProductList',
+        '/order/hallcart/add/',
+        '/order/hallcart/tableProductList',
     ];
 
     /** @var array $accessUrls 商家用户权限url */
