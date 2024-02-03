@@ -140,9 +140,9 @@ class CardRecord extends BaseModel
         return $model->where('is_delete', '=', 0)
             ->where('pay_status', '=', 20)
             ->where('user_id', '=', $user_id)
-            ->where(function ($query) {
-                $query->where('expire_time', '=', 0)->whereOr('expire_time', '>', time());
-            })
+            // ->where(function ($query) {
+            //     $query->where('expire_time', '=', 0)->whereOr('expire_time', '>', time());
+            // })
             ->findOrEmpty();
     }
 

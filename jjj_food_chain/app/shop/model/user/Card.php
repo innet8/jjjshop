@@ -147,8 +147,7 @@ class Card extends CardModel
         {
             return true;
         }
-
-        return (new PointsLogModel)->where('user_id', $user_id)->where('card_id', $card_id)->where('scene', PointsLogSceneEnum::CONSUME)->findOrEmpty()->isEmpty();
+        return !(new PointsLogModel)->where('user_id', $user_id)->where('card_id', $card_id)->where('scene', PointsLogSceneEnum::CONSUME)->findOrEmpty()->isEmpty();
     }
 
 
@@ -165,7 +164,7 @@ class Card extends CardModel
             $this->error = "记录不存在";
             return false;
         }
-        if ($this->checkUserConsumeRecord($detail['user_id'])) {
+        if ($this->checkUserConsumeRecord($detail['user_id'], $detail['card_id'])) {
             $this->error = "会员卡已使用，无法撤销";
             return false;
         }
