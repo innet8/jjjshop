@@ -41,7 +41,7 @@ class OrderHandoverPrinterService
         }
         // 商米一体机打印
         if (($printerConfig['cashier_printer_id'] ?? '0') == '0') {
-            $content = $this->getPrintContent(PrinterTypeEnum::SUNMI_LAN,$data);
+            $content = $this->getPrintContent(PrinterTypeEnum::SUNMI_LAN, $data);
             Cache::set("printer_data_cache", array_unique(array_merge(Cache::get("printer_data_cache",[]),[$content])), 60 * 60 * 24);
             return true;
         } else {
@@ -74,7 +74,10 @@ class OrderHandoverPrinterService
         $cashLeft = number_format($data['cash_left'] ?? 0, 2, '.', '');
         $user = User::where('shop_user_id',$data['shift_user_id'])->find();
         $isThai =  preg_match('/[\p{Thai}]/u', __("金额"));
-
+        // 
+        $currency = SettingModel::getSupplierItem(SettingEnum::STORE, $data['shop_supplier_id'], $data['app_id']);
+        $shopName = $currency['name'] ?? $user['supplier']['name'];
+        // 
         $categorys = (new UserShiftLog)->getSalesInfo($data['shift_user_id'], $data['shop_supplier_id'], $startTime, $endTime);
 
         /* *
@@ -86,7 +89,7 @@ class OrderHandoverPrinterService
             $printer = new SunmiCloudPrinter(567);
             $printer->lineFeed();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
-            $printer->appendText("***{$user['supplier']['name']}***\n");
+            $printer->appendText("***{$shopName}***\n");
             $printer->lineFeed();
             $printer->setPrintModes(true, true, false);
             $printer->setLineSpacing(50);
@@ -176,7 +179,7 @@ class OrderHandoverPrinterService
             $leftWidth = 32;
             $printer = new SunmiCloudPrinter(567);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
-            $printer->appendText("***{$user['supplier']['name']}***\n");
+            $printer->appendText("***{$shopName}***\n");
             $printer->lineFeed();
             $printer->setLineSpacing(80);
             $printer->setPrintModes(true, true, false);
@@ -255,7 +258,7 @@ class OrderHandoverPrinterService
         */
         $width = 32;
         $leftWidth = 16;
-        $content = "<C>***{$user['supplier']['name']}***</C><BR>";
+        $content = "<C>***{$shopName}***</C><BR>";
         $content .= "<CB>" . __('交班单') . "</CB><BR>";
         $content .= printText(__('交班编号'), ' ', $data['shift_no'], $width) . "<BR>";
         $content .= printText(__('交班人'), ' ', $user->real_name, $width) . "<BR>";

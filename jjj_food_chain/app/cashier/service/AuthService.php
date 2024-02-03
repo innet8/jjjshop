@@ -43,6 +43,8 @@ class AuthService
         '/order/order/useMember',
 
         '/order/hallcart/add',
+        '/order/hallcart/delProduct',
+        '/order/hallcart/getSendKitchen',
         '/order/hallcart/tableProductList',
 
         '/product/product/index',
@@ -51,6 +53,7 @@ class AuthService
 
         '/store/table/table',
         '/store/table/tableType',
+        '/store/paytype/index'
     ];
 
     /** @var array $accessUrls 商家用户权限url */

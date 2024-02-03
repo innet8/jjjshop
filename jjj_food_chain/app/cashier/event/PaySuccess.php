@@ -29,9 +29,7 @@ class PaySuccess
     {
         $printerConfig = SettingModel::getSupplierItem('printer', $this->order['shop_supplier_id'], $this->order['app_id']);
         request()->language = $printerConfig['default_language'] ?? '';
-        $order = Order::find($this->order->id);
-        $order['product'] = $this->order['product'];
-        $order['pay_time'] = $this->order['pay_time'];
+        $order = Order::detail($this->order->order_id);
         // 小票打印
         (new OrderPrinterService)->printTicket($order);
         // 菜品打印

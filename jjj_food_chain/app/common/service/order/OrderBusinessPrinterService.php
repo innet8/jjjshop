@@ -33,6 +33,7 @@ class OrderBusinessPrinterService
         if ($currency['unit'] ?? '') {
             $this->currencyUnit = $currency['unit'];
         }
+        // 
         // 商米一体机打印
         $res = true;
         if (($printerConfig['cashier_printer_id'] ?? '0') == '0') {
@@ -62,6 +63,10 @@ class OrderBusinessPrinterService
     {
         $startTime = date('Y-m-d H:i:s', $data['times'][0]);
         $endTime = $data['times'][1] ? date('Y-m-d H:i:s', $data['times'][1]) : date('Y-m-d H:i:s');
+   
+        // 
+        $currency = SettingModel::getSupplierItem(SettingEnum::STORE, $data['supplier']['shop_supplier_id'], $data['supplier']['app_id']);
+        $shopName = $currency['name'] ?? $data['supplier']['name'];
 
         /* *
         *
@@ -72,7 +77,7 @@ class OrderBusinessPrinterService
             $printer = new SunmiCloudPrinter(567);
             $printer->lineFeed();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
-            $printer->appendText("***{$data['supplier']['name']}***\n");
+            $printer->appendText("***{$shopName}***\n");
             $printer->lineFeed();
             $printer->setLineSpacing(50);
             $printer->setPrintModes(true, true, false);
@@ -145,7 +150,7 @@ class OrderBusinessPrinterService
             $width = 46;
             $printer = new SunmiCloudPrinter(567);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
-            $printer->appendText("***{$data['supplier']['name']}***\n");
+            $printer->appendText("***{$shopName}***\n");
             $printer->lineFeed();
             $printer->setLineSpacing(50);
             $printer->setPrintModes(true, true, false);
@@ -212,7 +217,7 @@ class OrderBusinessPrinterService
         */
         $width = 32;
         $leftWidth = 16;
-        $content = "<C>***{$data['supplier']['name']}***</C><BR>";
+        $content = "<C>***{$shopName}***</C><BR>";
         $content .= "<CB>" . __('营业数据') . "</CB><BR>";
         $content .= __('时间') . "：{$startTime}" . __('至') . "{$endTime}<BR><BR>";
         $content .= printText(__('分类'), __('数量'),  __('金额'), $width, $leftWidth);
