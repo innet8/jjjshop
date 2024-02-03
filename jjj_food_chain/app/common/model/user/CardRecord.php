@@ -135,7 +135,7 @@ class CardRecord extends BaseModel
     {
         $model = new static;
         if ($order_id) {
-            $model = $model->where('order_id', '<>', $order_id);
+            $model = $model->where('order_id', '=', $order_id);
         }
         return $model->where('is_delete', '=', 0)
             ->where('pay_status', '=', 20)

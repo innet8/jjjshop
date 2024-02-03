@@ -120,6 +120,7 @@ class GroupSuccessService extends BaseService
                 ->update();
             BalanceLogModel::add(BalanceLogSceneEnum::CONSUME, [
                 'user_id' => $this->user['user_id'],
+                'carp_id' => $this->user['order_id'],
                 'money' => -$this->model['balance'],
                 'app_id' => $this->model['app_id']
             ], ['order_no' => $this->model['order_no']]);

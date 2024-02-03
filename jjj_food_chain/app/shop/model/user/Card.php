@@ -125,6 +125,7 @@ class Card extends CardModel
 
                     BalanceLogModel::add(BalanceLogSceneEnum::ADMIN, [
                         'user_id' => $user['user_id'],
+                        'card_id' => $data['card_id'],
                         'money' => $detail['open_money_num'],
                     ], ['order_no' => '后台发放会员卡赠送']);
                 }
@@ -140,14 +141,14 @@ class Card extends CardModel
     }
 
     // 检测用户是否有余额/积分消费记录
-    public function checkUserConsumeRecord($userId)
+    public function checkUserConsumeRecord($user_id, $card_id = 0)
     {
-        if (!(new BalanceLogModel)->where('user_id', $userId)->where('scene', BalanceLogSceneEnum::CONSUME)->findOrEmpty()->isEmpty())
+        if (!(new BalanceLogModel)->where('user_id', $user_id)->where('card_id', $card_id)->where('scene', BalanceLogSceneEnum::CONSUME)->findOrEmpty()->isEmpty())
         {
             return true;
         }
 
-        return (new PointsLogModel)->where('user_id', $userId)->where('scene', PointsLogSceneEnum::CONSUME)->findOrEmpty()->isEmpty();
+        return (new PointsLogModel)->where('user_id', $user_id)->where('card_id', $card_id)->where('scene', PointsLogSceneEnum::CONSUME)->findOrEmpty()->isEmpty();
     }
 
 
@@ -189,6 +190,7 @@ class Card extends CardModel
 
                 BalanceLogModel::add(BalanceLogSceneEnum::ADMIN, [
                     'user_id' => $user['user_id'],
+                    'card_id' => $detail['card_id'],
                     'money' => -$detail['open_money_num'],
                 ], ['order_no' => '撤销会员卡减少余额']);
             }

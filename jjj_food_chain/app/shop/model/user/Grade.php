@@ -10,6 +10,7 @@ use app\shop\model\user\User as UserModel;
  */
 class Grade extends GradeModel
 {
+
     /**
      * 获取列表记录
      */
@@ -76,19 +77,19 @@ class Grade extends GradeModel
         $remark = '';
         if($data['open_money'] == 1){
             $money = sprintf('%.2f',$data['upgrade_money']);
-            $remark .= "会员消费满{$money}元可升级到此等级";
+            $remark .= __("会员消费满") . "{$money}" . __("元可升级到此等级");
         }
         if($data['open_points'] == 1){
             if(!empty($remark)){
                 $remark .= '\r\n';
             }
-            $remark .= "会员积分满{$data['upgrade_points']}可升级到此等级";
+            $remark .= __("会员积分满") . "{$data['upgrade_points']}" . __("可升级到此等级");
         }
         if($data['open_invite'] == 1){
             if(!empty($remark)){
                 $remark .= '\r\n';
             }
-            $remark .= "会员邀请人数满{$data['upgrade_invite']}可升级到此等级";
+            $remark .= __("会员邀请人数满") . "{$data['upgrade_invite']}" . __("可升级到此等级");
         }
         return $remark;
     }

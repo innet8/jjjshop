@@ -65,6 +65,7 @@ class OrderRefundService
         // 记录余额明细
         BalanceLogModel::add(BalanceLogSceneEnum::REFUND, [
             'user_id' => $user['user_id'],
+            'card_id' =>$user['card_id'],
             'money' => $money,
             'app_id' => $order['app_id'],
         ], ['order_no' => $order['order_no']]);

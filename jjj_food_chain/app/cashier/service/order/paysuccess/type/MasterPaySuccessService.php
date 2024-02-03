@@ -55,7 +55,7 @@ class MasterPaySuccessService extends BaseService
      * 订单支付成功业务处理
      */
     public function paySuccess($payType)
-    {   
+    {
         // 更新付款状态
         $status = $this->updatePayStatus($payType);
         // 订单支付成功行为
@@ -147,6 +147,7 @@ class MasterPaySuccessService extends BaseService
                 ->update();
             BalanceLogModel::add(BalanceLogSceneEnum::CONSUME, [
                 'user_id' => $this->user['user_id'],
+                'card_id' => $this->user['card_id'],
                 'money' => -$this->model['pay_price'],
             ], ['order_no' => $this->model['order_no']]);
         }
