@@ -167,9 +167,8 @@ class Controller extends JjjController
             'content' => json_encode($this->request->param(), JSON_UNESCAPED_UNICODE),
             'browser' => get_client_browser(),
             'agent' => $_SERVER['HTTP_USER_AGENT'],
-            'title' => (new AuthService($this->store))::getAccessNameByPath($this->routeUri, $this->store['app']['app_id']),
+            'title' => (new AuthService($this->store))::getAccessNameByApiPath($this->routeUri, $this->store['app']['app_id']),
             'app_id' => $this->store['app']['app_id']
         ]);
     }
-
 }

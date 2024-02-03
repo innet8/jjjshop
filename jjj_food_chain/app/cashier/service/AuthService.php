@@ -1,13 +1,12 @@
 <?php
 
-namespace app\shop\service;
+namespace app\cashier\service;
 
-use app\common\model\shop\Access;
 use think\facade\Cache;
-use think\facade\Session;
-use app\shop\model\auth\User;
-use app\shop\model\auth\UserRole;
-use app\shop\model\auth\RoleAccess;
+use app\common\model\shop\Access;
+use app\common\model\shop\User;
+use app\common\model\shop\UserRole;
+use app\common\model\shop\RoleAccess;
 
 /**
  * 商家后台权限业务
@@ -18,7 +17,7 @@ class AuthService
     static public $instance;
 
     // 商家登录信息
-    private $store;
+    private $cashier;
 
     // 商家用户信息
     private $user;
@@ -27,31 +26,15 @@ class AuthService
     protected $allowAllAction = [
         // 用户登录
         '/passport/login',
-        // 退出登录
         '/passport/logout',
+        // 通知
+        '/call/call/index',
+        '/call/call/unprocessed',
         // 首页
         '/index/index',
-        /*登录信息*/
-        '/index/base',
-        // 修改当前用户信息
-        '/passport/editPass',
-        // 图片上传
-        '/file/file/*',
-        '/file/upload/image',
-        // 数据选择
-        '/data/*',
-        // 添加商品规格
-        '/product/spec/*',
-        // 用户信息
-        '/auth/user/getUserInfo',
-        // 角色列表
-        '/auth/user/getRoleList',
-        // 统计
-        '/statistics/sales/order',
-        '/statistics/sales/product',
-        '/statistics/user/scale',
-        '/statistics/user/new_user',
-        '/statistics/user/pay_user'
+        '/order/cart/list',
+        '/product/product/index',
+        '/product/category/index',
     ];
 
     /** @var array $accessUrls 商家用户权限url */
@@ -71,12 +54,12 @@ class AuthService
     /**
      * 私有化构造方法
      */
-    public function __construct($store)
+    public function __construct($cashier)
     {
         // 商家登录信息
-        $this->store = $store;
+        $this->cashier = $cashier;
         // 当前用户信息
-        $this->user = User::detail($this->store['user']['shop_user_id']);
+        $this->user = User::detail($this->cashier['user']['shop_user_id']);
     }
 
     /**
@@ -130,6 +113,8 @@ class AuthService
         }
 
         // 获取当前用户的权限url列表
+    trace("checkAccess");
+    trace($url);
         if (!in_array($url, $this->getAccessUrls())) {
             return false;
         }
@@ -147,7 +132,7 @@ class AuthService
             // 根据已分配的权限
             $accessIds = RoleAccess::getAccessIds($roleIds);
             // 获取当前角色所有权限链接
-            $this->accessUrls = Access::getApiAccessUrls($accessIds, $this->user['user_type'], $this->store['supplier']);
+            $this->accessUrls = Access::getApiAccessUrls($accessIds, $this->user['user_type'], '');
         }
         return $this->accessUrls;
     }

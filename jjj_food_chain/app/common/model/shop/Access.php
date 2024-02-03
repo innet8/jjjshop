@@ -66,6 +66,18 @@ class Access extends BaseModel
     }
 
     /**
+     * 获取后台路径权限url集
+     */
+    public static function getApiAccessUrls($accessIds, $user_type, $supplier)
+    {
+        $urls = [];
+        foreach (static::getAll(1, $user_type, $supplier) as $item) {
+            in_array($item['access_id'], $accessIds) && $urls[] = $item['api_path'];
+        }
+        return $urls;
+    }
+
+    /**
      * 获取权限url集
      */
     public static function getAccessList($accessIds, $user_type, $supplier)
