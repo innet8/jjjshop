@@ -82,11 +82,11 @@ class Controller extends JjjController
         }
         $sid = Request()->header('sid');
         if (!$sid) {
-            throw new BaseException(['msg' => '绑定失效', 'code' => -1]);
+            throw new BaseException(['msg' => '绑定失效', 'code' => -3]);
         }
         $appid = Request()->header('appid');
         if (!$appid) {
-            throw new BaseException(['msg' => '绑定失效', 'code' => -1]);
+            throw new BaseException(['msg' => '绑定失效', 'code' => -3]);
         }
         $tid = Request()->header('tid');
         $this->table = [
