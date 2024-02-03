@@ -17,7 +17,7 @@ class BaseException extends Exception
      */
     public function __construct($params = [])
     {
-        
+
         if (!is_array($params)) {
             return;
         }
@@ -25,7 +25,7 @@ class BaseException extends Exception
             $this->code = $params['code'];
         }
         if (array_key_exists('msg', $params)) {
-            $this->message = $params['msg'];
+            $this->message = __($params['msg']);
         }
         if (array_key_exists('data', $params)) {
             $this->data = $params['data'];
