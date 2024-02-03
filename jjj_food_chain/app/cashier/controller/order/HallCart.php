@@ -195,7 +195,7 @@ class HallCart extends Controller
      * @Apidoc\Title("删除商品")
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.HallCart/delProduct")
-     * @Apidoc\Param("order_product_id", type="int", require=true, desc="订单商品ID")
+     * @Apidoc\Param("order_product_id", type="int|array", require=true, desc="订单商品ID, 多个传数组: [1,2]")
      * @Apidoc\Returned()
      */
     public function delProduct($order_product_id)

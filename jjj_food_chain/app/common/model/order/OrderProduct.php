@@ -252,10 +252,12 @@ class OrderProduct extends BaseModel
                     ['order_status', '=', OrderStatusEnum::NORMAL]
                 ]);
                 if (!$detail) {
+                    $this->rollback();
                     $this->error = '当前订单不可修改';
                     return false;
                 }
                 if ($model->is_send_kitchen == 1) {
+                    $this->rollback();
                     $this->error = '商品已送厨，禁止删除';
                     return false;
                 }
