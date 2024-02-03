@@ -13,7 +13,7 @@
             </template>
 
             <el-form-item :label="$t('加料排序')" prop="sort">
-                <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('请输入加料排序')" v-model.number="form.sort"></el-input-number>
+                <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('接近0，排序等級越高')" v-model.number="form.sort"></el-input-number>
             </el-form-item>
             <el-form-item :label="$t('价格')" prop="price">
                 <el-input type="number" v-model="form.price" :placeholder="$t('请输入价格')"></el-input>
