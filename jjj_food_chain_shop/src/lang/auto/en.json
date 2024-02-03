@@ -810,5 +810,7 @@
     "会员ID": "Member ID",
     "昵称/手机号/会员ID": "Nick name/Phone number/Member ID",
     "下载二维码": "Download QR code",
-    "下载": "download"
+    "下载": "download",
+    "确认退款?": "Confirm refund?",
+    "已取消退款": "Refund canceled"
 }
