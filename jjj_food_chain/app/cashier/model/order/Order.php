@@ -659,9 +659,9 @@ class Order extends OrderModel
                 $endTime = time();
                 break;
         }
-        if (isset($params['time']) && $params['time']) {
+        if (isset($params['time']) && $params['time'] && ($params['time'][0] ?? '') && ($params['time'][1] ?? '')) {
             $startTime = strtotime($params['time'][0]);
-            $endTime = strtotime($params['time'][0]) + 86399;
+            $endTime = strtotime($params['time'][1]) + 86399;
         }
         //
         $model = $this->alias('a')
@@ -674,7 +674,6 @@ class Order extends OrderModel
             ->when( $startTime && $endTime , function($q) use($startTime, $endTime) {
                 $q->where('a.create_time', 'between', [$startTime, $endTime]);
             });
-
         //
         $categorys = $model->clone()
             ->leftJoin('order_product rp','a.order_id = rp.order_id')
