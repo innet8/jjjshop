@@ -610,10 +610,10 @@ class Order extends OrderModel
             $ratio = helper::bcdiv($this['points_bonus'], $this['pay_price']);
             $points = helper::bcmul($data['refund_money'], $ratio, 2); // 应扣除积分
             $user = UserModel::where('user_id', '=', $this['user_id'])->find();
-            $user->dec('points', $points)->dec('total_points', $points)->update();
+            $user?->dec('points', $points)->dec('total_points', $points)->update();
             PointsLogModel::add([
                 'user_id' => $this['user_id'],
-                'card_id' => $user['card_id'],
+                'card_id' => $user?->card_id ?? 0,
                 'scene' => PointsLogSceneEnum::REFUND,
                 'value' => -$points,
                 'describe' => "退款扣除：{$this['order_no']}",
