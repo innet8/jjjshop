@@ -107,7 +107,7 @@ class Category extends BaseModel
                     ->when($name, function($q) use($name) {
                         $q->like('name', $name);
                     })
-                    ->order(['sort' => 'asc', 'create_time' => 'asc'])
+                    ->order(['sort' => 'asc', 'create_time' => 'desc'])
                     ->where('shop_supplier_id', '=', $shop_supplier_id)
                     ->select();
                 $all = !empty($data) ? $data->toArray() : [];
