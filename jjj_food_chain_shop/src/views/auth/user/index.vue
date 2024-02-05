@@ -19,10 +19,10 @@
                     <el-table-column prop="role.role_name" :label="$t('角色')">
                         <template #default="scope">
                             <div v-if="scope.row.is_super == 0">
-                                <span class="mr10 green" v-for="(item, index) in scope.row.userRole" :key="index">{{
+                                <span class="mr10 " v-for="(item, index) in scope.row.userRole" :key="index">{{
                                     item.role.role_name }}</span>
                             </div>
-                            <div class="gray" v-if="scope.row.is_super == 1">{{ $t('超级管理员') }}</div>
+                            <div  v-if="scope.row.is_super == 1">{{ $t('超级管理员') }}</div>
                         </template>
                     </el-table-column>
 
@@ -31,7 +31,7 @@
                             <el-switch
                                 :disabled="!(scope.row.is_super < 1 || (scope.row.is_super == 1 && scope.row.user_type == 1)) || !this.$filter.isAuth('/auth/user/state')"
                                 :model-value="scope.row.is_status" :active-value="0" :inactive-value="1"
-                                @click="isShowFunc(scope.row)" active-color="#13ce66" inactive-color="#cccccc"></el-switch>
+                                @click="isShowFunc(scope.row)" ></el-switch>
                         </template>
                     </el-table-column>
                     <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
