@@ -504,4 +504,8 @@ export default {
 .el-button--danger.is-link:focus{
     color: var(--el-color-primary);
 }
+.el-tag{
+    padding:0 6px;
+    height: 20px;
+}
 </style>
