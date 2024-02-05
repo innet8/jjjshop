@@ -208,7 +208,7 @@ class OrderProduct extends BaseModel
             // 
             $stockStatus = $this->getStockState($param['product_num']);
             if (!$stockStatus) {
-                $this->error = '商品库存不足';
+                $this->error = '商品库存不足，请重新选择';
                 return false;
             }
             // 判断限购
@@ -345,7 +345,7 @@ class OrderProduct extends BaseModel
             // 
             $res = ProductFactory::getFactory($order['order_source'])->updateOrderProductStock($order['unSendKitchenProduct']);
             if ($res !== true) {
-                $this->error = "商品库存不足";
+                $this->error = "商品库存不足，请重新选择";
                 $this->errorData = $res;
                 return false;
             }

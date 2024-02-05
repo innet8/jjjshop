@@ -913,6 +913,7 @@ return [
     "最多人数不可小于最少人数" => "Maksimum kişi sayısı minimum kişi sayısından az olamaz",
     "当前人员未交班，请先交班" => "Mevcut personel vardiyayı devretmedi, lütfen önce vardiyayı devredin",
     "账号被删除，请联系管理员" => "Hesap silindi, lütfen yöneticiyle iletişime geçin.",
+    "商品库存不足，请重新选择" => "Ürün stoklarımızda kalmamıştır, lütfen tekrar seçiniz",
     "同步直播商品失败,错误信息" => "Yayındaki ürünler senkronize edilemedi, hata mesajı",
     "登录失败, 用户名或密码错误" => "Giriş başarısız oldu, yanlış kullanıcı adı veya şifre",
     "当前用户为分销商，不可删除" => "Mevcut kullanıcı distribütördür ve silinemez.",
