@@ -10,10 +10,10 @@
       <el-form size="small" ref="form" :model="form" label-position="top">
         <el-form-item :label="$t('订单号')" :label-width="formLabelWidth" prop="order_no"
           :rules="[{required: true,message: ' '}]">
-          <el-input v-model="form.order_no" :placeholder="$t('请输入订单号')"  :readonly="true"></el-input>
+          <el-input v-model="form.order_no" disabled :placeholder="$t('请输入订单号')"  :readonly="true"></el-input>
         </el-form-item>
         <el-form-item :label="$t('备注')" :label-width="formLabelWidth" prop="cancel_remark"
-          :rules="[{required: true,message: ' '}]">
+          :rules="[{required: true,message: $t('请输入备注')}]">
           <el-input type="textarea" v-model="form.cancel_remark" :placeholder="$t('请输入备注')"></el-input>
         </el-form-item>
       </el-form>
