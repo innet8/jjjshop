@@ -161,7 +161,7 @@ class MasterProductService extends ProductService
         $error = [];
         // 
         foreach ($productList as $product) {
-            // 下单减库存
+            // 下单减库存 或者 付款减库存
             if ($product['deduct_stock_type'] == DeductStockTypeEnum::CREATE || ($product['deduct_stock_type'] == DeductStockTypeEnum::PAYMENT && $type == 'payment')) {
                 $stockStatus = $product->getStockState($product['total_num']);
                 if (!$stockStatus) {
