@@ -43,11 +43,6 @@ class Order extends Controller
         $data['order_type'] = 1;
         $data['shop_supplier_id'] = $this->cashier['user']['shop_supplier_id'];
 
-//        $order_status = [
-//            1=>'payment',
-//            2=>'complete',
-//            3=>'cancel',
-//        ];
         if ($data['dataType'] == 1) {
             $dataType = 'payment';
         } elseif ($data['dataType'] == 2) {
@@ -74,7 +69,6 @@ class Order extends Controller
         $info = [
                 'all' => $model->getCount('all', $data),
                 'pendingNum' => $model->getCount('payment', $data),
-//                'pendingNum' => $model->getCount('process', $data),
                 'completeNum' => $model->getCount('complete', $data),
                 'cancelNum' => $model->getCount('cancel', $data),
         ];
@@ -94,33 +88,6 @@ class Order extends Controller
      */
     public function buy($order_id)
     {
-//        // 立即购买：获取订单商品列表
-//        $params = $this->postData();
-//        $user = $this->cashier['user'];
-//        // 商品结算信息
-//        $CartModel = new CartModel();
-//        // 购物车商品列表
-//        $productList = $CartModel->getCartList($user);
-//        if (count($productList) <= 0) {
-//            return $this->renderError('购物车商品不能为空');
-//        }
-//        $params['eat_type'] = 20;
-//        // 实例化订单service
-//        $orderService = new CashierOrderSettledService($user, $productList, $params);
-//        // 获取订单信息
-//        $orderInfo = $orderService->settlement();
-//        // 订单结算提交
-//        if ($orderService->hasError()) {
-//            return $this->renderError($orderService->getError());
-//        }
-//        // 创建订单
-//        $order_id = $orderService->createOrder($orderInfo);
-//        if (!$order_id) {
-//            return $this->renderError($orderService->getError() ?: '订单创建失败');
-//        }
-//        // 移出购物车中已下单的商品
-//        $CartModel->deleteAll($this->cashier['user']);
-//        return $this->renderSuccess('收款成功');
         $detail = OrderModel::detail([
             ['order_id', '=', $order_id],
             ['order_status', '=', OrderStatusEnum::NORMAL],
