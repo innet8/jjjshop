@@ -306,7 +306,7 @@ export default {
         flex-shrink: 0;
     }
     :deep(.el-select__placeholder){
-        font-size: 12px;
+        font-size: 14px;
     }
 }
 </style>
