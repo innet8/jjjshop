@@ -101,7 +101,7 @@ class OrderHandoverPrinterService
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->setupColumns(
-                [160, SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [220, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
             );
             $printer->printInColumns(__("交班编号"), $data['shift_no']);
@@ -135,7 +135,7 @@ class OrderHandoverPrinterService
             $printer->appendText("------------------------------------------------\n");
             //
             $printer->setupColumns(
-                [400, SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [440, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
             );
             if ($sales > 0) {
