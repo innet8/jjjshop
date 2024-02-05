@@ -4,7 +4,8 @@
 namespace app\common\model\store;
 
 use app\common\model\BaseModel;
-
+use app\common\enum\order\OrderStatusEnum;
+use app\tablet\model\order\Order as OrderModel;
 /**
  * 桌位模型
  */
@@ -41,7 +42,14 @@ class Table extends BaseModel
     // 查询桌台是否进行中
     public static function isOpen($table_id)
     {
+        $order = OrderModel::where([['table_id', '=', $table_id],['order_status', '=', OrderStatusEnum::NORMAL]])->field('table_id')->find();
         $tableStatus = static::where('table_id', '=', $table_id)->value('status');
+        if (!$order) {
+            if ($tableStatus == 30) {
+                static::where('table_id', '=', $table_id)->update(['status'=>10]);
+            }
+            return false;
+        }
         return $tableStatus == 30;
     }
 
