@@ -64,7 +64,7 @@
         SettingApi.editCache(params, true)
           .then(data => {
             this.$ElMessage({
-              message: $t('恭喜你，清理成功'),
+              message: $t('操作成功'),
               type: 'success'
             });
             self.$router.push('/setting/clear/index');

@@ -160,7 +160,7 @@ export default {
               self.loading = false;
               if (data.code == 1) {
                 this.$ElMessage({
-                  message: '恭喜你，该管理员删除成功',
+                  message: $t('操作成功'),
                   type: 'success'
                 });
                 //刷新页面
