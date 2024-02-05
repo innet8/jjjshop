@@ -42,7 +42,8 @@ class OrderHandoverPrinterService
         // 商米一体机打印
         if (($printerConfig['cashier_printer_id'] ?? '0') == '0') {
             $content = $this->getPrintContent(PrinterTypeEnum::SUNMI_LAN, $data);
-            Cache::set("printer_data_cache", array_unique(array_merge(Cache::get("printer_data_cache",[]),[$content])), 60 * 60 * 24);
+            Cache::set("printer_handover_data_cache", array_unique(array_merge(Cache::get("printer_handover_data_cache",[]),[$content])), 60 * 60 * 24);
+            // Cache::set("printer_data_cache", array_unique(array_merge(Cache::get("printer_data_cache",[]),[$content])), 60 * 60 * 24);
             return true;
         } else {
             // 获取当前的打印机
