@@ -2,9 +2,10 @@
 
 namespace app\cashier\controller\user;
 
+use think\facade\Cache;
+use hg\apidoc\annotation as Apidoc;
 use app\cashier\controller\Controller;
 use app\common\model\shop\UserShiftLog as UserShiftLogModel;
-use hg\apidoc\annotation as Apidoc;
 
 /**
  * 收银交班
@@ -65,7 +66,7 @@ class UserShiftLog extends Controller
         $data['shop_user_id'] = $this->cashier['user']['cashier_id'];
         $userShiftLogModel = new UserShiftLogModel;
         if ($userShiftLogModel->shiftLog($data)) {
-            return $this->renderSuccess('交班成功');
+            return $this->renderSuccess('交班成功', Cache::pull("printer_handover_data_cache") ?: []);
         }
         return $this->renderError($userShiftLogModel->getError() ?: '交班失败');
     }
