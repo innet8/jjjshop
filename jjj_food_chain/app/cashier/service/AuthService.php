@@ -33,6 +33,8 @@ class AuthService
         '/call/call/unprocessed',
         // 首页
         '/index/index',
+        '/index/printData',
+
         '/user/user/detail',
         '/user/user/OrderUseCard',
 
