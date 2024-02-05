@@ -41,8 +41,7 @@ class Setting extends Controller
         }
 
         $tablet['is_show_sold_out'] = $data['is_show_sold_out'] ?? 0;
-        $cashier['default_language'] = $data['default_language'] ?? 'en';
-        if (SettingModel::updateSetting(SettingEnum::TABLET, $tablet, $shop_supplier_id) && SettingModel::updateSetting(SettingEnum::CASHIER, $cashier, $shop_supplier_id)) {
+        if (SettingModel::updateSetting(SettingEnum::TABLET, $tablet, $shop_supplier_id)) {
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model->getError() ?: '操作失败');
