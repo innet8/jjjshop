@@ -1312,10 +1312,13 @@ class Order extends BaseModel
             return false;
         }
         // 判断库存
-        $stockStatus = $this->productStockState($data['product_id'], $data['product_sku_id'], $orderId);
-        if (!$stockStatus) {
-            $this->error = '商品库存不足，请重新选择';
-            return false;
+        $deductStockType = ProductModel::where('product_id', $data['product_id'])->value('deduct_stock_type');
+        if ($deductStockType == DeductStockTypeEnum::CREATE) {
+            $stockStatus = $this->productStockState($data['product_id'], $data['product_sku_id'], $orderId);
+            if (!$stockStatus) {
+                $this->error = '商品库存不足，请重新选择';
+                return false;
+            }
         }
         // 判断限购
         $limitNum = ProductModel::getProductLimitNum($data['product_id']);
