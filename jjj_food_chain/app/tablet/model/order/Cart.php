@@ -343,7 +343,7 @@ class Cart extends CartModel
         }
         $stockStatus = $this->productStockState($data['product_id'], $data['product_sku_id']);
         if (!$stockStatus) {
-            $this->error = '商品库存不足';
+            $this->error = '商品库存不足，请重新选择';
             return false;
         }
         //判断是否存在
@@ -391,7 +391,7 @@ class Cart extends CartModel
         }
         $stockStatus = $this->getStockState($this['product_id'], $this['product_sku_id'], $param['product_num']);
         if (!$stockStatus) {
-            $this->error = '商品库存不足';
+            $this->error = '商品库存不足，请重新选择';
             return false;
         }
         if ($param['product_num'] <= 0) {
@@ -674,7 +674,7 @@ class Cart extends CartModel
         }
         $stockStatus = $this->productStockState($data['product_id'], $data['product_sku_id']);
         if (!$stockStatus) {
-            $this->error = '商品库存不足';
+            $this->error = '商品库存不足，请重新选择';
             return false;
         }
 

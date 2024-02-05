@@ -1314,7 +1314,7 @@ class Order extends BaseModel
         // 判断库存
         $stockStatus = $this->productStockState($data['product_id'], $data['product_sku_id'], $orderId);
         if (!$stockStatus) {
-            $this->error = '商品库存不足';
+            $this->error = '商品库存不足，请重新选择';
             return false;
         }
         // 判断限购

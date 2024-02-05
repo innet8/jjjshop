@@ -614,7 +614,7 @@ class SunmiCloudPrinter
                 $alignment = $this->columnSettings[$i][1];
                 $flag = $this->columnSettings[$i][2];
 
-                if (strlen($strrem[$i]) == 0) {
+                if (strlen($strrem[$i] ?? '') == 0) {
                     $pos += $width;
                     continue;
                 }

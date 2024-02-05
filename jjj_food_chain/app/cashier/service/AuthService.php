@@ -29,6 +29,7 @@ class AuthService
         '/passport/logout',
         // 通知
         '/call/call/index',
+        '/call/call/processed',
         '/call/call/unprocessed',
         // 首页
         '/index/index',

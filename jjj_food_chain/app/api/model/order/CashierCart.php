@@ -125,7 +125,7 @@ class CashierCart extends CartModel
         }
         $stockStatus = $this->productStockState($data['product_id'], $data['product_sku_id']);
         if (!$stockStatus) {
-            $this->error = '商品库存不足';
+            $this->error = '商品库存不足，请重新选择';
             return false;
         }
         //判断是否存在
@@ -179,14 +179,14 @@ class CashierCart extends CartModel
         } elseif ($param['type'] == 'up') {
             $stockStatus = $this->productStockState($this['product_id'], $this['product_sku_id']);
             if (!$stockStatus) {
-                $this->error = '商品库存不足';
+                $this->error = '商品库存不足，请重新选择';
                 return false;
             }
             return $this->where('cart_id', '=', $this['cart_id'])->inc('product_num', 1)->update();
         } elseif ($param['type'] == 'mid') {
             $stockStatus = $this->getStockState($this['product_id'], $this['product_sku_id'], $param['product_num']);
             if (!$stockStatus) {
-                $this->error = '商品库存不足';
+                $this->error = '商品库存不足，请重新选择';
                 return false;
             }
             return $this->save(['product_num' => $param['product_num']]);

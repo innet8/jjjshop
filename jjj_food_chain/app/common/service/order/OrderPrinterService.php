@@ -31,7 +31,7 @@ class OrderPrinterService
     {
         // 打印机设置
         $printerConfig = SettingModel::getSupplierItem('printer', $order['shop_supplier_id'], $order['app_id']);
-        // 
+        //
         if (($printerConfig['cashier_open'] ?? '') != 1){
             return;
         }
@@ -152,13 +152,13 @@ class OrderPrinterService
         if ($currency['unit'] ?? '') {
             $this->currencyUnit = $currency['unit'];
         }
-        // 
+        //
         $shop = SettingModel::getSupplierItem(SettingEnum::STORE, $order['shop_supplier_id'], $order['app_id']);
         $shopName = $shop['name'] ?? $order['supplier']['name'];
 
         /* *
         *
-        *商米打印机 
+        *商米打印机
         *
         */
         if ($printers == PrinterTypeEnum::SUNMI_LAN || $printers['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
@@ -178,7 +178,7 @@ class OrderPrinterService
                 $printer->lineFeed();
             }
             $printer->setLineSpacing(50);
-            // 
+            //
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
@@ -187,12 +187,14 @@ class OrderPrinterService
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
             );
             $printer->printInColumns(__("订单号"), $order->order_no);
-            $printer->printInColumns(__("收银员"), $order->cashier?->real_name);
+            if ($order->cashier?->real_name) {
+                $printer->printInColumns(__("收银员"), $order->cashier?->real_name);
+            }
             if ($order->pay_time) {
                 $printer->printInColumns(__("时间"), date('Y-m-d H:i:s', $order->pay_time));
             }
             $printer->lineFeed();
-            // 
+            //
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
@@ -212,23 +214,23 @@ class OrderPrinterService
                     $printer->lineFeed();
                 }
             }
-            // 
+            //
             $printer->appendText("------------------------------------------------\n");
             $printer->setupColumns(
                 [320, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
             );
             $printer->printInColumns(__("合计金额"), $this->currencyUnit . strval($order['total_price']));
-            if ($order['setting_service_money'] > 0) { 
+            if ($order['setting_service_money'] > 0) {
                 $printer->printInColumns(__("服务费"), $this->currencyUnit . strval($order['setting_service_money']));
             }
-            if ($order['consumption_tax_money'] > 0) { 
+            if ($order['consumption_tax_money'] > 0) {
                 $printer->printInColumns(__("消费税"), $this->currencyUnit . strval($order['consumption_tax_money']));
             }
-            if ($order['discount_money'] > 0) { 
+            if ($order['discount_money'] > 0) {
                 $printer->printInColumns(__("优惠折扣"), $this->currencyUnit . strval($order['discount_money']));
             }
-            if ($order['user_discount_money'] > 0) { 
+            if ($order['user_discount_money'] > 0) {
                 $printer->printInColumns(__("会员折扣"), $this->currencyUnit . strval($order['user_discount_money']));
             }
             if ($order['delivery_type']['value'] == DeliveryTypeEnum::EXPRESS) {
@@ -246,14 +248,14 @@ class OrderPrinterService
             $printer->setPrintModes(true, false, false);
             $printer->printInColumns(__("应收"), $this->currencyUnit . strval($order['pay_price']));
             $printer->setPrintModes(false, false, false);
-            // 
+            //
             if ($order->pay_status['value'] == OrderPayStatusEnum::SUCCESS){
                 $printer->lineFeed();
                 $printer->appendText("------------------------------------------------\n");
                 $printer->printInColumns(__("支付方式"),  $order['pay_type']['text']);
                 $printer->printInColumns(__("实付金额"), $this->currencyUnit . strval($order['pay_price']));
             }
-            // 
+            //
             if ($order->user) {
                 $printer->lineFeed();
                 $printer->appendText("------------------------------------------------\n");
@@ -266,14 +268,14 @@ class OrderPrinterService
             $printer->printAndExitPageMode();
             $printer->lineFeed(4);
             $printer->cutPaper(false);
-            // 
+            //
             return $printer->orderData;
         }
 
 
         /* *
         *
-        *芯烨打印机 
+        *芯烨打印机
         *
         */
         if ($printers['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
@@ -293,7 +295,7 @@ class OrderPrinterService
                 $printer->lineFeed();
             }
             $printer->setLineSpacing(50);
-            // 
+            //
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
@@ -305,7 +307,7 @@ class OrderPrinterService
                 $printer->appendText(printText(__("时间"), '', date('Y-m-d H:i:s', $order->pay_time) ,$width));
             }
             $printer->lineFeed();
-            // 
+            //
             $width = 46;
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
@@ -322,23 +324,23 @@ class OrderPrinterService
                 }
                 $printer->lineFeed();
             }
-            // 
+            //
             $printer->appendText("------------------------------------------------\n");
             $printer->appendText(printText(__("合计金额"),'', $this->currencyUnit . strval($order['total_price']) , $width, $leftWidth));
             $printer->lineFeed();
-            if ($order['setting_service_money'] > 0) { 
+            if ($order['setting_service_money'] > 0) {
                 $printer->appendText(printText(__("服务费"),'', $this->currencyUnit . strval($order['setting_service_money']) ,$width, $leftWidth));
                 $printer->lineFeed();
             }
-            if ($order['consumption_tax_money'] > 0) { 
+            if ($order['consumption_tax_money'] > 0) {
                 $printer->appendText(printText(__("消费税"),'', $this->currencyUnit . strval($order['consumption_tax_money']) ,$width, $leftWidth));
                 $printer->lineFeed();
             }
-            if ($order['discount_money'] > 0) { 
+            if ($order['discount_money'] > 0) {
                 $printer->appendText(printText(__("优惠折扣"),'', $this->currencyUnit . strval($order['discount_money']) ,$width, $leftWidth));
                 $printer->lineFeed();
             }
-            if ($order['user_discount_money'] > 0) { 
+            if ($order['user_discount_money'] > 0) {
                 $printer->appendText(printText(__("会员折扣"),'', $this->currencyUnit . strval($order['user_discount_money']) ,$width, $leftWidth));
                 $printer->lineFeed();
             }
@@ -362,7 +364,7 @@ class OrderPrinterService
             $printer->appendText(printText(__("应收"),'', $this->currencyUnit . strval($order['pay_price']) , $width, $leftWidth));
             $printer->lineFeed();
             $printer->setPrintModes(false, false, false);
-            // 
+            //
             if ($order->pay_status['value'] == OrderPayStatusEnum::SUCCESS){
                 $printer->lineFeed();
                 $printer->appendText("------------------------------------------------\n");
@@ -370,7 +372,7 @@ class OrderPrinterService
                 $printer->appendText(printText(__("实付金额"),'', $this->currencyUnit . strval($order['pay_price']) , $width , $leftWidth));
                 $printer->lineFeed();
             }
-            // 
+            //
             if ($order->user) {
                 $printer->lineFeed();
                 $printer->appendText("------------------------------------------------\n");
@@ -384,13 +386,13 @@ class OrderPrinterService
             $printer->printAndExitPageMode();
             $printer->lineFeed(4);
             $printer->cutPaper(false);
-            // 
+            //
             return $printer->orderData;
         }
 
         /* *
         *
-        *飞蛾打印机 
+        *飞蛾打印机
         *
         */
         $width = 32;
@@ -407,7 +409,7 @@ class OrderPrinterService
         if ($order->pay_time) {
             $content .= printText(__('时间'), '',  date('Y-m-d H:i:s', $order->pay_time)) . "<BR><BR>";
         }
-        // 
+        //
         $content .= printText(__('商品'), __('数量'),  __('金额'), $width, $leftWidth);
         $content .= "--------------------------------<BR>";
         foreach ($order['product'] as $key => $product) {
@@ -417,7 +419,7 @@ class OrderPrinterService
                 $content .= '<TEXT x="10" y="180" font="10" w="-1" h="-1" r="0">' . $product['remark'] . '</TEXT><BR><BR>';
             }
         }
-        // 
+        //
         $content .= "--------------------------------<BR>";
         $content .= printText(__('合计金额'), '', $this->currencyUnit . strval($order['total_price'])) . "<BR>";
         if ($order['setting_service_money'] > 0) {
@@ -445,11 +447,11 @@ class OrderPrinterService
             $content .= printText(__('满减优惠'), '', $this->currencyUnit . strval($order['fullreduce_money'])) . "<BR>";
         }
         $content .= '<BOLD>' . printText(__('应收'), '', $this->currencyUnit . strval($order['total_price'])) . "</BOLD><BR>";
-        // 
+        //
         $content .= '--------------------------------<BR>';
         $content .= printText(__('支付方式'), '', $order['pay_type']['text']) . "<BR>";
         $content .= printText(__('实付金额'), '', $this->currencyUnit . strval($order['pay_price'])) . "<BR>";
-        // 
+        //
         if ($order->user) {
             $content .= '--------------------------------<BR>';
             $content .= printText(__('会员剩余余额'), '', $this->currencyUnit . $order->user->balance) . "<BR>";
@@ -516,21 +518,21 @@ class OrderPrinterService
                 // 实例化打印机驱动
                 $PrinterDriver = new PrinterDriver($printer);
                 if ($item['type'] == 10) {
-                    if ($item['print_method'] == 40) { 
+                    if ($item['print_method'] == 40) {
                         foreach ($order['product'] as $key => $product) {
                             // 获取订单打印内容
                             $content = $this->getPrintProductContent($item, $order, $printer, $product);
                             // 执行打印请求
                             $content && $PrinterDriver->printTicket($content);
                         }
-                    } else { 
-                        $isPrinter = false; 
+                    } else {
+                        $isPrinter = false;
                         foreach ($order['product'] as $key => $product) {
                             $prodcutDetail = ProductModel::detail($product['product_id']);
                             if ($item['print_method'] == 20) {
                                 if (
-                                    $item['category_id'] 
-                                    && !in_array($prodcutDetail->special_id, $item['category_id']) 
+                                    $item['category_id']
+                                    && !in_array($prodcutDetail->special_id, $item['category_id'])
                                     && !in_array($prodcutDetail->category_id, $item['category_id'])
                                     && !in_array($prodcutDetail->category?->parent_id ?? 0, $item['category_id'])
                                 ) {
@@ -574,7 +576,7 @@ class OrderPrinterService
 
         /* *
         *
-        *商米 和 芯烨 打印机 
+        *商米 和 芯烨 打印机
         *
         */
         if ($printer && ( $printerType == PrinterTypeEnum::SUNMI_LAN || $printerType == PrinterTypeEnum::XPRINTER_LAN)) {
@@ -593,7 +595,7 @@ class OrderPrinterService
             }
             $printer->lineFeed();
             $printer->setLineSpacing(50);
-            // 
+            //
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
@@ -604,7 +606,7 @@ class OrderPrinterService
             $printer->printInColumns(__("订单号"), $order->order_no);
             $printer->printInColumns(__("时间"), $order->update_time);
             $printer->lineFeed();
-            // 
+            //
             $printer->appendText(printText(__("商品"), '',__("数量"), $width));
             $printer->appendText("\n------------------------------------------------\n");
             $printer->setupColumns(
@@ -615,8 +617,8 @@ class OrderPrinterService
                 $prodcutDetail = ProductModel::detail($product['product_id']);
                 if ($data['print_method'] == 20) {
                     if (
-                        $data['category_id'] 
-                        && !in_array($prodcutDetail->special_id, $data['category_id']) 
+                        $data['category_id']
+                        && !in_array($prodcutDetail->special_id, $data['category_id'])
                         && !in_array($prodcutDetail->category_id, $data['category_id'])
                         && !in_array($prodcutDetail->category?->parent_id ?? 0, $data['category_id'])
                     ) {
@@ -648,13 +650,13 @@ class OrderPrinterService
             $printer->printAndExitPageMode();
             $printer->lineFeed(4);
             $printer->cutPaper(false);
-            // 
+            //
             return $printer->orderData;
         }
 
         /* *
         *
-        *飞蛾打印机 
+        *飞蛾打印机
         *
         */
         $width = 32;
@@ -667,15 +669,15 @@ class OrderPrinterService
         }
         $content .= printText(__('订单号'), '', $order->order_no) . "<BR>";
         $content .= printText(__('时间'), '',  $order->update_time) . "<BR><BR>";
-        // 
+        //
         $content .= printText(__('商品'), '',  __('数量'));
         $content .= "--------------------------------<BR>";
         foreach ($order['product'] as $key => $product) {
             $prodcutDetail = ProductModel::detail($product['product_id']);
             if ($data['print_method'] == 20) {
                 if (
-                    $data['category_id'] 
-                    && !in_array($prodcutDetail->special_id, $data['category_id']) 
+                    $data['category_id']
+                    && !in_array($prodcutDetail->special_id, $data['category_id'])
                     && !in_array($prodcutDetail->category_id, $data['category_id'])
                     && !in_array($prodcutDetail->category?->parent_id ?? 0, $data['category_id'])
                 ) {
@@ -694,7 +696,7 @@ class OrderPrinterService
             $content .= printText($productName, '', ''.$product['total_num'], $width, 26);
             if ($product['remark'] ?? '') {
                 $content .= '<TEXT x="10" y="180" font="10" w="-1" h="-1" r="0">' . $product['remark'] . '</TEXT>';
-            } 
+            }
             $content .= '<BR><BR>';
         }
         return $content. '<BR><BR>';

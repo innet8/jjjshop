@@ -912,6 +912,7 @@ return [
     "最多人数不可小于最少人数" => "The maximum number of people cannot be less than the minimum number of people",
     "当前人员未交班，请先交班" => "The current staff has not handed over the shift, please hand over the shift first",
     "账号被删除，请联系管理员" => "The account has been deleted, please contact the administrator.",
+    "商品库存不足，请重新选择" => "The commodity is out of stock, please reselect",
     "同步直播商品失败,错误信息" => "Failed to synchronize live streaming commodity, error message",
     "登录失败, 用户名或密码错误" => "Login failed, wrong username or password",
     "当前用户为分销商，不可删除" => "The current user is a distributor and cannot be deleted.",
