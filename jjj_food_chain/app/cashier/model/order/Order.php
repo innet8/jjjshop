@@ -375,7 +375,7 @@ class Order extends OrderModel
                 } elseif ($data['discountType'] == 4) { //四舍五入到元
                     $discount_money = round($o['order_price'] - round($o['pay_price'], 0), 2);
                 }
-                // 
+                //
                 $pay_price = round($o['order_price'] - $discount_money, 2);
                 // 积分奖励按照应付计算
                 $setting = SettingModel::getSupplierItem(SettingEnum::POINTS, $detail['shop_supplier_id'], $detail['app_id']);
@@ -387,13 +387,13 @@ class Order extends OrderModel
                 }
                 $points_bonus = helper::bcmul($pay_price, $ratio, 3);
                 $points_bonus = round($points_bonus, 2);
-                // 
+                //
                 $o->save([
-                    'discount_money' => $discount_money < 0 ? 0 : $discount_money, 
-                    'pay_price' => $pay_price, 
+                    'discount_money' => $discount_money < 0 ? 0 : $discount_money,
+                    'pay_price' => $pay_price,
                     'points_bonus' => $points_bonus
                 ]);
-                
+
             } else {
                 if ($data['money'] > $detail['order_price']) {
                     $pay_price = $data['money'];
@@ -403,8 +403,8 @@ class Order extends OrderModel
                 if ($pay_price <= 0) {
                     $pay_price = 0;
                 }
-               
-                // 
+
+                //
                 if ($data['type'] == 1) {
                     // 积分奖励按照应付计算
                     $setting = SettingModel::getSupplierItem(SettingEnum::POINTS, $detail['shop_supplier_id'], $detail['app_id']);
@@ -417,15 +417,15 @@ class Order extends OrderModel
                     $points_bonus = helper::bcmul($pay_price, $ratio, 3);
                     $points_bonus = round($points_bonus, 2);
                     $detail->save([
-                        'discount_money' => $discount_money < 0 ? 0 : $discount_money, 
-                        'pay_price' => $pay_price, 
-                        'discount_ratio' => $discount_ratio, 
-                        'user_discount_money' => 0, 
+                        'discount_money' => $discount_money < 0 ? 0 : $discount_money,
+                        'pay_price' => $pay_price,
+                        'discount_ratio' => $discount_ratio,
+                        'user_discount_money' => 0,
                         'points_bonus' => $points_bonus
                     ]);
                 } else {
                     $detail->save([
-                        'discount_money' => $discount_money < 0 ? 0 : $discount_money, 
+                        'discount_money' => $discount_money < 0 ? 0 : $discount_money,
                         'pay_price' => $pay_price
                     ]);
                 }
@@ -694,8 +694,9 @@ class Order extends OrderModel
             ->field("sum(rp.total_num) as sales, sum(rp.total_pay_price) as prices")
             ->select()
             ->append([])?->toArray();
-        foreach ($categorys as $key => $data){
-            $categorys[$key]['name_text'] = Category::getNameTextAttr($data['name'] ?: '');
+        foreach ($categorys as $key => &$data){
+            $data['parent_id'] =  $categoryType == 1 ? 0 : Category::where('category_id', $data['category_id'])->value('parent_id');
+            $categorys[$key]['name_text'] = Category::getPathNameTextAttr($data['name'] ?: '', $data);
         }
         //
         $incomes = [];

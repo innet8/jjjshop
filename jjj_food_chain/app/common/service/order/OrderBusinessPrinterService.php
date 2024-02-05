@@ -28,12 +28,12 @@ class OrderBusinessPrinterService
         if (($printerConfig['cashier_open'] ?? '') != 1){
             return;
         }
-        // 
+        //
         $currency = SettingModel::getSupplierItem(SettingEnum::CURRENCY, $data['supplier']['shop_supplier_id'], $data['supplier']['app_id']);
         if ($currency['unit'] ?? '') {
             $this->currencyUnit = $currency['unit'];
         }
-        // 
+        //
         // 商米一体机打印
         $res = true;
         if (($printerConfig['cashier_printer_id'] ?? '0') == '0') {
@@ -52,7 +52,7 @@ class OrderBusinessPrinterService
             // 执行打印请求
             $res = $printerDriver->printTicket($content, $data['supplier']['name']);
         }
-        // 
+        //
         return $res;
     }
 
@@ -63,8 +63,8 @@ class OrderBusinessPrinterService
     {
         $startTime = date('Y-m-d H:i:s', $data['times'][0]);
         $endTime = $data['times'][1] ? date('Y-m-d H:i:s', $data['times'][1]) : date('Y-m-d H:i:s');
-   
-        // 
+
+        //
         $currency = SettingModel::getSupplierItem(SettingEnum::STORE, $data['supplier']['shop_supplier_id'], $data['supplier']['app_id']);
         $shopName = $currency['name'] ?? $data['supplier']['name'];
 
@@ -85,7 +85,7 @@ class OrderBusinessPrinterService
             $printer->lineFeed();
             $printer->lineFeed();
             $printer->setLineSpacing(50);
-            // 
+            //
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
@@ -95,11 +95,11 @@ class OrderBusinessPrinterService
             );
             $printer->printInColumns(__("时间"), $startTime."". __("至")."" . $endTime);
             $printer->lineFeed();
-            // 
+            //
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
-            // 
+            //
             $printer->setupColumns(
                 [300, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [96, SunmiCloudPrinter::ALIGN_CENTER, 0],
@@ -108,26 +108,26 @@ class OrderBusinessPrinterService
             $printer->printInColumns(__("分类"), __("数量"), __("金额"));
             $printer->appendText("------------------------------------------------\n");
             foreach ($data['categorys'] as $key => $category) {
-                $printer->printInColumns( (new CategoryModel)->getNameTextAttr($category['name']) .'' , "{$category['sales']}",  $this->currencyUnit . "{$category['prices']}" );
+                $printer->printInColumns( (new CategoryModel)->getPathNameTextAttr($category['name'], $category) .'' , "{$category['sales']}",  $this->currencyUnit . "{$category['prices']}" );
                 $printer->lineFeed();
             }
             $printer->appendText("------------------------------------------------\n");
-            // 
+            //
             $printer->setupColumns(
                 [360, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
             );
-            if ($data['sales_num'] > 0) { 
+            if ($data['sales_num'] > 0) {
                 $printer->printInColumns(__("销售笔数"),"{$data['sales_num']}");
                 $printer->lineFeed();
             }
-            // 
+            //
             foreach ($data['incomes'] as $key => $income) {
                 $printer->printInColumns($income['pay_type_name'], $this->currencyUnit . "{$income['price']}");
                 $printer->lineFeed();
             }
-            // 
-            if ($data['refund_amount'] > 0) { 
+            //
+            if ($data['refund_amount'] > 0) {
                 $printer->printInColumns(__("退款金额"), $this->currencyUnit . "{$data['refund_amount']}");
                 $printer->lineFeed();
             }
@@ -137,13 +137,13 @@ class OrderBusinessPrinterService
             $printer->printAndExitPageMode();
             $printer->lineFeed(4);
             $printer->cutPaper(false);
-            // 
+            //
             return $printer->orderData;
         }
 
         /* *
         *
-        *芯烨打印机 
+        *芯烨打印机
         *
         */
         if ($printers['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
@@ -167,11 +167,11 @@ class OrderBusinessPrinterService
             );
             $printer->printInColumns(__("时间"), $startTime."". __("至")."" . $endTime);
             $printer->lineFeed();
-            // 
+            //
             $printer->restoreDefaultLineSpacing();
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
-            // 
+            //
             $printer->appendText(printText(__("分类"), __("数量"), __("金额"), $width , 29));
             $printer->appendText("\n------------------------------------------------\n");
             $printer->lineFeed();
@@ -181,21 +181,21 @@ class OrderBusinessPrinterService
                 $printer->lineFeed();
             }
             $printer->appendText("------------------------------------------------\n");
-            // 
+            //
             $printer->lineFeed();
-            if ($data['sales_num'] > 0) { 
+            if ($data['sales_num'] > 0) {
                 $printer->appendText(printText(__("销售笔数"),'',"{$data['sales_num']}",$width));
                 $printer->lineFeed();
                 $printer->lineFeed();
             }
-            // 
+            //
             foreach ($data['incomes'] as $key => $income) {
                 $printer->appendText(printText($income['pay_type_name'],' ', $this->currencyUnit . "{$income['price']}", $width ));
                 $printer->lineFeed();
                 $printer->lineFeed();
             }
-            // 
-            if ($data['refund_amount'] > 0) { 
+            //
+            if ($data['refund_amount'] > 0) {
                 $printer->appendText(printText(__("退款金额"),'', $this->currencyUnit . "{$data['refund_amount']}", $width ));
                 $printer->lineFeed();
                 $printer->lineFeed();
@@ -206,7 +206,7 @@ class OrderBusinessPrinterService
             $printer->printAndExitPageMode();
             $printer->lineFeed(4);
             $printer->cutPaper(false);
-            // 
+            //
             return $printer->orderData;
         }
 
@@ -227,16 +227,16 @@ class OrderBusinessPrinterService
         }
         $content .= "--------------------------------<BR><BR>";
         $content .= printText(__('销售笔数'), ' ', $data['sales_num'], $width, $leftWidth + 4) . "<BR><BR>";
-        // 
+        //
         foreach ($data['incomes'] as $key => $income) {
             $content .= printText($income['pay_type_name'],'', $this->currencyUnit . "{$income['price']}", $width, $leftWidth + 4) . "<BR><BR>";
         }
-        // 
-        if ($data['refund_amount'] > 0) { 
+        //
+        if ($data['refund_amount'] > 0) {
             $content .= printText(__('退款金额'), '', $this->currencyUnit . strval($data['refund_amount']), $width, $leftWidth + 4) . "<BR><BR>";
         }
         $content .= printText(__('营业总额'), '', $this->currencyUnit . strval($data['total_amount']), $width, $leftWidth + 4) . "<BR><BR>";
-        // 
+        //
         return $content;
     }
 
