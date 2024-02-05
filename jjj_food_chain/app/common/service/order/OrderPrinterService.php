@@ -208,11 +208,10 @@ class OrderPrinterService
             foreach ($order['product'] as $key => $product) {
                 $productName = $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : '');
                 $printer->printInColumns($productName, $product['total_num'] . '', $this->currencyUnit . strval($product['total_price']));
-                $printer->lineFeed();
                 if ($product['remark']) {
                     $printer->printInColumns($product['remark']);
-                    $printer->lineFeed();
                 }
+                $printer->lineFeed();
             }
             //
             $printer->appendText("------------------------------------------------\n");
