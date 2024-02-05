@@ -277,3 +277,6 @@ input{
     border: var(--el-color-black);
     color: white;
 }
+.el-range-editor--small .el-range-input{
+    font-size: 14px;
+}
