@@ -130,16 +130,26 @@ class Index extends Controller
     }
 
     /**
-     * @Apidoc\Title("首页广告（废除）")
+     * @Apidoc\Title("收银机/副屏广告")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/cashier/index/ad")
+     * @Apidoc\Param("appid", type="string", require=true, desc="appid-从header传递")
+     * @Apidoc\Param("sid", type="string", require=true, desc="sid-从header传递")
      * @Apidoc\Returned()
      */
     public function ad()
     {
-        $cashier = SettingModel::getSupplierItem(SettingEnum::CASHIER, $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
+        $appid = Request()->header('appid');
+        $shop_supplier_id = Request()->header('sid');
+        if (empty($appid)) {
+            return $this->renderError('appid不能为空');
+        }
+        if (empty($shop_supplier_id)) {
+            return $this->renderError('sid不能为空');
+        }
+        $cashier = SettingModel::getSupplierItem(SettingEnum::CASHIER, $shop_supplier_id, $appid);
         $list = [];
-        if (isset($cashier['carousel']) && !empty($cashier['carousel'])) {
+        if ($cashier && isset($cashier['carousel']) && !empty($cashier['carousel'])) {
             $list = $cashier['carousel'];
         }
         return $this->renderSuccess('请求成功', $list);

@@ -37,6 +37,7 @@ class Controller extends JjjController
     /** @var array $allowCashierAction 收银机验证白名单 */
     protected $allowCashierAction = [
         '/index/lang', // 语言获取
+        '/index/ad', // 广告
         '/passport/login', // 登录页面
         '/index/base', // 登录信息
     ];
