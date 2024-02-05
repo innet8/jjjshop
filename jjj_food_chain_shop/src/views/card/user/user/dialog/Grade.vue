@@ -58,7 +58,7 @@
             self.loading = false;
             if (data.code == 1) {
               this.$ElMessage({
-                message: '操作成功',
+                message: $t('操作成功'),
                 type: 'success'
               });
               self.dialogFormVisible(true);
