@@ -160,11 +160,12 @@ class Order extends OrderModel
         try {
             // 订单商品送厨
             $model = new OrderProductModel();
-            if (!$model->sendKitchen($this['order_id'])) {
+            if (!$model->sendKitchen($this['order_id'], 'payment')) {
                 $this->error = $model->getError();
                 $this->errorData = $model->getErrorData();
                 return false;
             }
+
             //
             $status = $PaySuccess->onPaySuccess($pay_type);
             if (!$status) {

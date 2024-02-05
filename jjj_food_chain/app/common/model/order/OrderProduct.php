@@ -335,7 +335,7 @@ class OrderProduct extends BaseModel
     }
 
     // 送厨
-    public function sendKitchen($order_id)
+    public function sendKitchen($order_id, $type='kitchen')
     {
         $order = (new OrderModel)->with('unSendKitchenProduct')->where('order_id', $order_id)->find();
         if (!$order) {
@@ -346,7 +346,7 @@ class OrderProduct extends BaseModel
         $this->startTrans();
         try {
             // 
-            $res = ProductFactory::getFactory($order['order_source'])->updateOrderProductStock($order['unSendKitchenProduct']);
+            $res = ProductFactory::getFactory($order['order_source'])->updateOrderProductStock($order['unSendKitchenProduct'], $type);
             if ($res !== true) {
                 $this->error = "商品库存不足，请重新选择";
                 $this->errorData = $res;

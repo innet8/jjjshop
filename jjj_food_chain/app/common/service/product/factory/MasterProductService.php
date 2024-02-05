@@ -154,14 +154,15 @@ class MasterProductService extends ProductService
     /**
      * 送厨更新商品库存 (针对下单减库存的商品)
      */
-    public function updateOrderProductStock($productList)
+    public function updateOrderProductStock($productList, $type='product')
     {
         $productData = [];
         $productSkuData = [];
         $error = [];
+        // 
         foreach ($productList as $product) {
             // 下单减库存
-            if ($product['deduct_stock_type'] == DeductStockTypeEnum::CREATE) {
+            if ($product['deduct_stock_type'] == DeductStockTypeEnum::CREATE || ($product['deduct_stock_type'] == DeductStockTypeEnum::PAYMENT && $type == 'payment')) {
                 $stockStatus = $product->getStockState($product['total_num']);
                 if (!$stockStatus) {
                     $error[] = [
