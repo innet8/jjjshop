@@ -33,6 +33,8 @@ class AuthService
         '/call/call/unprocessed',
         // 首页
         '/index/index',
+        '/index/printData',
+
         '/user/user/detail',
         '/user/user/OrderUseCard',
 
@@ -54,7 +56,8 @@ class AuthService
 
         '/store/table/table',
         '/store/table/tableType',
-        '/store/paytype/index'
+        '/store/paytype/index',
+        '/store/business/print'
     ];
 
     /** @var array $accessUrls 商家用户权限url */
