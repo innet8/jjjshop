@@ -20,7 +20,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item :label="$t('手机号')" prop="mobile" :rules="[{ required: true, message: $t('请输入手机号') }]">
-                <el-input class="percent-w100" v-model="form.mobile" :placeholder="$t('请输入手机号')"></el-input>
+                <el-input class="percent-w100" :maxlength="20" v-model="form.mobile" :placeholder="$t('请输入手机号')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('密码')" prop="password" >
                 <el-input class="percent-w100" type="password" v-model="form.password" :placeholder="$t('请输入密码')"></el-input>
