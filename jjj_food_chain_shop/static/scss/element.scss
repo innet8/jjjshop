@@ -107,6 +107,10 @@
 .el-button:focus{
     outline: none;
 }
+.el-button:hover{
+    color: var(--el-color-primary);
+    border-color: var(--el-color-primary);
+}
 .el-button.el-button--small.el-button--text{
     padding-left: 0;
     padding-right: 0;

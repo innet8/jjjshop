@@ -73,6 +73,7 @@ export default {
                     textStyle: {
                         fontWeight: 'bold',  // 设置文字粗细为粗体
                         color:'#100A05',
+                        fontSize:'20px',
                     }
                 },
                 grid: {

@@ -814,5 +814,10 @@
     "确认退款?": "Confirm refund?",
     "已取消退款": "Refund canceled",
     "操作内容": "Operation content",
-    "请确认密码": "Please confirm your password"
+    "请确认密码": "Please confirm your password",
+    "请输入积分数量": "Please enter the number of points",
+    "请输入余额数量": "Please enter the balance amount",
+    "请输入优惠券": "Please enter coupon",
+    "请输入有效期": "Please enter the validity period",
+    "请输入使用须知": "Please enter instructions for use"
 }

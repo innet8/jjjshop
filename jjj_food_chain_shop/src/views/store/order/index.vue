@@ -498,4 +498,10 @@ export default {
 
 
 }
+.el-button--danger.is-link{
+    color: var(--el-color-primary);
+}
+.el-button--danger.is-link:focus{
+    color: var(--el-color-primary);
+}
 </style>
