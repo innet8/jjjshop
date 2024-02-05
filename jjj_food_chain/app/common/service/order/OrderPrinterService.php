@@ -215,7 +215,7 @@ class OrderPrinterService
             // 
             $printer->appendText("------------------------------------------------\n");
             $printer->setupColumns(
-                [200, SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [320, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
             );
             $printer->printInColumns(__("合计金额"), $this->currencyUnit . strval($order['total_price']));
