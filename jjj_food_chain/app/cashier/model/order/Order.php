@@ -691,11 +691,11 @@ class Order extends OrderModel
                     $q->field('c.category_id, c.name');
                 }
             })
-            ->field("c.parent_id, sum(rp.total_num) as sales, sum(rp.total_pay_price) as prices")
+            ->field("c.category_id, sum(rp.total_num) as sales, sum(rp.total_pay_price) as prices")
             ->select()
             ->append([])?->toArray();
         foreach ($categorys as $key => &$data){
-            $data['parent_id'] = $categoryType == 1 ? 0 : $data['parent_id'];
+            $data['parent_id'] =  $categoryType == 1 ? 0 : Category::where('category_id', $data['category_id'])->value('parent_id');
             $categorys[$key]['name_text'] = Category::getPathNameTextAttr($data['name'] ?: '', $data);
         }
         //
