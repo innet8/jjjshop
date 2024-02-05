@@ -206,10 +206,13 @@ class OrderProduct extends BaseModel
         // 
         if ($param['type'] != 'down') {
             // 
-            $stockStatus = $this->getStockState($param['product_num']);
-            if (!$stockStatus) {
-                $this->error = '商品库存不足，请重新选择';
-                return false;
+            $deductStockType = ProductModel::where('product_id', $this->product_id)->value('deduct_stock_type');
+            if ($deductStockType == DeductStockTypeEnum::CREATE) {
+                $stockStatus = $this->getStockState($param['product_num']);
+                if (!$stockStatus) {
+                    $this->error = '商品库存不足，请重新选择';
+                    return false;
+                }
             }
             // 判断限购
             $limitNum = ProductModel::getProductLimitNum($this['product_id']);
