@@ -133,6 +133,10 @@
     color: white;
     border-color: var(--el-color-black);
 }
+.el-button--primary:focus{
+    color: white;
+    border-color: var(--el-color-black);
+}
 /* 弹框 */
 .el-dialog__body{
     overflow: hidden;
