@@ -93,7 +93,7 @@ export default {
                 if(index < self.select_list.length - 1){
                     params.user_ids += item.user_id +','
                 }else{
-                    params.user_ids += item.user_id 
+                    params.user_ids += item.user_id
                 }
              })
             self.loading = true;
@@ -102,7 +102,7 @@ export default {
                     self.loading = false;
                     if (data.code == 1) {
                         this.$ElMessage({
-                            message: $t('恭喜你，发卡成功'),
+                            message: $t('操作成功'),
                             type: 'success'
                         });
                         self.dialogFormVisible(true);

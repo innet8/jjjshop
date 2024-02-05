@@ -58,7 +58,7 @@
             self.loading = false;
             if (data.code == 1) {
               this.$ElMessage({
-                message: '恭喜你，用户修改成功',
+                message: '操作成功',
                 type: 'success'
               });
               self.dialogFormVisible(true);
