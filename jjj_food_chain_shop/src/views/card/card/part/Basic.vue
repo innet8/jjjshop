@@ -7,8 +7,8 @@
   <div class="basic-setting-content pl16 pr16">
     <!--基本信息-->
     <div class="common-form">{{ $t('基本信息') }}</div>
-    <el-form-item :label="$t('会员卡名称：')" :rules="[{ required: true, message: $t('请填写会员卡名称') }]" prop="model.card_name">
-      <el-input v-model="form.model.card_name" :maxlength="50" class="max-w460"></el-input>
+    <el-form-item :label="$t('会员卡名称：')" :rules="[{ required: true, message: $t('请输入会员卡名称') }]" prop="model.card_name">
+      <el-input v-model="form.model.card_name" :maxlength="50" class="max-w460" :placeholder="$t('请输入会员卡名称')"></el-input>
     </el-form-item>
     <!-- <el-form-item :label="$t('卡片类型：')" prop="model.is_default">
       <el-radio-group v-model="form.model.is_default">
@@ -32,7 +32,7 @@
           </div>
       </div>
     </el-form-item>
-    <el-form-item :label="$t('排序：')" :rules="[{ required: true, message: $t('请填写排序') }]" prop="model.sort">
+    <el-form-item :label="$t('排序：')" :rules="[{ required: true, message: $t('请输入排序') }]" prop="model.sort">
       <el-input-number :controls="false" :min="0" :max="999" class="max-w460" :placeholder="$t('接近0，排序等级越高')" v-model.number="form.model.sort"></el-input-number>
     </el-form-item>
     <el-form-item :label="$t('会员权益：')">
@@ -41,9 +41,9 @@
         <el-radio :label="1">{{ $t('有折扣') }}</el-radio>
       </el-radio-group>
     </el-form-item>
-    <el-form-item :label="$t('折扣：')" :rules="[{ required: true, message: $t('请填写折扣') }]" prop="model.discount"
+    <el-form-item :label="$t('折扣：')" :rules="[{ required: true, message: $t('请输入折扣') }]" prop="model.discount"
       v-if="form.model.is_discount==1">
-      <el-input-number class="max-w460" :controls="false" :precision="0" :min="0" :max="100" :placeholder="$t('请填写折扣')" v-model.number="form.model.discount"></el-input-number>
+      <el-input-number class="max-w460" :controls="false" :precision="0" :min="0" :max="100" :placeholder="$t('请输入折扣')" v-model.number="form.model.discount"></el-input-number>
       <div> %</div>
     </el-form-item>
     <el-form-item :label="$t('开卡赠送：')">
@@ -53,15 +53,15 @@
     </el-form-item>
 
 
-    <el-form-item :label="$t('积分：')" :rules="[{ required: true, message: $t('请填写积分数量') }]" prop="model.open_points_num"
+    <el-form-item :label="$t('积分：')" :rules="[{ required: true, message: $t('请输入积分数量') }]" prop="model.open_points_num"
       v-if="form.model.open_points">
       <el-input v-model="form.model.open_points_num" class="max-w460"></el-input>
     </el-form-item>
-    <el-form-item :label="$t('余额：')" :rules="[{ required: true, message: $t('请填写余额数量') }]" prop="model.open_money_num"
+    <el-form-item :label="$t('余额：')" :rules="[{ required: true, message: $t('请输入余额数量') }]" prop="model.open_money_num"
       v-if="form.model.open_money">
       <el-input v-model="form.model.open_money_num" class="max-w460"></el-input>
     </el-form-item>
-    <el-form-item :label="$t('优惠券：')" :rules="[{ required: true, message: $t('请填写优惠券') }]" prop="model.open_coupons"
+    <el-form-item :label="$t('优惠券：')" :rules="[{ required: true, message: $t('请输入优惠券') }]" prop="model.open_coupons"
       v-if="form.model.open_coupon">
       <div class="d-s-c">
         <div style="width: 460px;border: 1px solid #dedede;min-height: 32px;"><span

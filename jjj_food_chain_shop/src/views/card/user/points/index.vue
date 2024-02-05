@@ -28,7 +28,7 @@
           <p>{{$t('注：退款后已赠送的订单积分对应扣除')}}</p>
         </div>
       </el-form-item>
-      <el-form-item :label="$t('积分赠送比例') " prop="gift_ratio" :rules="[{required: true,message: ' '}]">
+      <el-form-item v-if="form.is_shopping_gift == 1" :label="$t('积分赠送比例') " prop="gift_ratio" :rules="[{required: true,message: ' '}]">
         <el-input-number :controls="false" class="max-w460" :min="0" :max="100" :placeholder="$t('请输入内容')" v-model.number="form.gift_ratio"></el-input-number>
         <span>%</span>
         <div class="lh18 mt10 gray9">

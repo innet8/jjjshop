@@ -2,12 +2,14 @@
   <div class="product-add">
 
     <!--form表单-->
-    <el-form size="small" ref="form" :model="form" label-position="top" label-width="180px">
-      <!--基础信息-->
+    <el-form size="small" ref="form" class="product-form" :model="form" label-position="top" label-width="180px">
+        <div class="product-form-flex" ref="formContainer">
+        <!--基础信息-->
       <Basic ></Basic>
       <!--高级设置-->
       <Set ></Set>
       <!--提交-->
+      </div>
       <div class="common-button-wrapper">
         <el-button size="small"  @click="cancelFunc">{{ $t('取消') }}</el-button>
         <el-button size="small" type="primary" @click="onSubmit" :loading="loading">{{ $t('确定') }}</el-button>
@@ -114,11 +116,6 @@
               .catch(error => {
                 self.loading = false;
               });
-          } else {
-            this.$ElMessage({
-              message: '请检查必填项是否填写完整',
-              type: 'error'
-            });
           }
         });
       },
@@ -136,5 +133,24 @@
   .basic-setting-content {}
 
   .product-add {
+    height: calc(100% - 14px);
+    overflow: hidden;
   }
+  .product-form {
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    .product-form-flex {
+        flex: 1 1 auto;
+        overflow-y: auto;
+    }
+
+    .common-button-wrapper {
+        flex: 0 0 auto;
+        flex-shrink: 0;
+    }
+
+}
 </style>

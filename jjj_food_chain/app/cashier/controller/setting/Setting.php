@@ -36,7 +36,7 @@ class Setting extends Controller
         $model = new SettingModel;
         $data = $this->request->param();
         //
-        if(!in_array($data['default_language'], $cashier['language'])){
+        if(isset($data['default_language']) && !in_array($data['default_language'], $cashier['language'])){
             return $this->renderError('不在支持语言列表中');
         }
 
