@@ -240,6 +240,14 @@ class User extends UserModel
             $diffMoney = $this['balance'] + $data['money'];
             $money = $data['money'];
         } elseif ($data['mode'] === 'dec') {
+            if ($this['balance'] == 0) {
+                $this->error = '余额不能小于0';
+                return false;
+            }
+            if ($this['balance'] - $data['money'] < 0) {
+                $this->error = '余额不能小于当前数值';
+                return false;
+            }
             $diffMoney = $this['balance'] - $data['money'] <= 0 ? 0 : $this['balance'] - $data['money'];
             $money = -$data['money'];
         } else {
@@ -285,6 +293,14 @@ class User extends UserModel
             $diffMoney = $this['points'] + $data['value'];
             $points = $data['value'];
         } elseif ($data['mode'] === 'dec') {
+            if ($this['points'] == 0) {
+                $this->error = '积分不能小于0';
+                return false;
+            }
+            if ($this['points'] - $data['value'] < 0) {
+                $this->error = '积分不能小于当前数值';
+                return false;
+            }
             $diffMoney = $this['points'] - $data['value'] <= 0 ? 0 : $this['points'] - $data['value'];
             $points = -$data['value'];
         } else {
