@@ -20,6 +20,7 @@ use app\common\enum\order\OrderPayStatusEnum;
 use app\common\service\deliveryapi\MeTuanApi;
 use app\common\enum\settings\DeliveryTypeEnum;
 use app\common\enum\product\DeductStockTypeEnum;
+use app\cashier\model\store\Table as TableModel;
 use app\common\service\order\OrderPrinterService;
 use app\common\service\order\OrderCompleteService;
 use app\common\model\plus\discount\DiscountProduct;
@@ -1011,6 +1012,10 @@ class Order extends BaseModel
         if ($this->order_status['value'] != 10) {
             $this->error = "订单状态错误，不允许取消";
             return false;
+        }
+        // 关闭桌台
+        if ($this->table_id) {
+            TableModel::close($this->table_id);
         }
         return $this->save(['order_status' => 20]);
     }
