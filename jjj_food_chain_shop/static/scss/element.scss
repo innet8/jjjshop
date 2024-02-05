@@ -230,15 +230,19 @@
     color:var(--el-color-danger);
 }
 .el-button--primary.is-link.is-disabled{
-    color: var(--el-color-tips);
+    color: var(--el-color-tips) ;
 }
 .el-button--primary.is-link.is-disabled:hover{
     color: var(--el-color-tips);
 }
 .el-button--primary.el-button.is-disabled{
     opacity: 0.8;
-    background: var(--el-color-tips);
-    border-color: var(--el-color-tips);
+    background: #e8eaeb;
+    border-color:#e8eaeb;
+    color: #999;
+}
+.el-button--primary.el-button.is-disabled:hover{
+    color: #999;
 }
 .el-dropdown-menu__item.is-disabled{
     color:var(--el-color-primary) !important;
