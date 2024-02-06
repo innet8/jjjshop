@@ -2,9 +2,10 @@
 
 namespace app\shop\controller;
 
-use app\shop\model\settings\Setting as SettingModel;
-use app\shop\model\shop\User;
 use think\facade\Session;
+use app\shop\model\shop\User;
+use app\common\enum\settings\SettingEnum;
+use app\shop\model\settings\Setting as SettingModel;
 
 /**
  * 商户认证
@@ -20,7 +21,7 @@ class Passport extends Controller
         $user['password'] = salt_hash($user['password']);
         $model = new User();
         if ($userInfo = $model->checkLogin($user)) {
-            $setting = SettingModel::getItem('store', $userInfo['app']['app_id']);
+            $setting = SettingModel::getSupplierItem(SettingEnum::STORE, $userInfo['shop_supplier_id'] ?? 0, $userInfo['app']['app_id'] ?? 0);
             //当前系统版本
             $version = get_version();
             return $this->renderSuccess('登录成功', [
