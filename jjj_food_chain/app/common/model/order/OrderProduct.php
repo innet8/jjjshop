@@ -337,7 +337,7 @@ class OrderProduct extends BaseModel
     // 送厨
     public function sendKitchen($order_id, $type='kitchen')
     {
-        $order = (new OrderModel)->with('unSendKitchenProduct')->where('order_id', $order_id)->find();
+        $order = (new OrderModel)->with(['unSendKitchenProduct'])->where('order_id', $order_id)->find();
         if (!$order) {
             $this->error = "订单不存在";
             return false;
@@ -383,15 +383,6 @@ class OrderProduct extends BaseModel
     {
         $orderProductList = OrderProduct::where('order_id', '=', $order_id)->where('is_send_kitchen', '=', 1)->select();
         $result = [];
-
-//        foreach ($orderProductList as $orderProduct) {
-//            $sendKitchenTime = format_time_his($orderProduct->send_kitchen_time);
-//            if (!isset($result[$sendKitchenTime])) {
-//                $result[$sendKitchenTime] = [];
-//            }
-//            $result[$sendKitchenTime][] = $orderProduct;
-//        }
-//        return $result;
         foreach ($orderProductList as $orderProduct) {
             $sendKitchenTime = $orderProduct->send_kitchen_time;
             if (!isset($result[$sendKitchenTime])) {

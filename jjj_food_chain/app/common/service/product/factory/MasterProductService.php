@@ -174,6 +174,10 @@ class MasterProductService extends ProductService
                     ];
                     continue;
                 }
+                if($product['deduct_stock_type'] == DeductStockTypeEnum::PAYMENT && $type == 'payment'){
+                    continue;
+                }
+
                 // 总库存
                 $productData[] = [
                     'data' => [

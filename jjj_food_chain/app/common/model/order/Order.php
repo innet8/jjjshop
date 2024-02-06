@@ -431,7 +431,7 @@ class Order extends BaseModel
     public static function detail($where, $with = ['user', 'address', 'product' => ['image'], 'extract', 'supplier', 'cashier'])
     {
         is_array($where) ? $filter = $where : $filter['order_id'] = (int)$where;
-        return self::with($with)->where($filter)->find();
+        return self::with($with)->where($filter)->order('order_id', 'desc')->find();
     }
 
     /**
