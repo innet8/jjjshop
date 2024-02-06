@@ -24,7 +24,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('订单号')">
-                    <el-input size="small" v-model="searchForm.order_no" :placeholder="$t('请输入订单号')"></el-input>
+                    <el-input size="small" v-model="searchForm.order_no" :placeholder="$t('订单号')"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('用餐方式')">
                     <el-select size="small" v-model="searchForm.style_id" :placeholder="$t('请选择')">
