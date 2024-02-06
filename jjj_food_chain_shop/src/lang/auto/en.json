@@ -821,5 +821,6 @@
     "请输入有效期": "Please enter the validity period",
     "请输入使用须知": "Please enter instructions for use",
     "已退款：": "refunded:",
-    "支持JPG、JPEG、PNG格式，小于15MB，尺寸：160*120px": "Support JPG, JPEG, PNG format, less than 15MB, size: 160*120px"
+    "支持JPG、JPEG、PNG格式，小于15MB，尺寸：160*120px": "Support JPG, JPEG, PNG format, less than 15MB, size: 160*120px",
+    "支持JPG、JPEG、PNG格式，小于15MB，尺寸：120*120px": "Support JPG, JPEG, PNG format, less than 15MB, size: 120*120px"
 }

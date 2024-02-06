@@ -16,6 +16,7 @@
           <el-button @click="chooseImg('logoUrl')">{{$t('选择图片')}}</el-button>
         </div>
         <img class="mt10" v-img-url="form.logoUrl" :width="100">
+        <div class="tips">{{ $t('支持JPG、JPEG、PNG格式，小于15MB，尺寸：120*120px') }}</div>
       </el-form-item>
       
       <el-form-item :label="$t('店铺ID')" prop="customer">
