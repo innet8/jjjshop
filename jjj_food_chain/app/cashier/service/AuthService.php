@@ -32,8 +32,13 @@ class AuthService
         '/call/call/processed',
         '/call/call/unprocessed',
         // 首页
+        '/index/bind',
         '/index/index',
+        '/index/base',
+        '/index/lang',
+        '/index/ad',
         '/index/printData',
+        '/index/verifyAdvancedPassword',
 
         '/user/user/detail',
         '/user/user/OrderUseCard',
