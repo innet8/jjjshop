@@ -345,7 +345,7 @@ class OrderProduct extends BaseModel
 
         $this->startTrans();
         try {
-            // 
+            // 付款减库存
             $error = [];
             foreach ($order['product'] as $product) {
                 if ($product['deduct_stock_type'] == DeductStockTypeEnum::PAYMENT && $type == 'payment') {
