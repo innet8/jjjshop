@@ -1,7 +1,7 @@
 <template >
     <div>
-        <vue-cropper ref="cropper" :src="img" :aspectRatio="1" alt="Source Image"></vue-cropper>
-        <span class="dialog-footer" >
+        <vue-cropper ref="cropper" :src="img" :aspectRatio="aspectRatio" alt="Source Image"></vue-cropper>
+        <span class="dialog-footer">
             <el-button @click="handleClose"> {{ $t('取消') }}</el-button>
             <el-button type="primary" @click="handelCropper"> {{ $t('确定') }} </el-button>
         </span>
@@ -12,7 +12,16 @@ import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
 export default {
     components: { VueCropper },
-    props: ['imgSrc'],
+    props: {
+        imgSrc: {
+            type: String,
+            default: '',
+        },
+        aspectRatio: {
+            type: Number,
+            default: 1,
+        },
+    },
     data() {
         return {
             img: '',
@@ -56,7 +65,7 @@ export default {
 }
 </script>
 <style scoped>
-.dialog-footer{
+.dialog-footer {
     margin-top: 20px;
 }
 </style>

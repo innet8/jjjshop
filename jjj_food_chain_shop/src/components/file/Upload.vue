@@ -81,7 +81,7 @@
             <div class="pagination-cropper">
                 <!-- 图片裁剪 -->
                 <el-dialog v-model="cropperShow" :title="$t('图片裁剪')" :before-close="handleClose">
-                    <cropperImg v-if="cropperShow" ref="cropperImg" :imgSrc="imgSrc" @upload="UploadImage" @handleClose="handleClose"></cropperImg>
+                    <cropperImg v-if="cropperShow" ref="cropperImg" :aspectRatio="aspectRatio" :imgSrc="imgSrc" @upload="UploadImage" @handleClose="handleClose"></cropperImg>
                 </el-dialog>
             </div>
             <template #footer>
@@ -156,7 +156,15 @@ export default {
             accept: "",
         };
     },
-    props: ["config"],
+    props: {
+        config: {
+            default: '',
+        },
+        aspectRatio: {
+            type: Number,
+            default: 1,
+        },
+    },
     created() {
         /*覆盖默认值*/
         if (

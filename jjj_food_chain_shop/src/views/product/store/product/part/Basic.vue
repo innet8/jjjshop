@@ -55,7 +55,7 @@
                     </el-icon>
                 </div>
             </div>
-            <div class="gray9">{{ $t('支持JPG、JPEG、PNG格式，小于15MB，尺寸：48*48px') }}</div>
+            <div class="gray9">{{ $t('支持JPG、JPEG、PNG格式，小于15MB，尺寸：160*120px') }}</div>
         </el-form-item>
         <el-form-item :label="$t('商品卖点：')">
             <el-input type="textarea" :placeholder="$t('请输入商品卖点')" v-model="form.model.selling_point" show-word-limit
@@ -63,7 +63,7 @@
         </el-form-item>
 
         <!--商品图片组件-->
-        <Upload v-if="isProductUpload" :config="{ total: 1 }" :isupload="isProductUpload"
+        <Upload v-if="isProductUpload" :config="{ total: 1 }" :isupload="isProductUpload" :aspectRatio="1.333"
             @returnImgs="returnProductImgsFunc">{{ $t('上传图片') }}</Upload>
     </div>
 </template>
