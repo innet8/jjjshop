@@ -109,21 +109,18 @@
                             </p>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="pay_price" :label="$t('实付金额')">
+                    <el-table-column prop="pay_price" :label="$t('实付金额')" show-overflow-tooltip>
                         <template #default="scope">
                             <div>
                                 <div class="orange" v-if=" scope.row.order_status.value == 30 ">
                                     {{ currency.unit }}{{ scope.row.pay_price }}
-                     
                                 </div>
                                 <div v-else>-</div>
                                 <!-- <p class="gray9" v-if="scope.row.setting_service_money > 0">({{ $t('服务费') }}：{{
                                     scope.row.setting_service_money }})</p>
                                 <p class="gray9" v-if="scope.row.consumption_tax_money > 0">({{ $t('消费税') }}：{{
                                     scope.row.consumption_tax_money }})</p>-->
-                                <p class="gray9" v-if="scope.row.refund_money > 0">({{ $t('退款金额：') }}{{
-                                    scope.row.refund_money }})
-                                </p> 
+                                <p class="gray9" v-if="scope.row.refund_money > 0">({{ $t('退款金额：') }}{{ scope.row.refund_money }})</p> 
                             </div>
                         </template>
                     </el-table-column>
