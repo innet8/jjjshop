@@ -162,7 +162,7 @@ class MasterProductService extends ProductService
         // 
         foreach ($productList as $product) {
             // 下单减库存 或者 付款减库存
-            if ($product['deduct_stock_type'] == DeductStockTypeEnum::CREATE || ($product['deduct_stock_type'] == DeductStockTypeEnum::PAYMENT && $type == 'payment')) {
+            if ($product['deduct_stock_type'] == DeductStockTypeEnum::CREATE) {
                 $stockStatus = $product->getStockState($product['total_num']);
                 if (!$stockStatus) {
                     $error[] = [
@@ -174,10 +174,6 @@ class MasterProductService extends ProductService
                     ];
                     continue;
                 }
-                if($product['deduct_stock_type'] == DeductStockTypeEnum::PAYMENT && $type == 'payment'){
-                    continue;
-                }
-
                 // 总库存
                 $productData[] = [
                     'data' => [
