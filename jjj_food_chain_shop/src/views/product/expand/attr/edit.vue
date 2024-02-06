@@ -103,7 +103,7 @@ export default {
             self.$refs.form.validate((valid) => {
                 if (valid) {
                     self.loading = true;
-                    PorductApi.editAttribute(params).then(data => {
+                    PorductApi.editAttribute(params,true).then(data => {
                         self.loading = false;
                         this.$ElMessage({
                             message: $t('保存成功'),

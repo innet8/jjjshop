@@ -75,7 +75,7 @@ export default {
             self.$refs.form.validate((valid) => {
                 if (valid) {
                     self.loading = true;
-                    PorductApi.addLabel(params).then(data => {
+                    PorductApi.addLabel(params,true).then(data => {
                         self.loading = false;
                         this.$ElMessage({
                             message: $t('添加成功'),

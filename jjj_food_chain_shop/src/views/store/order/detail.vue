@@ -82,6 +82,9 @@
                         <div class="pb16">
                             <span class="gray9">{{ $t('实付款金额：') }}</span>
                             {{ currency.unit }}{{ detail.pay_price }}
+                            <span  v-if="detail.refund_money > 0">({{ $t('已退款：') }}
+                                {{ currency.unit }}{{ detail.refund_money }})
+                                </span> 
                         </div>
                     </el-col>
                     <el-col :span="6" v-if=" detail.order_status.value == 30">

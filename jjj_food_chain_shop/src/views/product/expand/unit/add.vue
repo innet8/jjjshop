@@ -80,7 +80,7 @@ export default {
             self.$refs.form.validate((valid) => {
                 if (valid) {
                     self.loading = true;
-                    PorductApi.addUnit(params).then(data => {
+                    PorductApi.addUnit(params,true).then(data => {
                         self.loading = false;
                         this.$ElMessage({
                             message: $t('添加成功'),

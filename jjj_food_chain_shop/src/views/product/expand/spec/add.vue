@@ -85,7 +85,7 @@ export default {
             self.$refs.form.validate((valid) => {
                 if (valid) {
                     self.loading = true;
-                    PorductApi.addSpec(params).then(data => {
+                    PorductApi.addSpec(params,true).then(data => {
                         self.loading = false;
                         this.$ElMessage({
                             message: $t('添加成功'),
