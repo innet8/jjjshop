@@ -8,13 +8,13 @@
     <div class="common-seach-wrap">
       <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item :label="$t('等级')">
-          <el-select v-model="formInline.grade_id" :placeholder="$t('请选择会员等级')" style="width: 120px;">
+          <el-select v-model="formInline.grade_id" :placeholder="$t('请选择')" style="width: 120px;">
             <el-option :label="$t('全部')" value="0"></el-option>
             <el-option v-for="(item, index) in gradeList" :key="index" :label="item.name" :value="item.grade_id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('性别')">
-          <el-select v-model="formInline.gender" :placeholder="$t('请选择性别')" style="width: 120px;">
+          <el-select v-model="formInline.gender" :placeholder="$t('请选择')" style="width: 120px;">
             <el-option :label="$t('全部')" value="-1"></el-option>
             <el-option v-for="(item, index) in sex" :key="index" :label="item" :value="index"></el-option>
           </el-select>
