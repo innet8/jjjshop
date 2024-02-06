@@ -39,12 +39,11 @@ class User extends UserModel
             $this->error = '登录失败, 当前应用已删除';
             return false;
         }
-        // DOTO 先注释掉让测试人员测试
-        // $cashierUser = $this->where(['cashier_online' => 1])->find();
-        // if ($cashierUser && $cashierUser['shop_user_id'] != $user['shop_user_id']) {
-        //     $this->error = '收银员' . $cashierUser['real_name'] . '未交班，请先交班';
-        //     return false;
-        // }
+        $cashierUser = $this->where(['cashier_online' => 1])->find();
+        if ($cashierUser && $cashierUser['shop_user_id'] != $user['shop_user_id']) {
+            $this->error = '收银员' . $cashierUser['real_name'] . '未交班，请先交班';
+            return false;
+        }
         // 保存登录状态
         $user['token'] = signToken($user['shop_user_id'], 'cashier');
         // 更新收银员信息
