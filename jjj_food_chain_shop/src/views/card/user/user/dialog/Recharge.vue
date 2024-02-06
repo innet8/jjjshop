@@ -25,7 +25,7 @@
                     </el-form-item>
                     <el-form-item :label="$t('变更金额')" :label-width="formLabelWidth" prop="balance.money" :rules="[{
                         validator: () => {
-                            return recharge.balance.money ? true : false;
+                            return recharge.balance.money || recharge.balance.money === 0 ? true : false;
                         },
                         message: $t('请输入变更金额')
                     }]">
@@ -54,7 +54,7 @@
                     </el-form-item>
                     <el-form-item :label="$t('变更数量')" :label-width="formLabelWidth" prop="points.value" :rules="[{
                         validator: () => {
-                            return recharge.points.value ? true : false;
+                            return recharge.points.value || recharge.points.value === 0 ? true : false;
                         },
                         message: $t('请输入变更数量')
                     }]">
