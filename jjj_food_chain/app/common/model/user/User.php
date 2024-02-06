@@ -79,16 +79,12 @@ class User extends BaseModel
     /**
      * 获取用户信息
      */
-    public static function detail($where)
+    public static function detail($where, $includeDeleted = false)
     {
         $model = new static;
-        $filter = ['is_delete' => 0];
-        if (is_array($where)) {
-            $filter = array_merge($filter, $where);
-        } else {
-            $filter['user_id'] = (int)$where;
-        }
-        //
+        $filter = $includeDeleted ? [] : ['is_delete' => 0];
+        $filter = is_array($where) ? array_merge($filter, $where) : array_merge($filter, ['user_id' => (int)$where]);
+
         $info = $model->where($filter)->with(['address', 'addressDefault', 'grade', 'card'])->find();
         if ($info) {
             $info->password = '';

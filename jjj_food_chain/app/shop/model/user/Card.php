@@ -172,9 +172,9 @@ class Card extends CardModel
         $this->startTrans();
         try {
             $detail->save(['is_delete' => 1]);
-            $user = (new User)::detail($detail['user_id']);
+            $user = (new User)::detail($detail['user_id'], true);
             // 撤销会员卡id
-            $user->setCardId(0);
+            $user?->setCardId(0);
             // 撤销积分
             if ($detail['open_points'] && $detail['open_points_num']) {
                 $user->setIncPoints(-$detail['open_points_num'], '撤销会员卡减少积分');
