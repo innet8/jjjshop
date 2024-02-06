@@ -51,9 +51,9 @@
                     <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
                     <el-table-column fixed="right" :label="$t('操作')" width="190">
                         <template #default="scope">
-                            <el-button @click="qrcode(scope.row)" type="primary" link size="small"
+                            <!-- <el-button @click="qrcode(scope.row)" type="primary" link size="small"
                                 v-auth="'/supplier/table/table/edit'">
-                                {{ $t('二维码') }}</el-button>
+                                {{ $t('二维码') }}</el-button> -->
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
                                 v-auth="'/supplier/table/table/edit'">{{ $t('编辑') }}
                             </el-button>

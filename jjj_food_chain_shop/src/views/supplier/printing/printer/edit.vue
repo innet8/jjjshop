@@ -121,7 +121,7 @@ export default {
                 printer_name: '',
                 printer_type: '',
                 sort: 1,
-                print_times: '',
+                print_times: 1,
                 FEI_E_YUN: {
                     USER: '',
                     UKEY: '',

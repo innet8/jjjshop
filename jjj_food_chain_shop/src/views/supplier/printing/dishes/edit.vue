@@ -167,6 +167,13 @@ export default {
                 this.takeList = data.data.takeList;
                 this.type = data.data.printerList;
                 this.typeTag = data.data.printerTagList;
+                const arr = [];
+                this.type.map(item=>{
+                    arr.push(item.printer_id)
+                })
+               if(arr.indexOf(this.form.printer_id) == -1){
+                this.form.printer_id = ''
+               }
                 this.labelList = data.data.labelList;
                 // 
                 this.options = [];

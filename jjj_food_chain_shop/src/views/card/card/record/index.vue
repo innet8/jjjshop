@@ -49,7 +49,7 @@
           <el-table-column prop="pay_time_text" :label="$t('领取时间')"></el-table-column>
           <el-table-column fixed="right" :label="$t('操作')" width="160">
             <template #default="scope">
-              <el-button v-auth="'/card/card/record/adjust'" @click="putClick(scope.row)" type="primary" link size="small" :disabled="scope.row.is_delete ==1" v-if="scope.row.expire_time > 0 ">{{ $t('调整有效期') }}</el-button>
+              <el-button v-auth="'/card/card/record/adjust'" @click="putClick(scope.row)" type="primary" link size="small" :disabled="scope.row.is_delete ==1" v-if="scope.row.expire_time >= 0 ">{{ $t('调整有效期') }}</el-button>
               <el-button v-auth="'/card/card/record/cancel'" @click="cancel(scope.row)" type="primary" link size="small" :disabled="scope.row.is_delete ==1" v-if="scope.row.pay_type==30">{{ $t('撤销') }}</el-button>
             </template>
           </el-table-column>

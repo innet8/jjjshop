@@ -1,6 +1,7 @@
 <template >
     <div class="cash">
-        <el-form size="small" ref="form" :model="form" label-position="top">
+        <div class="form-div">
+            <el-form size="small" ref="form" :model="form" label-position="top">
             <el-form-item :label="$t('轮播内容')" prop="carousel" :rules="[{ required: true, message: '' }]">
                 <div class="draggable-list">
                     <flieUpload @upLoad="upLoad" :tips1="$t('图片：支持JPG、JPEG、PNG格式，小于15MB，尺寸：1024*600px')"
@@ -86,6 +87,8 @@
                 </el-select>
             </el-form-item>
         </el-form>
+        </div>
+
         <div class="common-button-wrapper">
             <el-button size="small"  @click="getData">{{ $t('重置') }}</el-button>
             <el-button size="small" type="primary" @click="onSubmit" :loading="loading">{{ $t('保存') }}</el-button>
@@ -240,7 +243,23 @@ export default {
 
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
+.cash{
+    height: calc(100% - 14px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    .form-div{
+        flex: 1 1 auto;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    .common-button-wrapper{
+        flex: 0 0 auto;
+        flex-shrink: 0;
+    }
+}
+
 .delete-box {
     display: flex;
     align-items: center;
