@@ -65,8 +65,17 @@ class Call extends BaseModel
      */
     public function getUnSendList(int $shopSupplierId = 0)
     {
+        // 判断是否时安卓还是h5 android web
+        $header = request()->header();
+        $isAndroid = false;
+        if (isset($header['platform'])) {
+            $isAndroid = strpos($header['platform'], 'android') !== false;
+        }
+        //
         $unSendList = $this->withoutGlobalScope()->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->limit(5)->order(['create_time' => 'asc'])->select();
-        $this->withoutGlobalScope()->where('is_send', 0)->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->limit(5)->order(['create_time' => 'asc'])->update(['is_send' => 1]);
+        if ($isAndroid) {
+            $this->withoutGlobalScope()->where('is_send', 0)->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->limit(5)->order(['create_time' => 'asc'])->update(['is_send' => 1]);
+        }
         // 新增呼叫语音文字
         foreach ($unSendList as &$item) {
             $text = $item['call_type'] == 1 ? __('呼叫服务员') : __('呼叫结账');
