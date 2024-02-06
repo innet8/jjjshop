@@ -20,7 +20,7 @@
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('昵称/手机号/ID')"><el-input :placeholder="$t('昵称/手机号/ID')" v-model="formInline.keyword"></el-input></el-form-item>
-        <el-form-item>
+        <el-form-item style="margin-right: 0;">
           <el-button class="search-button" type="primary" icon="Search" @click="search">{{ $t('查询') }}</el-button>
         </el-form-item>
       </el-form>
@@ -221,5 +221,12 @@ export default {
   }
 };
 </script>
-
+<style scoped lang="scss">
+:deep(.el-select--small) {
+    .el-select__wrapper{
+        min-width: auto;
+    }
+ 
+}
+</style>
 

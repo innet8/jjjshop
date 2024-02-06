@@ -16,7 +16,11 @@
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
                     <el-table-column prop="id" label="ID"></el-table-column>
                     <el-table-column prop="name" :label="$t('名称')"></el-table-column>
-                    <el-table-column prop="printer.printer_name" :label="$t('打印机')"></el-table-column>
+                    <el-table-column prop="printer.printer_name" :label="$t('打印机')">
+                        <template #default="scope">
+                            <div>{{ scope.row.printer.is_delete == 0 ? scope.row.printer.printer_name : '-' }}</div>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="product_type" :label="$t('打印模式')">
                         <template #default="scope">
                             <div>{{ scope.row.print_type == 10 ? $t('付款打印') : $t('送厨打印') }}</div>
