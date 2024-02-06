@@ -345,28 +345,6 @@ class OrderProduct extends BaseModel
 
         $this->startTrans();
         try {
-            // 付款减库存
-            $error = [];
-            foreach ($order['product'] as $product) {
-                if ($product['deduct_stock_type'] == DeductStockTypeEnum::PAYMENT && $type == 'payment') {
-                    $stockStatus = $product->getStockState($product['total_num']);
-                    if (!$stockStatus) {
-                        $error[] = [
-                            'order_product_id' => $product['order_product_id'],
-                            'product_id' => $product['product_id'],
-                            'product_sku_id' => $product['product_sku_id'],
-                            'total_num' => $product['total_num'],
-                            'product_name_text' => $product['product_name_text'],
-                        ];
-                        continue;
-                    }
-                }
-            }
-            if (!empty($error)) {
-                $this->error = "商品库存不足，请重新选择";
-                $this->errorData = $error;
-                return false;
-            }
             // 
             $res = ProductFactory::getFactory($order['order_source'])->updateOrderProductStock($order['unSendKitchenProduct'], $type);
             if ($res !== true) {

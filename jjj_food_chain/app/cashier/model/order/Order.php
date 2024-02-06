@@ -18,6 +18,7 @@ use app\common\enum\order\OrderPayStatusEnum;
 use app\common\model\order\OrderProductReturn;
 use app\common\model\order\Order as OrderModel;
 use app\cashier\model\store\Table as TableModel;
+use app\common\enum\product\DeductStockTypeEnum;
 use app\common\service\order\OrderRefundService;
 use app\common\service\order\OrderCompleteService;
 use app\shop\model\user\PointsLog as PointsLogModel;
@@ -158,6 +159,28 @@ class Order extends OrderModel
         // 发起余额支付
         $this->startTrans();
         try {
+            // 付款减库存-判断库存
+            $error = [];
+            foreach ($this->product as $product) {
+                if ($product['deduct_stock_type'] == DeductStockTypeEnum::PAYMENT) {
+                    $stockStatus = $product->getStockState($product['total_num']);
+                    if (!$stockStatus) {
+                        $error[] = [
+                            'order_product_id' => $product['order_product_id'],
+                            'product_id' => $product['product_id'],
+                            'product_sku_id' => $product['product_sku_id'],
+                            'total_num' => $product['total_num'],
+                            'product_name_text' => $product['product_name_text'],
+                        ];
+                        continue;
+                    }
+                }
+            }
+            if (!empty($error)) {
+                $this->error = "商品库存不足，请重新选择";
+                $this->errorData = $error;
+                return false;
+            }
             // 订单商品送厨
             $model = new OrderProductModel();
             if (!$model->sendKitchen($this['order_id'], 'payment')) {
@@ -165,7 +188,6 @@ class Order extends OrderModel
                 $this->errorData = $model->getErrorData();
                 return false;
             }
-
             //
             $status = $PaySuccess->onPaySuccess($pay_type);
             if (!$status) {
