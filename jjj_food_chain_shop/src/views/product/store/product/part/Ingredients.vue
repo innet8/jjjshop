@@ -48,9 +48,7 @@
                                  <template #label>
                                 <span style="color: var(--el-color-danger);margin: 0  4px 0 0 !important;">*</span>{{ $t('价格：') }}
                             </template>
-                            <el-input class="inline-input" :placeholder="$t('价格')" type="number" size="small"
-                                v-model="item.price" placeholder="">
-                            </el-input>
+                            <el-input-number :controls="false" :min="0" :max="1000000" :placeholder="$t('请输入价格')" v-model.number="item.price"></el-input-number>
                         </el-form-item>
                     </el-form>
 
@@ -126,7 +124,7 @@ export default {
             this.form.model.product_feed.push(
                 {
                     feed_name: JSON.parse(languageData),
-                    price: ''
+                    price: null
                 }
             )
         },

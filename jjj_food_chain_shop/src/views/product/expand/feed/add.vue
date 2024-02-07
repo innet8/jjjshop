@@ -16,7 +16,7 @@
                 <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('接近0，排序等级越高')" v-model.number="form.sort"></el-input-number>
             </el-form-item>
             <el-form-item :label="$t('价格')" prop="price">
-                <el-input type="number" v-model="form.price" :placeholder="$t('请输入价格')"></el-input>
+                <el-input-number :controls="false" :min="0" :max="1000000" :placeholder="$t('请输入价格')" v-model.number="form.price"></el-input-number>
             </el-form-item>
         </el-form>
         <template #footer>
@@ -44,7 +44,7 @@ export default {
             form: {
                 feed_name: JSON.parse(languageData),
                 sort: null,
-                price: ''
+                price: null
             },
             formRules: {
 
