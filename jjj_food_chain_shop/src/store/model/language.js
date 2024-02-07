@@ -21,12 +21,17 @@ export const languageStore = defineStore({
                 key: 'en',
                 label: 'English'
             },
+            {
+                key: 'ja',
+                label: '日本語'
+            },
         ],
         languageData:{
             th: "",
             zh: "",
             zhtw: "",
             en: "",
+            ja: "",
         },
     }),
     getters: {

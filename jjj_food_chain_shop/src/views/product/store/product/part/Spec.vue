@@ -68,12 +68,13 @@ export default {
         Many
     },
     data() {
+        let languageObj = {}
+        languageList.forEach(item => {
+            languageObj[item.key] = []
+        });
         return {
             restaurants: [],
-            restaurants_zh: [],
-            restaurants_zhtw: [],
-            restaurants_en: [],
-            restaurants_th: [],
+            restaurantsObj: languageObj,
             languageList: languageList,
         }
     },
@@ -81,31 +82,24 @@ export default {
     watch: {
         'form': {
             handler(val) {
-                this.restaurants_zh = [];
-                this.restaurants_zhtw = [];
-                this.restaurants_en = [];
-                this.restaurants_th = [];
+                let languageObj = {}
+                languageList.forEach(item => {
+                    languageObj[item.key] = []
+                });
+                this.restaurantsObj = languageObj
                 val.unit.map((item, index) => {
-                    if (JSON.parse(item.unit_name).zh && JSON.parse(item.unit_name).zhtw && JSON.parse(item.unit_name).en && JSON.parse(item.unit_name).th) { 
-                        this.restaurants_zh.push({
-                        value: JSON.parse(item.unit_name).zh,
-                        index: index,
-                    })
-                    this.restaurants_zhtw.push({
-                        value: JSON.parse(item.unit_name).zhtw,
-                        index: index,
-                    })
-                    this.restaurants_en.push({
-                        value: JSON.parse(item.unit_name).en,
-                        index: index,
-                    })
-                    this.restaurants_th.push({
-                        value: JSON.parse(item.unit_name).th,
-                        index: index,
-                    })
-                    }
-   
+                    let unit_name = JSON.parse(item.unit_name);
+                    languageList.forEach(items => {
+                        if (unit_name[items.key]) {
+                            this.restaurantsObj[items.key].push({
+                                value: unit_name[items.key],
+                                index: index,
+                            })
+                        }
+                    });
+
                 })
+
             },
             deep: true,
             immediate: true,
@@ -128,47 +122,23 @@ export default {
         },
         querySearch(queryString, cb, key) {
             let restaurants = [];
-            if (key == 'th') {
-                restaurants = this.restaurants_th
-            }
-            if (key == 'zh') {
-                restaurants = this.restaurants_zh
-            }
-            if (key == 'zhtw') {
-                restaurants = this.restaurants_zhtw
-            }
-            if (key == 'en') {
-                restaurants = this.restaurants_en
-            }
+            restaurants = this.restaurantsObj[key]
             let results = queryString ? restaurants.filter(this.createFilter(queryString, key)) : restaurants;
             // 调用 callback 返回建议列表的数据
             cb(results);
         },
         createFilter(queryString, key) {
             var restaurants = [];
-            if (key == 'th') {
-                restaurants = this.restaurants_th
-            }
-            if (key == 'zh') {
-                restaurants = this.restaurants_zh
-            }
-            if (key == 'zhtw') {
-                restaurants = this.restaurants_zhtw
-            }
-            if (key == 'en') {
-                restaurants = this.restaurants_en
-            }
-            console.log(restaurants, 1213);
+            restaurants = this.restaurantsObj[key]
             return (restaurants) => {
                 return (restaurants.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
             };
         },
 
         selectChange(e) {
-            this.form.model.product_unit.zh = this.restaurants_zh[e.index].value
-            this.form.model.product_unit.th = this.restaurants_th[e.index].value
-            this.form.model.product_unit.en = this.restaurants_en[e.index].value
-            this.form.model.product_unit.zhtw = this.restaurants_zhtw[e.index].value
+            languageList.forEach(item => {
+                this.form.model.product_unit[item.key] = this.restaurantsObj[item.key][e.index].value
+            });
         },
     }
 };

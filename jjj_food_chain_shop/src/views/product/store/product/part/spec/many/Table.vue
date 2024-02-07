@@ -35,8 +35,8 @@
                                 },
                                 message: $t('请输入价格')
                             }]">
-                                <el-input-number type="number" :placeholder="$t('请输入价格')" size="small" :min="0" :max="1000000" :controls="false"
-                                    v-model="scope.row.product_price"></el-input-number>
+                                <el-input-number type="number" :placeholder="$t('请输入价格')" size="small" :min="0"
+                                    :max="1000000" :controls="false" v-model="scope.row.product_price"></el-input-number>
                             </el-form-item>
                         </template>
                     </el-table-column>
@@ -61,8 +61,8 @@
                                 },
                                 message: $t('请输入库存')
                             }]">
-                                <el-input-number type="number" :placeholder="$t('请输入库存')"  size="small" :min="0" :max="999" :controls="false"
-                                    v-model="scope.row.stock_num"></el-input-number>
+                                <el-input-number type="number" :placeholder="$t('请输入库存')" size="small" :min="0" :max="999"
+                                    :controls="false" v-model="scope.row.stock_num"></el-input-number>
                             </el-form-item>
                         </template>
                     </el-table-column>
@@ -89,13 +89,14 @@ export default {
 
     },
     data() {
+        let languageObj = {}
+        languageList.forEach(item => {
+            languageObj[item.key] = []
+        });
         return {
             languageList: languageList,
             restaurants: [],
-            restaurants_zh: [],
-            restaurants_zhtw: [],
-            restaurants_en: [],
-            restaurants_th: [],
+            restaurantsObj: languageObj,
             /*批量设置sku属性*/
             batchData: {
                 product_price: '',
@@ -110,25 +111,29 @@ export default {
         };
     },
     inject: ['form'],
-    created() {
-        this.form.spec.map((item, index) => {
-            this.restaurants_zh.push({
-                value: JSON.parse(item.spec_name).zh,
-                index: index,
-            })
-            this.restaurants_zhtw.push({
-                value: JSON.parse(item.spec_name).zhtw,
-                index: index,
-            })
-            this.restaurants_en.push({
-                value: JSON.parse(item.spec_name).en,
-                index: index,
-            })
-            this.restaurants_th.push({
-                value: JSON.parse(item.spec_name).th,
-                index: index,
-            })
-        })
+    watch: {
+        'form': {
+            handler(val) {
+                let languageObj = {}
+                languageList.forEach(item => {
+                    languageObj[item.key] = []
+                });
+                this.restaurantsObj = languageObj
+                val.spec.map((item, index) => {
+                    let spec_name = JSON.parse(item.spec_name);
+                    languageList.forEach(items => {
+                        if (spec_name[items.key]) {
+                            this.restaurantsObj[items.key].push({
+                                value: spec_name[items.key],
+                                index: index,
+                            })
+                        }
+                    });
+                })
+            },
+            deep: true,
+            immediate: true,
+        }
     },
     mounted() {
 
@@ -136,54 +141,31 @@ export default {
     },
     methods: {
         deleteAttr(i) {
-            if( this.form.model.sku.length > 1){
+            if (this.form.model.sku.length > 1) {
                 this.form.model.sku.splice(i, 1)
             }
         },
 
         querySearch(queryString, cb, key) {
             let restaurants = [];
-            if (key == 'th') {
-                restaurants = this.restaurants_th
-            }
-            if (key == 'zh') {
-                restaurants = this.restaurants_zh
-            }
-            if (key == 'zhtw') {
-                restaurants = this.restaurants_zhtw
-            }
-            if (key == 'en') {
-                restaurants = this.restaurants_en
-            }
+            restaurants = this.restaurantsObj[key]
             let results = queryString ? restaurants.filter(this.createFilter(queryString, key)) : restaurants;
             // 调用 callback 返回建议列表的数据
             cb(results);
         },
 
         createFilter(queryString, key) {
-            var restaurants = [];
-            if (key == 'th') {
-                restaurants = this.restaurants_th
-            }
-            if (key == 'zh') {
-                restaurants = this.restaurants_zh
-            }
-            if (key == 'zhtw') {
-                restaurants = this.restaurants_zhtw
-            }
-            if (key == 'en') {
-                restaurants = this.restaurants_en
-            }
+            let restaurants = [];
+            restaurants = this.restaurantsObj[key]
             return (restaurants) => {
                 return (restaurants.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
             };
         },
 
         selectChange(e, index) {
-            this.form.model.sku[index].spec_name.zh = this.restaurants_zh[e.index].value
-            this.form.model.sku[index].spec_name.th = this.restaurants_th[e.index].value
-            this.form.model.sku[index].spec_name.en = this.restaurants_en[e.index].value
-            this.form.model.sku[index].spec_name.zhtw = this.restaurants_zhtw[e.index].value
+            languageList.forEach(item => {
+                this.form.model.sku[index].spec_name[item.key] = this.restaurantsObj[item.key][e.index].value
+            });
         },
 
     }

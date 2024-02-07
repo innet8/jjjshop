@@ -32,7 +32,8 @@
                                 message: $t('请输入加料名称')
                             }]">
                             <template #label>
-                                <span style="color: var(--el-color-danger);margin: 0  4px 0 0 !important;">*</span>{{ $t('加料名称：') }}<span class="product-tips">({{ items.label }})</span>
+                                <span style="color: var(--el-color-danger);margin: 0  4px 0 0 !important;">*</span>{{
+                                    $t('加料名称：') }}<span class="product-tips">({{ items.label }})</span>
                             </template>
                             <el-autocomplete :fetch-suggestions="(e, h) => querySearch(e, h, items.key)"
                                 @select="(e) => selectChange(e, index)" class="inline-input"
@@ -40,15 +41,17 @@
                                 :placeholder="$t('如：番茄酱')"></el-autocomplete>
                         </el-form-item>
                         <el-form-item :label="$t('价格：')" :prop="`item.price`" :rules="[{
-                                validator: () => {
-                                    return item.price !='' ? true : false;
-                                },
-                                message: $t('请输入价格')
-                            }]">
-                                 <template #label>
-                                <span style="color: var(--el-color-danger);margin: 0  4px 0 0 !important;">*</span>{{ $t('价格：') }}
+                            validator: () => {
+                                return item.price != '' ? true : false;
+                            },
+                            message: $t('请输入价格')
+                        }]">
+                            <template #label>
+                                <span style="color: var(--el-color-danger);margin: 0  4px 0 0 !important;">*</span>{{
+                                    $t('价格：') }}
                             </template>
-                            <el-input-number :controls="false" :min="0" :max="1000000" :placeholder="$t('请输入价格')" v-model.number="item.price"></el-input-number>
+                            <el-input-number :controls="false" :min="0" :max="1000000" :placeholder="$t('请输入价格')"
+                                v-model.number="item.price"></el-input-number>
                         </el-form-item>
                     </el-form>
 
@@ -64,15 +67,17 @@
 import { languageStore } from '@/store/model/language.js';
 const languageData = JSON.stringify(languageStore().languageData)
 const languageList = languageStore().languageList;
+
 export default {
     data() {
+        let languageObj = {}
+        languageList.forEach(item => {
+            languageObj[item.key] = []
+        });
         return {
             languageList: languageList,
             restaurants: [],
-            restaurants_zh: [],
-            restaurants_zhtw: [],
-            restaurants_en: [],
-            restaurants_th: [],
+            restaurantsObj: languageObj,
             formData: {
                 feed: []
             },
@@ -86,33 +91,22 @@ export default {
     watch: {
         'form': {
             handler(val) {
-                this.restaurants_zh = [];
-                this.restaurants_zhtw = [];
-                this.restaurants_en = [];
-                this.restaurants_th = [];
+                let languageObj = {}
+                languageList.forEach(item => {
+                    languageObj[item.key] = []
+                });
+                this.restaurantsObj = languageObj
                 val.feed.map((item, index) => {
-                    if (JSON.parse(item.feed_name).zh && JSON.parse(item.feed_name).zhtw && JSON.parse(item.feed_name).en && JSON.parse(item.feed_name).th) {
-                        this.restaurants_zh.push({
-                            value: JSON.parse(item.feed_name).zh,
-                            index: index,
-                            price: item.price,
-                        })
-                        this.restaurants_zhtw.push({
-                            value: JSON.parse(item.feed_name).zhtw,
-                            index: index,
-                            price: item.price,
-                        })
-                        this.restaurants_en.push({
-                            value: JSON.parse(item.feed_name).en,
-                            index: index,
-                            price: item.price,
-                        })
-                        this.restaurants_th.push({
-                            value: JSON.parse(item.feed_name).th,
-                            index: index,
-                            price: item.price,
-                        })
-                    }
+                    let feed_name = JSON.parse(item.feed_name);
+                    languageList.forEach(items => {
+                        if (feed_name[items.key]) {
+                            this.restaurantsObj[items.key].push({
+                                value: feed_name[items.key],
+                                index: index,
+                                price: item.price,
+                            })
+                        }
+                    });
                 })
             },
             deep: true,
@@ -124,46 +118,25 @@ export default {
             this.form.model.product_feed.push(
                 {
                     feed_name: JSON.parse(languageData),
-                    price: null
+                    price: null,
                 }
             )
         },
         handleDelete(index) {
             this.form.model.product_feed.splice(index, 1);
         },
+        
         querySearch(queryString, cb, key) {
             let restaurants = [];
-            if (key == 'th') {
-                restaurants = this.restaurants_th
-            }
-            if (key == 'zh') {
-                restaurants = this.restaurants_zh
-            }
-            if (key == 'zhtw') {
-                restaurants = this.restaurants_zhtw
-            }
-            if (key == 'en') {
-                restaurants = this.restaurants_en
-            }
+            restaurants = this.restaurantsObj[key]
             let results = queryString ? restaurants.filter(this.createFilter(queryString, key)) : restaurants;
             // 调用 callback 返回建议列表的数据
             cb(results);
         },
 
         createFilter(queryString, key) {
-            var restaurants = [];
-            if (key == 'th') {
-                restaurants = this.restaurants_th
-            }
-            if (key == 'zh') {
-                restaurants = this.restaurants_zh
-            }
-            if (key == 'zhtw') {
-                restaurants = this.restaurants_zhtw
-            }
-            if (key == 'en') {
-                restaurants = this.restaurants_en
-            }
+            let restaurants = [];
+            restaurants = this.restaurantsObj[key]
             return (restaurants) => {
                 return (restaurants.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
             };
@@ -171,10 +144,9 @@ export default {
 
         selectChange(e, index) {
             this.form.model.product_feed[index].price = e.price
-            this.form.model.product_feed[index].feed_name.zh = this.restaurants_zh[e.index].value
-            this.form.model.product_feed[index].feed_name.th = this.restaurants_th[e.index].value
-            this.form.model.product_feed[index].feed_name.en = this.restaurants_en[e.index].value
-            this.form.model.product_feed[index].feed_name.zhtw = this.restaurants_zhtw[e.index].value
+            languageList.forEach(item => {
+                this.form.model.product_feed[index].feed_name[item.key] = this.restaurantsObj[item.key][e.index].value
+            });
         },
 
         checkedForm() {
@@ -182,7 +154,7 @@ export default {
                 this.$refs['form-' + index].forEach((item, indexs) => {
                     this.$refs['form-' + index][indexs].validate(valid => {
                         if (!valid) {
-                 
+
                         }
                     })
                 })
@@ -210,10 +182,11 @@ export default {
 :deep(.inline-input) {
     width: 100%;
 }
-.product-tips{
+
+.product-tips {
     color: var(--el-color-tips);
 }
+
 .product-box {
     display: flex;
-}
-</style>
+}</style>

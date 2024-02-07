@@ -24,7 +24,7 @@
 
             <!--提交-->
             <div class="common-button-wrapper">
-                <el-button size="small"  @click="cancelFunc">{{ $t('取消') }}</el-button>
+                <el-button size="small" @click="cancelFunc">{{ $t('取消') }}</el-button>
                 <el-button size="small" type="primary" @click="onSubmit" :loading="loading">{{ $t('确定') }}</el-button>
             </div>
         </el-form>
@@ -41,7 +41,7 @@ import Content from './part/Content.vue';
 import Buyset from './part/Buyset.vue';
 import { languageStore } from '@/store/model/language.js';
 const languageData = JSON.stringify(languageStore().languageData)
-
+const languageList = languageStore().languageList;
 export default {
     components: {
         /*基础信息*/
@@ -206,17 +206,23 @@ export default {
                 if (self.form.model.product_attr.length > 0) {
                     let checkArr = self.form.model.product_attr
                     for (let i = 0; i < checkArr.length; i++) {
-                        if (checkArr[i].attribute_name.en == '' || checkArr[i].attribute_name.th == '' || checkArr[i].attribute_name.zh == '' || checkArr[i].attribute_name.zhtw == '') return;
-                        for (let e = 0; e < checkArr[i].attribute_value.length; e++) {
-                            if (checkArr[i].attribute_value[e].en == '' || checkArr[i].attribute_value[e].th == '' || checkArr[i].attribute_value[e].zh == '' || checkArr[i].attribute_value[e].zhtw == '') return;
+                        for (let e = 0; e < languageList.length; e++) {
+                            if (!checkArr[i].attribute_name[languageList[e].key]) return
                         }
-
+                        for (let e = 0; e < checkArr[i].attribute_value.length; e++) {
+                            for (let d = 0; d < languageList.length; d++) {
+                                if (!checkArr[i].attribute_value[e][languageList[d].key]) return
+                            }
+                        }
                     }
                 }
                 if (self.form.model.product_feed.length > 0) {
                     let checkArr = self.form.model.product_feed;
                     for (let i = 0; i < checkArr.length; i++) {
-                        if (checkArr[i].feed_name.en == '' || checkArr[i].feed_name.th == '' || checkArr[i].feed_name.zh == '' || checkArr[i].feed_name.zhtw == '' || checkArr[i].price == '' || checkArr[i].price == null) return;
+                        for (let e = 0; e < languageList.length; e++) {
+                            if (!checkArr[i].feed_name[languageList[e].key]) return
+                        }
+                        if (checkArr[i].price == '' || checkArr[i].price == null) return;
                     }
                 }
                 if (valid) {
@@ -305,7 +311,8 @@ export default {
         flex: 0 0 auto;
         flex-shrink: 0;
     }
-    :deep(.el-select__placeholder){
+
+    :deep(.el-select__placeholder) {
         font-size: 14px;
     }
 }

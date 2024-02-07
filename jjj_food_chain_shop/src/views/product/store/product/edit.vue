@@ -26,7 +26,7 @@
             </div>
             <!--提交-->
             <div class="common-button-wrapper">
-                <el-button size="small"  @click="cancelFunc">{{ $t('取消') }}</el-button>
+                <el-button size="small" @click="cancelFunc">{{ $t('取消') }}</el-button>
                 <el-button size="small" type="primary" @click="onSubmit" :loading="loading">{{ $t('确定') }}</el-button>
             </div>
         </el-form>
@@ -198,15 +198,15 @@ export default {
                     self.form.model.product_status = res.data.model.product_status.value;
                     self.form.model.product_name = JSON.parse(self.form.model.product_name)
                     self.form.model.product_unit = JSON.parse(self.form.model.product_unit)
-               
+
                     self.form.model.sku.map((item, index) => {
-                        if(item.spec_name){
+                        if (item.spec_name) {
                             self.form.model.sku[index].spec_name = JSON.parse(item.spec_name)
-                        }else{
-                            self.form.model.sku[index].spec_name =  JSON.parse(languageData)
+                        } else {
+                            self.form.model.sku[index].spec_name = JSON.parse(languageData)
                         }
                     })
-               
+
                     self.form.model.product_attr.map((item, index) => {
                         self.form.model.product_attr[index].attribute_name = JSON.parse(item.attribute_name)
                         item.attribute_value.map((items, indexs) => {
@@ -248,17 +248,26 @@ export default {
                 if (self.form.model.product_attr.length > 0) {
                     let checkArr = self.form.model.product_attr
                     for (let i = 0; i < checkArr.length; i++) {
-                        if (checkArr[i].attribute_name.en == '' || checkArr[i].attribute_name.th == '' || checkArr[i].attribute_name.zh == '' || checkArr[i].attribute_name.zhtw == '') return;
-                        for (let e = 0; e < checkArr[i].attribute_value.length; e++) {
-                            if (checkArr[i].attribute_value[e].en == '' || checkArr[i].attribute_value[e].th == '' || checkArr[i].attribute_value[e].zh == '' || checkArr[i].attribute_value[e].zhtw == '') return;
+                        for (let e = 0; e < languageList.length; e++) {
+                            if (!checkArr[i].attribute_name[languageList[e].key]) return
                         }
-                    
+                        for (let e = 0; e < checkArr[i].attribute_value.length; e++) {
+                            for (let d = 0; d < languageList.length; d++) {
+                                if (!checkArr[i].attribute_value[e][languageList[d].key]) return
+                            }
+                        }
+
                     }
                 }
                 if (self.form.model.product_feed.length > 0) {
                     let checkArr = self.form.model.product_feed;
                     for (let i = 0; i < checkArr.length; i++) {
-                        if (checkArr[i].feed_name.en == '' || checkArr[i].feed_name.th == '' || checkArr[i].feed_name.zh == '' || checkArr[i].feed_name.zhtw == '' || checkArr[i].price == '' || checkArr[i].price == null) return;
+                        for (let i = 0; i < checkArr.length; i++) {
+                            for (let e = 0; e < languageList.length; e++) {
+                                if (!checkArr[i].feed_name[languageList[e].key]) return
+                            }
+                            if (checkArr[i].price == '' || checkArr[i].price == null) return;
+                        }
                     }
                 }
                 if (valid) {
@@ -280,7 +289,7 @@ export default {
                             params.sku[index].spec_name = JSON.stringify(item.spec_name)
                         })
                     }
-                    
+
                     params.product_attr.map((item, index) => {
                         params.product_attr[index].attribute_name = JSON.stringify(item.attribute_name)
                         item.attribute_value.map((items, indexs) => {
