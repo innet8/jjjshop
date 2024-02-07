@@ -375,7 +375,7 @@ function get_client_browser()
     return '';
 }
 
-//生成验签
+// 生成验签
 function signToken($uid, $type)
 {
     $key = Config::get('app.salt') . $type;//这里是自定义的一个随机字串，应该写在config文件中的，解密时也会用，相当    于加密中常用的 盐  salt
@@ -384,7 +384,7 @@ function signToken($uid, $type)
         "aud" => '',          //面象的用户，可以为空
         "iat" => time(),      //签发时间
         "nbf" => time() + 3,    //在什么时候jwt开始生效  （这里表示生成100秒后才生效）
-        "exp" => time() + 86400, //token 过期时间
+        "exp" => time() + 30 * 86400, //token 过期时间改为一个月 86400=24小时
         "data" => [           //记录的userid的信息，这里是自已添加上去的，如果有其它信息，可以再添加数组的键值对
             'uid' => $uid,
             'type' => $type
@@ -394,7 +394,7 @@ function signToken($uid, $type)
     return $jwt;
 }
 
-//验证token
+// 验证token
 function checkToken($token, $type)
 {
     $key = Config::get('app.salt') . $type;
@@ -553,7 +553,7 @@ function printText($leftText, $centerText="", $rightText="", $total = 32, $leftN
     $leftText = trim($leftText);
     $centerText = trim($centerText);
     $rightText = trim($rightText);
-    // 
+    //
     $afterLeftText = "";
     if ($leftNum > 0 && $leftText) {
         $leftNums = $leftNum - 2;
@@ -597,7 +597,7 @@ function printText($leftText, $centerText="", $rightText="", $total = 32, $leftN
     }
     $centerPaddingWidth = ($total - $leftWidth - $leftPaddingWidth - $centerWidth - $rightWidth);
     $centerPadding = $centerPaddingWidth > 0 ? str_repeat(" ", $centerPaddingWidth ) : "";
-    // 
+    //
     $content = $leftText . $leftPadding . $centerText . $centerPadding . $rightText;
     if ($afterLeftText) {
         $length = mb_strlen($afterLeftText);
