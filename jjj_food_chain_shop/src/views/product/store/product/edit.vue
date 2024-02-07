@@ -43,6 +43,7 @@ import Content from './part/Content.vue';
 import Buyset from './part/Buyset.vue';
 import { languageStore } from '@/store/model/language.js';
 const languageData = JSON.stringify(languageStore().languageData)
+const languageList = languageStore().languageList;
 import {
     formatModel
 } from '@/utils/base.js';
