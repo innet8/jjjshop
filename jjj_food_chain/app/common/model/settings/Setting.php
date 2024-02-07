@@ -24,6 +24,10 @@ define('LANGUAGE_LIST', [
         'key' => 'en',
         'value' => 'English'
     ],
+    [
+        'key' => 'ja',
+        'value' => '日本語です'
+    ],
 ]);
 
 /**
@@ -560,7 +564,7 @@ class Setting extends BaseModel
                     'language_list' => LANGUAGE_LIST,
                     // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
                     'language' => [
-                        'th', 'en', 'zh', 'zh-tw'
+                        'th', 'en', 'zh', 'zh-tw', 'ja'
                     ],
                     // 默认语言
                     'default_language' => 'en',
@@ -586,7 +590,7 @@ class Setting extends BaseModel
                     'language_list' => LANGUAGE_LIST,
                     // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
                     'language' => [
-                        'th', 'en', 'zh', 'zh-tw'
+                        'th', 'en', 'zh', 'zh-tw', 'ja'
                     ],
                     'default_language' => 'en', // 默认语言
                 ],
@@ -609,7 +613,7 @@ class Setting extends BaseModel
                     'language_list' => LANGUAGE_LIST,
                     // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
                     'language' => [
-                        'th', 'en', 'zh', 'zh-tw'
+                        'th', 'en', 'zh', 'zh-tw', 'ja'
                     ],
                     'default_language' => 'en', // 默认语言
                 ],
