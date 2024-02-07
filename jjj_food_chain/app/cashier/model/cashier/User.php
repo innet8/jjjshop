@@ -41,7 +41,7 @@ class User extends UserModel
         }
         $cashierUser = $this->where(['cashier_online' => 1])->find();
         if ($cashierUser && $cashierUser['shop_user_id'] != $user['shop_user_id']) {
-            $this->error = '收银员' . $cashierUser['real_name'] . '未交班，请先交班';
+            $this->error = __('收银员') . ' ' . $cashierUser['real_name'] . ' ' . __('未交班，请先交班');
             return false;
         }
         // 保存登录状态
