@@ -11,8 +11,8 @@ if(JSON.parse(localStorage.getItem("Language"))){
 }
 const i18n = createI18n({
     legacy: false,
-    locale: lang || "en",
-    fallbackLocale: "en",
+    locale: lang || "zh",
+    fallbackLocale: "zh",
     globalInjection: true,
     messages: {
         zh: { ...auto_zh },
