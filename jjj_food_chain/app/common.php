@@ -627,18 +627,12 @@ function printText($leftText, $centerText="", $rightText="", $total = 32, $leftN
 function extractLanguage($json)
 {
     try {
-        $lang = checkDetect();
         $texts = json_decode($json, true);
         if (!$texts) {
             return $json;
         }
-        if (array_key_exists($lang, $texts)) {
-            return $texts[$lang];
-        }
-        if (array_key_exists("en", $texts)) {
-            return $texts["en"];
-        }
-        return  $json;
+        $lang = checkDetect();
+        return $texts[$lang] ?? $texts["en"] ?? $json;
     } catch (\Throwable $th) {
         return $json;
     }
