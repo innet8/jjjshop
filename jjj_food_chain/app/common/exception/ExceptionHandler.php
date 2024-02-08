@@ -41,7 +41,12 @@ class ExceptionHandler extends Handle
             $this->message = $e->getMessage() ?: '很抱歉，服务器内部错误';
             $this->recordErrorLog($e);
         }
-        return json(['msg' => $this->message, 'code' => $this->code]);
+        return json([
+            'msg' => $this->message, 
+            'code' => $this->code,
+            'line' => $e->getline() ?: '',
+            'file' => $e->getFile() ?: ''
+        ]);
     }
 
     /**
