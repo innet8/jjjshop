@@ -158,7 +158,7 @@ class ShopService
      */
     private function getProductTotal($where = [])
     {
-        return number_format($this->ProductModel->getProductTotal($where));
+        return number_format($this->ProductModel->getProductTotal($where), 0, '.', '');
     }
 
     /**
@@ -166,7 +166,7 @@ class ShopService
      */
     private function getSupplierProductTotal($shop_supplier_id, $product_type, $product_status = 0)
     {
-        return number_format($this->ProductModel->getSupplierProductTotal($shop_supplier_id, $product_type, $product_status));
+        return number_format($this->ProductModel->getSupplierProductTotal($shop_supplier_id, $product_type, $product_status), 0, '.', '');
     }
 
     /**
@@ -174,7 +174,7 @@ class ShopService
      */
     private function getProductStockTotal($shop_supplier_id)
     {
-        return number_format($this->ProductModel->getProductStockTotal($shop_supplier_id));
+        return number_format($this->ProductModel->getProductStockTotal($shop_supplier_id), 0, '.', '');
     }
 
     /**
@@ -182,7 +182,7 @@ class ShopService
      */
     private function getUserTotal($day = null)
     {
-        return number_format($this->UserModel->getUserTotal($day));
+        return number_format($this->UserModel->getUserTotal($day), 0, '.', '');
     }
 
     /**
@@ -190,7 +190,7 @@ class ShopService
      */
     private function getOrderTotal($day, $shop_supplier_id = 0)
     {
-        return number_format($this->OrderModel->getOrderData($day, null, 'order_total', $shop_supplier_id));
+        return number_format($this->OrderModel->getOrderData($day, null, 'order_total', $shop_supplier_id), 0, '.', '');
     }
 
     /**
@@ -198,7 +198,7 @@ class ShopService
      */
     private function getReviewOrderTotal($shop_supplier_id)
     {
-        return number_format($this->OrderModel->getReviewOrderTotal($shop_supplier_id));
+        return number_format($this->OrderModel->getReviewOrderTotal($shop_supplier_id), 0, '.', '');
     }
 
     /**
@@ -219,7 +219,7 @@ class ShopService
     private function getSupplierTotal()
     {
         $model = new SupplierModel;
-        return number_format($model->getSupplierTotal());
+        return number_format($model->getSupplierTotal(), 0, '.', '');
     }
 
     /**
@@ -247,7 +247,7 @@ class ShopService
      */
     private function getPayOrderUserTotal($day, $shop_supplier_id = 0)
     {
-        return number_format($this->OrderModel->getPayOrderUserTotal($day, $shop_supplier_id));
+        return number_format($this->OrderModel->getPayOrderUserTotal($day, $shop_supplier_id), 0, '.', '');
     }
 
     /**

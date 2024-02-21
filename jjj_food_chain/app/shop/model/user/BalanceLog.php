@@ -28,7 +28,6 @@ class BalanceLog extends BalanceLogModel
         // 搜索关键词
         if (!empty($query['keyword'])) {
             $keyword = trim($query['keyword']);
-            trace($keyword);
             $model = $model->where(function ($query) use ($keyword) {
                 $query->like('user.user_id|user.mobile|user.nickName', $keyword);
             });

@@ -96,8 +96,6 @@ class Cart extends CartModel
             ]);
         }
         $user_id = $order ? $order['user_id'] : 0;
-        trace('会员ID');
-        trace($user_id);
 
         $pay_money = 0;
         $order_price = 0;
@@ -117,8 +115,6 @@ class Cart extends CartModel
 
                 if ($user) {
                     $discount = (new CardRecordModel)->getDiscount($user['user_id']);
-                    trace('折扣信息');
-                    trace($discount);
                 } else {
                     $discount = 0;
                 }
@@ -149,8 +145,6 @@ class Cart extends CartModel
                     // 会员卡
                     $discountRatio = $discount;
                 }
-                trace('折扣');
-                trace($discountRatio);
                 if ($discountRatio <= 1) {
                     if ($alone_grade_type == 20) {
                         // 固定金额
@@ -159,40 +153,23 @@ class Cart extends CartModel
                     } else {
                         // 商品会员折扣后单价
                         $grade_product_price = helper::number2(helper::bcmul($product['price'], $discountRatio), true);
-                        trace('商品会员折扣后单价');
-                        trace($grade_product_price);
                     }
                     $productDiscount = DiscountProduct::getDiscount($product['product_id']);
-                    trace('========');
-                    trace($product['product_num']);
-                    trace('========');
                     if ($product['product_num'] > 1 && $productDiscount) {
                         $gradeTotalPrice = $grade_product_price * ($product['product_num'] - 1) + round($grade_product_price * $productDiscount['discount'] / 10, 2);
                     } else {
                         $gradeTotalPrice = $grade_product_price * $product['product_num'];
-                        trace('商品会员折扣后单价 * 数量');
-                        trace($gradeTotalPrice);
                     }
 
-                    trace('折扣');
-                    trace($grade_ratio);
                     // 原商品总价 - 折扣后
-                    trace('原商品总价');
-                    trace($product['total_price']);
-                    trace($product['product_price']);
                     $grade_total_money = helper::number2(helper::bcsub($product['price'] * $product['product_num'], $gradeTotalPrice));
-                    trace('优惠后与原商品差价');
-                    trace($grade_total_money);
                     $product['total_price'] = $gradeTotalPrice;
                 }
             }
-            $product_points_bonus = 0;
 
             $updateArr = [
                 'user_id' => $user_id,
                 'product_price' => $grade_product_price,   // 购物车价格（可能是原价或折扣的）
-//                'price' => $product['total_price'],   // 商品总价(数量×单价)
-//                'grade_total_money' => $grade_total_money,  // 会员折扣的总额差 （商品总价 - 商品折扣后总价）
             ];
             $product->save($updateArr);
 
@@ -210,22 +187,6 @@ class Cart extends CartModel
             $consume_rate = $consumeFee['tax_rate'];
             $consume_fee = floatval(helper::bcmul($total_price, $consume_rate));
         }
-
-//        $updateOrderArr = [
-//            'order_no' => $re_order_no ? $this->orderNo() : $order['order_no'],
-//            'discount_money' => 0,  // 折扣优惠重置
-//            'total_price' => $total_price,
-//            'order_price' => $order_price + $service_money + $service_fee + $consume_fee, // 订单总额 = 商品原始总价 + 原服务费 + 新服务费用 + 消费税
-//            'pay_price' => $total_price + $service_money + $service_fee + $consume_fee, // 应付金额 = 商品折扣总价（会员折扣） + 原服务费 + 新服务费用 + 消费税
-//            'points_bonus' => $points_bonus,
-//            'service_money' => $service_money,
-//            'meal_num' => $meal_num,
-//            'settle_type' => $settle_type,
-//            'setting_service_money' => $service_fee,
-//            'consumption_tax_money' => $consume_fee,
-//            'user_discount_money' => $user_discount_money
-//        ];
-//        $order->save($updateOrderArr);
 
         return [
             'cart_product_price' => $order_price,                                   // 购物车商品原价
@@ -760,7 +721,6 @@ class Cart extends CartModel
             return $return_order;
 
         } catch (\Exception $e) {
-//            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
             $this->error = $e->getMessage();
             $this->rollback();
             return false;

@@ -4,7 +4,6 @@ namespace app\common\model\user;
 
 use app\common\model\BaseModel;
 use app\common\service\order\OrderService;
-use app\common\model\user\WxCard as WxCardModel;
 
 /**
  * 会员卡领取记录模型
@@ -140,9 +139,6 @@ class CardRecord extends BaseModel
         return $model->where('is_delete', '=', 0)
             ->where('pay_status', '=', 20)
             ->where('user_id', '=', $user_id)
-            // ->where(function ($query) {
-            //     $query->where('expire_time', '=', 0)->whereOr('expire_time', '>', time());
-            // })
             ->findOrEmpty();
     }
 
