@@ -127,7 +127,7 @@ export default {
     created() {
         /*获取列表*/
         if (this.$route.query.inventory) {
-            this.stock = 10;
+            this.stock = "10";
             this.$route.query = {}
         }
         this.getData();
