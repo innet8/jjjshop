@@ -63,20 +63,6 @@ class UserGrade
      */
     public function checkCanUpdate($user, $grade)
     {
-//        // 按消费升级
-//        if ($grade['open_money'] == 1 && $user['expend_money'] >= $grade['upgrade_money']) {
-//            return true;
-//        }
-//        // 按积分升级
-//        if ($grade['open_points'] == 1 && $user['total_points'] >= $grade['upgrade_points']) {
-//            return true;
-//        }
-//        // 按消费升级
-//        if ($grade['open_invite'] == 1 && $user['total_invite'] >= $grade['upgrade_invite']) {
-//            return true;
-//        }
-//        return false;
-
         // 按积分与消费升级
         if ($grade['open_money'] == 1 && $grade['open_points'] == 1) {
             if ($user['expend_money'] >= $grade['upgrade_money'] && $user['total_points'] >= $grade['upgrade_points']) {

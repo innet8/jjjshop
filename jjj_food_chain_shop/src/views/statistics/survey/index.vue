@@ -298,6 +298,7 @@ export default {
 }
 
 .key-box2 {
+    flex-shrink: 0;
     display: block;
     width: 20px;
     height: 20px;
