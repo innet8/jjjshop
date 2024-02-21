@@ -100,6 +100,7 @@ export default {
     color: var(--el-color-primary);
     background: #FFF6DE;
     font-weight: 700;
+    flex-shrink: 0;
 }
 .right-box .list img {
     width: 30px;
