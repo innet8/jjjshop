@@ -9,7 +9,7 @@
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
                     <el-table-column prop="img" :label="$t('图片')">
                         <template #default="scope">
-                            <img :src="scope.row.img" style="width: 48px;" />
+                            <img :src="domain+scope.row.img" style="width: 48px;" />
                         </template>
                     </el-table-column>
                     <el-table-column prop="name" :label="$t('名称')"></el-table-column>
@@ -55,9 +55,11 @@ export default {
             open: false,
             /*是否打开编辑弹窗*/
             title: '',
+            domain:'',
         }
     },
     created() {
+        this.domain = localStorage.getItem('SHOP_BASIC_URL');
         this.getData();
     },
     methods: {

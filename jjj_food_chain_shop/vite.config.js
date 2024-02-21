@@ -14,6 +14,7 @@ export default defineConfig(({ mode }) => {
     const config = loadEnv(mode, './')
     return {
         base: process.env.NODE_ENV === 'production' ? './' : '/',
+        // base: './',
         server: {
             proxy: {
                 '/api': {

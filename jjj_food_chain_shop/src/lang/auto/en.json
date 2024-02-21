@@ -823,5 +823,10 @@
     "已退款：": "refunded:",
     "支持JPG、JPEG、PNG格式，小于15MB，尺寸：160*120px": "Support JPG, JPEG, PNG format, less than 15MB, size: 160*120px",
     "支持JPG、JPEG、PNG格式，小于15MB，尺寸：120*120px": "Support JPG, JPEG, PNG format, less than 15MB, size: 120*120px",
-    "会員管理": "Member management"
+    "会員管理": "Member management",
+    "请输入服务器地址": "Please enter server address",
+    "端口": "port",
+    "绑定": "binding",
+    "切换服务器": "Switch server",
+    "是否切换服务器?": "Do you want to switch servers?"
 }

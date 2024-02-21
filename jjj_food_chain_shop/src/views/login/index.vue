@@ -68,6 +68,7 @@
 
             </el-form>
         </div>
+        <h2 class="server-change-title" style="margin-top: 20px;" v-if="haveUrl" @click="removeUrl">{{ $t('切换服务器') }}</h2>
         <div class="language-box">
             <el-dropdown trigger="click" @command="setLanguage">
                 <span class="el-dropdown-link">
@@ -98,6 +99,7 @@ import { useUserStore } from '@/store';
 // import { useLockscreenStore } from "@/store/model/lockscreen.js"
 import { languageStore } from '@/store/model/language.js';
 import SvgIcon from "@/components/svg-icon/SvgIcon.vue";
+import axios from "axios";
 // const useLockscreen = useLockscreenStore();
 const { afterLogin } = useUserStore();
 const language = languageStore()
@@ -246,7 +248,8 @@ export default {
         onEnter(event) {
             if (event.key === 'Enter') {
                 // 处理回车事件的逻辑
-                this.SubmitFunc();
+
+                this.haveUrl? this.SubmitFunc(): this.SubmitB();
             }
         },
         /*登录方法*/
@@ -278,8 +281,49 @@ export default {
         },
 
         SubmitB(){
-            localStorage.setItem('SHOP_BASIC_URL', this.ruleForm.address);
-            location.reload();
+            this.checkUrl(this.ruleForm.address)
+        },
+
+        checkUrl(url) {
+            url = `${/^https?:\/\//i.test(url) ? '' : 'http://'}${url}`;
+
+            axios.get(url+"/index.php/shop/index/base", {
+                baseURL: '', // 设置baseURL为空字符串
+            })
+                .then(response => {
+                    // 处理成功响应数据
+                    // console.log(response.data);
+                    localStorage.setItem('SHOP_BASIC_URL', url);
+                    location.reload();
+                })
+                .catch(error => {
+                    // 处理请求错误
+                    console.error(error);
+                    ElMessage({
+                        showClose: true,
+                        message: $t('无效的地址'),
+                        type: "error",
+                    });
+                });
+        },
+
+        removeUrl() {
+            ElMessageBox.confirm(
+                $t('是否切换服务器?'),
+                $t('提示'), {
+                    confirmButtonText: $t('确定'),
+                    cancelButtonText: $t('取消'),
+                    type: 'warning',
+                }
+            )
+                .then(() => {
+                    localStorage.removeItem("SHOP_BASIC_URL");
+                    location.reload();
+                })
+                .catch(() => {
+
+                });
+
         },
 
         setLanguage(e) {
@@ -410,6 +454,12 @@ export default {
         border: none;
         padding: 0;
     }
+}
+
+.server-change-title {
+    color: var(--el-color-black);
+    margin-top: 20px;
+    cursor: pointer;
 }
 
 .language-box {
