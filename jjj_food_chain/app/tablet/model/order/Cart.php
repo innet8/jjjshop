@@ -721,7 +721,6 @@ class Cart extends CartModel
             return $return_order;
 
         } catch (\Exception $e) {
-//            Log::error($e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
             $this->error = $e->getMessage();
             $this->rollback();
             return false;

@@ -370,15 +370,7 @@ class Order extends OrderModel
 
                     break;
                 case '3'://抹零
-                    // if ($data['discountType'] == 1) {//抹分
-                    //     $discount_money = round($detail['order_price'] - intval($detail['pay_price'] * 10) / 10, 2);
-                    // } elseif ($data['discountType'] == 2) {//抹角
-                    //     $discount_money = round($detail['order_price'] - intval($detail['pay_price']), 2);
-                    // } elseif ($data['discountType'] == 3) {//四舍五入到角
-                    //     $discount_money = round($detail['order_price'] - round($detail['pay_price'], 1), 2);
-                    // } elseif ($data['discountType'] == 4) {//四舍五入到元
-                    //     $discount_money = round($detail['order_price'] - round($detail['pay_price'], 0), 2);
-                    // }
+
                     break;
             }
 

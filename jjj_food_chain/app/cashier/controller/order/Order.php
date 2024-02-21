@@ -370,7 +370,11 @@ class Order extends Controller
             return $this->renderError('订单不存在');
         }
         if ($detail?->useMember($user_id)) {
-            return $this->renderSuccess('使用会员成功');
+            $reset_notice = 0;
+            if ($detail->discount_money != 0 || $detail->discount_ratio != 0) {
+                $reset_notice = 1;
+            }
+            return $this->renderSuccess('使用会员成功', ['reset_notice' => $reset_notice]);
         }
         return $this->renderError($detail->getError() ?: '使用会员失败');
     }
