@@ -86,6 +86,7 @@ export default {
     color: var(--el-color-black);
     background: var(--el-color-primary);
     font-weight: 700;
+    flex-shrink: 0;
 }
 .key-box2 {
     display: block;
