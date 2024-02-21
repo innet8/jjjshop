@@ -217,7 +217,6 @@ class Card extends CardModel
         ];
 
         foreach ($limits as $key => $value) {
-            trace($key);
             if (array_key_exists($key, $data) && $data[$key] > $value['limit']) {
                 return $value['message'];
             }

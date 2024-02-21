@@ -185,7 +185,6 @@ function export_excel($fileName, $tileArray = [], $dataArray = [])
 function log_write($value, $channel = '')
 {
     $msg = is_string($value) ? $value : var_export($value, true);
-//    Log::channel($channel)->write($msg);
     trace($msg);
 }
 
@@ -198,7 +197,6 @@ function base_url()
     static $baseUrl = '';
     if (empty($baseUrl)) {
         $request = Request::instance();
-        //$subDir = str_replace('\\', '/', dirname($request->server('PHP_SELF')));
         $baseUrl = $request->scheme() . '://' . $request->host() . '/';
     }
     return $baseUrl;

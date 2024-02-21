@@ -9,7 +9,6 @@ use app\common\model\settings\Setting as SettingModel;
 use app\common\model\plus\cashier\Cart as CartModel;
 use app\common\model\plus\discount\DiscountProduct;
 use app\common\model\order\Order as CommonOrderModel;
-use app\common\model\order\OrderProduct as OrderProductModel;
 use app\common\model\supplier\Supplier as SupplierModel;
 use app\cashier\model\user\User as UserModel;
 use app\cashier\model\order\Order as OrderModel;
@@ -18,7 +17,6 @@ use app\cashier\model\user\CardRecord as CardRecordModel;
 use app\cashier\model\product\ProductSku as ProductSkuModel;
 use app\cashier\service\order\settled\CashierOrderSettledService;
 use app\common\library\helper;
-use think\facade\Log;
 
 /**
  * 收银购物车模型
@@ -95,8 +93,6 @@ class Cart extends CartModel
             ]);
         }
         $user_id = $order ? $order['user_id'] : 0;
-//        trace('会员ID');
-//        trace($user_id);
 
         $pay_money = 0;
         $order_price = 0;
@@ -152,30 +148,16 @@ class Cart extends CartModel
                     } else {
                         // 商品会员折扣后单价
                         $grade_product_price = helper::number2(helper::bcmul($product['price'], $discountRatio), true);
-//                        trace('商品会员折扣后单价');
-//                        trace($grade_product_price);
                     }
                     $productDiscount = DiscountProduct::getDiscount($product['product_id']);
-//                    trace('========');
-//                    trace($product['product_num']);
-//                    trace('========');
                     if ($product['product_num'] > 1 && $productDiscount) {
                         $gradeTotalPrice = $grade_product_price * ($product['product_num'] - 1) + round($grade_product_price * $productDiscount['discount'] / 10, 2);
                     } else {
                         $gradeTotalPrice = $grade_product_price * $product['product_num'];
-//                        trace('商品会员折扣后单价 * 数量');
-//                        trace($gradeTotalPrice);
                     }
 
-//                    trace('折扣');
-//                    trace($grade_ratio);
                     // 原商品总价 - 折扣后
-//                    trace('原商品总价');
-//                    trace($product['total_price']);
-//                    trace($product['product_price']);
                     $grade_total_money = helper::number2(helper::bcsub($product['price'] * $product['product_num'], $gradeTotalPrice));
-//                    trace('优惠后与原商品差价');
-//                    trace($grade_total_money);
                     $product['total_price'] = $gradeTotalPrice;
                 }
             }
@@ -990,8 +972,6 @@ class Cart extends CartModel
                         // 会员卡
                         $discountRatio = $discount;
                     }
-                    trace('折扣比例');
-                    trace($discountRatio);
                     if ($discountRatio <= 1) {
                         if ($alone_grade_type == 20) {
                             // 固定金额
@@ -1000,31 +980,15 @@ class Cart extends CartModel
                         } else {
                             // 商品会员折扣后单价
                             $grade_product_price = helper::bcmul($product['product_price'], $discountRatio, 3);
-                            trace('商品会员折扣后单价');
-                            trace($grade_product_price);
                         }
                         $productDiscount = DiscountProduct::getDiscount($product['product_id']);
-                        trace('========');
-                        trace($product['total_num']);
-                        trace('========');
                         if ($product['total_num'] > 1 && $productDiscount) {
                             $gradeTotalPrice = $grade_product_price * ($product['total_num'] - 1) + round($grade_product_price * $productDiscount['discount'] / 10, 2);
                         } else {
                             $gradeTotalPrice = $grade_product_price * $product['total_num'];
-                            trace('商品会员折扣后单价 * 数量');
-                            trace($gradeTotalPrice);
                         }
-                        $is_user_grade = !($discountRatio == 1);
-                        $grade_ratio = $discountRatio == 1 ? 0 : $discountRatio;
-                        trace('折扣');
-                        trace($grade_ratio);
                         // 原商品总价 - 折扣后
-                        trace('原商品总价');
-                        trace($product['total_price']);
-                        trace($product['product_price']);
                         $grade_total_money = helper::number2(helper::bcsub($product['product_price'] * $product['total_num'], $gradeTotalPrice, 3));
-                        trace('优惠后与原商品差价');
-                        trace($grade_total_money);
                         $product['total_price'] = $gradeTotalPrice;
                     }
                 } else {
@@ -1055,9 +1019,6 @@ class Cart extends CartModel
         $order_price = 0;
         $user_discount_money = 0;
 
-        trace('======');
-        trace($cartList);
-        trace('======');
         foreach ($cartList as $product) {
             // 会员等级抵扣的金额
             $grade_ratio = 0;
@@ -1067,8 +1028,6 @@ class Cart extends CartModel
 
                 if ($user) {
                     $discount = (new CardRecordModel)->getDiscount($user['user_id']);
-                    trace('折扣信息');
-                    trace($discount);
                 } else {
                     $discount = 0;
                 }
@@ -1099,8 +1058,6 @@ class Cart extends CartModel
                     // 会员卡
                     $discountRatio = $discount;
                 }
-                trace('折扣');
-                trace($discountRatio);
                 if ($discountRatio <= 1) {
                     if ($alone_grade_type == 20) {
                         // 固定金额
@@ -1109,30 +1066,16 @@ class Cart extends CartModel
                     } else {
                         // 商品会员折扣后单价
                         $grade_product_price = helper::number2(helper::bcmul($product['price'], $discountRatio), true);
-                        trace('商品会员折扣后单价');
-                        trace($grade_product_price);
                     }
                     $productDiscount = DiscountProduct::getDiscount($product['product_id']);
-                    trace('========');
-                    trace($product['product_num']);
-                    trace('========');
                     if ($product['product_num'] > 1 && $productDiscount) {
                         $gradeTotalPrice = $grade_product_price * ($product['product_num'] - 1) + round($grade_product_price * $productDiscount['discount'] / 10, 2);
                     } else {
                         $gradeTotalPrice = $grade_product_price * $product['product_num'];
-                        trace('商品会员折扣后单价 * 数量');
-                        trace($gradeTotalPrice);
                     }
 
-                    trace('折扣');
-                    trace($grade_ratio);
                     // 原商品总价 - 折扣后
-                    trace('原商品总价');
-                    trace($product['total_price']);
-                    trace($product['product_price']);
                     $grade_total_money = helper::number2(helper::bcsub($product['price'] * $product['product_num'], $gradeTotalPrice));
-                    trace('优惠后与原商品差价');
-                    trace($grade_total_money);
                     $product['total_price'] = $gradeTotalPrice;
                 }
             }
