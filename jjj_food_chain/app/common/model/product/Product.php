@@ -225,8 +225,8 @@ class Product extends BaseModel
             $model = $model->whereNotIn('product_id', $params['product_id']);
         }
         // 执行查询
-
         $model = $model->alias('product')
+            ->distinct()
             ->field(['product.*', '(sales_initial + sales_actual) as product_sales'])
             ->with(['category', 'image.file', 'sku', 'supplier'])
             ->where('product.is_delete', '=', 0)
@@ -240,7 +240,6 @@ class Product extends BaseModel
         // 整理列表数据并返回
         return $this->setProductListData($list, true);
     }
-
 
     /**
      * 获取商品列表
