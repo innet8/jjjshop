@@ -42,6 +42,7 @@ class AuthService
 
         '/user/user/detail',
         '/user/user/OrderUseCard',
+        '/user/usershiftlog/index',
 
         '/order/cart/add',
         '/order/cart/sub',
