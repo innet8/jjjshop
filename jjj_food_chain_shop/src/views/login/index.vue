@@ -5,24 +5,45 @@
                 class="demo-ruleForm login-container d-b-c">
                 <div class="flex-1 login-box">
                     <h3 class="title" style="margin-bottom: 40px;"><img src="/src/assets/logo.svg" />{{ $t('点餐管理系统') }}</h3>
-                    <!--用户名-->
-                    <el-form-item prop="account">
-                        <div class="left-img-input"><img class="l-img" src="/src/assets/img/user.svg">
-                            <el-input class="l-input" type="text" v-model="ruleForm.account" auto-complete="off"
-                                :placeholder="$t('请输入用户名')">
-                            </el-input>
-                        </div>
-                        <!-- <el-input type="text" v-model="ruleForm.account" auto-complete="off" placeholder="账号"></el-input> -->
-                    </el-form-item>
-                    <!--密码-->
-                    <el-form-item prop="checkPass">
-                        <div class="left-img-input"><img class="l-img" src="/src/assets/img/lock.svg">
-                            <el-input type="password" class="l-input" v-model="ruleForm.checkPass" auto-complete="off"
-                                :placeholder="$t('请输入登录密码')">
-                            </el-input>
-                        </div>
-                        <!-- <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off" placeholder="密码"></el-input> -->
-                    </el-form-item>
+
+                    <template v-if="haveUrl">
+                        <!--用户名-->
+                        <el-form-item prop="account">
+                            <div class="left-img-input"><img class="l-img" src="/src/assets/img/user.svg">
+                                <el-input class="l-input" type="text" v-model="ruleForm.account" auto-complete="off"
+                                    :placeholder="$t('请输入用户名')">
+                                </el-input>
+                            </div>
+                            <!-- <el-input type="text" v-model="ruleForm.account" auto-complete="off" placeholder="账号"></el-input> -->
+                        </el-form-item>
+                        <!--密码-->
+                        <el-form-item prop="checkPass">
+                            <div class="left-img-input"><img class="l-img" src="/src/assets/img/lock.svg">
+                                <el-input type="password" class="l-input" v-model="ruleForm.checkPass" auto-complete="off"
+                                    :placeholder="$t('请输入登录密码')">
+                                </el-input>
+                            </div>
+                            <!-- <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off" placeholder="密码"></el-input> -->
+                        </el-form-item>
+                    </template>
+                    <template v-else>
+                        <el-form-item prop="address">
+                            <div class="left-img-input">
+                                <el-input type="text" class="l-input" v-model="ruleForm.address" auto-complete="off"
+                                    :placeholder="$t('请输入服务器地址')">
+                                </el-input>
+                            </div>
+                            <!-- <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off" placeholder="密码"></el-input> -->
+                        </el-form-item>
+                        <!-- <el-form-item prop="port">
+                            <div class="left-img-input">
+                                <el-input type="text" class="l-input" v-model="ruleForm.port" auto-complete="off"
+                                    :placeholder="$t('端口')">
+                                </el-input>
+                            </div>
+              
+                        </el-form-item> -->
+                    </template>
                     <!-- <el-form-item prop="verifycode" style="line-height:0px;">
             <div class="d-b-c">
               <div class="left-img-input" style="width: auto;">
@@ -35,9 +56,13 @@
             </div>
           </el-form-item> -->
                     <!--登录-->
-                    <el-button type="primary" :disabled="disabledC"
+                    <el-button  v-if="haveUrl" type="primary" :disabled="disabledC"
                         style="width:100%;height: 48px;font-size: 18px;margin-top: 6px;" @click.native.prevent="SubmitFunc"
                         :loading="logining">{{ $t('登录') }}
+                    </el-button>
+                    <el-button  v-else type="primary" :disabled="disabledB"
+                        style="width:100%;height: 48px;font-size: 18px;margin-top: 6px;" @click.native.prevent="SubmitB"
+                        :loading="logining">{{ $t('绑定') }}
                     </el-button>
                 </div>
 
@@ -51,8 +76,10 @@
                 </span>
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item v-for="item in languageList" :disabled="item.key == languageTag" :command="item.key">
-                            <div class="language-div">{{ item.label}}<img v-if="item.key == languageTag" src="../../assets/img/Check.svg"/></div>
+                        <el-dropdown-item v-for="item in languageList" :disabled="item.key == languageTag"
+                            :command="item.key">
+                            <div class="language-div">{{ item.label }}<img v-if="item.key == languageTag"
+                                    src="../../assets/img/Check.svg" /></div>
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
@@ -87,6 +114,9 @@ export default {
     computed: {
         disabledC() {
             return this.ruleForm.account == '' && this.ruleForm.checkPass == ''
+        },
+        disabledB() {
+            return this.ruleForm.address == ''
         }
     },
     data() {
@@ -103,6 +133,8 @@ export default {
             }
         }
         return {
+            haveUrl: false,
+
             loginForm: {
 
             },
@@ -123,7 +155,8 @@ export default {
                 account: '',
                 /*密码*/
                 checkPass: '',
-                verifycode: ''
+                address: '',
+                port:80,
             },
             /*验证规则*/
             rules: {
@@ -155,7 +188,10 @@ export default {
     },
     created() {
         this.refreshCode();
-        this.getData();
+        if (localStorage.getItem('SHOP_BASIC_URL')) {
+            this.haveUrl = true;
+            this.getData();
+        } 
     },
     mounted() {
         this.identifyCode = '';
@@ -240,6 +276,12 @@ export default {
                 }
             });
         },
+
+        SubmitB(){
+            localStorage.setItem('SHOP_BASIC_URL', this.ruleForm.address);
+            location.reload();
+        },
+
         setLanguage(e) {
             if (e == this.languageTag) return;
             ElMessageBox.confirm(
@@ -343,6 +385,7 @@ export default {
     align-items: center;
     padding: 0 16px;
     border-radius: 4px;
+
     .l-img {
         width: 20px;
         height: 20px;
@@ -359,7 +402,7 @@ export default {
 
         :deep(.el-input__wrapper) {
             box-shadow: none;
-            border: none ;
+            border: none;
         }
     }
 
@@ -394,13 +437,14 @@ export default {
         color: var(--el-color-black);
     }
 }
-:deep(.language-div){
+
+:deep(.language-div) {
     width: 90px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    img{
+
+    img {
         width: 18px;
     }
-}
-</style>
+}</style>

@@ -1,5 +1,10 @@
+
+var url = '/index.php';
+if(localStorage.getItem('SHOP_BASIC_URL')){
+    url = localStorage.getItem('SHOP_BASIC_URL') + url
+}
 export default {
-	baseURL: process.env.NODE_ENV === 'development' ? '/api/index.php' : `${import.meta.env.VITE_BASIC_URL}/index.php`,
+	baseURL: process.env.NODE_ENV === 'development' ? '/api/index.php' : url,
 	tokenName: 'token',
 	strongToken: "jjjShopToken",
 	renderMenu: "jjjShopRenderMenus",
