@@ -4,6 +4,7 @@ namespace app\shop\model\shop;
 
 use app\common\model\shop\LoginLog as LoginLogModel;
 use app\common\model\shop\User as UserModel;
+use app\common\model\shop\Access as AccessModel;
 use app\shop\model\settings\Setting as SettingModel;
 
 /**
@@ -44,6 +45,12 @@ class User extends UserModel
         }
         if ($user['app']['expire_time'] != 0 && $user['app']['expire_time'] < time()) {
             $this->error = '登录失败, 当前应用已过期，请联系平台续费';
+            return false;
+        }
+        // 验证权限
+        $permission = (new AccessModel)->getPermission(AccessModel::SHOP_ROUTE_NAME, $user, $user['supplier']);
+        if (empty($permission)) {
+            $this->error = '当前无权限，请联系管理员';
             return false;
         }
         // 保存登录状态
