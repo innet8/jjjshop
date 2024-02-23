@@ -2,6 +2,7 @@
 
 namespace app\common\model\order;
 
+use app\common\model\buffet\Buffet;
 use think\facade\Log;
 use app\common\library\helper;
 use app\common\model\BaseModel;
@@ -1379,5 +1380,23 @@ class Order extends BaseModel
             ->where('is_delete', '=', 0)
             ->order('order_id desc')
             ->find();
+    }
+
+    // 创建订单自助餐关联信息
+    public static function createOrderBuffet($order_id, array $buffet_ids)
+    {
+        foreach ($buffet_ids as $id) {
+            $buffet = (new Buffet)->withoutGlobalScope()->where('status', '=', 1)->where('id', '=', $id)->find();
+            $inArr = [
+                'order_id' => $order_id,
+                'buffet_id' => $id,
+                'name' => $buffet['name'],
+                'price' => $buffet['price'],
+                'buy_limit_status' => $buffet['buy_limit_status'],
+                'is_comb' => $buffet['is_comb'],
+                'time_limit' => $buffet['time_limit'],
+            ];
+            (new OrderBuffet)->insert($inArr);
+        }
     }
 }
