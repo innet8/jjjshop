@@ -58,6 +58,7 @@ class Clear extends Controller
             'setting' => [
                 'type' => 'cache',
                 'key' => 'setting_' . $app_id. '_0',
+                'keys' => 'setting_' . $app_id. '_'. $app_id,
                 'name' => '商城设置'
             ],
             'app' => [
@@ -94,6 +95,10 @@ class Clear extends Controller
             $item = $cacheList[$key];
             if ($item['type'] === 'cache') {
                 Cache::has($item['key']) && Cache::set($item['key'], null);
+                // 
+                if (isset($item['keys'])) {
+                    Cache::has($item['keys']) && Cache::set($item['keys'], null);
+                }
                 //如果是app，则多删除
                 if($item['key'] == 'app'){
                     Cache::has('app_mp_' . $app_id) && Cache::set('app_mp_' . $app_id, null);

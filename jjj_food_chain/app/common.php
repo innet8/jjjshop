@@ -1,11 +1,13 @@
 <?php
 
 use help\SystemHelp;
-use think\facade\Log;
 use \Firebase\JWT\JWT;
 use \Firebase\JWT\Key;
 use think\facade\Config;
 use think\facade\Request;
+use app\common\model\shop\User;
+use app\common\enum\settings\SettingEnum;
+use app\common\model\settings\Setting as SettingModel;
 
 // 应用公共文件
 /**
@@ -636,6 +638,18 @@ function extractLanguage($json)
         if (array_key_exists("en", $texts)) {
             return $texts["en"];
         }
+        // 
+        $languages = SettingModel::getSupplierItem(SettingEnum::STORE, User::getShopInfo('shop_supplier_id'))['language'];
+        foreach ($languages as $language) {
+            $name = $language['name'] ?? 'en';
+            $name = $name == 'zhtw' ? 'zh-tw' : $name;
+            // dump($name == $lang);
+            // die;
+            if ($name == $lang && array_key_exists($language['key'] ?? '', $texts)) {
+                return $texts[$language['key']];
+            }
+        }
+        // 
         return  $json;
     } catch (\Throwable $th) {
         return $json;

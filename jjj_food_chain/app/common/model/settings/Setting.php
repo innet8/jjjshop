@@ -2,33 +2,13 @@
 
 namespace app\common\model\settings;
 
+use think\Model;
 use think\facade\Env;
 use think\facade\Cache;
 use app\common\model\BaseModel;
+use app\common\model\shop\User;
 use app\common\enum\settings\SettingEnum;
-
-define('LANGUAGE_LIST', [
-    [
-        'key' => 'th',
-        'value' => 'ภาษาไทย'
-    ],
-    [
-        'key' => 'zh',
-        'value' => '简体中文'
-    ],
-    [
-        'key' => 'zh-tw',
-        'value' => '繁體中文'
-    ],
-    [
-        'key' => 'en',
-        'value' => 'English'
-    ],
-    [
-        'key' => 'ja',
-        'value' => '日本語です'
-    ],
-]);
+use app\common\enum\settings\LanguageEnum;
 
 /**
  * 系统设置模型
@@ -78,7 +58,8 @@ class Setting extends BaseModel
         $model = new static;
         $result = $model->withoutGlobalScope()->where('key', '=', SettingEnum::SYS_CONFIG)->value('values');
         if (!$result) {
-            $result = $model->defaultData()[SettingEnum::SYS_CONFIG]['values'];
+            $languageList = self::getSupplierItem(SettingEnum::STORE, User::getShopInfo('shop_supplier_id'))['language'] ?? [];
+            $result = $model->defaultData(null,$languageList)[SettingEnum::SYS_CONFIG]['values'];
         } else {
             $result = json_decode($result, true);
         }
@@ -90,7 +71,8 @@ class Setting extends BaseModel
      */
     public static function getSupplierItem($key, $shop_supplier_id, $app_id = null)
     {
-        $data = self::getAll($app_id, $shop_supplier_id);
+        $languageList = $key != SettingEnum::STORE ? (self::getSupplierItem(SettingEnum::STORE, User::getShopInfo('shop_supplier_id'))['language'] ?? []) : [];
+        $data = self::getAll($app_id, $shop_supplier_id, $languageList);
         $data_key = $data[$key];
         if (isset($data_key)) {
             $data_key = $data[$key]['values'];
@@ -98,7 +80,13 @@ class Setting extends BaseModel
         } else {
             $data_key = [];
         }
-
+        if ($key == SettingEnum::STORE) {
+            if (isset($data_key['language'])) {
+                $data_key['language'] = $data_key['language'] ?: LanguageEnum::default();
+            } else {
+                $data_key['language'] = LanguageEnum::default();
+            }
+        }
         return $data_key;
     }
 
@@ -118,7 +106,7 @@ class Setting extends BaseModel
     /**
      * 全局缓存: 系统设置
      */
-    public static function getAll($app_id = null, $shop_supplier_id = 0)
+    public static function getAll($app_id = null, $shop_supplier_id = 0, $languageList=[])
     {
         $static = new static;
         is_null($app_id) && $app_id = $static::$app_id;
@@ -127,7 +115,7 @@ class Setting extends BaseModel
             $data = empty($setting) ? [] : array_column($static->collection($setting)->toArray(), null, 'key');
             Cache::tag('cache')->set('setting_' . $app_id . '_' . $shop_supplier_id, $data);
         }
-        return $static->getMergeData($data);
+        return $static->getMergeData($data, $languageList);
     }
 
     /**
@@ -147,9 +135,9 @@ class Setting extends BaseModel
     /**
      * 合并用户设置与默认数据
      */
-    private function getMergeData($userData)
+    private function getMergeData($userData, $languageList=[])
     {
-        $defaultData = $this->defaultData();
+        $defaultData = $this->defaultData(null, $languageList);
         if (isset($userData['store']['values']['checkedPay'])) {
             unset($defaultData['store']['values']['checkedPay']);
         }
@@ -174,7 +162,7 @@ class Setting extends BaseModel
         $model = self::detail($key, $shop_supplier_id);
 
         // 删除系统设置缓存
-        Cache::delete('setting_' . self::$app_id. '_' . $shop_supplier_id);
+        Cache::set('setting_' . self::$app_id. '_' . $shop_supplier_id, null);
 
         $model = $model->save(
             [
@@ -193,15 +181,19 @@ class Setting extends BaseModel
     /**
      * 默认配置
      */
-    public function defaultData($storeName = null)
+    public function defaultData($storeName = null, $languageList=[])
     {
+        foreach ($languageList as $key => $language) {
+            $languageList[$key]['key'] = $language['name'];
+            unset($languageList[$key]['name']);
+        }
         return [
             SettingEnum::STORE => [
                 'key' => 'store',
                 'describe' => '商城设置',
                 'values' => [
                     // 商城名称
-                    'name' => $storeName ?: '三勾点餐系统连锁店版本',
+                    'name' => $storeName ?: '点餐系统连锁店版本',
                     // 快递100
                     'kuaidi100' => [
                         'customer' => '',
@@ -319,7 +311,7 @@ class Setting extends BaseModel
                     'cashier_open' => '1',   // 是否开启打印
                     'cashier_printer_id' => '0', // 打印机id
                     'order_status' => [], // 订单类型 10下单打印 20付款打印 30确认收货打印
-                    'language_list' => LANGUAGE_LIST, // 语言列表
+                    'language_list' => $languageList, // 语言列表
                     'default_language' => 'en', // 默认语言
                 ],
             ],
@@ -561,7 +553,7 @@ class Setting extends BaseModel
                     // 自动锁屏（秒），默认5分钟
                     'auto_lock_screen' => 300,
                     // 语言列表
-                    'language_list' => LANGUAGE_LIST,
+                    'language_list' => $languageList,
                     // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
                     'language' => [
                         'th', 'en', 'zh', 'zh-tw', 'ja'
@@ -587,7 +579,7 @@ class Setting extends BaseModel
                     // 高级设置密码
                     'advanced_password' => '666888',
                     // 语言列表
-                    'language_list' => LANGUAGE_LIST,
+                    'language_list' => $languageList,
                     // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
                     'language' => [
                         'th', 'en', 'zh', 'zh-tw', 'ja'
@@ -610,7 +602,7 @@ class Setting extends BaseModel
                     // 时长颜色 10分钟-黄色#ffff00 20分钟-红色#ff0000
                     'wait_color' => [],
                     // 语言列表
-                    'language_list' => LANGUAGE_LIST,
+                    'language_list' => $languageList,
                     // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
                     'language' => [
                         'th', 'en', 'zh', 'zh-tw', 'ja'
