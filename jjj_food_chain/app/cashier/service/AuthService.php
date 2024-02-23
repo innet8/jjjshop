@@ -44,14 +44,14 @@ class AuthService
         '/user/user/OrderUseCard',
         '/user/usershiftlog/index',
 
-        '/order/cart/add',
+        '/order/cart/add', // 收银-加入购物车
         '/order/cart/sub',
         '/order/cart/list',
-        '/order/cart/pick',
+        '/order/cart/pick', // 取单
         '/order/cart/stayList',
         '/order/order/useMember',
 
-        '/order/hallcart/add',
+        '/order/hallcart/add', // 桌台-加入购物车
         '/order/hallcart/delProduct',
         '/order/hallcart/getSendKitchen',
         '/order/hallcart/tableProductList',

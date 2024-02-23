@@ -29,7 +29,7 @@ class Product extends ProductModel
             $categoryIds = Category::where('status', '=', 1)->column('category_id');
             $model = $model->whereIn('product.category_id', $categoryIds);
         }
-        if (!empty($params['search'])) {
+        if (isset($params['search']) && $params['search'] != '') {
             $model = $model->like('product_name', trim($params['search']));
         }
 

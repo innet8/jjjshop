@@ -124,7 +124,7 @@ class OrderSettled extends OrderSettledModel
     {
         $model = $this;
         // 查询条件：订单号
-        if (isset($params['order_no']) && !empty($params['order_no'])) {
+        if (isset($params['order_no']) && $params['order_no'] != '') {
             $model = $model->like('order.order_no', $params['order_no']);
         }
         if (isset($params['start_day']) && !empty($params['start_day'])) {

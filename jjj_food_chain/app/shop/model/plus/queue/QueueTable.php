@@ -19,7 +19,7 @@ class QueueTable extends QueueTableModel
     public function getList($params, $shop_supplier_id)
     {
         $model = $this;
-        if (!empty($params['search']) && $params['search']) {
+        if (isset($params['search']) && $params['search'] != '') {
             $model = $model->like('table_name',  $params['search']);
         }
         // 查询列表数据

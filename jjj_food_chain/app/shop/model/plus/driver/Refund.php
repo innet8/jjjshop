@@ -20,7 +20,7 @@ class Refund extends RefundModel
             ->field('apply.*, user.nickName, user.avatarUrl')
             ->join('user', 'user.user_id = apply.user_id')
             ->order(['apply.create_time' => 'desc']);
-        if (!empty($search['nick_name'])) {
+        if (isset($search['nick_name']) && $search['nick_name'] != '') {
             $model = $model->like('user.nickName|apply.real_name|apply.mobile', $search['nick_name']);
         }
 

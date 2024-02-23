@@ -15,7 +15,7 @@ class InvitationReceive extends InvitationReceiveModel
     public function getList($id, $data)
     {
         $model = $this;
-        if ($data['search'] != '') {
+        if (isset($data['search']) && $data['search'] != '') {
             $model = $model->like('user.nickName|user.mobile', trim($data['search']));
         }
         return $model->alias('receive')->field('receive.*')->with(['user','invite'])

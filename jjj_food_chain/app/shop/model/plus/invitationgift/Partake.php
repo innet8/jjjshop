@@ -17,7 +17,7 @@ class Partake extends PartakeModel
     public function getList($id, $data)
     {
         $model = $this;
-        if ($data['search'] != '') {
+        if (isset($data['search']) && $data['search'] != '') {
             $model = $model->like('user.nickName|user.mobile', trim($data['search']));
         }
         return $model->alias('partake')->field('partake.*')->with(['user', 'partake'])

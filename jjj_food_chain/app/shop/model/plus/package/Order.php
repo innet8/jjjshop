@@ -18,7 +18,7 @@ class Order extends OrderModel
     public function getList($data)
     {
         $model = $this;
-        if ($data['search'] != '') {
+        if (isset($data['search']) && $data['search'] != '') {
             $model = $model->like('user.nickName|user.mobile', trim($data['search']));
         }
         return $model->alias('order')->field('order.*')->with(['user'])

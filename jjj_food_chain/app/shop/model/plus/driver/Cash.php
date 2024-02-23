@@ -50,7 +50,7 @@ class Cash extends CashModel
         if ($user_id > 0) {
             $model = $model->where('cash.user_id', '=', $user_id);
         }
-        if (!empty($search)) {
+        if ($search) {
             $model = $model->like('driver.real_name|driver.mobile', $search);
         }
         if ($apply_status > 0) {

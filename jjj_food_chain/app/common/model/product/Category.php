@@ -90,7 +90,7 @@ class Category extends BaseModel
                 ->where('is_special', '=', $is_special)
                 ->order(['sort' => 'asc', 'create_time' => 'desc'])
                 ->where('shop_supplier_id', '=', $shop_supplier_id)
-                ->when($name, function($q) use($name) {
+                ->when($name != '', function($q) use($name) {
                     $q->like('name', $name);
                 })
                 ->select();
@@ -100,7 +100,7 @@ class Category extends BaseModel
                 $data = $model->with(['images'])
                     ->where('type', '=', $type)
                     ->where('is_special', '=', $is_special)
-                    ->when($name, function($q) use($name) {
+                    ->when($name != '', function($q) use($name) {
                         $q->like('name', $name);
                     })
                     ->order(['sort' => 'asc', 'create_time' => 'desc'])

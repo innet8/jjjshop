@@ -18,7 +18,7 @@ class Package extends PackageModel
     {
         $model = $this;
         //检索活动名称
-        if ($data['search'] != '') {
+        if (isset($data['search']) && $data['search'] != '') {
             $model = $model->like('name', trim($data['search']));
         }
         return $model->where('is_delete', '=', 0)

@@ -181,7 +181,7 @@ class Product extends BaseModel
         if ($params['special_id'] > 0) {
             $model = $model->where('product.special_id', '=', $params['special_id']);
         }
-        if (!empty($params['product_name'])) {
+        if (isset($params['product_name']) && $params['product_name'] != '') {
             $model = $model->like('product_name', $params['product_name']);
         }
         if (!empty($params['search'])) {
@@ -257,10 +257,10 @@ class Product extends BaseModel
             $arr = Category::getSubCategoryId($params['category_id']);
             $model = $model->where('category_id', 'IN', $arr);
         }
-        if (!empty($params['product_name'])) {
+        if (isset($params['product_name']) && $params['product_name'] != '') {
             $model = $model->like('product_name', trim($params['product_name']));
         }
-        if (!empty($params['search'])) {
+        if (isset($params['search']) && $params['search'] != '') {
             $model = $model->like('product_name', trim($params['search']));
         }
         $list = $model
