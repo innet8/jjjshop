@@ -162,7 +162,7 @@ class Language
                 $newTargets[$target] = $target;
             }
         }
-        return array_merge($newTargets, ['zh' => 'zh']);
+        return empty($newTargets) ? [] : array_merge($newTargets, ['zh' => 'zh']);
     }
 
     /**
