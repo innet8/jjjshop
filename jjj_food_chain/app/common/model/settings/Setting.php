@@ -618,6 +618,26 @@ class Setting extends BaseModel
                     'default_language' => 'en', // 默认语言
                 ],
             ],
+            SettingEnum::BUFFET => [
+                'key' => 'buffet',
+                'describe' => '自助餐设置',
+                'values' => [
+                    // 是否开启自助餐 0-关闭 1-开启
+                    'is_open' => '1',
+                    // 平板结束时间提醒（分）
+                    'tablet_end_time' => '5',
+                    // 非自助餐商品到时是否能继续选购 0-关闭 1-开启
+                    'is_buy_continue' => '1',
+                    // 是否开启加钟 0-关闭 1-开启
+                    'is_add_clock' => '0',
+                    // 加钟时间（分）- 价格
+                    // [
+                    //     'time' => '30',
+                    //     'value' => '10'
+                    // ]
+                    'add_clock' => [],
+                ],
+            ],
         ];
     }
 }

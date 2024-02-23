@@ -63,6 +63,8 @@ class SettingEnum extends Enum
     const TABLET = 'tablet';
     // 各端-厨显设置
     const KITCHEN = 'kitchen';
+    // 自助餐-自助餐设置
+    const BUFFET = 'buffet';
 
 
     /**
@@ -178,6 +180,10 @@ class SettingEnum extends Enum
             self::KITCHEN => [
                 'value' => self::KITCHEN,
                 'describe' => __('厨显设置'),
+            ],
+            self::BUFFET => [
+                'value' => self::BUFFET,
+                'describe' => __('自助餐设置'),
             ],
         ];
     }
