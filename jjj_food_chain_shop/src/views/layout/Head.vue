@@ -15,8 +15,8 @@
                         </span>
                         <template #dropdown>
                             <el-dropdown-menu>
-                                <el-dropdown-item v-for="item in languageList" :disabled="item.key == languageTag" :command="item.key">
-                                <div class="language-div">{{ item.label}}<img v-if="item.key == languageTag" src="../../assets/img/Check.svg"/></div>
+                                <el-dropdown-item v-for="item in languageList" :disabled="item.name == languageTag" :command="item.name">
+                                <div class="language-div">{{ item.value}}<img v-if="item.name == languageTag" src="../../assets/img/Check.svg"/></div>
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </template>

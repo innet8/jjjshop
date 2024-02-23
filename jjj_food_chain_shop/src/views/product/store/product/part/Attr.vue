@@ -31,7 +31,7 @@
                         }]">
                             <template #label>
                                 <span style="color: var(--el-color-danger);margin: 0  4px 0 0 !important;">*</span>{{
-                                    $t('属性名称：') }}<span class="product-tips">（{{ items.label }}）</span>
+                                    $t('属性名称：') }}<span class="product-tips">（{{ items.value }}）</span>
                             </template>
                             <el-autocomplete :fetch-suggestions="(e, h) => querySearch(e, h, items.key)"
                                 @select="(e) => selectChange(e, index)" class="inline-input"

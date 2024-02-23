@@ -6,32 +6,32 @@ export const languageStore = defineStore({
         language: 'en',
         languageList: [
             {
-                key: 'th',
-                label: 'ภาษาไทย'
+                "key": 1,
+                "name": "en",
+                "value": "English"
             },
             {
-                key: 'zh',
-                label: '简体中文'
+                "key": 2,
+                "name": "th",
+                "value": "ภาษาไทย"
             },
             {
-                key: 'zhtw',
-                label: '繁體中文'
+                "key": 3,
+                "name": "zh-tw",
+                "value": "繁體中文"
             },
             {
-                key: 'en',
-                label: 'English'
-            },
-            {
-                key: 'ja',
-                label: '日本語'
-            },
-        ],
-        languageData:{
-            th: "",
-            zh: "",
-            zhtw: "",
-            en: "",
-            ja: "",
+                "key": 4,
+                "name": "ja",
+                "value": "日本語です"
+            }
+        ]
+        ,
+        languageData: {
+            "1": "111",
+            "2": "",
+            "3": "",
+            "4": "",
         },
     }),
     getters: {
@@ -41,14 +41,20 @@ export const languageStore = defineStore({
         setLanguage(lang) {
             this.language = lang;
         },
+        setLanguageList(data) {
+            this.languageList = data;
+        },
+        setLanguageData(data) {
+            this.languageData = data;
+        },
         getLanguage() {
             return {
-                language: computed(()=>{
+                language: computed(() => {
                     let result = 'English'
-                    this.languageList.map((item=>{
-                        if(item.key == this.language ){
-                            result = item.label
-                        } 
+                    this.languageList.map((item => {
+                        if (item.name == this.language) {
+                            result = item.value
+                        }
                     }));
                     return result
                 })

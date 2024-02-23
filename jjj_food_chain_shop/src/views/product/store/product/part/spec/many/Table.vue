@@ -22,7 +22,7 @@
                                     <el-autocomplete size="small" @select="(e) => selectChange(e, scope.$index)"
                                         :fetch-suggestions="(e, h) => querySearch(e, h, item.key)"
                                         v-model="scope.row.spec_name[item.key]"
-                                        :placeholder="$t('请输入') + `(${item.label})`"></el-autocomplete>
+                                        :placeholder="$t('请输入') + `(${item.value})`"></el-autocomplete>
                                 </el-form-item>
                             </div>
                         </template>

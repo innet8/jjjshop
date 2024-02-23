@@ -3,7 +3,7 @@
         :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
             <template v-for="(item, index) in languageList" :key="index">
-                <el-form-item :label="$t('分类名称') + `(${item.label})`" :prop="`form.name.${item.key}.`"
+                <el-form-item :label="$t('分类名称') + `(${item.value})`" :prop="`form.name.${item.key}.`"
                     :rules="[{ validator: ()=>{
                     return form.name[item.key] ? true : false ;
                     }, message: $t('请输入分类名称') }]"

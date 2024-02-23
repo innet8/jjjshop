@@ -6,7 +6,7 @@
         :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
             <template v-for="(item, index) in languageList" :key="index">
-                <el-form-item :label="$t('属性名称') + `(${item.label})`" :prop="`attribute_name.${[item.key]}`"
+                <el-form-item :label="$t('属性名称') + `(${item.value})`" :prop="`attribute_name.${[item.key]}`"
                     :rules="[{ required: true, message: $t('请输入属性名称') }]">
                     <el-input v-model="form.attribute_name[item.key]" :placeholder="$t('如：温度')" :maxlength="50" autocomplete="off"></el-input>
                 </el-form-item>

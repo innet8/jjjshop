@@ -7,7 +7,7 @@
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
 
             <template v-for="(item, index) in languageList" :key="index">
-                <el-form-item :label="$t('单位名称') + `(${item.label})`" :rules="[{ required: true, message: $t('请输入单位名称') }]"
+                <el-form-item :label="$t('单位名称') + `(${item.value})`" :rules="[{ required: true, message: $t('请输入单位名称') }]"
                     :prop="`unit_name.${[item.key]}`">
                     <el-input v-model="form.unit_name[item.key]" :placeholder="$t('请输入单位名称')" :maxlength="50" autocomplete="off"></el-input>
                 </el-form-item>

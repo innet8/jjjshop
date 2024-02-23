@@ -7,7 +7,7 @@
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
 
             <template v-for="(item, index) in languageList" :key="index">
-                <el-form-item :label="$t('规格名称') + `(${item.label})`" :prop="`spec_name.${item.key}`">
+                <el-form-item :label="$t('规格名称') + `(${item.value})`" :prop="`spec_name.${item.key}`">
                     <el-input v-model="form.spec_name[item.key]" :placeholder="$t('请输入规格名称')" :maxlength="50"
                         autocomplete="off"></el-input>
                 </el-form-item>

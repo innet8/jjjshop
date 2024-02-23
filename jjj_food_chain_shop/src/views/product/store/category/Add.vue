@@ -18,7 +18,7 @@
             </el-form-item>
 
             <template v-for="(item, index) in languageList" :key="index">
-                <el-form-item :label="$t('分类名称') + `(${item.label})`" :prop="`name.${item.key}`"
+                <el-form-item :label="$t('分类名称') + `(${item.value})`" :prop="`name.${item.key}`"
                     :rules="[{ required: true, message: $t('请输入分类名称') }]">
                     <el-input v-model="form.name[item.key]" :placeholder="$t('请输入分类名称')" :maxlength="50" autocomplete="off"></el-input>
                 </el-form-item>
