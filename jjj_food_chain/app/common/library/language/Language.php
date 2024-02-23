@@ -12,14 +12,14 @@ use app\common\library\language\engine\YouDao;
 class Language
 {
     // 当前文件语言集
-    // zh: 中文 | zhtw: 繁体中文 | en: 英文 | th: 泰文 | ja: 日文 | tr: 土耳其文
-    private $targetFiles = ['zh', 'zhtw', 'en', 'th', 'ja','tr'];
+    // zh: 中文 | zhtw: 繁体中文 | en: 英文 | th: 泰文 | ja: 日文 | tr: 土耳其文 | ko：韩语
+    private $targetFiles = ['zh', 'zhtw', 'en', 'th', 'ja', 'tr', 'ko'];
 
     // 谷歌语言集
-    private $googleTargetFiles = ['zh', 'zh-TW', 'en', 'th', 'ja', 'tr'];
+    private $googleTargetFiles = ['zh', 'zh-TW', 'en', 'th', 'ja', 'tr', 'ko'];
 
     // 有道语言集
-    private $youdaoTargetFiles = ['zh-CHS', 'zh-CHT', 'en', 'th', 'ja', 'tr'];
+    private $youdaoTargetFiles = ['zh-CHS', 'zh-CHT', 'en', 'th', 'ja', 'tr', 'ko'];
 
     // 当前语言文件路径
     private $langFilePath = 'lang/';
@@ -148,6 +148,21 @@ class Language
             file_put_contents($savePath, $emptyContent);
         }
         return $savePath;
+    }
+
+    /**
+     * 获取新翻译语言
+     */
+    public function getTranslatedLang()
+    {
+        $newTargets = [];
+        foreach ($this->targetFiles as $target) {
+            $savePath = $this->getSavePath($target);
+            if (!file_exists($savePath)) {
+                $newTargets[$target] = $target;
+            }
+        }
+        return array_merge($newTargets, ['zh' => 'zh']);
     }
 
     /**
