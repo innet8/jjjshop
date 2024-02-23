@@ -142,7 +142,9 @@ export default {
         },
         onSubmit() {
             let self = this;
-            this.$refs["form-item"].validate()
+            if(this.$refs["form-item"]){
+                this.$refs["form-item"].validate()
+            }
             for (let i = 0; i < self.form.carousel.length; i++) {
                 if(self.form.carousel[i].sort==null) {return};
             }
