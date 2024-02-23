@@ -35,7 +35,7 @@ class CreateBuffetProductTable extends Migrator
         $table->addColumn('product_name', 'string', ['limit' => 255, 'default' => '', 'comment' => '商品名']);
         $table->addColumn('limit_num', 'integer', ['default' => 0, 'comment' => '限购数量']);
         $table->addColumn('create_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'signed' => true, 'comment' => '创建时间']);
-        $table->addColumn('update_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'signed' => true, 'comment' => '创建时间']);
+        $table->addColumn('update_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'signed' => true, 'comment' => '更新时间']);
         $table->addIndex(['buffet_id'], ['name' => 'buffet_id']);
         $table->create();
     }

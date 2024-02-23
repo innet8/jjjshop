@@ -39,7 +39,7 @@ class CreateBuffetTable extends Migrator
         $table->addColumn('status', 'integer', ['default' => 1, 'comment' => '状态']);
         $table->addColumn('sort', 'integer', ['default' => 0, 'comment' => '排序']);
         $table->addColumn('create_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'signed' => true, 'comment' => '创建时间']);
-        $table->addColumn('update_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'signed' => true, 'comment' => '创建时间']);
+        $table->addColumn('update_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'signed' => true, 'comment' => '更新时间']);
         $table->create();
     }
 }
