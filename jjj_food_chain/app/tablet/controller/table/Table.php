@@ -7,7 +7,7 @@ use app\common\model\settings\Setting as SettingModel;
 use app\tablet\model\store\Table as TableModel;
 use app\tablet\controller\Controller;
 use hg\apidoc\annotation as Apidoc;
-
+use app\tablet\model\order\Order as OrderModel;
 
 /**
  * 桌台相关
@@ -85,10 +85,23 @@ class Table extends Controller
     /**
      * @Apidoc\Title("桌台")
      * @Apidoc\Method("POST")
+     * @Apidoc\Param("table_id", type="int", require=false, desc="桌号ID")
      * @Apidoc\Url("/index.php/tablet/table.table/ping")
      */
     public function ping()
     {
-        return $this->renderSuccess('请求成功');
+        // Tid
+        $tableId = $this->table['table_id'] ?? 0;
+        // 
+        $is_lock = 0;
+        // 
+        if ($tableId > 0) {
+            $detail = OrderModel::getTableUnderwayOrder($tableId);
+            if ($detail) {
+                $is_lock = $detail->is_lock;
+            }
+        }
+        // 
+        return $this->renderSuccess('请求成功', compact('is_lock'));
     }
 }
