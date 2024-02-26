@@ -10,6 +10,9 @@ use app\common\model\BaseModel;
 class Buffet extends BaseModel
 {
     protected $name = 'buffet';
+    protected $deleteTime = 'delete_time';
+    protected $defaultSoftDelete = 0;
+
 
     /**
      * 追加字段
@@ -19,17 +22,11 @@ class Buffet extends BaseModel
 
     ];
 
-    /**
-     * 关联供应商表
-     */
-    public function orders()
-    {
-        return $this->belongsTo('app\\common\\model\\order\\Order', 'order_id', 'order_id');
-    }
 
     public static function getList()
     {
         return (new self())->where('status', '=', 1)
+            ->order('sort asc')
             ->select();
     }
 

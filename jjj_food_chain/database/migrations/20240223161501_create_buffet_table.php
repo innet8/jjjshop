@@ -42,6 +42,7 @@ class CreateBuffetTable extends Migrator
         $table->addColumn('shop_supplier_id', 'integer', ['default' => 0, 'comment' => '门店id']);
         $table->addColumn('create_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'signed' => true, 'comment' => '创建时间']);
         $table->addColumn('update_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'signed' => true, 'comment' => '更新时间']);
+        $table->addColumn(Column::unsignedInteger('delete_time')->setNull(false)->setDefault(0)->setComment('删除时间')->setAfter('create_time'));
         $table->addIndex(['app_id'], ['name' => 'app_id']);
         $table->addIndex(['shop_supplier_id'], ['name' => 'shop_supplier_id']);
         $table->create();
