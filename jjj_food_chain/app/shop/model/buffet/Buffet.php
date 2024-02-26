@@ -10,14 +10,6 @@ use app\common\model\buffet\Buffet as BuffetModel;
 class Buffet extends BuffetModel
 {
     /**
-     * 追加字段
-     * @var string[]
-     */
-    protected $append = [
-
-    ];
-
-    /**
      * 获取自助餐详情
      */
     public static function detail($buffet_id)

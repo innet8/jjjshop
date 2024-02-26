@@ -622,8 +622,9 @@ class Setting extends BaseModel
                     'is_buy_continue' => '1',
                     // 是否开启加钟 0-关闭 1-开启
                     'is_add_clock' => '0',
-                    // 加钟时间（分）- 价格
+                    // 名称 - 加钟时间（分）- 价格
                     // [
+                    //     'name' => '名称',
                     //     'time' => '30',
                     //     'value' => '10'
                     // ]

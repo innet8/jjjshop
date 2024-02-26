@@ -22,7 +22,8 @@ class Buffet extends Controller
      * @Apidoc\Param("tablet_end_time", type="string", require=true, default="5", desc="平板结束时间提醒（分）")
      * @Apidoc\Param("is_buy_continue", type="string", require=true, desc="非自助餐商品到时是否能继续选购")
      * @Apidoc\Param("is_add_clock", type="string", require=true, desc="是否开启加钟")
-     * @Apidoc\Param("add_clock", type="array", require=true, desc="加钟时间（分）- 价格", children={
+     * @Apidoc\Param("add_clock", type="array", require=true, desc="名称 - 加钟时间（分）- 价格", children={
+     *     @Apidoc\Returned("name", type="string", desc="名称"),
      *     @Apidoc\Returned("time", type="string", desc="时间（分）"),
      *     @Apidoc\Returned("value", type="string", desc="价格"),
      * })
@@ -41,7 +42,7 @@ class Buffet extends Controller
                 return $this->renderError('加钟设置不能为空');
             }
             foreach ($data['add_clock'] as $clock) {
-                if (empty($clock['time']) || empty($clock['value'])) {
+                if (empty($clock['name']) || empty($clock['time']) || empty($clock['value'])) {
                     return $this->renderError('加钟设置参数错误');
                 }
             }

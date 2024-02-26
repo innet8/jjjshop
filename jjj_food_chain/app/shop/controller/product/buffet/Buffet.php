@@ -40,7 +40,7 @@ class Buffet extends Controller
     public function detail($buffet_id)
     {
         // 获取全部商品列表
-        $detail = BuffetModel::detail($buffet_id);
+        $detail = BuffetModel::detail($buffet_id ?? 0);
         if (!$detail) {
             return $this->renderError('数据不存在');
         }
@@ -99,7 +99,7 @@ class Buffet extends Controller
      */
     public function edit($buffet_id)
     {
-        $model = BuffetModel::detail($buffet_id);
+        $model = BuffetModel::detail($buffet_id ?? 0);
         if (!$model) {
             return $this->renderError('数据不存在');
         }
@@ -119,7 +119,7 @@ class Buffet extends Controller
      */
     public function comb($buffet_id, $is_comb)
     {
-        $model = BuffetModel::detail($buffet_id);
+        $model = BuffetModel::detail($buffet_id ?? 0);
         if (!$model) {
             return $this->renderError('数据不存在');
         }
@@ -139,7 +139,7 @@ class Buffet extends Controller
      */
     public function state($buffet_id, $state)
     {
-        $model = BuffetModel::detail($buffet_id);
+        $model = BuffetModel::detail($buffet_id ?? 0);
         if (!$model) {
             return $this->renderError('数据不存在');
         }
@@ -158,7 +158,7 @@ class Buffet extends Controller
      */
     public function delete($buffet_id)
     {
-        $model = BuffetModel::detail($buffet_id);
+        $model = BuffetModel::detail($buffet_id ?? 0);
         if (!$model) {
             return $this->renderError('数据不存在');
         }
