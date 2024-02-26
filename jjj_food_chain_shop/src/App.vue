@@ -89,6 +89,15 @@ onMounted(() => {
                 data[(index + 1).toString()] = ''
             })
             languageStore().setLanguageData(data)
+            //刷新
+            if(!JSON.parse(localStorage.getItem("Language"))){
+                location.reload();
+            }
+            //判断默认语言
+            if(JSON.parse(localStorage.getItem("Language")) && JSON.parse(localStorage.getItem("Language")).language =='' ){
+                languageStore().setLanguage(JSON.parse(localStorage.getItem("Language")).languageList[0].name)
+            }
+    
         })
         .catch(error => {
 
