@@ -39,6 +39,9 @@ class Order extends Controller
         if (!$table) {
             return $this->renderError('桌台不存在');
         }
+        if ($table['status'] == 30) {
+            return $this->renderError('桌台已开台');
+        }
 
         // 实例化订单service
         $user = [

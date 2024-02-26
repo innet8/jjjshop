@@ -354,6 +354,7 @@ abstract class CashierSettledService extends BaseService
             'app_id' => $this->app_id,
             'setting_service_money' => $order['setting_service_money'] ?? 0,
             'consumption_tax_money' => $order['consumption_tax_money'],
+            'is_buffet' => $order['is_buffet'],
         ];
         if ($data['eat_type'] == 20) {
             $startTime = strtotime(date('Y-m-d'));

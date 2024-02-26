@@ -1386,17 +1386,20 @@ class Order extends BaseModel
     public static function createOrderBuffet($order_id, array $buffet_ids)
     {
         foreach ($buffet_ids as $id) {
-            $buffet = (new Buffet)->withoutGlobalScope()->where('status', '=', 1)->where('id', '=', $id)->find();
-            $inArr = [
-                'order_id' => $order_id,
-                'buffet_id' => $id,
-                'name' => $buffet['name'],
-                'price' => $buffet['price'],
-                'buy_limit_status' => $buffet['buy_limit_status'],
-                'is_comb' => $buffet['is_comb'],
-                'time_limit' => $buffet['time_limit'],
-            ];
-            (new OrderBuffet)->insert($inArr);
+            $buffet = (new Buffet)->where('status', '=', 1)->where('id', '=', $id)->find();
+            if ($buffet) {
+                $inArr = [
+                    'order_id' => $order_id,
+                    'app_id' => self::$app_id,
+                    'buffet_id' => $id,
+                    'name' => $buffet['name'],
+                    'price' => $buffet['price'],
+                    'buy_limit_status' => $buffet['buy_limit_status'],
+                    'is_comb' => $buffet['is_comb'],
+                    'time_limit' => $buffet['time_limit'],
+                ];
+            }
+            (new OrderBuffet)->save($inArr);
         }
     }
 }

@@ -6,6 +6,7 @@ use app\cashier\controller\Controller;
 use app\cashier\model\order\Cart as CartModel;
 use app\cashier\model\order\Order as OrderModel;
 use app\cashier\model\store\Table as TableModel;
+use app\common\model\buffet\Buffet;
 use app\common\model\order\OrderProduct;
 use hg\apidoc\annotation as Apidoc;
 
@@ -218,5 +219,17 @@ class HallCart extends Controller
             return $this->renderSuccess('退菜成功');
         }
         return $this->renderError($detail?->getError() ?: '退菜失败');
+    }
+
+    /**
+     * @Apidoc\Title("桌台-自助餐列表")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/buffetList")
+     * @Apidoc\Returned()
+     */
+    public function buffetList()
+    {
+        $list = Buffet::getList();
+        return $this->renderSuccess('',$list);
     }
 }

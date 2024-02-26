@@ -27,4 +27,10 @@ class Buffet extends BaseModel
         return $this->belongsTo('app\\common\\model\\order\\Order', 'order_id', 'order_id');
     }
 
+    public static function getList()
+    {
+        return (new self())->where('status', '=', 1)
+            ->select();
+    }
+
 }
