@@ -554,9 +554,9 @@ class Setting extends BaseModel
                     'auto_lock_screen' => 300,
                     // 语言列表
                     'language_list' => $languageList,
-                    // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
+                    // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zhtw'
                     'language' => [
-                        'th', 'en', 'zh', 'zh-tw', 'ja'
+                        'th', 'en', 'zh', 'zhtw', 'ja'
                     ],
                     // 默认语言
                     'default_language' => 'en',
@@ -580,9 +580,9 @@ class Setting extends BaseModel
                     'advanced_password' => '666888',
                     // 语言列表
                     'language_list' => $languageList,
-                    // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
+                    // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zhtw'
                     'language' => [
-                        'th', 'en', 'zh', 'zh-tw', 'ja'
+                        'th', 'en', 'zh', 'zhtw', 'ja'
                     ],
                     'default_language' => 'en', // 默认语言
                 ],
@@ -603,9 +603,9 @@ class Setting extends BaseModel
                     'wait_color' => [],
                     // 语言列表
                     'language_list' => $languageList,
-                    // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
+                    // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zhtw'
                     'language' => [
-                        'th', 'en', 'zh', 'zh-tw', 'ja'
+                        'th', 'en', 'zh', 'zhtw', 'ja'
                     ],
                     'default_language' => 'en', // 默认语言
                 ],

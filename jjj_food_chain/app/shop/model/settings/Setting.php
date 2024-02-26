@@ -16,7 +16,7 @@ class Setting extends SettingModel
         $model = self::detail($key, $shop_supplier_id) ?: $this;
         // 删除系统设置缓存
         Cache::delete('setting_' . self::$app_id . '_' . $shop_supplier_id);
-
+        // 
         $data = [
             'key' => $key,
             'describe' => SettingEnum::data()[$key]['describe'],
@@ -24,8 +24,33 @@ class Setting extends SettingModel
             'app_id' => self::$app_id,
             'shop_supplier_id' => $shop_supplier_id
         ];
-
-        return $model->save($data) !== false;
+        $res = $model->save($data) !== false;
+        // 更新其他语言
+        if ($key == SettingEnum::STORE && isset($values['language']) && !empty($values['language'])) {
+            $names = array_column($values['language'], 'name');
+            foreach ([SettingEnum::PRINTER, SettingEnum::CASHIER, SettingEnum::TABLET, SettingEnum::KITCHEN] as $enum) {
+                $setting = self::detail($enum, $shop_supplier_id);
+                $settingDefaultLanguage = $setting['values']['default_language'] ?? '';
+                if (!in_array($settingDefaultLanguage, $names)) {
+                    $settingValues = $setting['values'];
+                    if (isset($settingValues['language']) && !in_array($names[0], $settingValues['language']) ) {
+                        $settingValues['language'][] = $names[0];
+                        // 对比并删除不匹配的值
+                        foreach ($settingValues['language'] as $key => $value) {
+                            if (!in_array($value, $names)) {
+                                unset($settingValues['language'][$key]);
+                            }
+                        }
+                        $settingValues['language'] = array_values($settingValues['language']);
+                    }
+                    $settingValues['default_language'] = $names[0];
+                    $setting->values = $settingValues;
+                    $setting->save();
+                }
+            }
+        }
+        // 
+        return $res;
     }
 
     /**

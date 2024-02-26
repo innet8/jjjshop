@@ -441,7 +441,6 @@ function strExists($string, $find)
  */
 function checkDetect(): string
 {
-
     if ($langSet = request()->language) {
         if ($langSet == 'zh-tw') {
             $langSet = 'zhtw';

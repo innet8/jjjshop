@@ -156,6 +156,16 @@ class OrderPrinterService
         $shop = SettingModel::getSupplierItem(SettingEnum::STORE, $order['shop_supplier_id'], $order['app_id']);
         $shopName = $shop['name'] ?? $order['supplier']['name'];
 
+        $products = [];
+        foreach ($order['product'] as $product) {
+            $key = $product['product_id'] . $product['product_sku_id'] . $product['product_attr'];
+            $products[$key] = [
+                'product_name' => $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : ''),
+                "total_num" => bcadd($product['total_num'], $products[$key]['total_num'] ?? 0),
+                "total_price" => bcadd($product['total_price'], $products[$key]['total_price'] ?? 0)
+            ];
+        }
+
         /* *
         *
         *商米打印机
@@ -205,12 +215,9 @@ class OrderPrinterService
             );
             $printer->printInColumns(__("商品"), __("数量"), __("金额"));
             $printer->appendText("------------------------------------------------\n");
-            foreach ($order['product'] as $key => $product) {
-                $productName = $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : '');
-                $printer->printInColumns($productName, $product['total_num'] . '', $this->currencyUnit . strval($product['total_price']));
-                if ($product['remark']) {
-                    $printer->printInColumns($product['remark']);
-                }
+            // 
+            foreach ($products as $product) {
+                $printer->printInColumns($product['product_name'], $product['total_num'] . '', $this->currencyUnit . strval($product['total_price']));
                 $printer->lineFeed();
             }
             //
@@ -304,6 +311,7 @@ class OrderPrinterService
             $printer->lineFeed();
             if ($order->pay_time) {
                 $printer->appendText(printText(__("时间"), '', date('Y-m-d H:i:s', $order->pay_time) ,$width));
+                $printer->lineFeed();
             }
             $printer->lineFeed();
             //
@@ -313,14 +321,9 @@ class OrderPrinterService
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->appendText(printText(__("商品"), __("数量"), __("金额"), $width, $leftWidth));
             $printer->appendText("\n------------------------------------------------\n");
-            foreach ($order['product'] as $key => $product) {
-                $productName = $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : '');
-                $printer->appendText(printText($productName, $product['total_num'] . '', $this->currencyUnit . $product['total_price'] , $width, $leftWidth + 2));
-                if ($product['remark']) {
-                    $printer->appendText(printText($product['remark'],'','' ,$width, $leftWidth + 2));
-                }else {
-                    $printer->lineFeed();
-                }
+            foreach ($products as $product) {
+                $printer->appendText(printText($product['product_name'], $product['total_num'] . '', $this->currencyUnit . strval($product['total_price']) , $width, $leftWidth + 2));
+                $printer->lineFeed();
                 $printer->lineFeed();
             }
             //
@@ -411,12 +414,8 @@ class OrderPrinterService
         //
         $content .= printText(__('商品'), __('数量'),  __('金额'), $width, $leftWidth);
         $content .= "--------------------------------<BR>";
-        foreach ($order['product'] as $key => $product) {
-            $productName = $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : '');
-            $content .= printText($productName, $product['total_num'], $this->currencyUnit . strval($product['total_price']), $width, $leftWidth);
-            if ($product['remark']) {
-                $content .= '<TEXT x="10" y="180" font="10" w="-1" h="-1" r="0">' . $product['remark'] . '</TEXT><BR><BR>';
-            }
+        foreach ($products as $product) {
+            $content .= printText($product['product_name'], $product['total_num'] . '', $this->currencyUnit . strval($product['total_price']) , $width, $leftWidth + 2);
         }
         //
         $content .= "--------------------------------<BR>";

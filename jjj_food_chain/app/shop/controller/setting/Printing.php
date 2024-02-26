@@ -45,7 +45,9 @@ class Printing extends Controller
         if (isset($postData['default_language'])) {
             $printerSettings['default_language'] = $postData['default_language'];
         }
-
+        if (isset($printerSettings['language_list'])) {
+            unset($printerSettings['language_list']);
+        }
         $model = new SettingModel;
         if ($model->edit(SettingEnum::PRINTER, $printerSettings, $this->store['user']['shop_supplier_id'])) {
             return $this->renderSuccess('操作成功');
