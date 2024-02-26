@@ -121,8 +121,15 @@ class Order extends Controller
         if ($params['meal_num'] > 999 || $params['meal_num'] < 1) {
             return $this->renderError('请输入1-999的人数');
         }
+        $table = TableModel::detail($params['table_id']);
+        if (!$table) {
+            return $this->renderError('桌台不存在');
+        }
+        if ($table['status'] == 30) {
+            return $this->renderError('桌台已开台');
+        }
         // 自助餐
-        if ($params['is_buffet'] == 1) {
+        if (($params['is_buffet'] ?? 0) == 1) {
             if (empty($params['buffet_ids'])) {
                 return $this->renderError('请选择自助餐');
             }
@@ -131,9 +138,8 @@ class Order extends Controller
 
         // 实例化订单service
         $orderService = new CashierOrderSettledService($user, [], $params);
-        // 获取订单信息
+        // 订单信息初始化
         $orderInfo = $orderService->settlement();
-        // 订单结算提交
         if ($orderService->hasError()) {
             return $this->renderError($orderService->getError());
         }

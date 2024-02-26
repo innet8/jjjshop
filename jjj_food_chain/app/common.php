@@ -642,9 +642,7 @@ function extractLanguage($json)
         $languages = SettingModel::getSupplierItem(SettingEnum::STORE, User::getShopInfo('shop_supplier_id'))['language'];
         foreach ($languages as $language) {
             $name = $language['name'] ?? 'en';
-            $name = $name == 'zhtw' ? 'zh-tw' : $name;
-            // dump($name == $lang);
-            // die;
+            $name = $name == 'zhtw' ? 'zhtw' : $name;
             if ($name == $lang && array_key_exists($language['key'] ?? '', $texts)) {
                 return $texts[$language['key']];
             }

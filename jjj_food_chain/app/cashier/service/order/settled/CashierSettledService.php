@@ -139,7 +139,7 @@ abstract class CashierSettledService extends BaseService
         $orderDetail = OrderModel::detail($this->model['order_id']);
         //
         // 创建自助餐
-        if ($this->params['is_buffet']) {
+        if ($this->params['is_buffet'] ?? 0) {
             OrderModel::createOrderBuffet($this->model['order_id'], $this->params['buffet_ids']);
         }
 
@@ -354,6 +354,7 @@ abstract class CashierSettledService extends BaseService
             'app_id' => $this->app_id,
             'setting_service_money' => $order['setting_service_money'] ?? 0,
             'consumption_tax_money' => $order['consumption_tax_money'],
+            'is_buffet' => $order['is_buffet'],
         ];
         if ($data['eat_type'] == 20) {
             $startTime = strtotime(date('Y-m-d'));
