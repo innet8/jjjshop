@@ -15,13 +15,12 @@ class Buffet extends BaseModel
     protected $deleteTime = 'delete_time';
     protected $defaultSoftDelete = 0;
 
-
     /**
      * 追加字段
      * @var string[]
      */
     protected $append = [
-
+        'name_text',
     ];
 
     /**
@@ -38,6 +37,14 @@ class Buffet extends BaseModel
     public function buffetLimitProducts()
     {
         return $this->hasMany('app\\common\\model\\buffet\\BuffetProduct', 'buffet_id', 'id')->where('limit_num', '>', 0)->with('product');
+    }
+
+    /**
+     * 获取自助餐名称
+     */
+    public function getNameTextAttr($value, $data = [])
+    {
+        return extractLanguage($value ?: $data['name']);
     }
 
     public static function getList()
