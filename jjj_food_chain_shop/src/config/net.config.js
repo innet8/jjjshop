@@ -15,7 +15,7 @@ export default {
 	successCode: [200, 0, '200', '0'],
 	statusName: 'code',
 	messageName: 'msg',
-	withCredentials: true,
+	withCredentials: false,
 	responseType: 'json',
-    currency:'currency',
+    currency: 'currency',
 };
