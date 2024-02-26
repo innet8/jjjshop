@@ -370,7 +370,7 @@ class OrderProduct extends BaseModel
             $this->error = "订单不存在";
             return false;
         }
-        if ($order->is_lock == 1) {
+        if ($type != 'payment' && $order->is_lock == 1) {
             $this->error = '当前订单已被锁定';
             return false;
         }

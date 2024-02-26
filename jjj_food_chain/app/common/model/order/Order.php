@@ -1249,7 +1249,7 @@ class Order extends BaseModel
                         'total_num' => $data['product_num'],
                         'total_price' => $data['product_num'] * $data['price'],
                         'total_pay_price' => $data['product_num'] * $data['price'],
-                        'is_buffet_product' => $data['is_buffet'],
+                        'is_buffet_product' => $data['is_buffet'] ?? 0,
                     ];
 
                     $orderProduct->save($inArr);

@@ -391,4 +391,24 @@ class Order extends Controller
         }
         return $this->renderError($detail->getError() ?: '使用会员失败');
     }
+
+    /**
+     * @Apidoc\Title("取消锁定")
+     * @Apidoc\Tag("取消锁定")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/index.php/cashier/order.order/unlock")
+     * @Apidoc\Param("order_id", type="int",require=true, default=0, desc="订单id")
+     */
+    public function unlock($order_id)
+    {
+        $order = OrderModel::detail($order_id);
+        if (!$order) {
+            return $this->renderError('订单不存在');
+        }
+        // 锁定
+        $order->is_lock = 0;
+        $order->save();
+        //
+        return  $this->renderSuccess('取消成功');
+    }
 }

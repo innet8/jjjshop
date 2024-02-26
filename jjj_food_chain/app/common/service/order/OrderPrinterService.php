@@ -307,7 +307,7 @@ class OrderPrinterService
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->appendText(printText(__("订单号"), '', $order->order_no ,$width));
             $printer->lineFeed();
-            $printer->appendText(printText(__("收银员"), '', $order->cashier?->real_name ,$width));
+            $printer->appendText(printText(__("收银员"), '', $order->cashier?->real_name ?: '', $width));
             $printer->lineFeed();
             if ($order->pay_time) {
                 $printer->appendText(printText(__("时间"), '', date('Y-m-d H:i:s', $order->pay_time) ,$width));
