@@ -45,9 +45,10 @@ git-clone(){
         sudo apt update
         sudo apt install git
     fi
-    echo -e "${Green}拉取项目代码${Font}"
-    cd /
-    git clone --depth=1 https://github.com/innet8/jjjshop.git
+    #echo -e "${Green}拉取项目代码${Font}"
+    #cd /
+    #git clone --depth=1 https://github.com/innet8/jjjshop.git
+    echo -e "${Green}设置目录权限${Font}"
     chown -R www-data:www-data $(pwd)/../../jjjshop/
     chmod -R 777  $(pwd)/runtime
     chmod +x $(pwd)/lanp-install.sh
