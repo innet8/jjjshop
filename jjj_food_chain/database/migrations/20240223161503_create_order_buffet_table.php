@@ -37,9 +37,11 @@ class CreateOrderBuffetTable extends Migrator
         $table->addColumn('buy_limit_status', 'integer', ['default' => 0, 'comment' => '是否限购 0-否 1-是']);
         $table->addColumn('is_comb', 'integer', ['default' => 0, 'comment' => '是否组合 0-否 1-是']);
         $table->addColumn('time_limit', 'integer', ['default' => 0, 'comment' => '用餐时间（分）']);
+        $table->addColumn('app_id', 'integer', ['default' => 0, 'comment' => '应用id']);
         $table->addColumn('create_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'signed' => true, 'comment' => '创建时间']);
         $table->addColumn('update_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'signed' => true, 'comment' => '更新时间']);
         $table->addIndex(['order_id'], ['name' => 'order_id']);
+        $table->addIndex(['app_id'], ['name' => 'app_id']);
         $table->create();
     }
 }
