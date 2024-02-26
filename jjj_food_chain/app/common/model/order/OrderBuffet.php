@@ -9,7 +9,6 @@ use app\common\model\BaseModel;
  */
 class OrderBuffet extends BaseModel
 {
-    protected $pk = 'deliver_id';
     protected $name = 'order_buffet';
 
     /**
@@ -21,11 +20,11 @@ class OrderBuffet extends BaseModel
     ];
 
     /**
-     * 关联订单表
+     * 订单商品列表
      */
-    public function orders()
+    public function buffetProduct()
     {
-        return $this->belongsTo('app\\common\\model\\order\\Order', 'order_id', 'order_id');
+        return $this->hasMany('app\\common\\model\\buffet\\BuffetProduct', 'buffet_id', 'buffet_id');
     }
 
 }

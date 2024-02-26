@@ -53,7 +53,6 @@ class Product extends ProductModel
             ->where('product.shop_supplier_id', '=', $params['shop_supplier_id'])
             ->where('product_status', '=', 10)
             ->order(['product_sort', 'product_id' => 'desc']);
-        $list = $model->paginate($params);
-        return $list;
+        return $model->paginate($params)->toArray();
     }
 }

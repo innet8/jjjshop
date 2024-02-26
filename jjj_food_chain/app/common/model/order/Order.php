@@ -66,6 +66,14 @@ class Order extends BaseModel
     }
 
     /**
+     * 订单自助餐列表
+     */
+    public function buffet()
+    {
+        return $this->hasMany('app\\common\\model\\order\\OrderBuffet', 'order_id', 'order_id');
+    }
+
+    /**
      * 收银员
      */
     public function cashier()
@@ -429,7 +437,7 @@ class Order extends BaseModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public static function detail($where, $with = ['user', 'address', 'product' => ['image'], 'extract', 'supplier', 'cashier'])
+    public static function detail($where, $with = ['user', 'address', 'buffet', 'product' => ['image'], 'extract', 'supplier', 'cashier'])
     {
         is_array($where) ? $filter = $where : $filter['order_id'] = (int)$where;
         return self::with($with)->where($filter)->order('order_id', 'desc')->find();
@@ -1398,8 +1406,69 @@ class Order extends BaseModel
                     'is_comb' => $buffet['is_comb'],
                     'time_limit' => $buffet['time_limit'],
                 ];
+                (new OrderBuffet)->save($inArr);
             }
-            (new OrderBuffet)->save($inArr);
         }
+    }
+
+    // 获取订单自助餐商品列表
+    public static function getOrderBuffetProductArr($order_id)
+    {
+        $list = (new OrderBuffet)->with(['buffetProduct'])->where('order_id', '=', $order_id)->select();
+        $arr = [];
+        foreach ($list as $buffet) {
+            foreach ($buffet['buffetProduct'] as $product) {
+                if (isset($arr[$product['product_id']]) && $arr[$product['product_id']] < $product['limit_num']) {
+                    $arr[$product['product_id']] = [
+                        'product_id' => $product['product_id'],
+                        'limit_num' => $product['limit_num'],
+                    ];
+                } else if (!isset($arr[$product['product_id']])) {
+                    $arr[$product['product_id']] = [
+                        'product_id' => $product['product_id'],
+                        'limit_num' => $product['limit_num'],
+                    ];
+                }
+            }
+        }
+        return $arr;
+    }
+
+    // 点餐商品列表按自助餐优惠显示
+    public static function handleBuffetProductIndex($product_list, $buffet_arr)
+    {
+        foreach ($product_list as &$product) {
+            if (array_key_exists($product['product_id'], $buffet_arr)) {
+                $product['is_buffet'] = 1;
+                $product['buffet_limit_num'] = $buffet_arr[$product['product_id']]['limit_num'];
+                $product['product_price'] = 0;
+                foreach ($product['sku'] as &$item) {
+                    $item['product_price'] = 0;
+                }
+            } else {
+                $product['is_buffet'] = 1;
+                $product['buffet_limit_num'] = 0;
+            }
+        }
+        return $product_list;
+    }
+
+    // 商品详情按自助餐优惠显示
+    public static function handleBuffetProductDetail($product, $buffet_arr)
+    {
+        if (array_key_exists($product['product_id'], $buffet_arr)) {
+            $product['is_buffet'] = 1;
+            $product['buffet_limit_num'] = $buffet_arr[$product['product_id']]['limit_num'];
+            $product['product_price'] = 0;
+            foreach ($product['sku'] as &$item) {
+                $item['product_price'] = 0;
+            }
+        } else {
+            $product['is_buffet'] = 1;
+            $product['buffet_limit_num'] = 0;
+        }
+
+        return $product;
+
     }
 }
