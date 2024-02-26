@@ -172,8 +172,15 @@ class Supplier extends BaseModel
         ];
         // 平板端设置
         $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $detail['shop_supplier_id'] ?? 0, $detail['app_id'] ?? 0);
+        $languageList = $tablet['language_list'];
         unset($tablet['advanced_password']);
         unset($tablet['language_list']);
+        $tablet['language_list'] = [];
+        foreach ($languageList as $language) {
+            if (in_array($language['key'], $tablet['language'])) {
+                $tablet['language_list'][] = $language;
+            }
+        }
         $detail['tablet'] = $tablet;
         // 替换成商家后台设置的名称和logo
         $shop = SettingModel::getSupplierItem(SettingEnum::STORE, $detail['shop_supplier_id'] ?? 0, $detail['app_id'] ?? 0);

@@ -78,7 +78,6 @@ class Table extends Controller
         // 平板端设置
         $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
         unset($tablet['advanced_password']);
-        unset($tablet['language_list']);
         $table['tablet'] = $tablet;
         return $this->renderSuccess('桌台信息', $table);
     }
