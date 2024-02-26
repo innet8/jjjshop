@@ -194,9 +194,15 @@ class OrderProduct extends BaseModel
             ->count();
     }
 
-    //
+    // 更改商品数量
     public function sub($param)
     {
+        // 判断是否被锁定
+        if ($this->orderM()->value('is_lock') == 1) {
+            $this->error = '当前订单已被锁定';
+            return false;
+        }
+
         //判断商品是否下架
         $product = $this->productState($this['product_id']);
         if (!$product && $param['type'] != 'down') {
@@ -259,6 +265,11 @@ class OrderProduct extends BaseModel
                     $this->error = '当前订单不可修改';
                     return false;
                 }
+                if ($detail->is_lock == 1) {
+                    $this->rollback();
+                    $this->error = '当前订单已被锁定';
+                    return false;
+                }
                 if ($model->is_send_kitchen == 1) {
                     $this->rollback();
                     $this->error = '商品已送厨，禁止删除';
@@ -290,7 +301,20 @@ class OrderProduct extends BaseModel
     // 未送厨商品备注
     public function updateKitchenRemark($order_product_id, $remark)
     {
-        return $this->where('order_product_id', '=', $order_product_id)->update(['remark' => $remark]);
+        $orderProduct = $this->where('order_product_id', '=', $order_product_id)->find();
+        if (empty($orderProduct)) {
+            $this->error = '商品不存';
+            return false;
+        }
+        if ($orderProduct->orderM()->value('is_lock') == 1) {
+            $this->error = '当前订单已被锁定';
+            return false;
+        }
+        // 
+        $orderProduct->remark = $remark;
+        $orderProduct->save();
+        // 
+        return true;
     }
 
     // 收银端列表商品改价
@@ -314,6 +338,10 @@ class OrderProduct extends BaseModel
             ]);
             if (!$detail) {
                 $this->error = '当前订单不可修改';
+                return false;
+            }
+            if ($detail->is_lock == 1) {
+                $this->error = '当前订单已被锁定';
                 return false;
             }
             $p->product_price = $money;
@@ -340,6 +368,10 @@ class OrderProduct extends BaseModel
         $order = (new OrderModel)->with(['unSendKitchenProduct'])->where('order_id', $order_id)->find();
         if (!$order) {
             $this->error = "订单不存在";
+            return false;
+        }
+        if ($order->is_lock == 1) {
+            $this->error = '当前订单已被锁定';
             return false;
         }
 

@@ -63,6 +63,7 @@ class Cart extends Controller
         $stayNum = (new OrderModel)->stayOrderNum();
         // 购物车 + 送厨商品列表 + 购物车计算
         $allProductInfo = $model->getOrderCartDetail($this->cashier['user'], 0, $order_id);
+        // 
         return $this->renderSuccess('', compact('allProductInfo', 'delivery', 'stayNum', 'order_id'));
     }
 
@@ -267,6 +268,9 @@ class Cart extends Controller
         ]);
         if (!$detail) {
             return $this->renderError('当前状态不可操作');
+        }
+        if ($detail->is_lock) {
+            return $this->renderError('当前订单已被锁定');
         }
         if ($detail?->moveProduct($order_product_id, $num, $return_reason)) {
             return $this->renderSuccess('退菜成功');

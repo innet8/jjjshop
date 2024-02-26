@@ -1207,6 +1207,10 @@ class Order extends BaseModel
             return false;
         }
         if ($orderId > 0) {
+            if ($detail->is_lock) {
+                $this->error = '当前订单已被锁定';
+                return false;
+            }
             $curNum = (new OrderProduct())->where([
                 'order_id' => $orderId,
                 'product_id' => $data['product_id'],
