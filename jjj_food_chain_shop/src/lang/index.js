@@ -5,14 +5,17 @@ import auto_zhtw from "./auto/zh-tw.json"
 import auto_th from "./auto/th.json"
 import auto_ja from "./auto/ja.json"
 
-let lang = 'en'
+let lang = '';
+let defaultLang = ''
 if(JSON.parse(localStorage.getItem("Language"))){
-    lang = JSON.parse(localStorage.getItem("Language")).language 
+    lang = JSON.parse(localStorage.getItem("Language")).language;
+    defaultLang = JSON.parse(localStorage.getItem("Language")).languageList[0].name;
 }
+
 const i18n = createI18n({
     legacy: false,
-    locale: lang || "en",
-    fallbackLocale: "en",
+    locale: lang || defaultLang,
+    fallbackLocale: defaultLang,
     globalInjection: true,
     messages: {
         zh: { ...auto_zh },
