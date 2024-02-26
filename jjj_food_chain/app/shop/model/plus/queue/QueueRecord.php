@@ -16,7 +16,7 @@ class QueueRecord extends QueueRecordModel
     public function getList($params, $shop_supplier_id)
     {
         $model = $this;
-        if (!empty($params['search']) && $params['search']) {
+        if (isset($params['search']) && $params['search'] != '') {
             $model = $model->like('mobile', $params['search']);
         }
         if (!empty($params['status']) && $params['status']) {

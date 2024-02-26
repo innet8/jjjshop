@@ -107,6 +107,7 @@ class Order extends Controller
      * @Apidoc\Url ("/index.php/cashier/order.Order/tableBuy")
      * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
      * @Apidoc\Param("meal_num", type="int", require=true, desc="就餐人数")
+     * @Apidoc\Param("is_buffet", type="int", require=true, desc="是否自助餐 0-否 1-是")
      * @Apidoc\Param("user_id", type="int", require=false, desc="会员ID（会员自己开台必填）")
      * @Apidoc\Returned()
      */
@@ -120,8 +121,13 @@ class Order extends Controller
         if ($params['meal_num'] > 999 || $params['meal_num'] < 1) {
             return $this->renderError('请输入1-999的人数');
         }
-        // 商品结算信息
-        $CartModel = new CartModel();
+        // 自助餐
+        if ($params['is_buffet'] == 1) {
+            if (empty($params['buffet_ids'])) {
+                return $this->renderError('请选择自助餐');
+            }
+        }
+
 
         // 实例化订单service
         $orderService = new CashierOrderSettledService($user, [], $params);
@@ -136,8 +142,6 @@ class Order extends Controller
         if (!$order_id) {
             return $this->renderError($orderService->getError() ?: '订单创建失败');
         }
-        // 移出购物车中已下单的商品
-        $CartModel->deleteTableAll($this->cashier['user'], $params['table_id']);
         // 修改桌台状态
         TableModel::open($params['table_id']);
         // 返回结算信息

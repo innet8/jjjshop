@@ -22,17 +22,17 @@ import zhCn from "element-plus/es/locale/lang/zh-cn";
 import zhTw from "element-plus/es/locale/lang/zh-tw";
 import en from "element-plus/es/locale/lang/en";
 import th from "element-plus/es/locale/lang/th";
-
+import IndexApi from '@/api/index.js';
 import {
-	getSessionStorage,
-	setSessionStorage
+    getSessionStorage,
+    setSessionStorage
 } from '@/utils/base.js'
-import configObj from "@/config"; 
+import configObj from "@/config";
 import {
-	getStorage
+    getStorage
 } from '@/utils/storageData';
 import {
-	createdAuth
+    createdAuth
 } from '@/utils/createdAuth.js'
 
 const { menu } = configObj;
@@ -41,6 +41,7 @@ const { afterLogin, userInfo, token, currency } = useUserStore();
 // const isLock = computed(() => useLockscreen.isLock);
 // const lockTime = computed(() => useLockscreen.lockTime);
 const language = languageStore().language
+
 
 const route = useRoute();
 const router = useRouter();
@@ -79,6 +80,19 @@ const state = reactive({});
 // };
 
 onMounted(() => {
+    /*获取基础配置*/
+    IndexApi.base(true)
+        .then(res => {
+            languageStore().setLanguageList(res.data.language)
+            const data = {}
+            res.data.language.map((item,index) => {
+                data[(index + 1).toString()] = ''
+            })
+            languageStore().setLanguageData(data)
+        })
+        .catch(error => {
+
+        });
     if (userInfo) {
         const data = {
             data: {
@@ -97,13 +111,12 @@ onMounted(() => {
         afterLogin(data);
 
         let auth = getSessionStorage('authlist');
-  
-            let authlist = {}
-            auth = getStorage(menu);
-            createdAuth(auth, authlist);
-            setSessionStorage('authlist', authlist);
-            auth = authlist;
-        
+
+        let authlist = {}
+        auth = getStorage(menu);
+        createdAuth(auth, authlist);
+        setSessionStorage('authlist', authlist);
+        auth = authlist;
     }
 });
 

@@ -20,7 +20,7 @@ class WxLive extends WxLiveModel
     public function getList($params)
     {
         $model = $this;
-        if (isset($params['search']) && !empty($params['search'])) {
+        if (isset($params['search']) && $params['search'] != '') {
             $model = $model->like('name|anchor_name', $params['search']);
         }
         return $model

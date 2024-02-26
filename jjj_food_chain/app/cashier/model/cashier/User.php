@@ -3,6 +3,7 @@
 namespace app\cashier\model\cashier;
 
 use app\common\model\shop\User as UserModel;
+use app\common\model\shop\Access as AccessModel;
 use think\facade\Env;
 
 /**
@@ -39,6 +40,13 @@ class User extends UserModel
             $this->error = '登录失败, 当前应用已删除';
             return false;
         }
+        // 验证权限
+        $permission = (new AccessModel)->getPermission(AccessModel::CASHIER_ROUTE_NAME, $user, $user['supplier']);
+        if (empty($permission)) {
+            $this->error = '当前无权限，请联系管理员';
+            return false;
+        }
+        // 检查是否有未交班的收银员
         $cashierUser = $this->where(['cashier_online' => 1])->find();
         if ($cashierUser && $cashierUser['shop_user_id'] != $user['shop_user_id']) {
             $this->error = __('收银员') . ' ' . $cashierUser['real_name'] . ' ' . __('未交班，请先交班');

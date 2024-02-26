@@ -20,7 +20,7 @@ class TableArea extends TableAreaModel
     public function getList($params, $shop_supplier_id)
     {
         $model = $this;
-        if (!empty($params['search']) && $params['search']) {
+        if (isset($params['search']) && $params['search'] != '') {
             $model = $model->like('area_name', $params['search']);
         }
         // 查询列表数据

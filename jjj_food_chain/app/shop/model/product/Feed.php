@@ -15,7 +15,7 @@ class Feed extends FeedModel
     public function getList($data, $shop_supplier_id)
     {
         $model = $this;
-        if (isset($data['feed_name']) && !empty($data['feed_name'])) {
+        if (isset($data['feed_name']) && $data['feed_name'] != '') {
             $model = $model->like('feed_name', trim($data['feed_name']));
         }
         return $model->where('shop_supplier_id', '=', $shop_supplier_id)

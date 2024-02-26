@@ -42,7 +42,7 @@ class Product extends ProductModel
             $model = $model->whereIn('product.category_id', $categoryIds);
         }
 
-        if (!empty($params['search'])) {
+        if (isset($params['search']) && $params['search'] != '') {
             $model = $model->like('product_name', trim($params['search']));
         }
         $model = $model->alias('product')

@@ -2,6 +2,7 @@
 
 namespace app\common\model\shop;
 
+use think\facade\Cache;
 use app\common\model\BaseModel;
 
 /**
@@ -89,12 +90,18 @@ class User extends BaseModel
     /**
      * 获取店铺信息-绑定使用
      */
-    public static function getShopInfo()
+    public static function getShopInfo($key='')
     {
-        $userModel = new static;
-        $info = $userModel->withoutGlobalScope()->where('app_id', '>', 0)->find();
-        $app_id = $info?->app_id ?: 0;
-        $shop_supplier_id = $info?->shop_supplier_id ?: 0;
-        return compact('shop_supplier_id', 'app_id');
+        if (!$data = Cache::get('first_shop_info')) {
+            $userModel = new static;
+            $info = (new static)->withoutGlobalScope()->where('app_id', '>', 0)->field('app_id,shop_supplier_id')->find();
+            $app_id = $info?->app_id ?: 0;
+            $shop_supplier_id = $info?->shop_supplier_id ?: 0;
+            $data = compact('shop_supplier_id', 'app_id');
+            if ($shop_supplier_id) {
+                Cache::set('first_shop_info', $data);
+            }
+        }
+        return $key ? ($data[$key] ?? 0) : $data;
     }
 }

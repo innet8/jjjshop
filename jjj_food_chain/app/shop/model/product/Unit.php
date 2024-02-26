@@ -15,7 +15,7 @@ class Unit extends UnitModel
     public function getList($data, $shop_supplier_id)
     {
         $model = $this;
-        if (isset($data['unit_name']) && !empty($data['unit_name'])) {
+        if (isset($data['unit_name']) && $data['unit_name'] != '') {
             $model = $model->like('unit_name', $data['unit_name']);
         }
         return $model->where('shop_supplier_id', '=', $shop_supplier_id)

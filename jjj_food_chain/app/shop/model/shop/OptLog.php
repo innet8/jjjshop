@@ -15,7 +15,7 @@ class OptLog extends OptLogModel
     {
         $model = $this;
         // 查询条件：订单号
-        if (isset($params['username']) && !empty($params['username'])) {
+        if (isset($params['username']) && $params['username'] != '') {
             $model = $model->like('user.user_name|user.real_name', $params['username']);
         }
         // 查询列表数据

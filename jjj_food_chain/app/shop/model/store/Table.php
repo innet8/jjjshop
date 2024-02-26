@@ -28,7 +28,7 @@ class Table extends TableModel
         if (isset($params['type_id']) && $params['type_id']) {
             $model = $model->where('type_id', '=', $params['type_id']);
         }
-        if (!empty($params['search']) && $params['search']) {
+        if (isset($params['search']) && $params['search'] != '') {
             $model = $model->like('table_no', $params['search']);
         }
         // 查询列表数据

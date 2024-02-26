@@ -85,8 +85,16 @@ class Base extends Controller
         ];
         // 厨显端设置
         $kitchen = SettingModel::getSupplierItem(SettingEnum::KITCHEN, $this->kitchen['shop_supplier_id'], $this->kitchen['app_id'] ?? 0);
+        $languageList = $kitchen['language_list'];
         unset($kitchen['advanced_password']);
         unset($kitchen['language_list']);
+        $kitchen['language_list'] = [];
+        foreach ($languageList as $language) {
+            if (in_array($language['key'], $kitchen['language'])) {
+                $kitchen['language_list'][] = $language;
+            }
+        }
+        // 
         $supplier['kitchen'] = $kitchen;
         return $this->renderSuccess('基础信息', compact('app', 'kitchen'));
     }

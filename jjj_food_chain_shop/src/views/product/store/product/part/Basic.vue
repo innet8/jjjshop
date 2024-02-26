@@ -8,7 +8,7 @@
         <!--基本信息-->
         <div class="common-form">{{ $t('基本信息') }}</div>
         <template v-for="(item, index) in languageList" :key="index">
-            <el-form-item :label="$t('商品名称：') + `(${item.label})`" :prop="`model.product_name.${item.key}`"
+            <el-form-item :label="$t('商品名称：') + `(${item.value})`" :prop="`model.product_name.${item.key}`"
                 :rules="[{ required: true, message: $t('请填写商品名称') }]">
                 <el-input v-model="form.model.product_name[item.key]" :placeholder="$t('请输入商品名称')"
                     class="max-w460"></el-input>

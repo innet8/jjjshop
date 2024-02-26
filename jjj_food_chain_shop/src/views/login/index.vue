@@ -77,10 +77,9 @@
                 </span>
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item v-for="item in languageList" :disabled="item.key == languageTag"
-                            :command="item.key">
-                            <div class="language-div">{{ item.label }}<img v-if="item.key == languageTag"
-                                    src="../../assets/img/Check.svg" /></div>
+
+                        <el-dropdown-item v-for="item in languageList" :disabled="item.name == languageTag" :command="item.name">
+                            <div class="language-div">{{ item.value }}<img v-if="item.name == languageTag" src="../../assets/img/Check.svg"/></div>
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
@@ -91,7 +90,7 @@
 
 <script>
 import sidentify from '@/components/sidentify.vue';
-import IndexApi from '@/api/index.js';
+
 import bgimg from '@/assets/img/login_bg.png';
 import logimg from '@/assets/img/login_logo.png';
 import UserApi from '@/api/user.js';
@@ -101,6 +100,7 @@ import { languageStore } from '@/store/model/language.js';
 import SvgIcon from "@/components/svg-icon/SvgIcon.vue";
 import axios from "axios";
 // const useLockscreen = useLockscreenStore();
+import IndexApi from '@/api/index.js';
 const { afterLogin } = useUserStore();
 const language = languageStore()
 const languageNow = language.getLanguage().language
@@ -190,10 +190,11 @@ export default {
     },
     created() {
         this.refreshCode();
+
         if (localStorage.getItem('SHOP_BASIC_URL')) {
             this.haveUrl = true;
-            this.getData();
         } 
+
     },
     mounted() {
         this.identifyCode = '';
@@ -221,30 +222,7 @@ export default {
             }
 
         },
-        /*获取基础配置*/
-        getData() {
-            let self = this;
-            IndexApi.base(true)
-                .then(res => {
-                    self.loading = false;
-                    // self.shop_name = res.data.settings.shop_name;
-                    const { data: { settings: { shop_bg_img, shop_name, shop_logo_img } } } = res;
-                    self.shop_name = shop_name;
-                    if (shop_bg_img) {
-                        self.bgimg_url = shop_bg_img;
-                    } else {
-                        self.bgimg_url = bgimg;
-                    }
-                    if (shop_logo_img) {
-                        self.log_url = shop_logo_img;
-                    } else {
-                        self.log_url = logimg;
-                    }
-                })
-                .catch(error => {
-                    self.loading = false;
-                });
-        },
+
         onEnter(event) {
             if (event.key === 'Enter') {
                 // 处理回车事件的逻辑

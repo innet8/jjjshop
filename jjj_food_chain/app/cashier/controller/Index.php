@@ -125,6 +125,15 @@ class Index extends Controller
         }
         $cashier = SettingModel::detail(SettingEnum::CASHIER, $shop_supplier_id);
         $lang['language'] = $cashier['values']['language'] ?? [];
+        $lang['language_list'] = [];
+        $languageList = SettingModel::getSupplierItem(SettingEnum::STORE, $shop_supplier_id)['language'] ?? [];
+        foreach ($languageList as $language) {
+            if (in_array($language['name'], $lang['language'])) {
+                $language['key'] = $language['name'];
+                unset($language['name']);
+                $lang['language_list'][] = $language;
+            }
+        }
         $lang['default_language'] = $cashier['values']['default_language'] ?? '';
         return $this->renderSuccess('请求成功', $lang);
     }

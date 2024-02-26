@@ -3,9 +3,10 @@
 namespace app\shop\controller\setting;
 
 use app\shop\controller\Controller;
-use app\common\enum\settings\SettingEnum;
-use app\shop\model\settings\Setting as SettingModel;
 use hg\apidoc\annotation as Apidoc;
+use app\common\enum\settings\SettingEnum;
+use app\common\enum\settings\LanguageEnum;
+use app\shop\model\settings\Setting as SettingModel;
 
 /**
  * 商城设置
@@ -29,6 +30,9 @@ class Store extends Controller
             $ret['shop']['shop_supplier_id'] = $this->store['user']['shop_supplier_id'];
             // 获取当前设备机器码
             $ret['shop']['device_code'] = getMachineCode();
+            // 获取语言列表
+            $ret['shop']['language'] = LanguageEnum::data();
+            // 
             return $this->renderSuccess('', $ret);
         }
         $model = new SettingModel;
@@ -43,11 +47,12 @@ class Store extends Controller
         $arr = [
             'name' => $data['name'],
             'kuaidi100' => ['customer' => $data['customer'] ?? '', 'key' => $data['key'] ?? ''],
-           'sms_open' => $data['sms_open'] ?? 0,
+            'sms_open' => $data['sms_open'] ?? 0,
             'is_get_log' => $data['is_get_log'] ?? 0,
             'wx_open' => $data['wx_open'] ?? 0,
             'avatarUrl' => $data['avatarUrl'] ?? '',
             'logoUrl' => $data['logoUrl'] ?? '',
+            'language' => $data['language'] ?? []
         ];
         if ($model->edit(SettingEnum::STORE, $arr, $this->store['user']['shop_supplier_id'])) {
             return $this->renderSuccess('操作成功');

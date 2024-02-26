@@ -181,7 +181,7 @@ class Product extends BaseModel
         if ($params['special_id'] > 0) {
             $model = $model->where('product.special_id', '=', $params['special_id']);
         }
-        if (!empty($params['product_name'])) {
+        if (isset($params['product_name']) && $params['product_name'] != '') {
             $model = $model->like('product_name', $params['product_name']);
         }
         if (!empty($params['search'])) {
@@ -215,7 +215,7 @@ class Product extends BaseModel
         // 产品需求，如果sku规格库中数量少于传输的库存数量，就要显示
         if (isset($params['stock']) && $params['stock'] > 0) {
             $stock = (int)$params['stock'];
-            $model = $model->join('product_sku sku', 'sku.product_id = product.product_id', 'left')->where('sku.stock_num', '<', $stock)->distinct();
+            $model = $model->join('product_sku sku', 'sku.product_id = product.product_id', 'left')->where('sku.stock_num', '<', $stock)->group('product.product_id');
         }
         //
         if (isset($params['shop_supplier_id']) && $params['shop_supplier_id']) {
@@ -226,12 +226,12 @@ class Product extends BaseModel
         }
         // 执行查询
         $model = $model->alias('product')
-            ->distinct()
             ->field(['product.*', '(sales_initial + sales_actual) as product_sales'])
             ->with(['category', 'image.file', 'sku', 'supplier'])
             ->where('product.is_delete', '=', 0)
             ->where($filter)
             ->order($sort);
+
         if ($page == 1) {
             $list = $model->select();
         } else {
@@ -257,10 +257,10 @@ class Product extends BaseModel
             $arr = Category::getSubCategoryId($params['category_id']);
             $model = $model->where('category_id', 'IN', $arr);
         }
-        if (!empty($params['product_name'])) {
+        if (isset($params['product_name']) && $params['product_name'] != '') {
             $model = $model->like('product_name', trim($params['product_name']));
         }
-        if (!empty($params['search'])) {
+        if (isset($params['search']) && $params['search'] != '') {
             $model = $model->like('product_name', trim($params['search']));
         }
         $list = $model

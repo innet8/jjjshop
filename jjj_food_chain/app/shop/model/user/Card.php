@@ -22,7 +22,7 @@ class Card extends CardModel
     public function getList($data)
     {
         $model = $this;
-        if ($data['card_name']) {
+        if (isset($data['card_name']) && $data['card_name'] != '') {
             $model = $model->like('card_name', $data['card_name']);
         }
         if ($data['status'] >= 0) {
@@ -40,7 +40,7 @@ class Card extends CardModel
     public function getDeleteList($data)
     {
         $model = $this;
-        if ($data['card_name']) {
+        if (isset($data['card_name']) && $data['card_name']) {
             $model = $model->like('card_name', $data['card_name']);
         }
         $list = $model->where('is_delete', '=', 1)

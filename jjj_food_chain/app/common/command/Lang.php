@@ -48,6 +48,13 @@ class Lang extends Command
         // 执行待翻译中文
         $output->writeln('#####开始翻译#####');
 
+        // 新语言翻译
+        $newTargets = $lang->getTranslatedLang();
+        if (!empty($newTargets)) {
+            $lang->commandExecute($newTargets, $translated, $tr);
+        }
+
+        // 语言翻译
         $lang->commandExecute($targets, $texts, $tr);
         $output->writeln('#####翻译完成#####');
     }

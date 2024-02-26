@@ -81,6 +81,7 @@ const tabClick = (event) => {
             }
         });
     }
+
     /*商品扩展*/
     if (tab_type.value == "expand") {
         router.push({
@@ -90,6 +91,17 @@ const tabClick = (event) => {
             }
         });
     }
+
+    /*自助餐*/
+    if (tab_type.value == "buffetproduct") {
+        router.push({
+            path: "/product/buffet/index",
+            query: {
+                type: e.name
+            }
+        });
+    }
+
     /*商品扩展*/
     if (tab_type.value == "printing") {
         router.push({

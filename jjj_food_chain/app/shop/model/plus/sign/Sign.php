@@ -36,7 +36,7 @@ class Sign extends SignModel
                 $model = $model->where('sign.create_time', 'between', [$data['create_time'][0], $data['create_time'][1]]);
             }
         }
-        if (isset($data['nickName']) && !empty($data['nickName'])) {
+        if (isset($data['nickName']) && $data['nickName'] != '') {
             $model = $model->like('user.nickName', trim($data['nickName']));
         }
 

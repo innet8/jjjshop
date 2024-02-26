@@ -2,9 +2,11 @@
 
 namespace app\shop\controller;
 
+use app\common\model\shop\User;
 use app\shop\service\ShopService;
-use app\common\model\settings\Setting as SettingModel;
 use hg\apidoc\annotation as Apidoc;
+use app\common\enum\settings\SettingEnum;
+use app\common\model\settings\Setting as SettingModel;
 
 /**
  * 后台首页
@@ -110,6 +112,9 @@ class Index extends Controller
             'shop_bg_img' => $config['shop_bg_img'],
             'shop_logo_img' => isset($config['shop_logo_img']) ? $config['shop_logo_img'] : '',
         ];
-        return $this->renderSuccess('', compact('settings'));
+        // 
+        $language = SettingModel::getSupplierItem(SettingEnum::STORE, User::getShopInfo('shop_supplier_id'))['language'] ?? [];
+        // 
+        return $this->renderSuccess('', compact('settings', 'language'));
     }
 }

@@ -24,7 +24,8 @@ class Category extends Controller
     {
         $params = $this->postData();
         $model = new CategoryModel;
-        $list = $model->getCacheAll(1, 0, $this->store, $params['name'] ?? '') ?: [];
+        $name = isset($params['name']) ? $params['name'] : '';
+        $list = $model->getCacheAll(1, 0, $this->store, $name) ?: [];
         return $this->renderSuccess('', compact('list'));
     }
 
