@@ -1478,4 +1478,13 @@ class Order extends BaseModel
         return $product;
 
     }
+
+    // 商品详情按自助餐优惠显示
+    public static function getBuffetRemainingTime($order_id, $start_timestamp)
+    {
+        $time_limit = (new OrderBuffet)->where('order_id', '=', $order_id)->max('time_limit');
+        $expired_timestamp = $start_timestamp + $time_limit * 60;
+        $remaining_time = $expired_timestamp - time();
+        return max($remaining_time, 0);
+    }
 }

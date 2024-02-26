@@ -785,6 +785,9 @@ class Cart extends CartModel
             $order_user_discount_money = $order['user_discount_money'];
             $order_pay_price = $order['pay_price'];
             $order_original_price = $order['original_price'];
+            // 自助餐剩余时间
+            $start_timestamp = strtotime($order['create_time']);
+            $order['buffet_remaining_time'] = Order::getBuffetRemainingTime($order['order_id'], $start_timestamp);
         } else {
             $order_total_num = 0;
             $order_total_price = 0;
