@@ -143,8 +143,8 @@ export default {
                             let nowLanguage = JSON.parse(localStorage.getItem("Language")).language;
                             if(self.lang.indexOf(nowLanguage) == -1){
                                 languageStore().setLanguage(self.lang[0])
-                                location.reload();
                             }
+                            location.reload();
                         })
                         .catch(error => {
                             self.loading = false;
