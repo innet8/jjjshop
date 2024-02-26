@@ -823,5 +823,11 @@
     "已退款：": "refunded:",
     "支持JPG、JPEG、PNG格式，小于15MB，尺寸：160*120px": "Support JPG, JPEG, PNG format, less than 15MB, size: 160*120px",
     "支持JPG、JPEG、PNG格式，小于15MB，尺寸：120*120px": "Support JPG, JPEG, PNG format, less than 15MB, size: 120*120px",
-    "会員管理": "Member management"
+    "会員管理": "Member management",
+    "自助餐": "buffet",
+    "自助餐设置": "buffet setting",
+    "全部状态": "All status",
+    "自助餐名称": "buffet name",
+    "请输入自助餐名称": "Please enter buffet name",
+    "语言": "language"
 }

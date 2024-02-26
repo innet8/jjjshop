@@ -48,10 +48,8 @@ git-clone(){
     echo -e "${Green}拉取项目代码${Font}"
     cd /
     git clone --depth=1 https://github.com/innet8/jjjshop.git
-    chown -R www-data:root /jjjshop/
+    chown -R www-data:www-data /jjjshop/
     chmod -R 777  /jjjshop/jjj_food_chain/runtime
-    chmod -R 777  /jjjshop/jjj_food_chain/public/uploads
-    chmod -R 777  /jjjshop/jjj_food_chain/public/temp
     chmod +x /jjjshop/jjj_food_chain/lanp-install.sh
     cd /jjjshop/jjj_food_chain
     if [ $? -ne 0 ]; then
@@ -81,7 +79,51 @@ check-env(){
 
     fi
 
+    
+}
+check-runtime(){
+    #安装监控文件监控工具
+    echo -e "${Green}开始安装inotify-tools服务${Font}"
+    sudo apt install inotify-tools
 
+cat > /etc/inotify_jjj.sh <<EOF
+#!/bin/bash
+
+# 设置 umask 为新文件/目录的默认权限
+umask 0002
+
+# 监听的目录
+WATCH_DIR="/jjjshop/jjj_food_chain/runtime/"
+
+# 启动 inotifywait 来监听目录
+inotifywait -m -r -e create --format "%w%f" "\$WATCH_DIR" |
+while read -r FILE
+do
+  if [ -f "\$FILE" ] || [ -d "\$FILE" ]; then
+    # 新创建的是文件或目录
+    chown -R www-data:www-data "\$FILE"
+    chmod 766 "\$FILE"  # 设置文件或目录的权限，根据需要修改
+  fi
+done
+EOF
+
+#使用systemd进行管理
+cat > /etc/systemd/system/inotify_jjj.service <<EOF
+[Unit]
+Description=JJJshop Check
+After=network.target
+
+[Service]
+ExecStart=/bin/bash /etc/inotify_jjj.sh 
+Restart=always
+StandardOutput=file:/var/log/inotify_jjj.log
+
+[Install]
+WantedBy=default.target
+EOF
+    systemctl start inotify_jjj.service
+    systemctl enable inotify_jjj.service
+    echo -e "${Green}inotify-tools服务安装完成${Font}"
 }
 
 nginx-install(){
@@ -89,7 +131,7 @@ nginx-install(){
     echo -e "${Green}开始安装Nginx服务${Font}"
     sudo apt install -y curl gnupg2 ca-certificates lsb-release ubuntu-keyring
     curl https://nginx.org/keys/nginx_signing.key | gpg --dearmor | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
-    echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
+    echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
     sudo apt update
     sudo apt install nginx
     nginx -v
@@ -140,8 +182,8 @@ server {
     access_log off;
 }
 EOF
-    systemctl  start nginx.service
-    systemctl  enable nginx.service
+    systemctl  start nginx.service 
+    systemctl  enable nginx.service 
     echo -e "${Green}Nginx服务安装完成${Font}"
 
 
@@ -166,8 +208,8 @@ mysql-install(){
     sudo DEBIAN_FRONTEND=noninteractive dpkg -i mysql-community-server_5.7.42-1ubuntu18.04_amd64.deb
     sudo dpkg -i mysql-server_5.7.42-1ubuntu18.04_amd64.deb
     #启动和开机自启
-    systemctl  start mysql.service
-    systemctl  enable mysql.service
+    systemctl  start mysql.service 
+    systemctl  enable mysql.service 
     echo -e "${Green}修改数据库监听地址${Font}"
     sed -i 's#127.0.0.1#0.0.0.0#g' /etc/mysql/mysql.conf.d/mysqld.cnf
     service mysql restart
@@ -198,13 +240,12 @@ php-install(){
     # 解除禁用的函数
     sudo sed -i 's#disable_functions =.*#disable_functions =#g' /etc/php/8.2/fpm/php.ini
     sudo sed -i 's#upload_max_filesize = 2M#upload_max_filesize = 100M#g' /etc/php/8.2/fpm/php.ini
-    sudo sed -i 's#post_max_size = 8M#post_max_size = 100M#g' /etc/php/8.2/fpm/php.ini
-    #sudo sed -i 's#;open\_basedir\ \=#open\_basedir\ \='$(pwd)'/jjj_food_chain#g'  /etc/php/8.2/fpm/php.ini
+    #sudo sed -i 's#;open\_basedir\ \=#open\_basedir\ \='$(pwd)'/jjj_food_chain#g'  /etc/php/8.2/fpm/php.ini 
     systemctl  start  php8.2-fpm.service
     systemctl  enable php8.2-fpm.service
 
     cd /jjjshop/jjj_food_chain
-    curl -sS https://getcomposer.org/installer | php
+    curl -sS https://getcomposer.org/installer | php    
     mv composer.phar /usr/local/bin/composer
     sudo composer install -q
     sudo php think migrate:run
@@ -261,6 +302,7 @@ RustDesk-install(){
 }
 
 install() {
+    check-runtime
     nginx-install
     mysql-install
     php-install
@@ -286,7 +328,7 @@ uninstall() {
 
             # 卸载远程软件
             apt-get purge  -y  /tmp/rustdesk-1.2.3-x86_64.deb
-
+            
             #删除项目
             rm -rf /jjjshop/
             echo -e "${Green}卸载完成${Font}"
@@ -298,8 +340,8 @@ uninstall() {
             echo "无效选项，请重新输入"
         fi
     done
-
-
+    
+    
 }
 
 if [ $# -eq 0 ]; then
