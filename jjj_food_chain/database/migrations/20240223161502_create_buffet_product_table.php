@@ -32,7 +32,6 @@ class CreateBuffetProductTable extends Migrator
         $table = $this->table('buffet_product', ['engine' => 'InnoDB', 'collation' => 'utf8mb4_unicode_ci', 'comment' => '自助餐商品表']);
         $table->addColumn('buffet_id', 'integer', ['comment' => '关联id']);
         $table->addColumn('product_id', 'integer', ['comment' => '商品id']);
-        $table->addColumn('product_name', 'string', ['limit' => 255, 'default' => '', 'comment' => '商品名']);
         $table->addColumn('limit_num', 'integer', ['default' => 0, 'comment' => '限购数量']);
         $table->addColumn('app_id', 'integer', ['default' => 0, 'comment' => '应用id']);
         $table->addColumn('create_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'signed' => true, 'comment' => '创建时间']);
