@@ -1245,6 +1245,7 @@ class Order extends BaseModel
                         'total_num' => $data['product_num'],
                         'total_price' => $data['product_num'] * $data['price'],
                         'total_pay_price' => $data['product_num'] * $data['price'],
+                        'is_buffet_product' => $data['is_buffet'],
                     ];
 
                     $orderProduct->save($inArr);
@@ -1278,6 +1279,7 @@ class Order extends BaseModel
                         'total_num' => $data['product_num'],
                         'total_price' => $data['product_num'] * $data['price'],
                         'total_pay_price' => $data['product_num'] * $data['price'],
+                        'is_buffet_product' => $data['is_buffet'],
                     ];
 
                     $orderProduct->save($inArr);
@@ -1318,6 +1320,7 @@ class Order extends BaseModel
                     'total_num' => $data['product_num'],
                     'total_price' => $data['product_num'] * $data['price'],
                     'total_pay_price' => $data['product_num'] * $data['price'],
+                    'is_buffet_product' => $data['is_buffet'],
                 ];
 
                 (new OrderProductModel)->save($inArr);
@@ -1446,7 +1449,7 @@ class Order extends BaseModel
                     $item['product_price'] = 0;
                 }
             } else {
-                $product['is_buffet'] = 1;
+                $product['is_buffet'] = 0;
                 $product['buffet_limit_num'] = 0;
             }
         }
@@ -1464,7 +1467,7 @@ class Order extends BaseModel
                 $item['product_price'] = 0;
             }
         } else {
-            $product['is_buffet'] = 1;
+            $product['is_buffet'] = 0;
             $product['buffet_limit_num'] = 0;
         }
 

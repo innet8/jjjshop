@@ -36,6 +36,7 @@ class Cart extends Controller
     {
         $data = $this->postData();
         $data['eat_type'] = 20; // 10-堂食 20-快餐
+        $data['is_buffet'] = 0;
         $model = new OrderModel();
         $order_id = $model->addToOrder($data, $this->cashier['user']);
         if ($order_id > 0) {

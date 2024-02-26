@@ -3,12 +3,12 @@
 namespace app\tablet\controller\order;
 
 use app\common\library\helper;
+use app\common\model\buffet\Buffet;
 use app\common\model\order\OrderProduct;
 use app\tablet\model\store\Table as TableModel;
 use app\cashier\service\order\settled\CashierOrderSettledService;
 use app\tablet\model\order\Cart as CartModel;
 use app\tablet\model\order\Order as OrderModel;
-use app\common\model\order\Order as CommonOrderModel;
 use app\tablet\controller\Controller;
 use hg\apidoc\annotation as Apidoc;
 /**
@@ -203,6 +203,18 @@ class Order extends Controller
             return $this->renderSuccess('删除成功');
         };
         return $this->renderError($model->getError() ?: '删除失败');
+    }
+
+    /**
+     * @Apidoc\Title("桌台-自助餐列表")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/tablet/order.Order/buffetList")
+     * @Apidoc\Returned()
+     */
+    public function buffetList()
+    {
+        $list = Buffet::getList();
+        return $this->renderSuccess('',$list);
     }
 
 }
