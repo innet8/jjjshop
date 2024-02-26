@@ -122,7 +122,7 @@ class Order extends Controller
             return $this->renderError('请输入1-999的人数');
         }
         // 自助餐
-        if ($params['is_buffet'] == 1) {
+        if (($params['is_buffet'] ?? 0) == 1) {
             if (empty($params['buffet_ids'])) {
                 return $this->renderError('请选择自助餐');
             }
