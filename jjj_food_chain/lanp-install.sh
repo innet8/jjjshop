@@ -48,10 +48,10 @@ git-clone(){
     echo -e "${Green}拉取项目代码${Font}"
     cd /
     git clone --depth=1 https://github.com/innet8/jjjshop.git
-    chown -R www-data:www-data /jjjshop/
-    chmod -R 777  /jjjshop/jjj_food_chain/runtime
-    chmod +x /jjjshop/jjj_food_chain/lanp-install.sh
-    cd /jjjshop/jjj_food_chain
+    chown -R www-data:www-data $(pwd)/../../jjjshop/
+    chmod -R 777  $(pwd)/runtime
+    chmod +x $(pwd)/lanp-install.sh
+    cd $(pwd)/../../jjjshop/jjj_food_chain
     if [ $? -ne 0 ]; then
         echo -e "${Error}拉取失败${Font}"
     else
