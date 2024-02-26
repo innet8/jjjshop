@@ -26,7 +26,7 @@
                 <el-input v-model="form.shop.device_code" disabled placeholder="" class="max-w460"></el-input>
             </el-form-item>
             <template v-for="(item, index) in 4" :key="index">
-                <el-form-item :label="$t('语言') + (index + 1) + (index==0 ? '('+ $t('默认') +')' : '')" prop="lang">
+                <el-form-item :label="$t('语言') + (index + 1) + (index == 0 ? '(' + $t('默认') + ')' : '')" prop="lang">
                     <el-select v-model="lang[index]" clearable class="max-w460" size="default">
                         <template v-for="cat in langList" :key="cat.name">
                             <el-option :value="cat.name" :label="cat.value" :disabled="selectOne(cat.name)"></el-option>
@@ -85,10 +85,10 @@ export default {
 
     methods: {
 
-        selectOne(lang){
+        selectOne(lang) {
             let result = false;
-            this.lang.map(item=>{
-                if(lang == item){
+            this.lang.map(item => {
+                if (lang == item) {
                     result = true
                 }
             })
@@ -103,7 +103,7 @@ export default {
                 // self.form = formatModel(self.form, vars);
                 self.form = Object.assign(self.form, vars);
                 self.form.shop = res.data.shop;
-                res.data.vars.values.language.map(item=>{
+                res.data.vars.values.language.map(item => {
                     self.lang.push(item.name)
                 })
                 self.langList = res.data.shop.language;
@@ -118,13 +118,13 @@ export default {
             let self = this;
             let params = this.form;
             let language = []
-            this.lang.map((item,index)=>{
-                this.langList.map(items=>{
-                    if(items.name == item){
+            this.lang.map((item, index) => {
+                this.langList.map(items => {
+                    if (items.name == item) {
                         language.push({
-                            key:index+1,
-                            name:items.name,
-                            value:items.value,
+                            key: index + 1,
+                            name: items.name,
+                            value: items.value,
                         })
                     }
                 })
@@ -136,15 +136,18 @@ export default {
                     SettingApi.editStore(params, true)
                         .then(data => {
                             self.loading = false;
+                            let nowLanguage = JSON.parse(localStorage.getItem("Language")).language;
+                            if (self.lang.indexOf(nowLanguage) == -1) {
+                                languageStore().setLanguage(self.lang[0])
+                            }
                             this.$ElMessage({
                                 message: $t('操作成功'),
                                 type: 'success'
                             });
-                            let nowLanguage = JSON.parse(localStorage.getItem("Language")).language;
-                            if(self.lang.indexOf(nowLanguage) == -1){
-                                languageStore().setLanguage(self.lang[0])
-                            }
-                            location.reload();
+                            setTimeout(() => {
+
+                                location.reload();
+                            }, 1000)
                         })
                         .catch(error => {
                             self.loading = false;
