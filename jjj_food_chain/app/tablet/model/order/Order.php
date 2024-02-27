@@ -4,6 +4,7 @@ namespace app\tablet\model\order;
 
 use app\common\enum\order\OrderStatusEnum;
 use think\facade\Log;
+use think\facade\Cache;
 use app\api\model\order\OrderProduct;
 use app\common\model\supplier\Supplier;
 use app\common\enum\order\OrderTypeEnum;
@@ -337,7 +338,17 @@ class Order extends OrderModel
         return $status;
     }
 
-
+    // 自助餐到期提醒
+    public static function buffetTimeRemind($tid, $buffet_expired_time, $minute)
+    {
+        $second = $minute * 60;
+        $now_timestamp = time();
+        if (($buffet_expired_time - $now_timestamp < $second) && Cache::get("remind::{$tid}")) {
+            Cache::set("remind::{$tid}", 1, $second);
+            return 1;
+        }
+        return 0;
+    }
 
 
 }

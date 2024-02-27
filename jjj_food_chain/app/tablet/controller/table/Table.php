@@ -94,14 +94,24 @@ class Table extends Controller
         $tableId = $this->table['table_id'] ?? 0;
         // 
         $is_lock = 0;
+        $buffet_time_remind = [
+            'remind' => 0,
+            'minute' => 0
+        ];
         // 
         if ($tableId > 0) {
             $detail = OrderModel::getTableUnderwayOrder($tableId);
             if ($detail) {
+                // 自助餐设置
+                $buffet = SettingModel::getSupplierItem(SettingEnum::BUFFET, $detail['shop_supplier_id'] ?? 0, $detail['app_id'] ?? 0);
                 $is_lock = $detail->is_lock;
+                $buffet_time_remind = [
+                    'remind' => OrderModel::buffetTimeRemind($tableId, $detail['buffet_expired_time'], $buffet['tablet_end_time']),
+                    'minute' => $buffet['tablet_end_time']
+                ];
             }
         }
         // 
-        return $this->renderSuccess('请求成功', compact('is_lock'));
+        return $this->renderSuccess('请求成功', compact('is_lock', 'buffet_time_remind'));
     }
 }
