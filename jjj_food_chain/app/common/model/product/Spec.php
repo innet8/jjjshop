@@ -33,7 +33,8 @@ class Spec extends BaseModel
                     if ($isExit == 0) {
                         $addData[] = [
                             'spec_name' => $item['spec_name'],
-                            'app_id' => self::$app_id
+                            'app_id' => self::$app_id,
+                            'shop_supplier_id' => self::$app_id,
                         ];
                     }
                 }
