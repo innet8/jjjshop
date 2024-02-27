@@ -1,14 +1,14 @@
 <template >
-    <el-dialog :title="$t('选择商品')" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
+    <el-dialog :title="$t('选择商品')" v-model="dialogVisible" @close="dialogFormVisible"  append-to-body :close-on-click-modal="false"
         :close-on-press-escape="false">
         <div class="common-seach-wrap">
             <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
 
                 <el-form-item :label="$t('商品状态')">
-                    <el-select size="small" v-model="searchForm.status" :placeholder="$t('商品状态')">
-                        <el-option :label="$t('全部状态')" value=""></el-option>
-                        <el-option :label="$t('上架中')" value="0"></el-option>
-                        <el-option :label="$t('下架中')" value="1"></el-option>
+                    <el-select size="small" v-model="searchForm.type" :placeholder="$t('商品状态')">
+                        <el-option :label="$t('全部')" value="all"></el-option>
+                        <el-option :label="$t('上架中')" value="sell"></el-option>
+                        <el-option :label="$t('下架中')" value="lower"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('商品分类')">
@@ -19,7 +19,7 @@
                         </template>
                     </el-cascader>
                 </el-form-item>
-                <el-form-item :label="$t('商品名称')"><el-input size="small" v-model="searchForm.keyword"
+                <el-form-item :label="$t('商品名称')"><el-input size="small" v-model="searchForm.product_name"
                         :placeholder="$t('商品名称')"></el-input></el-form-item>
                 <el-form-item>
                     <el-button class="search-button" size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询')
@@ -31,7 +31,8 @@
         <!--内容-->
         <div class="product-content">
             <div class="table-wrap">
-                <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
+                <el-table size="small" ref="multipleTable" :data="tableData" border style="width: 100%" v-loading="loading"
+                    @selection-change="handleSelectionChange" :row-key="getRowKey">
                     <el-table-column prop="product_name" :label="$t('商品名称')" width="300px">
                         <template #default="scope">
                             <div class="product-info">
@@ -50,14 +51,14 @@
                     <el-table-column prop="product_status.text" :label="$t('状态')" width="100">
                         <template #default="scope">
                             <el-switch :disabled="!this.$filter.isAuth('/product/buffet/list/status')"
-                                :model-value="scope.row.product_status.value == 10 ? true : false"
-                                @click="undercarriage(scope.row, scope.row.product_status.value == 10 ? 20 : 10)"></el-switch>
+                                :model-value="scope.row.product_status.value == 10 ? true : false">
+                            </el-switch>
                         </template>
                     </el-table-column>
                     <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
                     <el-table-column prop="product_sort" :label="$t('排序')"></el-table-column>
 
-                    <el-table-column fixed="right" type="selection" width="40" />
+                    <el-table-column fixed="right" type="selection" width="40" :reserve-selection="true"/>
                 </el-table>
             </div>
         </div>
@@ -76,13 +77,14 @@
     </el-dialog>
 </template>
 <script>
+import PorductApi from '@/api/product.js';
 export default {
     data() {
         return {
             searchForm: {
-                status: '',
-                keyword: '',
-                category_id:'',
+                type: '',
+                product_name: '',
+                category_id: '',
             },
 
             /*一页多少条*/
@@ -94,6 +96,7 @@ export default {
             tableData: [],
             /*全部分类*/
             categoryList: [],
+            multipleSelection: [],
         }
     },
     props: {
@@ -101,30 +104,119 @@ export default {
             type: Boolean,
             default: false,
         },
+        limit_ids: {
+            type: String,
+            default: '',
+        },
+        selectType: {
+            type: String,
+            default: '',
+        },
 
     },
     created() {
         this.dialogVisible = this.open_product;
+        this.getData();
     },
     methods: {
+
+        getData() {
+            let self = this;
+            let Params = self.searchForm;
+            Params.product_ids = this.selectType == 'limit' ? this.limit_ids : '';
+            Params.page = self.curPage;
+            Params.list_rows = self.pageSize;
+            if (typeof Params.category_id == 'object' && Params.category_id) {
+                Params.category_id = Number(Params.category_id[Params.category_id.length - 1])
+            }
+            self.loading = true;
+            PorductApi.storeProductList(Params, true)
+                .then(data => {
+                    self.loading = false;
+                    self.tableData = data.data.list.data;
+                    self.totalDataNumber = data.data.list.total;
+                    self.categoryList = [];
+                    data.data.category.map((item, index) => {
+                        self.categoryList.push({
+                            value: item.category_id,
+                            label: item.name_text,
+                            children: [],
+                        })
+                        item.child.map((items, indexs) => {
+                            self.categoryList[index].children.push({
+                                value: items.category_id,
+                                label: items.name_text,
+                            })
+                        })
+                    })
+
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        /*搜索查询*/
+        onSubmit() {
+            this.curPage = 1;
+            this.getData();
+        },
+
+        /*选择第几页*/
+        handleCurrentChange(val) {
+            this.curPage = val;
+            this.getData();
+        },
+
+        /*每页多少条*/
+        handleSizeChange(val) {
+            this.curPage = 1;
+            this.pageSize = val;
+            this.getData();
+        },
+
         /*关闭弹窗*/
         dialogFormVisible(e) {
             if (e) {
-                this.$emit('closeDialog', {
+                this.$emit('closeDialogFunc', {
                     type: 'success',
                     openDialog: false
                 })
             } else {
-                this.$emit('closeDialog', {
+                this.$emit('closeDialogFunc', {
                     type: 'error',
                     openDialog: false
                 })
             }
         },
 
+        submit() {
+            if (this.selectType == 'limit') {
+                this.$emit('closeDialogFunc', {
+                    type: 'limit',
+                    openDialog: false,
+                    data: this.multipleSelection,
+                })
+            } else {
+                this.$emit('closeDialogFunc', {
+                    type: 'select',
+                    openDialog: false,
+                    data: this.multipleSelection,
+                })
+            }
 
-        handleValue(data){
-            this.searchForm.category_id =[]
+        },
+
+        getRowKey(row) {
+            return row.product_id;
+        },
+
+        handleSelectionChange(e) {
+            this.multipleSelection = e;
+        },
+
+        handleValue(data) {
+            this.searchForm.category_id = []
             this.searchForm.category_id = data.value;
         }
     },
@@ -136,4 +228,5 @@ export default {
     justify-content: space-between;
     margin-bottom: 0;
 }
+
 </style>

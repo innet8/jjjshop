@@ -18,7 +18,7 @@
                 </el-form-item>
             </el-form>
             <el-button size="small" type="primary" icon="Plus" v-auth="'/product/buffet/list/add'"
-                @click="addEditClick($t('添加自助餐'))">{{
+                @click="addClick">{{
                     $t('添加商品') }}</el-button>
         </div>
 
@@ -26,35 +26,34 @@
         <div class="product-content">
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-                    <el-table-column prop="product_name" :label="$t('自助餐名称')" width="400px">
+                    <el-table-column prop="name_text" :label="$t('自助餐名称')" width="400px">
                         <template #default="scope">
                             <div class="product-info">
-                                <div class="pic"><img v-img-url="scope.row.image[0].file_path" alt="" /></div>
                                 <div class="info">
-                                    <div class="name">{{ scope.row.product_name_text }}</div>
-                                    <div class="price">{{ $t('销售价：') }}{{ scope.row.product_price }}</div>
+                                    <div class="name">{{ scope.row.name_text }}</div>
+                                    <div class="price">{{ $t('销售价：') }}{{ scope.row.price }}</div>
                                 </div>
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="sales_actual" :label="$t('实际销量')"></el-table-column>
-                    <el-table-column prop="product_stock" :label="$t('用餐时间')"></el-table-column>
-                    <el-table-column prop="product_status.text" :label="$t('组合')" width="100">
+                    <el-table-column prop="sale_num" :label="$t('实际销量')"></el-table-column>
+                    <el-table-column prop="time_limit" :label="$t('用餐时间')"></el-table-column>
+                    <el-table-column prop="is_comb" :label="$t('组合')" width="100">
                         <template #default="scope">
                             <el-switch :disabled="!this.$filter.isAuth('/product/buffet/list/assembly')"
-                                :model-value="scope.row.product_status.value == 10 ? true : false"
-                                @click="undercarriage(scope.row, scope.row.product_status.value == 10 ? 20 : 10)"></el-switch>
+                                :model-value="scope.row.is_comb == 1 ? true : false"
+                                @click="handleComb(scope.row, scope.row.is_comb == 1 ? 0 : 1)"></el-switch>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="product_status.text" :label="$t('状态')" width="100">
+                    <el-table-column prop="status" :label="$t('状态')" width="100">
                         <template #default="scope">
                             <el-switch :disabled="!this.$filter.isAuth('/product/buffet/list/status')"
-                                :model-value="scope.row.product_status.value == 10 ? true : false"
-                                @click="undercarriage(scope.row, scope.row.product_status.value == 10 ? 20 : 10)"></el-switch>
+                                :model-value="scope.row.status == 1 ? true : false"
+                                @click="handleStatus(scope.row, scope.row.status == 1 ? 0 : 1)"></el-switch>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
-                    <el-table-column prop="product_sort" :label="$t('排序')"></el-table-column>
+                    <el-table-column prop="create_time" :label="$t('添加时间')" width="180"></el-table-column>
+                    <el-table-column prop="sort" :label="$t('排序')"></el-table-column>
                     <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
@@ -79,16 +78,18 @@
 </template>
 <script >
 import addEdit from './addEdit.vue';
+import PorductApi from '@/api/product.js';
 export default {
     components: { addEdit },
     data() {
         return {
+            loading:false,
             searchForm: {
                 status: '',
                 keyword: ''
             },
             /*一页多少条*/
-            pageSize: 5,
+            pageSize: 10,
             /*一共多少条数据*/
             totalDataNumber: 0,
             /*当前是第几页*/
@@ -98,31 +99,47 @@ export default {
             title: '',
         }
     },
+    mounted(){
+        this.getData();
+    },
     methods: {
         onSubmit() {
 
         },
 
-        addEditClick(e) {
-            this.title = e;
+        addClick(e) {
+            this.title = $t('添加自助餐');
+            this.open_dialog = true;
+        },
+
+        editClick(row){
+            this.title = $t('编辑自助餐')
             this.open_dialog = true;
         },
 
         getData() {
-            // let self = this;
-            // self.loading = true;
-            // let Params = {};
-            // Params.page = self.curPage;
-            // Params.list_rows = self.pageSize;
-            // ArticleApi.articlelist(Params, true)
-            //     .then(data => {
-            //         self.loading = false;
-            //         self.tableData = data.data.list.data;
-            //         self.totalDataNumber = data.data.list.total;
-            //     })
-            //     .catch(error => {
-            //         console.log(error);
-            //     });
+            let self = this;
+            self.loading = true;
+            let Params = {};
+            Params.page = self.curPage;
+            Params.list_rows = self.pageSize;
+            PorductApi.getBuffetList(Params, true)
+                .then(data => {
+                    self.loading = false;
+                    self.tableData = data.data.list.data;
+                    self.totalDataNumber = data.data.list.total;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        //改变组合
+        handleComb(e){},
+
+        //改变状态
+        handleStatus(e){
+            
         },
 
         /*选择第几页*/
@@ -155,5 +172,8 @@ export default {
     display: flex;
     justify-content: space-between;
     margin-bottom: 0;
+}
+.el-button--primary.is-link{
+    color: var(--el-color-primary);
 }
 </style>

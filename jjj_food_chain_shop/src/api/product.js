@@ -229,7 +229,7 @@ let ProductApi = {
 	deleteLabel(data, errorback) {
 	    return request._post('/shop/product.expand.Label/delete', data, errorback);
 	},
-    // 
+    // 自助餐设置
     getSettingBuffet(data, errorback) {
         return request._get('/shop/setting.Buffet/index', data, errorback);
     },
@@ -237,6 +237,15 @@ let ProductApi = {
         return request._post('/shop/setting.Buffet/index', data, errorback);
     },
 
+    // 自助餐
+    getBuffetList(data, errorback) {
+        return request._post('/shop/product.buffet.buffet/list', data, errorback);
+    },
+    // 自助餐
+    addBuffet(data, errorback) {
+        return request._post('/shop/product.buffet.buffet/add', data, errorback);
+    },
+    
 }
 
 export default ProductApi;

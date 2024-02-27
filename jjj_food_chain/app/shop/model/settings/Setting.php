@@ -16,8 +16,7 @@ class Setting extends SettingModel
         $model = self::detail($key, $shop_supplier_id) ?: $this;
         // 删除系统设置缓存
         Cache::set('setting_' . self::$app_id . '_' . $shop_supplier_id, null);
-        Cache::set('common_shop_supplier_id', null);
-        Cache::set('common_setting_languages' . $shop_supplier_id, null);
+        Cache::tag('common'.$shop_supplier_id)->clear();
         // 
         $data = [
             'key' => $key,
