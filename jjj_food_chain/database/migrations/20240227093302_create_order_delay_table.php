@@ -30,6 +30,8 @@ class CreateOrderDelayTable extends Migrator
     public function change()
     {
         $table = $this->table('order_delay', ['engine' => 'InnoDB', 'collation' => 'utf8mb4_unicode_ci', 'comment' => '订单加钟关联表']);
+        $table->addColumn('order_id', 'integer', ['comment' => '关联订单id']);
+        $table->addColumn('buffet_id', 'integer', ['comment' => '关联自助餐id']);
         $table->addColumn('name', 'string', ['limit' => 255, 'default' => '', 'comment' => '名称']);
         $table->addColumn('delay_time', 'integer', ['default' => 0, 'comment' => '用餐时间（分）']);
         $table->addColumn('price', 'decimal', ['precision' => 12, 'scale' => 2, 'default' => 0, 'comment' => '价格']);
