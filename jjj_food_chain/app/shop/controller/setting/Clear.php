@@ -79,6 +79,11 @@ class Clear extends Controller
                     'runtime' => root_path('runtime') . '/image/' . $app_id . '/'
                 ]
             ],
+            'common' => [
+                'type' => 'common',
+                'key' => 'common_' . $app_id,
+                'name' => '公共'
+            ],
         ];
     }
 
@@ -104,13 +109,20 @@ class Clear extends Controller
                     Cache::has('app_mp_' . $app_id) && Cache::set('app_mp_' . $app_id, null);
                     Cache::has('app_wx_' . $app_id) && Cache::set('app_wx_' . $app_id, null);
                 }
+            } elseif ($item['type'] === 'common') {
+                Cache::tag($item['key'])->clear();
+                Cache::tag('firstshop')->clear();
             } elseif ($item['type'] === 'file') {
                 $this->deltree($item['dirPath']);
             }
+            // 
+            if ($key === 'category') {
+                Cache::tag($item['key'] . '0' . '0')->clear();
+                Cache::tag($item['key'] . '0' . '1')->clear();
+                Cache::tag($item['key'] . '1' . '0')->clear();
+                Cache::tag($item['key'] . '1' . '1')->clear();
+            } 
         }
-        // 
-        Cache::has('first_shop_info') && Cache::tag('firstshop')->set('first_shop_info', null);
-        Cache::tag('common'.$app_id)->clear();
     }
 
     /**
