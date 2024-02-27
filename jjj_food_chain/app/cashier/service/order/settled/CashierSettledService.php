@@ -129,12 +129,6 @@ abstract class CashierSettledService extends BaseService
         }
         // 创建新的订单
         $status = $this->model->transaction(function () use ($order) {
-            // 创建自助餐
-            if ($this->params['is_buffet'] ?? 0) {
-                $buffet_time_limit = OrderModel::createOrderBuffet($this->model['order_id'], $this->params['buffet_ids']);
-                $buffet_expired_time = time() + $buffet_time_limit * 60;
-                $order['buffet_expired_time'] = $buffet_expired_time;
-            }
             // 创建订单事件
             return $this->createOrderEvent($order);
         });
@@ -376,6 +370,12 @@ abstract class CashierSettledService extends BaseService
         // 保存订单记录
         $this->model->save($data);
         $new_order_id = $this->model->order_id;
+        // 创建自助餐
+        if ($this->params['is_buffet']) {
+            $buffet_time_limit = OrderModel::createOrderBuffet($this->model['order_id'], $this->params['buffet_ids']);
+            $buffet_expired_time = time() + $buffet_time_limit * 60;
+            $this->model->save(['buffet_expired_time' => $buffet_expired_time]);
+        }
         return $new_order_id;
     }
 
