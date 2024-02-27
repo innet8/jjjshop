@@ -165,7 +165,7 @@ class Setting extends BaseModel
         // 删除系统设置缓存
         Cache::set('setting_' . self::$app_id. '_' . $shop_supplier_id, null);
         Cache::set('common_setting_languages' . $shop_supplier_id, null);
-        // 
+        //
         $model = $model->save(
             [
                 'key' => $key,
@@ -624,11 +624,6 @@ class Setting extends BaseModel
                     // 是否开启加钟 0-关闭 1-开启
                     'is_add_clock' => '0',
                     // 名称 - 加钟时间（分）- 价格
-                    // [
-                    //     'name' => '名称',
-                    //     'time' => '30',
-                    //     'value' => '10'
-                    // ]
                     'add_clock' => [],
                 ],
             ],
