@@ -74,6 +74,14 @@ class Order extends BaseModel
     }
 
     /**
+     * 订单自助餐列表
+     */
+    public function delay()
+    {
+        return $this->hasMany('app\\common\\model\\order\\OrderDelay', 'order_id', 'order_id');
+    }
+
+    /**
      * 收银员
      */
     public function cashier()
@@ -1413,7 +1421,7 @@ class Order extends BaseModel
                     'is_comb' => $buffet['is_comb'],
                     'time_limit' => $buffet['time_limit'],
                 ];
-                (new OrderBuffet)->save($inArr);
+                (new OrderDelay)->save($inArr);
             }
         }
     }
@@ -1421,7 +1429,7 @@ class Order extends BaseModel
     // 获取订单自助餐商品列表
     public static function getOrderBuffetProductArr($order_id)
     {
-        $list = (new OrderBuffet)->with(['buffetProduct'])->where('order_id', '=', $order_id)->select();
+        $list = (new OrderDelay)->with(['buffetProduct'])->where('order_id', '=', $order_id)->select();
         $arr = [];
         foreach ($list as $buffet) {
             foreach ($buffet['buffetProduct'] as $product) {
@@ -1482,7 +1490,7 @@ class Order extends BaseModel
     // 商品详情按自助餐优惠显示
     public static function getBuffetRemainingTime($order_id, $start_timestamp)
     {
-        $time_limit = (new OrderBuffet)->where('order_id', '=', $order_id)->max('time_limit');
+        $time_limit = (new OrderDelay)->where('order_id', '=', $order_id)->max('time_limit');
         $expired_timestamp = $start_timestamp + $time_limit * 60;
         $remaining_time = $expired_timestamp - time();
         return max($remaining_time, 0);
