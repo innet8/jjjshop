@@ -1,13 +1,148 @@
 <template >
-    <div>
-        setting
+    <div class="setting">
+        <el-form size="small" ref="form" :model="form" label-position="top">
+            <el-form-item :label="$t('自助餐')" :rules="[{ required: true, message: '' }]">
+                <el-radio-group v-model="form.is_open">
+                    <el-radio label="1">{{ $t('开') }}</el-radio>
+                    <el-radio label="0">{{ $t('关') }}</el-radio>
+                </el-radio-group>
+            </el-form-item>
+            <el-form-item :label="$t('平板结束时间提醒')" :rules="[{ required: true, message: '' }]">
+                <div class="max-w460 color-box">
+                    <el-input-number :controls="false" :min="0" :max="999" style="width: 200px !important;"
+                        :placeholder="$t('请输入平板结束时间提醒')" v-model.number="form.tablet_end_time"></el-input-number>
+                    {{ $t('分') }}
+                </div>
+            </el-form-item>
+
+            <el-form-item :label="$t('非自助餐商品到时继续选购')" :rules="[{ required: true, message: '' }]">
+                <el-radio-group v-model="form.is_buy_continue">
+                    <el-radio label="1">{{ $t('开') }}</el-radio>
+                    <el-radio label="0">{{ $t('关') }}</el-radio>
+                </el-radio-group>
+            </el-form-item>
+
+            <el-form-item :label="$t('加钟')" :rules="[{ required: true, message: '' }]">
+                <el-radio-group v-model="form.is_add_clock">
+                    <el-radio label="1">{{ $t('开') }}</el-radio>
+                    <el-radio label="0">{{ $t('关') }}</el-radio>
+                </el-radio-group>
+                <div class="limit-list" v-if="form.is_add_clock == 1">
+                    <el-button type="primary" @click="add">{{ $t('添加') }}</el-button>
+
+                    <div class="limit-product-list">
+                        <template v-for="item, index in form.add_clock" :key="index">
+                            <div class="limit-product-box">
+                                <el-input type="text" v-model="item.name" :placeholder="$t('名称')"></el-input>
+                                <el-input-number :controls="false" :min="0" :max="999" style="width: 200px !important;"
+                                    :placeholder="$t('请输入时间')" v-model.number="item.time"></el-input-number>
+                                <p>{{ $t('分') }}</p>
+                                <el-input-number :controls="false" :min="0" :max="999" style="width: 200px !important;"
+                                    :placeholder="$t('请输入价格')" v-model.number="item.value"></el-input-number>
+                                <el-icon class="delete-icon" @click="handleDelete(index)">
+                                    <Delete />
+                                </el-icon>
+                            </div>
+                        </template>
+                    </div>
+
+                </div>
+            </el-form-item>
+
+
+        </el-form>
+        <div class="common-button-wrapper">
+            <el-button size="small" @click="getData">{{ $t('重置') }}</el-button>
+            <el-button size="small" type="primary" @click="onSubmit" :loading="loading">{{ $t('保存') }}</el-button>
+        </div>
     </div>
 </template>
 <script>
+import PorductApi from '@/api/product.js';
 export default {
-    
+    data() {
+        return {
+            loading: false,
+            form: {
+                is_open: "1",
+                tablet_end_time: null,
+                is_buy_continue: "1",
+                is_add_clock: "1",
+                add_clock: [],
+            },
+        }
+    },
+    mounted() {
+        this.getData();
+    },
+    methods: {
+        getData() {
+            let self = this;
+            self.loading = true;
+            PorductApi.getSettingBuffet().then(data => {
+                self.loading = false;
+                this.form = data.data.vars.values;
+            }).catch(error => {
+                self.loading = false;
+            });
+        },
+        onSubmit(){
+            let self = this;
+            let params = JSON.parse(JSON.stringify(self.form));
+            self.loading = true;
+            PorductApi.setSettingBuffet(params, true).then(data => {
+                self.loading = false;
+                this.$ElMessage({
+                    message: $t('保存成功'),
+                    type: 'success'
+                });
+            }).catch(error => {
+                self.loading = false;
+            });
+        },
+        add(){
+            this.form.add_clock.push({
+                name:'',
+                time:null,
+                value:null,
+            })
+        },
+
+        handleDelete(index) {
+            this.form.add_clock.splice(index, 1);
+        },
+    },
 }
 </script>
 <style lang="scss" scoped>
-    
+.color-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.limit-list {
+    width: 100%;
+    margin-top: 12px;
+
+    .limit-product-list {
+        width: 100%;
+        max-width: 600px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 16px;
+
+        .limit-product-box {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+
+            .delete-icon {
+                font-size: 24px;
+                cursor: pointer;
+            }
+        }
+    }
+}
 </style>

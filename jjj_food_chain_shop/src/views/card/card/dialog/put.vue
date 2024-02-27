@@ -180,4 +180,5 @@ export default {
         cursor: pointer;
         color: #c80000;
     }
-}</style>
+}
+</style>

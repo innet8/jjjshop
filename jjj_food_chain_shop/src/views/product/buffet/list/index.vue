@@ -17,15 +17,16 @@
                     }}</el-button>
                 </el-form-item>
             </el-form>
-            <el-button size="small" type="primary" icon="Plus" v-auth="'/product/buffet/list/add'" @click="addClick">{{
-                $t('添加商品') }}</el-button>
+            <el-button size="small" type="primary" icon="Plus" v-auth="'/product/buffet/list/add'"
+                @click="addEditClick($t('添加自助餐'))">{{
+                    $t('添加商品') }}</el-button>
         </div>
 
-                <!--内容-->
-                <div class="product-content">
+        <!--内容-->
+        <div class="product-content">
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-                    <el-table-column prop="product_name" :label="$t('商品名称')" width="400px">
+                    <el-table-column prop="product_name" :label="$t('自助餐名称')" width="400px">
                         <template #default="scope">
                             <div class="product-info">
                                 <div class="pic"><img v-img-url="scope.row.image[0].file_path" alt="" /></div>
@@ -36,12 +37,18 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="category.path_name_text" :label="$t('分类')"></el-table-column>
                     <el-table-column prop="sales_actual" :label="$t('实际销量')"></el-table-column>
-                    <el-table-column prop="product_stock" :label="$t('库存')"></el-table-column>
+                    <el-table-column prop="product_stock" :label="$t('用餐时间')"></el-table-column>
+                    <el-table-column prop="product_status.text" :label="$t('组合')" width="100">
+                        <template #default="scope">
+                            <el-switch :disabled="!this.$filter.isAuth('/product/buffet/list/assembly')"
+                                :model-value="scope.row.product_status.value == 10 ? true : false"
+                                @click="undercarriage(scope.row, scope.row.product_status.value == 10 ? 20 : 10)"></el-switch>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="product_status.text" :label="$t('状态')" width="100">
                         <template #default="scope">
-                            <el-switch :disabled="!this.$filter.isAuth('/product/store/product/state')"
+                            <el-switch :disabled="!this.$filter.isAuth('/product/buffet/list/status')"
                                 :model-value="scope.row.product_status.value == 10 ? true : false"
                                 @click="undercarriage(scope.row, scope.row.product_status.value == 10 ? 20 : 10)"></el-switch>
                         </template>
@@ -51,9 +58,9 @@
                     <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/product/store/product/edit'">{{ $t('编辑') }}</el-button>
+                                v-auth="'/product/buffet/list/edit'">{{ $t('编辑') }}</el-button>
                             <el-button @click="deleteClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/product/store/product/delete'">{{ $t('删除') }}</el-button>
+                                v-auth="'/product/buffet/list/delete'">{{ $t('删除') }}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -65,26 +72,79 @@
                 :current-page="curPage" :page-size="pageSize" layout="total, prev, pager, next, jumper"
                 :total="totalDataNumber"></el-pagination>
         </div>
+        <!--添加-->
+        <addEdit v-if="open_dialog" :title="title" :open_dialog="open_dialog"  @closeDialog="closeDialogFunc($event)">
+        </addEdit>
     </div>
 </template>
 <script >
+import addEdit from './addEdit.vue';
 export default {
+    components: { addEdit },
     data() {
         return {
-            searchForm:{
+            searchForm: {
                 status: '',
-    keyword: ''
+                keyword: ''
             },
-            tableData:[]
+            /*一页多少条*/
+            pageSize: 5,
+            /*一共多少条数据*/
+            totalDataNumber: 0,
+            /*当前是第几页*/
+            curPage: 1,
+            tableData: [],
+            open_dialog: false,
+            title: '',
         }
     },
-    methods:{
-        onSubmit(){
+    methods: {
+        onSubmit() {
 
         },
 
-        addClick(){
+        addEditClick(e) {
+            this.title = e;
+            this.open_dialog = true;
+        },
 
+        getData() {
+            // let self = this;
+            // self.loading = true;
+            // let Params = {};
+            // Params.page = self.curPage;
+            // Params.list_rows = self.pageSize;
+            // ArticleApi.articlelist(Params, true)
+            //     .then(data => {
+            //         self.loading = false;
+            //         self.tableData = data.data.list.data;
+            //         self.totalDataNumber = data.data.list.total;
+            //     })
+            //     .catch(error => {
+            //         console.log(error);
+            //     });
+        },
+
+        /*选择第几页*/
+        handleCurrentChange(val) {
+            let self = this;
+            self.curPage = val;
+            self.getData();
+        },
+
+        /*每页多少条*/
+        handleSizeChange(val) {
+            this.pageSize = val;
+            this.curPage = 1;
+            this.getData();
+        },
+
+        /*关闭弹窗*/
+        closeDialogFunc(e) {
+            this.open_dialog = e.openDialog;
+            if (e.type == 'success') {
+                this.getData();
+            }
         },
     },
 }

@@ -229,6 +229,13 @@ let ProductApi = {
 	deleteLabel(data, errorback) {
 	    return request._post('/shop/product.expand.Label/delete', data, errorback);
 	},
+    // 
+    getSettingBuffet(data, errorback) {
+        return request._get('/shop/setting.Buffet/index', data, errorback);
+    },
+    setSettingBuffet(data, errorback) {
+        return request._post('/shop/setting.Buffet/index', data, errorback);
+    },
 
 }
 

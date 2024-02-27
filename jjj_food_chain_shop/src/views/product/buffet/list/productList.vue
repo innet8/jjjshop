@@ -1,0 +1,139 @@
+<template >
+    <el-dialog :title="$t('选择商品')" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
+        :close-on-press-escape="false">
+        <div class="common-seach-wrap">
+            <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
+
+                <el-form-item :label="$t('商品状态')">
+                    <el-select size="small" v-model="searchForm.status" :placeholder="$t('商品状态')">
+                        <el-option :label="$t('全部状态')" value=""></el-option>
+                        <el-option :label="$t('上架中')" value="0"></el-option>
+                        <el-option :label="$t('下架中')" value="1"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item :label="$t('商品分类')">
+                    <el-cascader :options="categoryList" :props="{ checkStrictly: true, expandTrigger: 'hover' }"
+                        v-model="searchForm.category_id" clearable :placeholder="$t('请选择分类')">
+                        <template #default="{ data }">
+                            <span @click="handleValue(data)">{{ data.label }}</span>
+                        </template>
+                    </el-cascader>
+                </el-form-item>
+                <el-form-item :label="$t('商品名称')"><el-input size="small" v-model="searchForm.keyword"
+                        :placeholder="$t('商品名称')"></el-input></el-form-item>
+                <el-form-item>
+                    <el-button class="search-button" size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询')
+                    }}</el-button>
+                </el-form-item>
+            </el-form>
+
+        </div>
+        <!--内容-->
+        <div class="product-content">
+            <div class="table-wrap">
+                <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
+                    <el-table-column prop="product_name" :label="$t('商品名称')" width="300px">
+                        <template #default="scope">
+                            <div class="product-info">
+                                <div class="pic"><img v-img-url="scope.row.image[0].file_path" alt="" /></div>
+                                <div class="info">
+                                    <div class="name">{{ scope.row.product_name_text }}</div>
+                                    <div class="price">{{ $t('销售价：') }}{{ scope.row.product_price }}</div>
+                                </div>
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="product_stock" :label="$t('分类')"></el-table-column>
+                    <el-table-column prop="sales_actual" :label="$t('实际销量')"></el-table-column>
+                    <el-table-column prop="sales_actual" :label="$t('库存')"></el-table-column>
+
+                    <el-table-column prop="product_status.text" :label="$t('状态')" width="100">
+                        <template #default="scope">
+                            <el-switch :disabled="!this.$filter.isAuth('/product/buffet/list/status')"
+                                :model-value="scope.row.product_status.value == 10 ? true : false"
+                                @click="undercarriage(scope.row, scope.row.product_status.value == 10 ? 20 : 10)"></el-switch>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
+                    <el-table-column prop="product_sort" :label="$t('排序')"></el-table-column>
+
+                    <el-table-column fixed="right" type="selection" width="40" />
+                </el-table>
+            </div>
+        </div>
+        <!--分页-->
+        <div class="pagination">
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" background
+                :current-page="curPage" :page-size="pageSize" layout="total, prev, pager, next, jumper"
+                :total="totalDataNumber"></el-pagination>
+        </div>
+        <template #footer>
+            <div class="dialog-footer">
+                <el-button @click="dialogFormVisible">{{ $t('取消') }}</el-button>
+                <el-button type="primary" @click="submit" :loading="loading">{{ $t('确定') }}</el-button>
+            </div>
+        </template>
+    </el-dialog>
+</template>
+<script>
+export default {
+    data() {
+        return {
+            searchForm: {
+                status: '',
+                keyword: '',
+                category_id:'',
+            },
+
+            /*一页多少条*/
+            pageSize: 5,
+            /*一共多少条数据*/
+            totalDataNumber: 0,
+            /*当前是第几页*/
+            curPage: 1,
+            tableData: [],
+            /*全部分类*/
+            categoryList: [],
+        }
+    },
+    props: {
+        open_product: {
+            type: Boolean,
+            default: false,
+        },
+
+    },
+    created() {
+        this.dialogVisible = this.open_product;
+    },
+    methods: {
+        /*关闭弹窗*/
+        dialogFormVisible(e) {
+            if (e) {
+                this.$emit('closeDialog', {
+                    type: 'success',
+                    openDialog: false
+                })
+            } else {
+                this.$emit('closeDialog', {
+                    type: 'error',
+                    openDialog: false
+                })
+            }
+        },
+
+
+        handleValue(data){
+            this.searchForm.category_id =[]
+            this.searchForm.category_id = data.value;
+        }
+    },
+}
+</script>
+<style lang="scss" scoped>
+.common-seach-wrap {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0;
+}
+</style>

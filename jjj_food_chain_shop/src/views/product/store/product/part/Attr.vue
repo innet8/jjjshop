@@ -41,7 +41,7 @@
                         <el-form-item class="product-attr-item">
                             <template #label>
                                 <span style="color: var(--el-color-danger);margin: 0  4px 0 0 !important;">*</span>{{
-                                    $t('属性：') }}<span class="product-tips">({{ items.label }})</span>
+                                    $t('属性：') }}<span class="product-tips">({{ items.value }})</span>
                             </template>
                             <el-form-item v-for="(aitem, aindex) in item.attribute_value" :key="aindex"
                                 :prop="`item.attribute_value[aindex][items.key]`" :rules="[{
