@@ -28,6 +28,10 @@ class Unit extends UnitModel
      */
     public function add($data, $shop_supplier_id)
     {
+        if(hasEmptyValue($data['unit_name'] ?? '')){
+            $this->error = '单位名称不能为空';
+            return false;
+        }
         $isExist = $this->where('shop_supplier_id', '=', $shop_supplier_id)
             ->where('unit_name', '=', $data['unit_name'])
             ->count();
@@ -45,6 +49,10 @@ class Unit extends UnitModel
      */
     public function edit($data)
     {
+        if(hasEmptyValue($data['unit_name'] ?? '')){
+            $this->error = '单位名称不能为空';
+            return false;
+        }
         $isExist = $this->where('shop_supplier_id', '=', $this['shop_supplier_id'])
             ->where('unit_name', '=', $data['unit_name'])
             ->where('unit_id', '<>', $this['unit_id'])

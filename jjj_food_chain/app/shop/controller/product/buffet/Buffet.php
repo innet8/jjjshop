@@ -20,7 +20,9 @@ class Buffet extends Controller
      * @Apidoc\Param("name", type="string", require=false, desc="自助餐名称")
      * @Apidoc\Param("status", type="int", default=-1, require=false, desc="状态 -1-全部 0-未开启 1-已开启")
      * @Apidoc\Param(ref="pageParam")
-     * @Apidoc\Returned()
+     * @Apidoc\Returned("list", type="array", ref="app\shop\model\buffet\Buffet\getShopBuffetList", children={
+     *  @Apidoc\Returned("name_text", type="string", desc="自助餐名称(多语言)"),
+     * })
      */
     public function list()
     {
@@ -35,7 +37,9 @@ class Buffet extends Controller
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/shop/product.buffet.buffet/detail")
      * @Apidoc\Param("buffet_id", type="int", require=true, desc="自助餐id")
-     * @Apidoc\Returned()
+     * @Apidoc\Returned("detail", type="object", ref="app\shop\model\buffet\Buffet\detail" , children={
+     * @Apidoc\Returned("name_text", type="string", desc="自助餐名称(多语言)"),
+     * })
      */
     public function detail($buffet_id)
     {
@@ -44,7 +48,7 @@ class Buffet extends Controller
         if (!$detail) {
             return $this->renderError('数据不存在');
         }
-        return $this->renderSuccess('', $detail);
+        return $this->renderSuccess('', compact('detail'));
     }
 
     /**

@@ -53,7 +53,7 @@ class Buffet extends BuffetModel
         $data['is_comb'] = $data['is_comb'] ?? 0; // 是否组合 0-否 1-是
         $data['buy_limit_status'] = $data['buy_limit_status'] ?? 0; // 是否限购 0-否 1-是
 
-        if ($data['name'] == '') {
+        if(hasEmptyValue($data['name'])){
             $this->error = '请输入自助餐名称';
             return false;
         }
@@ -130,7 +130,7 @@ class Buffet extends BuffetModel
         $data['is_comb'] = $data['is_comb'] ?? 0; // 是否组合 0-否 1-是
         $data['buy_limit_status'] = $data['buy_limit_status'] ?? 0; // 是否限购 0-否 1-是
 
-        if ($data['name'] == '') {
+        if(hasEmptyValue($data['name'])){
             $this->error = '请输入自助餐名称';
             return false;
         }

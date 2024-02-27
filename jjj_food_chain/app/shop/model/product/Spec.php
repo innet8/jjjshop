@@ -28,6 +28,10 @@ class Spec extends SpecModel
      */
     public function add($data, $shop_supplier_id)
     {
+        if(hasEmptyValue($data['spec_name'] ?? '')){
+            $this->error = '规格名称不能为空';
+            return false;
+        }
         $isExist = $this->where('shop_supplier_id', '=', $shop_supplier_id)
             ->where('spec_name', '=', $data['spec_name'])
             ->count();
@@ -45,6 +49,10 @@ class Spec extends SpecModel
      */
     public function edit($data)
     {
+        if(hasEmptyValue($data['spec_name'] ?? '')){
+            $this->error = '规格名称不能为空';
+            return false;
+        }
         $isExist = $this->where('shop_supplier_id', '=', $this['shop_supplier_id'])
             ->where('spec_name', '=', $data['spec_name'])
             ->where('spec_id', '<>', $this['spec_id'])

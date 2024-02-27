@@ -631,7 +631,7 @@ function extractLanguage($json)
         if (!$texts) {
             return $json;
         }
-        // 
+        //
         $languages = SettingModel::getSupplierItem(SettingEnum::STORE, User::getShopInfo('shop_supplier_id'))['language'];
         foreach ($languages as $language) {
             $name = $language['name'] ?? 'en';
@@ -640,14 +640,14 @@ function extractLanguage($json)
                 return $texts[$language['key']];
             }
         }
-        // 
+        //
         if (array_key_exists($lang, $texts)) {
             return $texts[$lang];
         }
         if (array_key_exists("en", $texts)) {
             return $texts["en"];
         }
-        // 
+        //
         return  $json;
     } catch (\Throwable $th) {
         return $json;
@@ -730,4 +730,25 @@ function getMachineCode()
         cache('machine_code', $machineCode, 86400);
     }
     return $machineCode;
+}
+
+/**
+ * 函数用于检查数组或 JSON 字符串中是否存在空值
+ *
+ * @param array|string $input
+ * @return bool
+ */
+function hasEmptyValue($input): bool
+{
+    if (is_string($input)) {
+        $input = json_decode($input, true);
+        if ($input === null) {
+            return true;
+        }
+    }
+    if (!is_array($input)) {
+        return true;
+    }
+    // 检查数组中是否存在空值
+    return in_array("", array_map('trim', $input), true);
 }

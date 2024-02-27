@@ -15,6 +15,10 @@ class Product extends ProductModel
      */
     public function add($data)
     {
+        if(hasEmptyValue($data['product_name'] ?? '')){
+            $this->error = '商品名称不能为空';
+            return false;
+        }
         if (!isset($data['image']) || empty($data['image'])) {
             $this->error = '请上传商品图片';
             return false;
@@ -118,6 +122,10 @@ class Product extends ProductModel
      */
     public function edit($data)
     {
+        if(hasEmptyValue($data['product_name'] ?? '')){
+            $this->error = '商品名称不能为空';
+            return false;
+        }
         if (!isset($data['image']) || empty($data['image'])) {
             $this->error = '请上传商品图片';
             return false;
