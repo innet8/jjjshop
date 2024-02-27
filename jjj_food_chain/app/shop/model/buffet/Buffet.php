@@ -48,7 +48,7 @@ class Buffet extends BuffetModel
         $data['price'] = $data['price'] ?? 0; // 价格
         $data['time_limit'] = $data['time_limit'] ?? 0; // 用餐时间
         $data['is_time_limit'] = $data['is_time_limit'] ?? 0; // 是否开启不限制时间 0-否 1-是
-        $data['time_limit'] = $data['is_time_limit'] == 1 ? 0 : $data['time_limit'];
+        $data['time_limit'] = $data['is_time_limit'] == 1 ? $data['time_limit'] : 0;
         $data['status'] = $data['status'] ?? 0; // 状态 0-未开启 1-已开启
         $data['is_comb'] = $data['is_comb'] ?? 0; // 是否组合 0-否 1-是
         $data['buy_limit_status'] = $data['buy_limit_status'] ?? 0; // 是否限购 0-否 1-是
@@ -125,7 +125,7 @@ class Buffet extends BuffetModel
         $data['price'] = $data['price'] ?? 0; // 价格
         $data['time_limit'] = $data['time_limit'] ?? 0; // 用餐时间
         $data['is_time_limit'] = $data['is_time_limit'] ?? 0; // 是否开启不限制时间 0-否 1-是
-        $data['time_limit'] = $data['is_time_limit'] == 1 ? 0 : $data['time_limit'];
+        $data['time_limit'] = $data['is_time_limit'] == 1 ? $data['time_limit'] : 0;
         $data['status'] = $data['status'] ?? 0; // 状态 0-未开启 1-已开启
         $data['is_comb'] = $data['is_comb'] ?? 0; // 是否组合 0-否 1-是
         $data['buy_limit_status'] = $data['buy_limit_status'] ?? 0; // 是否限购 0-否 1-是
