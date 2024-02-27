@@ -378,6 +378,19 @@ class OrderProduct extends BaseModel
             $this->error = '当前订单已被锁定';
             return false;
         }
+        // 检查自助餐商品状态
+        foreach ($order['unSendKitchenProduct'] as $order_product) {
+            if ($order_product['is_buffet_product'] == 1) {
+                $start_timestamp = strtotime($order['create_time']);
+                if (Order::getBuffetRemainingTime($order['order_id'], $start_timestamp) <= 0) {
+                    $this->error = '自助餐时间已到达，自助餐商品不可继续下单';
+                    return false;
+                } else {
+                    break;
+                }
+            }
+
+        }
 
         $this->startTrans();
         try {

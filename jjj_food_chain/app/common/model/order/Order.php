@@ -1228,7 +1228,6 @@ class Order extends BaseModel
             $this->error = '超过限购数量';
             return false;
         }
-        trace($limitNum);
         if ($orderId > 0) {
             $curNum = (new OrderProduct())->where([
                 'order_id' => $orderId,
