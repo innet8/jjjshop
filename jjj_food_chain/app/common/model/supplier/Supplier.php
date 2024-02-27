@@ -186,6 +186,9 @@ class Supplier extends BaseModel
         $shop = SettingModel::getSupplierItem(SettingEnum::STORE, $detail['shop_supplier_id'] ?? 0, $detail['app_id'] ?? 0);
         $detail['name'] = $shop['name'];
         $detail['logo'] = $shop['logoUrl'];
+        // 自助餐设置
+        $buffet = SettingModel::getSupplierItem(SettingEnum::BUFFET, $detail['shop_supplier_id'] ?? 0, $detail['app_id'] ?? 0);
+        $detail['buffet'] = $buffet;
         return $detail;
     }
 }

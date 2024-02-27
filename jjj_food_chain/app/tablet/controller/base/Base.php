@@ -41,6 +41,12 @@ class Base extends Controller
      *    @Apidoc\Param ("language",type="array",desc="常用语言，默认th, en, zh, zh-tw"),
      *    @Apidoc\Param ("default_language",type="array",desc="默认语言，默认en"),
      * })
+     * @Apidoc\Returned("buffet", type="object", desc="自助餐设置", children={
+     *    @Apidoc\Param ("is_open",type="string",desc="是否开启自助餐 0-关闭 1-开启"),
+     *    @Apidoc\Param ("tablet_end_time",type="string",desc="平板结束时间提醒（分）"),
+     *    @Apidoc\Param ("is_buy_continue",type="string",desc="非自助餐商品到时是否能继续选购 0-关闭 1-开启"),
+     *    @Apidoc\Param ("is_add_clock",type="string",desc="是否开启加钟 0-关闭 1-开启"),
+     * })
      */
     public function getInfo()
     {
