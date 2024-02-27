@@ -631,12 +631,6 @@ function extractLanguage($json)
         if (!$texts) {
             return $json;
         }
-        if (array_key_exists($lang, $texts)) {
-            return $texts[$lang];
-        }
-        if (array_key_exists("en", $texts)) {
-            return $texts["en"];
-        }
         // 
         $languages = SettingModel::getSupplierItem(SettingEnum::STORE, User::getShopInfo('shop_supplier_id'))['language'];
         foreach ($languages as $language) {
@@ -645,6 +639,13 @@ function extractLanguage($json)
             if ($name == $lang && array_key_exists($language['key'] ?? '', $texts)) {
                 return $texts[$language['key']];
             }
+        }
+        // 
+        if (array_key_exists($lang, $texts)) {
+            return $texts[$lang];
+        }
+        if (array_key_exists("en", $texts)) {
+            return $texts["en"];
         }
         // 
         return  $json;
