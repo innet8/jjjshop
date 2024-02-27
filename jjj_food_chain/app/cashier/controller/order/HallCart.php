@@ -7,6 +7,7 @@ use app\cashier\model\order\Cart as CartModel;
 use app\cashier\model\order\Order as OrderModel;
 use app\cashier\model\store\Table as TableModel;
 use app\common\model\buffet\Buffet;
+use app\common\model\delay\Delay;
 use app\common\model\order\OrderProduct;
 use hg\apidoc\annotation as Apidoc;
 
@@ -231,5 +232,37 @@ class HallCart extends Controller
     {
         $list = Buffet::getList();
         return $this->renderSuccess('',$list);
+    }
+
+    /**
+     * @Apidoc\Title("桌台-加钟列表")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/delayList")
+     * @Apidoc\Returned()
+     */
+    public function delayList()
+    {
+        $list = Delay::getList();
+        return $this->renderSuccess('',$list);
+    }
+
+    /**
+     * @Apidoc\Title("桌台-加钟")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/addDelay")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台id")
+     * @Apidoc\Param("delay_id", type="int", require=true, desc="加钟id")
+     * @Apidoc\Returned()
+     */
+    public function addDelay($table_id, $delay_id)
+    {
+        $detail = OrderModel::getTableUnderwayOrder($table_id);
+        if (!$detail) {
+            return $this->renderError('当前状态不可操作');
+        }
+        if (!OrderModel::addDelay($detail['order_id'], $delay_id)) {
+            return $this->renderError('加钟失败');
+        }
+        return $this->renderSuccess('加钟成功');
     }
 }

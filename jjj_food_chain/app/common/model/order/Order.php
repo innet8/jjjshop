@@ -3,6 +3,7 @@
 namespace app\common\model\order;
 
 use app\common\model\buffet\Buffet;
+use app\common\model\delay\Delay;
 use think\facade\Log;
 use app\common\library\helper;
 use app\common\model\BaseModel;
@@ -1421,7 +1422,7 @@ class Order extends BaseModel
                     'is_comb' => $buffet['is_comb'],
                     'time_limit' => $buffet['time_limit'],
                 ];
-                (new OrderDelay)->save($inArr);
+                (new OrderBuffet)->save($inArr);
             }
         }
     }
@@ -1429,7 +1430,7 @@ class Order extends BaseModel
     // 获取订单自助餐商品列表
     public static function getOrderBuffetProductArr($order_id)
     {
-        $list = (new OrderDelay)->with(['buffetProduct'])->where('order_id', '=', $order_id)->select();
+        $list = (new OrderBuffet)->with(['buffetProduct'])->where('order_id', '=', $order_id)->select();
         $arr = [];
         foreach ($list as $buffet) {
             foreach ($buffet['buffetProduct'] as $product) {
@@ -1490,9 +1491,27 @@ class Order extends BaseModel
     // 商品详情按自助餐优惠显示
     public static function getBuffetRemainingTime($order_id, $start_timestamp)
     {
-        $time_limit = (new OrderDelay)->where('order_id', '=', $order_id)->max('time_limit');
+        $time_limit = (new OrderBuffet())->where('order_id', '=', $order_id)->max('time_limit');
         $expired_timestamp = $start_timestamp + $time_limit * 60;
         $remaining_time = $expired_timestamp - time();
         return max($remaining_time, 0);
+    }
+
+    // 订单加钟
+    public static function addDelay($order_id, $delay_id)
+    {
+        $delay = (new Delay)->where('status', '=', 1)->where('id', '=', $delay_id)->find();
+        if ($delay) {
+            $inArr = [
+                'order_id' => $order_id,
+                'app_id' => self::$app_id,
+                'delay_id' => $delay_id,
+                'name' => $delay['name'],
+                'price' => $delay['price'],
+                'delay_time' => $delay['delay_time'],
+            ];
+            return (new OrderDelay())->save($inArr);
+        }
+        return false;
     }
 }

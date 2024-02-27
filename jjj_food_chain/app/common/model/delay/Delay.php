@@ -10,7 +10,6 @@ use think\model\concern\SoftDelete;
  */
 class Delay extends BaseModel
 {
-    use SoftDelete;
     protected $name = 'delay';
 
     /**
