@@ -221,7 +221,11 @@ class OrderProduct extends BaseModel
                 }
             }
             // 判断限购
-            $limitNum = ProductModel::getProductLimitNum($this['product_id']);
+            if ($this['is_buffet_product'] == 1) {
+                $limitNum = Order::getBuffetProductLimitNum($this['order_id'], $this['product_id']);
+            } else {
+                $limitNum = ProductModel::getProductLimitNum($this['product_id']);
+            }
             if ($limitNum && $param['product_num'] > $limitNum) {
                 $this->error = '超过限购数量';
                 return false;

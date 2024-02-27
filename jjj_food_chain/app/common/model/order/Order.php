@@ -3,6 +3,7 @@
 namespace app\common\model\order;
 
 use app\common\model\buffet\Buffet;
+use app\common\model\buffet\BuffetProduct;
 use app\common\model\delay\Delay;
 use think\facade\Log;
 use app\common\library\helper;
@@ -1194,6 +1195,13 @@ class Order extends BaseModel
             }
             $orderId = $detail['order_id'];
         }
+        // 检查锁定
+        if ($orderId > 0) {
+            if ($detail->is_lock) {
+                $this->error = '当前订单已被锁定';
+                return false;
+            }
+        }
         //判断商品是否下架
         $product = $this->productState($data['product_id']);
         if (!$product) {
@@ -1209,17 +1217,19 @@ class Order extends BaseModel
                 return false;
             }
         }
+
         // 判断限购
-        $limitNum = ProductModel::getProductLimitNum($data['product_id']);
+        if (isset($data['is_buffet']) && $data['is_buffet'] == 1) {
+            $limitNum = Order::getBuffetProductLimitNum($orderId, $data['product_id']);
+        } else {
+            $limitNum = ProductModel::getProductLimitNum($data['product_id']);
+        }
         if ($limitNum && $data['product_num'] > $limitNum) {
             $this->error = '超过限购数量';
             return false;
         }
+        trace($limitNum);
         if ($orderId > 0) {
-            if ($detail->is_lock) {
-                $this->error = '当前订单已被锁定';
-                return false;
-            }
             $curNum = (new OrderProduct())->where([
                 'order_id' => $orderId,
                 'product_id' => $data['product_id'],
@@ -1518,5 +1528,12 @@ class Order extends BaseModel
             }
         }
         return $i;
+    }
+
+    // 获取订单自助餐商品限购数
+    public static function getBuffetProductLimitNum($order_id, $product_id)
+    {
+        $buffet_ids = (new OrderBuffet)->where('order_id', '=', $order_id)->column('buffet_id');
+        return  (new BuffetProduct)->where('buffet_id', 'in', $buffet_ids)->where('product_id', '=', $product_id)->max('limit_num');
     }
 }

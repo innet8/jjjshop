@@ -2,7 +2,6 @@
 
 namespace app\cashier\controller\order;
 
-use app\cashier\model\order\Cart as CartModel;
 use app\cashier\model\order\Order as OrderModel;
 use app\cashier\model\store\Table as TableModel;
 use app\common\enum\order\OrderStatusEnum;
