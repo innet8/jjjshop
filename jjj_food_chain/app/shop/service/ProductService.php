@@ -39,7 +39,10 @@ class ProductService extends BaseProductService
         // 会员等级列表
         $gradeList = GradeModel::getUsableList();
         // 平台分销规则
-        $basicSetting = AgentSetting::getItem('basic');
+        // DOTO 暂时用不到分销, 先注释掉节省查询时间
+        // $basicSetting = AgentSetting::getItem('basic');
+        $basicSetting = [];
+        // 
         return compact('attribute', 'feed', 'unit', 'spec', 'special', 'category', 'gradeList', 'basicSetting', 'labelList');
     }
 }

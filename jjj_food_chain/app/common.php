@@ -754,7 +754,8 @@ function hasEmptyValue($input): bool
     return in_array("", array_map('trim', $input), true);
 }
 
-/** 获取当前系统设置的语言
+/** 
+ * 获取当前系统设置的语言
  */
 function getSettingLanguages()
 {
