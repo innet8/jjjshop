@@ -158,6 +158,9 @@ class OrderPrinterService
 
         $products = [];
         foreach ($order['product'] as $product) {
+            if (($product['is_buffet_product'] ?? 0) == 1) {
+                continue;
+            }
             $key = $product['product_id'] . $product['product_sku_id'] . $product['product_attr'];
             $products[$key] = [
                 'product_name' => $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : ''),
@@ -215,6 +218,17 @@ class OrderPrinterService
             );
             $printer->printInColumns(__("商品"), __("数量"), __("金额"));
             $printer->appendText("------------------------------------------------\n");
+            // 自助餐
+            if ($order->is_buffet == 1) {
+                foreach ($order['buffet'] ?? [] as $buffet) {
+                    $printer->printInColumns($buffet['name'], '1', $this->currencyUnit . strval($buffet['price']));
+                    $printer->lineFeed();
+                }
+                foreach ($order['delay'] ?? [] as $delay) {
+                    $printer->printInColumns($delay['name'], '1', $this->currencyUnit . strval($delay['price']));
+                    $printer->lineFeed();
+                }
+            }
             // 
             foreach ($products as $product) {
                 $printer->printInColumns($product['product_name'], $product['total_num'] . '', $this->currencyUnit . strval($product['total_price']));
@@ -321,6 +335,20 @@ class OrderPrinterService
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->appendText(printText(__("商品"), __("数量"), __("金额"), $width, $leftWidth));
             $printer->appendText("\n------------------------------------------------\n");
+            // 自助餐
+            if ($order->is_buffet == 1) {
+                foreach ($order['buffet'] ?? [] as $buffet) {
+                    $printer->appendText(printText($buffet['name'], '1', $this->currencyUnit . strval($buffet['price']) , $width, $leftWidth + 2));
+                    $printer->lineFeed();
+                    $printer->lineFeed();
+                }
+                foreach ($order['delay'] ?? [] as $delay) {
+                    $printer->appendText(printText($delay['name'], '1', $this->currencyUnit . strval($delay['price']) , $width, $leftWidth + 2));
+                    $printer->lineFeed();
+                    $printer->lineFeed();
+                }
+            }
+            // 
             foreach ($products as $product) {
                 $printer->appendText(printText($product['product_name'], $product['total_num'] . '', $this->currencyUnit . strval($product['total_price']) , $width, $leftWidth + 2));
                 $printer->lineFeed();
@@ -414,6 +442,15 @@ class OrderPrinterService
         //
         $content .= printText(__('商品'), __('数量'),  __('金额'), $width, $leftWidth);
         $content .= "--------------------------------<BR>";
+        // 自助餐
+        if ($order->is_buffet == 1) {
+            foreach ($order['buffet'] ?? [] as $buffet) {
+                $content .= printText($buffet['name'], '1', $this->currencyUnit . strval($buffet['price']) , $width, $leftWidth + 2);
+            }
+            foreach ($order['delay'] ?? [] as $delay) {
+                $content .= printText($delay['name'], '1', $this->currencyUnit . strval($delay['price']) , $width, $leftWidth + 2);
+            }
+        }
         foreach ($products as $product) {
             $content .= printText($product['product_name'], $product['total_num'] . '', $this->currencyUnit . strval($product['total_price']) , $width, $leftWidth + 2);
         }
