@@ -446,7 +446,7 @@ class Order extends BaseModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public static function detail($where, $with = ['user', 'address', 'buffet', 'product' => ['image'], 'extract', 'supplier', 'cashier'])
+    public static function detail($where, $with = ['user', 'address', 'buffet', 'delay', 'product' => ['image'], 'extract', 'supplier', 'cashier'])
     {
         is_array($where) ? $filter = $where : $filter['order_id'] = (int)$where;
         return self::with($with)->where($filter)->order('order_id', 'desc')->find();
@@ -1488,30 +1488,35 @@ class Order extends BaseModel
 
     }
 
-    // 商品详情按自助餐优惠显示
+    // 获取自助餐订单剩余就餐时间
     public static function getBuffetRemainingTime($order_id, $start_timestamp)
     {
         $time_limit = (new OrderBuffet())->where('order_id', '=', $order_id)->max('time_limit');
-        $expired_timestamp = $start_timestamp + $time_limit * 60;
+        $delay_time = (new OrderDelay())->where('order_id', '=', $order_id)->sum('delay_time');
+        $expired_timestamp = $start_timestamp + $time_limit * 60 + $delay_time * 60;
         $remaining_time = $expired_timestamp - time();
         return max($remaining_time, 0);
     }
 
     // 订单加钟
-    public static function addDelay($order_id, $delay_id)
+    public static function addDelay($order_id, $delay_ids)
     {
-        $delay = (new Delay)->where('status', '=', 1)->where('id', '=', $delay_id)->find();
-        if ($delay) {
-            $inArr = [
-                'order_id' => $order_id,
-                'app_id' => self::$app_id,
-                'delay_id' => $delay_id,
-                'name' => $delay['name'],
-                'price' => $delay['price'],
-                'delay_time' => $delay['delay_time'],
-            ];
-            return (new OrderDelay())->save($inArr);
+        $i = 0;
+        foreach ($delay_ids as $delay_id) {
+            $delay = (new Delay)->where('status', '=', 1)->where('id', '=', $delay_id)->find();
+            if ($delay) {
+                $inArr = [
+                    'order_id' => $order_id,
+                    'app_id' => self::$app_id,
+                    'delay_id' => $delay_id,
+                    'name' => $delay['name'],
+                    'price' => $delay['price'],
+                    'delay_time' => $delay['delay_time'],
+                ];
+                (new OrderDelay())->save($inArr);
+                $i++;
+            }
         }
-        return false;
+        return $i;
     }
 }

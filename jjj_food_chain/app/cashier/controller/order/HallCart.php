@@ -251,16 +251,19 @@ class HallCart extends Controller
      * @Apidoc\Method("POST")
      * @Apidoc\Url ("/index.php/cashier/order.HallCart/addDelay")
      * @Apidoc\Param("table_id", type="int", require=true, desc="桌台id")
-     * @Apidoc\Param("delay_id", type="int", require=true, desc="加钟id")
+     * @Apidoc\Param("delay_ids", type="int", require=true, desc="加钟id组")
      * @Apidoc\Returned()
      */
-    public function addDelay($table_id, $delay_id)
+    public function addDelay($table_id, $delay_ids)
     {
         $detail = OrderModel::getTableUnderwayOrder($table_id);
         if (!$detail) {
             return $this->renderError('当前状态不可操作');
         }
-        if (!OrderModel::addDelay($detail['order_id'], $delay_id)) {
+        if (!is_array($delay_ids)) {
+            return $this->renderError('参数错误');
+        }
+        if (!OrderModel::addDelay($detail['order_id'], $delay_ids)) {
             return $this->renderError('加钟失败');
         }
         return $this->renderSuccess('加钟成功');

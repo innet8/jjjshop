@@ -21,7 +21,7 @@ class Delay extends BaseModel
     ];
 
     /**
-     * 获取自助餐名称
+     * 获取名称
      */
     public function getNameTextAttr($value, $data = [])
     {
