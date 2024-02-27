@@ -267,9 +267,11 @@ class HallCart extends Controller
         if (empty($delay_ids)) {
             return $this->renderError('请选择加钟');
         }
-        if (!OrderModel::addDelay($detail['order_id'], $delay_ids)) {
-            return $this->renderError('加钟失败');
+        if (OrderModel::addDelay($detail['order_id'], $delay_ids)) {
+            (new OrderModel())->reloadPrice($detail['order_id']);
+            return $this->renderSuccess('加钟成功');
         }
-        return $this->renderSuccess('加钟成功');
+        return $this->renderError('加钟失败');
+
     }
 }

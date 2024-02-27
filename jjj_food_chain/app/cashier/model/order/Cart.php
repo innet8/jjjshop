@@ -4,6 +4,7 @@ namespace app\cashier\model\order;
 
 use app\common\enum\order\OrderStatusEnum;
 use app\common\enum\settings\SettingEnum;
+use app\common\model\order\Order;
 use app\common\model\order\OrderProduct;
 use app\common\model\settings\Setting as SettingModel;
 use app\common\model\plus\cashier\Cart as CartModel;
@@ -910,9 +911,12 @@ class Cart extends CartModel
             $consume_fee = round($consume_fee, 2);
         }
         $total_consumption_tax_money = $consume_fee;    // 总消费税
-
+        // 自助餐费用
+        $buffetPrice = Order::getBuffetPrice($order_id);
+        // 加钟费用
+        $delayPrice = Order::getDelayPrice($order_id);
         // 应付
-        $pay_price = $total_consumption_tax_money + $total_product_pay_price + $total_service_money;
+        $pay_price = $total_consumption_tax_money + $total_product_pay_price + $total_service_money + $buffetPrice + $delayPrice;
         // 优惠折扣
         if (isset($order['discount_ratio']) && $order['discount_ratio'] > 0) {
             $pay_price = round($pay_price * $order['discount_ratio'] / 100, 2);

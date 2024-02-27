@@ -982,7 +982,7 @@ class Order extends BaseModel
     }
 
     /**
-     * 重新计算订单价格信息（服务费+消费税+会员折扣）（折扣抹零计算重置)
+     * 重新计算订单价格信息（服务费+消费税+会员折扣+自助餐+加钟费）（折扣抹零计算重置)
      * @param $order_id
      * @param $re_order_no
      * @return array|\think\Model|null
@@ -1119,8 +1119,19 @@ class Order extends BaseModel
             $consume_fee = round($consume_fee, 2);
             $original_consume_fee = round($original_consume_fee, 2);
         }
+        // 自助餐费用
+        $buffetPrice = Order::getBuffetPrice($order_id);
+        trace('自助餐费用');
+        trace($buffetPrice);
+        // 加钟费用
+        $delayPrice = Order::getDelayPrice($order_id);
+        trace('加钟费用');
+        trace($delayPrice);
+
         // 应付
-        $pay_price = $total_price + $service_money + $service_fee + $consume_fee; // 应付金额 = 商品折扣总价（会员折扣） + 原服务费 + 新服务费用 + 消费税
+        $pay_price = $total_price + $service_money + $service_fee + $consume_fee + $buffetPrice + $delayPrice; // 应付金额 = 商品折扣总价（会员折扣） + 原服务费 + 新服务费用 + 消费税 + 自助餐 + 加钟费
+        trace('应付');
+        trace($pay_price);
         // 优惠折扣
         $discount_money = 0;
         if ($order['discount_ratio'] > 0) {
@@ -1534,5 +1545,17 @@ class Order extends BaseModel
     {
         $buffet_ids = (new OrderBuffet)->where('order_id', '=', $order_id)->column('buffet_id');
         return  (new BuffetProduct)->where('buffet_id', 'in', $buffet_ids)->where('product_id', '=', $product_id)->max('limit_num');
+    }
+
+    // 订单自助餐费用
+    public static function getBuffetPrice($order_id)
+    {
+        return (new OrderBuffet)->where('order_id', '=', $order_id)->sum('price');
+    }
+
+    // 订单加钟费用
+    public static function getDelayPrice($order_id)
+    {
+        return (new OrderDelay())->where('order_id', '=', $order_id)->sum('price');
     }
 }
