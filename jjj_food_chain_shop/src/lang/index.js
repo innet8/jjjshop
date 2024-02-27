@@ -8,9 +8,10 @@ import auto_ko from "./auto/ko.json"
 
 let lang = '';
 let defaultLang = ''
-if(JSON.parse(localStorage.getItem("Language"))){
-    lang = JSON.parse(localStorage.getItem("Language")).language;
-    defaultLang = JSON.parse(localStorage.getItem("Language")).languageList[0].name;
+let language = JSON.parse(localStorage.getItem("Language"))
+if(language){
+    lang = language.language;
+    defaultLang = language.languageList[0]?.name;
 }
 
 const i18n = createI18n({
