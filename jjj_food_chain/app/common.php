@@ -761,11 +761,11 @@ function getSettingLanguages()
 {
     if (!($shop_supplier_id = Cache::get('common_shop_supplier_id')) || !Cache::get('first_shop_info')) {
         $shop_supplier_id = User::getShopInfo('shop_supplier_id');
-        Cache::tag('cache')->set('common_shop_supplier_id', $shop_supplier_id);
+        Cache::tag('common'. $shop_supplier_id)->set('common_shop_supplier_id', $shop_supplier_id);
     }
     if (!$languages = Cache::get('common_setting_languages' . $shop_supplier_id)) {
         $languages = SettingModel::getSupplierItem(SettingEnum::STORE, $shop_supplier_id)['language'];
-        Cache::tag('cache')->set('common_setting_languages' . $shop_supplier_id, $languages);
+        Cache::tag('common'. $shop_supplier_id)->set('common_setting_languages' . $shop_supplier_id, $languages);
     }
     return $languages;
 }

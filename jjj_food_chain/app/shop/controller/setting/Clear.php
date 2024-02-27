@@ -109,9 +109,8 @@ class Clear extends Controller
             }
         }
         // 
-        Cache::has('first_shop_info') && Cache::set('first_shop_info', null);
-        Cache::has('common_shop_supplier_id') && Cache::set('common_shop_supplier_id', null);
-        Cache::has('common_setting_languages' . $app_id) && Cache::set('common_setting_languages'. $app_id, null);
+        Cache::has('first_shop_info') && Cache::tag('firstshop')->set('first_shop_info', null);
+        Cache::tag('common'.$app_id)->clear();
     }
 
     /**

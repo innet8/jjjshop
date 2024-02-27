@@ -58,10 +58,7 @@ class Category extends CategoryModel
      */
     public function deleteCache($type, $is_special, $shop_supplier_id)
     {
-        Cache::delete('category_' . $shop_supplier_id . '_' . static::$app_id . $type . $is_special);
-        Cache::delete('category_' . $shop_supplier_id . '_' . static::$app_id . $type . $is_special . '_' . checkDetect());
-        Cache::delete('category_api_' . $shop_supplier_id . '_' . static::$app_id . $type . $is_special);
-        Cache::delete('category_cashier_' . $shop_supplier_id . '_' . static::$app_id . $type . $is_special);
+        Cache::tag('category'. $shop_supplier_id. $is_special . $type)->clear();
         return true;
     }
 
