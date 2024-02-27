@@ -82,8 +82,8 @@ class Category extends BaseModel
             $shop_supplier_id = $detail['shop_supplier_id'];
         }
         $model = new static;
-        // DOTO 去缓存
-        // if (!$name && !Cache::get('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. $name)) {
+        $cacheKey = 'category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. '_' . checkDetect();
+        if ($name != '' || !($result = Cache::get($cacheKey))) {
             $data = $model->with(['images', 'child'])
                 ->where('parent_id', '=', 0)
                 ->where('type', '=', $type)
@@ -108,10 +108,13 @@ class Category extends BaseModel
                     ->select();
                 $all = !empty($data) ? $data->toArray() : [];
             }
-            return $all;
-            // Cache::tag('cache')->set('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. $name, $all);
-        // }
-        // return Cache::get('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. $name);
+            // 
+            $result = $all;
+            if ($name == '') {
+                Cache::tag('cache')->set($cacheKey, $all);
+            }
+        }
+        return $result;
     }
 
     /**
@@ -228,15 +231,6 @@ class Category extends BaseModel
     public static function getCacheTree($type, $is_special, $store = '', $name = '')
     {
         return self::getALL($type, $is_special, $store, $name);
-    }
-
-    /**
-     * 获取所有分类(树状结构)
-     * @return string
-     */
-    public static function getCacheTreeJson()
-    {
-        return json_encode(static::getCacheTree());
     }
 
     /**

@@ -71,7 +71,7 @@ class Setting extends BaseModel
      */
     public static function getSupplierItem($key, $shop_supplier_id, $app_id = null)
     {
-        $languageList = $key != SettingEnum::STORE ? (self::getSupplierItem(SettingEnum::STORE, User::getShopInfo('shop_supplier_id'))['language'] ?? []) : [];
+        $languageList = $key != SettingEnum::STORE ? (self::getSupplierItem(SettingEnum::STORE, $shop_supplier_id)['language'] ?? []) : [];
         $data = self::getAll($app_id, $shop_supplier_id, $languageList);
         $data_key = $data[$key];
         if (isset($data_key)) {
@@ -110,6 +110,8 @@ class Setting extends BaseModel
     {
         $static = new static;
         is_null($app_id) && $app_id = $static::$app_id;
+        is_null($shop_supplier_id) && $shop_supplier_id = $static::$app_id;
+        $shop_supplier_id == 0 && $shop_supplier_id = $static::$app_id;
         if (!$data = Cache::get('setting_' . $app_id . '_' . $shop_supplier_id)) {
             $setting = $static->where(compact('app_id'))->where('shop_supplier_id', $shop_supplier_id)->select();
             $data = empty($setting) ? [] : array_column($static->collection($setting)->toArray(), null, 'key');
@@ -160,10 +162,10 @@ class Setting extends BaseModel
     public static function updateSetting(string $key, array $values, int $shop_supplier_id = 0): bool
     {
         $model = self::detail($key, $shop_supplier_id);
-
         // 删除系统设置缓存
         Cache::set('setting_' . self::$app_id. '_' . $shop_supplier_id, null);
-
+        Cache::set('common_setting_languages' . $shop_supplier_id, null);
+        // 
         $model = $model->save(
             [
                 'key' => $key,
@@ -173,7 +175,6 @@ class Setting extends BaseModel
                 'shop_supplier_id' => $shop_supplier_id
             ]
         );
-
         return $model !== null;
     }
 

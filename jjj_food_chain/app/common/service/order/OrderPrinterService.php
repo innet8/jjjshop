@@ -158,7 +158,7 @@ class OrderPrinterService
 
         $products = [];
         foreach ($order['product'] as $product) {
-            if (($product['is_buffet_product'] ?? 0) == 1) {
+            if (($product['is_buffet_product'] ?? 0) == 1 && $product['total_price'] <= 0) {
                 continue;
             }
             $key = $product['product_id'] . $product['product_sku_id'] . $product['product_attr'];

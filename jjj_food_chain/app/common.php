@@ -3,6 +3,7 @@
 use help\SystemHelp;
 use \Firebase\JWT\JWT;
 use \Firebase\JWT\Key;
+use think\facade\Cache;
 use think\facade\Config;
 use think\facade\Request;
 use app\common\model\shop\User;
@@ -631,8 +632,8 @@ function extractLanguage($json)
         if (!$texts) {
             return $json;
         }
-        //
-        $languages = SettingModel::getSupplierItem(SettingEnum::STORE, User::getShopInfo('shop_supplier_id'))['language'];
+        // 
+        $languages = getSettingLanguages();
         foreach ($languages as $language) {
             $name = $language['name'] ?? 'en';
             $name = $name == 'zhtw' ? 'zhtw' : $name;
@@ -752,3 +753,19 @@ function hasEmptyValue($input): bool
     // 检查数组中是否存在空值
     return in_array("", array_map('trim', $input), true);
 }
+
+/** 获取当前系统设置的语言
+ */
+function getSettingLanguages()
+{
+    if (!($shop_supplier_id = Cache::get('common_shop_supplier_id')) || !Cache::get('first_shop_info')) {
+        $shop_supplier_id = User::getShopInfo('shop_supplier_id');
+        Cache::tag('cache')->set('common_shop_supplier_id', $shop_supplier_id);
+    }
+    if (!$languages = Cache::get('common_setting_languages' . $shop_supplier_id)) {
+        $languages = SettingModel::getSupplierItem(SettingEnum::STORE, $shop_supplier_id)['language'];
+        Cache::tag('cache')->set('common_setting_languages' . $shop_supplier_id, $languages);
+    }
+    return $languages;
+}
+
