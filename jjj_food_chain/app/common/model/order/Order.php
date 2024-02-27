@@ -1121,17 +1121,11 @@ class Order extends BaseModel
         }
         // 自助餐费用
         $buffetPrice = Order::getBuffetPrice($order_id);
-        trace('自助餐费用');
-        trace($buffetPrice);
         // 加钟费用
         $delayPrice = Order::getDelayPrice($order_id);
-        trace('加钟费用');
-        trace($delayPrice);
 
         // 应付
         $pay_price = $total_price + $service_money + $service_fee + $consume_fee + $buffetPrice + $delayPrice; // 应付金额 = 商品折扣总价（会员折扣） + 原服务费 + 新服务费用 + 消费税 + 自助餐 + 加钟费
-        trace('应付');
-        trace($pay_price);
         // 优惠折扣
         $discount_money = 0;
         if ($order['discount_ratio'] > 0) {
@@ -1429,6 +1423,7 @@ class Order extends BaseModel
     // 创建订单自助餐关联信息
     public static function createOrderBuffet($order_id, array $buffet_ids)
     {
+        $time_limit = 0;
         foreach ($buffet_ids as $id) {
             $buffet = (new Buffet)->where('status', '=', 1)->where('id', '=', $id)->find();
             if ($buffet) {
@@ -1442,9 +1437,11 @@ class Order extends BaseModel
                     'is_comb' => $buffet['is_comb'],
                     'time_limit' => $buffet['time_limit'],
                 ];
+                $time_limit = max($time_limit, $buffet['time_limit']);
                 (new OrderBuffet)->save($inArr);
             }
         }
+        return $time_limit;
     }
 
     // 获取订单自助餐商品列表
@@ -1509,12 +1506,9 @@ class Order extends BaseModel
     }
 
     // 获取自助餐订单剩余就餐时间
-    public static function getBuffetRemainingTime($order_id, $start_timestamp)
+    public static function getBuffetRemainingTime($buffet_expired_time)
     {
-        $time_limit = (new OrderBuffet())->where('order_id', '=', $order_id)->max('time_limit');
-        $delay_time = (new OrderDelay())->where('order_id', '=', $order_id)->sum('delay_time');
-        $expired_timestamp = $start_timestamp + $time_limit * 60 + $delay_time * 60;
-        $remaining_time = $expired_timestamp - time();
+        $remaining_time = $buffet_expired_time - time();
         return max($remaining_time, 0);
     }
 
@@ -1522,6 +1516,7 @@ class Order extends BaseModel
     public static function addDelay($order_id, $delay_ids)
     {
         $i = 0;
+        $delay_time = 0;
         foreach ($delay_ids as $delay_id) {
             $delay = (new Delay)->where('status', '=', 1)->where('id', '=', $delay_id)->find();
             if ($delay) {
@@ -1534,9 +1529,22 @@ class Order extends BaseModel
                     'delay_time' => $delay['delay_time'],
                 ];
                 (new OrderDelay())->save($inArr);
+                $delay_time = max($delay_time, $delay['delay_time']);
                 $i++;
             }
         }
+        $order = (new Order)->where('order_id', '=', $order_id)->find();
+        if (!$order) {
+            return 0;
+        }
+        $now_timestamp = time();
+        $delay_time_second = $delay_time * 60;
+        if ($order['buffet_expired_time'] >= $now_timestamp) {
+            $buffet_expired_time = $order['buffet_expired_time'] + $delay_time_second;
+        } else {
+            $buffet_expired_time = $now_timestamp + $delay_time_second;
+        }
+        $order->save(['buffet_expired_time' => $buffet_expired_time]);
         return $i;
     }
 

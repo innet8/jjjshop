@@ -383,8 +383,7 @@ class OrderProduct extends BaseModel
         if ($type != 'payment') {
             foreach ($order['unSendKitchenProduct'] as $order_product) {
                 if ($order_product['is_buffet_product'] == 1) {
-                    $start_timestamp = strtotime($order['create_time']);
-                    if (Order::getBuffetRemainingTime($order['order_id'], $start_timestamp) <= 0) {
+                    if (Order::getBuffetRemainingTime($order['buffet_expired_time']) <= 0) {
                         $this->error = '自助餐时间已到达，自助餐商品不可继续下单';
                         return false;
                     } else {

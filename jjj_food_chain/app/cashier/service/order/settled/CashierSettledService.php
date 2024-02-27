@@ -129,6 +129,12 @@ abstract class CashierSettledService extends BaseService
         }
         // 创建新的订单
         $status = $this->model->transaction(function () use ($order) {
+            // 创建自助餐
+            if ($this->params['is_buffet'] ?? 0) {
+                $buffet_time_limit = OrderModel::createOrderBuffet($this->model['order_id'], $this->params['buffet_ids']);
+                $buffet_expired_time = time() + $buffet_time_limit * 60;
+                $order['buffet_expired_time'] = $buffet_expired_time;
+            }
             // 创建订单事件
             return $this->createOrderEvent($order);
         });
@@ -137,10 +143,7 @@ abstract class CashierSettledService extends BaseService
             $this->model->onPayment($this->model['order_no'], $order['pay_type']);
         }
         $orderDetail = OrderModel::detail($this->model['order_id']);
-        // 创建自助餐
-        if ($this->params['is_buffet'] ?? 0) {
-            OrderModel::createOrderBuffet($this->model['order_id'], $this->params['buffet_ids']);
-        }
+
         // 菜品打印
         (new OrderPrinterService)->printProductTicket($orderDetail, 20);
         // 
@@ -354,6 +357,7 @@ abstract class CashierSettledService extends BaseService
             'setting_service_money' => $order['setting_service_money'] ?? 0,
             'consumption_tax_money' => $order['consumption_tax_money'],
             'is_buffet' => $order['is_buffet'],
+            'buffet_expired_time' => isset($order['buffet_expired_time']) ? $order['buffet_expired_time'] : 0,
         ];
         if ($data['eat_type'] == 20) {
             $startTime = strtotime(date('Y-m-d'));
