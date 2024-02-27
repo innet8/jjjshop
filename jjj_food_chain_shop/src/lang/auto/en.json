@@ -829,5 +829,21 @@
     "全部状态": "All status",
     "自助餐名称": "buffet name",
     "请输入自助餐名称": "Please enter buffet name",
-    "语言": "language"
+    "语言": "language",
+    "限制用餐时间": "Limit meal times",
+    "不限制": "not limited",
+    "限制": "limit",
+    "请输入用餐时间": "Please enter meal time",
+    "组合": "combination",
+    "选中商品": "Selected product",
+    "限购": "Purchase limit",
+    "添加自助餐": "Add buffet",
+    "用餐时间": "dining time",
+    "选择商品": "Select product",
+    "平板结束时间提醒": "Tablet end time reminder",
+    "请输入平板结束时间提醒": "Please enter the tablet end time reminder",
+    "分": "point",
+    "非自助餐商品到时继续选购": "Continue to purchase non-buffet items when the time comes",
+    "加钟": "add clock",
+    "请输入时间": "Please enter time"
 }

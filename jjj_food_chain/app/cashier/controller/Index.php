@@ -87,7 +87,6 @@ class Index extends Controller
         $cashier = SettingModel::getSupplierItem(SettingEnum::CASHIER, $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
         unset($cashier['cashier_password']);
         unset($cashier['advanced_password']);
-        unset($cashier['language_list']);
         $user['cashier'] = $cashier;
         // 平板端设置
         $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);

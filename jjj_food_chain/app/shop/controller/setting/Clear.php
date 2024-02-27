@@ -108,6 +108,8 @@ class Clear extends Controller
                 $this->deltree($item['dirPath']);
             }
         }
+        // 
+        Cache::has('first_shop_info') && Cache::set('first_shop_info', null);
     }
 
     /**

@@ -4,6 +4,7 @@ import auto_en from "./auto/en.json"
 import auto_zhtw from "./auto/zh-tw.json"
 import auto_th from "./auto/th.json"
 import auto_ja from "./auto/ja.json"
+import auto_ko from "./auto/ko.json"
 
 let lang = '';
 let defaultLang = ''
@@ -23,6 +24,7 @@ const i18n = createI18n({
         zhtw: { ...auto_zhtw },
         th: { ...auto_th },
         ja: { ...auto_ja },
+        ko: { ...auto_ko },
     },
     warnHtmlMessage: false,
 })

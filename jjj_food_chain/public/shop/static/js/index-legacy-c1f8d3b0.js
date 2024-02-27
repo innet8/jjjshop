@@ -1,1 +1,0 @@
-System.register(["./_plugin-vue_export-helper-legacy-61c4c9d1.js","./@vue-legacy-8ef99c9b.js"],(function(e,t){"use strict";var n,u,r;return{setters:[function(e){n=e._},function(e){u=e.o,r=e.c}],execute:function(){e("default",n({},[["render",function(e,t,n,c,i,s){return u(),r("div",null," setting ")}]]))}}}));

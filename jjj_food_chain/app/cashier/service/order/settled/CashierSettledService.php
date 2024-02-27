@@ -137,14 +137,13 @@ abstract class CashierSettledService extends BaseService
             $this->model->onPayment($this->model['order_no'], $order['pay_type']);
         }
         $orderDetail = OrderModel::detail($this->model['order_id']);
-        //
         // 创建自助餐
         if ($this->params['is_buffet'] ?? 0) {
             OrderModel::createOrderBuffet($this->model['order_id'], $this->params['buffet_ids']);
         }
-
         // 菜品打印
         (new OrderPrinterService)->printProductTicket($orderDetail, 20);
+        // 
         return $this->model['order_id'];
     }
 
