@@ -199,7 +199,9 @@ export default {
                     self.form.model.product_status = res.data.model.product_status.value;
                     self.form.model.product_name = JSON.parse(self.form.model.product_name)
                     self.form.model.product_unit = JSON.parse(self.form.model.product_unit)
-
+                    if(self.form.model.special_id == 0){
+                        self.form.model.special_id = '';
+                    }
                     self.form.model.sku.map((item, index) => {
                         if (item.spec_name) {
                             self.form.model.sku[index].spec_name = JSON.parse(item.spec_name)

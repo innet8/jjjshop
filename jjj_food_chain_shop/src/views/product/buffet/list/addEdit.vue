@@ -3,13 +3,13 @@
         :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
             <template v-for="(item, index) in languageList" :key="index">
-                <el-form-item :label="$t('自助餐名称') + `(${item.value})`" :prop="`feed_name.${[item.key]}`"
+                <el-form-item :label="$t('自助餐名称') + `(${item.value})`" :prop="`name.${[item.key]}`"
                     :rules="[{ required: true, message: $t('请输入自助餐名称') }]">
-                    <el-input type="text" v-model="form.feed_name[item.key]" :placeholder="$t('请输入自助餐名称')"></el-input>
+                    <el-input type="text" v-model="form.name[item.key]" :placeholder="$t('请输入自助餐名称')"></el-input>
                 </el-form-item>
             </template>
 
-            <el-form-item :label="$t('加料排序')" prop="sort">
+            <el-form-item :label="$t('排序')" prop="sort">
                 <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('接近0，排序等级越高')"
                     v-model.number="form.sort"></el-input-number>
             </el-form-item>
@@ -17,37 +17,46 @@
                 <el-input-number :controls="false" :min="0" :max="1000000" :placeholder="$t('请输入价格')"
                     v-model.number="form.price"></el-input-number>
             </el-form-item>
-            <el-form-item :label="$t('限制用餐时间')" prop="parent">
-                <el-radio-group v-model="parent" @change="radioChange">
-                    <el-radio :label="1">{{ $t('不限制') }}</el-radio>
-                    <el-radio :label="0">{{ $t('限制') }}</el-radio>
+            <el-form-item :label="$t('限制用餐时间')" prop="is_time_limit" :rules="[{ required: true, message: '' }]">
+                <el-radio-group v-model="form.is_time_limit">
+                    <el-radio :label="0">{{ $t('不限制') }}</el-radio>
+                    <el-radio :label="1">{{ $t('限制') }}</el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item v-if="parent == 0" :label="$t('')" prop="time">
+
+            <el-form-item v-if="form.is_time_limit == 1" :label="$t('')" prop="time_limit"
+                :rules="[{ required: true, message: $t('请输入用餐时间') }]">
                 <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('请输入用餐时间')"
-                    v-model.number="form.time"></el-input-number>
+                    v-model.number="form.time_limit"></el-input-number>
             </el-form-item>
 
             <el-form-item :label="$t('状态')" prop="status" :rules="[{ required: true, message: '' }]">
-                <el-radio-group v-model="form.status" @change="radioChange">
-                    <el-radio :label="1">{{ $t('开启') }}</el-radio>
-                    <el-radio :label="0">{{ $t('关闭') }}</el-radio>
-                </el-radio-group>
-            </el-form-item>
-            <el-form-item :label="$t('组合')" prop="status" :rules="[{ required: true, message: '' }]">
-                <el-radio-group v-model="form.status" @change="radioChange">
+                <el-radio-group v-model="form.status">
                     <el-radio :label="1">{{ $t('开启') }}</el-radio>
                     <el-radio :label="0">{{ $t('关闭') }}</el-radio>
                 </el-radio-group>
             </el-form-item>
 
-            <el-form-item :label="$t('商品')" prop="product" :rules="[{ required: true, message: '' }]">
-                <el-button type="primary" @click="selectList">{{ $t('选中商品') }}</el-button>
+            <el-form-item :label="$t('组合')" prop="is_comb" :rules="[{ required: true, message: '' }]">
+                <el-radio-group v-model="form.is_comb">
+                    <el-radio :label="1">{{ $t('开启') }}</el-radio>
+                    <el-radio :label="0">{{ $t('关闭') }}</el-radio>
+                </el-radio-group>
+            </el-form-item>
+
+            <el-form-item :label="$t('商品')" prop="product_ids" :rules="[{
+                required: true,
+                validator: () => {
+                    return form.product_ids.length > 0 ? true : false;
+                },
+                message: $t('请选中商品')
+            }]">
+                <el-button type="primary" @click="selectList('select')">{{ $t('选中商品') }}</el-button>
                 <div class="select-list" v-if="select_list.length > 0">
                     <template v-for="item, index in select_list">
-                        <el-tooltip class="box-item" effect="dark" :content="item.nickName" placement="top">
+                        <el-tooltip class="box-item" effect="dark" :content="item.product_name_text" placement="top">
                             <div class="select-button">
-                                <p>{{ item.nickName }}</p>
+                                <p>{{ item.product_name_text }}</p>
                                 <el-icon class="select-icon" @click="deleteOne(index)">
                                     <CircleCloseFilled />
                                 </el-icon>
@@ -57,23 +66,42 @@
                 </div>
             </el-form-item>
 
-            <el-form-item :label="$t('限购')" prop="Limited" :rules="[{ required: true, message: '' }]">
-                <el-radio-group v-model="Limited" @change="radioChange">
+            <el-form-item :label="$t('限购')" prop="buy_limit_products" :rules="[{
+                required: true,
+                validator: () => {
+                    return (form.buy_limit_products.length == 0 && form.buy_limit_status == 1) ? false : true;
+                },
+                message: $t('请选中商品')
+            }]">
+                <el-radio-group v-model="form.buy_limit_status">
                     <el-radio :label="1">{{ $t('开启') }}</el-radio>
                     <el-radio :label="0">{{ $t('关闭') }}</el-radio>
                 </el-radio-group>
-                <div class="limit-list"  v-if="Limited == 1" >
-                    <el-button type="primary" @click="">{{ $t('选中商品') }}</el-button>
-                    <div class="limit-product-list">
-                        <div class="limit-product-box">
-                            <el-input type="text" v-model="time" disabled></el-input>
-                            <el-input-number :controls="false" :min="0" :max="999" style="width: 200px !important;" :placeholder="$t('请输入限购数量')"
-                                v-model.number="form.time"></el-input-number>
-                            <el-icon class="delete-icon" @click="handleDelete(index)">
-                                <Delete />
-                            </el-icon>
+                <div class="limit-list" v-if="form.buy_limit_status == 1">
+                    <el-button type="primary" @click="selectList('limit')" :disabled="!limit_ids">{{ $t('选中商品')
+                    }}</el-button>
+                    <template v-for="item, index in form.buy_limit_products">
+                        <div class="limit-product-list">
+                            <div class="limit-product-box">
+                                <el-input type="text" v-model="item.name" readonly></el-input>
+                                <el-form-item label="" style="margin-top: 16px;" prop="item.limit_num" :rules="[{
+                                    required: true,
+                                    validator: () => {
+                                        return item.limit_num ? true : false;
+                                    },
+                                    message: $t('请输入限购数量')
+                                }]">
+                                    <el-input-number :controls="false" :min="0" :max="999" style="width: 200px !important;"
+                                        :placeholder="$t('请输入限购数量')" v-model.number="item.limit_num"></el-input-number>
+                                </el-form-item>
+
+                                <el-icon class="delete-icon" @click="handleDelete(index)">
+                                    <Delete />
+                                </el-icon>
+                            </div>
                         </div>
-                    </div>
+                    </template>
+
                 </div>
             </el-form-item>
         </el-form>
@@ -84,17 +112,20 @@
                 <el-button type="primary" @click="submit" :loading="loading">{{ $t('确定') }}</el-button>
             </div>
         </template>
-
+        <productList v-if="open_product" :open_product="open_product" :limit_ids="limit_ids" :selectType="selectType"
+            @closeDialogFunc="closeDialogFunc($event)">
+        </productList>
     </el-dialog>
-    <productList v-if="open_product" :open_product="open_product"  @closeDialog="closeDialogFunc($event)"></productList>
+
 </template>
 <script>
+import PorductApi from '@/api/product.js';
 import { languageStore } from '@/store/model/language.js';
 import productList from './productList.vue';
 const languageData = JSON.stringify(languageStore().languageData);
 const languageList = languageStore().languageList;
 export default {
-    components:{productList},
+    components: { productList },
     data() {
         return {
             languageList: languageList,
@@ -103,15 +134,18 @@ export default {
             open_product: false,
 
             form: {
-                feed_name: JSON.parse(languageData),
+                name: JSON.parse(languageData),
                 sort: null,
                 price: null,
-                time: null,
+                is_time_limit: 1,
+                time_limit: null,
                 status: 1,
+                is_comb: 1,
+                buy_limit_status: 1,
+                buy_limit_products: [],
+                product_ids: '',
             },
 
-            Limited: 1,
-            parent: 1,
             formRules: {
 
                 price: [{
@@ -133,20 +167,11 @@ export default {
                     trigger: 'blur'
                 }],
             },
-            select_list: [
-                {
-                    nickName: 'ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss',
-                },
-                {
-                    nickName: 111,
-                },
-                {
-                    nickName: 111,
-                },
-                {
-                    nickName: 111,
-                }
-            ],
+            select_list: [],
+            limit_list: [],
+            multiple_selection: [],
+            limit_ids: '',
+            selectType: '',
         }
     },
     props: {
@@ -164,40 +189,84 @@ export default {
     methods: {
 
         submit() {
-            // let self = this;
-            // let params = JSON.parse(JSON.stringify(self.form));
-            // params.feed_name = JSON.stringify(params.feed_name)
-            // self.$refs.form.validate((valid) => {
-            //     if (valid) {
-            //         self.loading = true;
-            //         PorductApi.addFeed(params,true).then(data => {
-            //             self.loading = false;
-            //             this.$ElMessage({
-            //                 message: $t('添加成功'),
-            //                 type: 'success'
-            //             });
-            //             self.dialogFormVisible(true);
-            //         }).catch(error => {
-            //             self.loading = false;
-            //         });
-            //     }
-            // });
+            let self = this;
+            self.$refs.form.validate((valid) => {
+                if (valid) {
+                    let params = JSON.parse(JSON.stringify(self.form));
+                    params.name = JSON.stringify(params.name)
+                    params.product_ids = params.product_ids.join(',')
+                    self.loading = true;
+                    PorductApi.addBuffet(params, true).then(data => {
+                        self.loading = false;
+                        this.$ElMessage({
+                            message: $t('添加成功'),
+                            type: 'success'
+                        });
+                        self.dialogFormVisible(true);
+                    }).catch(error => {
+                        self.loading = false;
+                    });
+                }
+            });
         },
 
-        selectList(){
+        selectList(e) {
+            if (e == 'select') {
+                this.selectType = e;
+                this.multiple_selection = this.select_list;
+            }
+            if (e == 'limit') {
+                this.selectType = e;
+                this.limit_ids = this.form.product_ids.join(',');
+            }
             this.open_product = true;
         },
 
         /*关闭弹窗*/
         closeDialogFunc(e) {
             this.open_product = e.openDialog;
-            if (e.type == 'success') {
-              
+            if (e.type == 'select') {
+                let map = new Map();
+                [this.select_list, e.data].flat().forEach(obj => map.set(obj.product_id, obj));
+                this.select_list = Array.from(map.values());
+
+                this.form.product_ids = [];
+                this.select_list.map(item => {
+                    this.form.product_ids.push(item.product_id)
+                })
+
+                this.$refs.form.validateField('product_ids');
+                this.limit_ids = this.form.product_ids.join(',');
+            }
+            if (e.type == 'limit') {
+                let map = new Map();
+                [this.limit_list, e.data].flat().forEach(obj => map.set(obj.product_id, obj));
+                this.limit_list = Array.from(map.values());
+                this.form.buy_limit_products = []
+                this.limit_list.map(item => {
+                    this.form.buy_limit_products.push({
+                        name: item.product_name_text,
+                        product_id: item.product_id,
+                        limit_num: null,
+                    })
+                })
+                this.$refs.form.validateField('buy_limit_products');
             }
         },
 
         deleteOne(index) {
             this.select_list.splice(index, 1)
+            this.form.product_ids = []
+            this.select_list.map(item => {
+                this.form.product_ids.push(item.product_id)
+            })
+            this.limit_ids = this.form.product_ids.join(',')
+            this.$refs.form.validateField('product_ids');
+        },
+        handleDelete(index) {
+            this.form.buy_limit_products.splice(index, 1)
+            this.limit_list.splice(index, 1)
+            this.$refs.form.validateField('buy_limit_products');
         },
 
         /*关闭弹窗*/
