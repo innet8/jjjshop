@@ -113,7 +113,7 @@ class Index extends Controller
             'shop_logo_img' => isset($config['shop_logo_img']) ? $config['shop_logo_img'] : '',
         ];
         // 
-        $language = SettingModel::getSupplierItem(SettingEnum::STORE, User::getShopInfo('shop_supplier_id'), User::getShopInfo('app_id'))['language'] ?? [];
+        $language = getSettingLanguages();
         // 
         return $this->renderSuccess('', compact('settings', 'language'));
     }
