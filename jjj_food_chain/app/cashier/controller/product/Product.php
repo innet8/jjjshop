@@ -37,7 +37,7 @@ class Product extends Controller
                 ['table_id', '=', $param['table_id']],
                 ['order_status', '=', OrderStatusEnum::NORMAL]
             ]);
-            if ($order) {
+            if ($order && $order['is_buffet'] == 1) {
                 $buffetProductArr = Order::getOrderBuffetProductArr($order['order_id']);
                 $list['data'] = Order::handleBuffetProductIndex($list['data'], $buffetProductArr);
             }

@@ -54,7 +54,6 @@ class Call extends BaseModel
      */
     public function getUnprocessedCount(int $shopSupplierId = 0)
     {
-//        return $this->withoutGlobalScope()->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->count();
         return $this->withoutGlobalScope()->where('status', 0)->where('shop_supplier_id', $shopSupplierId)
             ->group('table_id')
             ->count();

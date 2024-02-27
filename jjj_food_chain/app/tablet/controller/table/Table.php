@@ -4,6 +4,7 @@ namespace app\tablet\controller\table;
 
 use app\common\enum\settings\SettingEnum;
 use app\common\model\settings\Setting as SettingModel;
+use app\tablet\controller\order\Order;
 use app\tablet\model\store\Table as TableModel;
 use app\tablet\controller\Controller;
 use hg\apidoc\annotation as Apidoc;
@@ -95,8 +96,10 @@ class Table extends Controller
         // 
         $is_lock = 0;
         $buffet_time_remind = [
+            'is_buffet' => 0,
             'remind' => 0,
-            'minute' => 0
+            'minute' => 0,
+            'buffet_remaining_time' => 0,
         ];
         // 
         if ($tableId > 0) {
@@ -106,8 +109,10 @@ class Table extends Controller
                 $buffet = SettingModel::getSupplierItem(SettingEnum::BUFFET, $detail['shop_supplier_id'] ?? 0, $detail['app_id'] ?? 0);
                 $is_lock = $detail->is_lock;
                 $buffet_time_remind = [
+                    'is_buffet' => $detail['is_buffet'],
                     'remind' => OrderModel::buffetTimeRemind($tableId, $detail['buffet_expired_time'], $buffet['tablet_end_time']),
-                    'minute' => $buffet['tablet_end_time']
+                    'minute' => $buffet['tablet_end_time'],
+                    'buffet_remaining_time' => OrderModel::getBuffetRemainingTime($detail['buffet_expired_time'])
                 ];
             }
         }
