@@ -1214,7 +1214,7 @@ class Order extends BaseModel
                 return false;
             }
             // 检查自助餐商品可添加状态
-            if ($detail['is_buffet'] == 1 && $detail['buffet_expired_time'] < time()) {
+            if ($detail['is_buffet'] == 1 && $detail['buffet_expired_time'] != -1 && $detail['buffet_expired_time'] < time()) {
                 // 自助餐设置
                 $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $this->cashier['user']['shop_supplier_id'] ?? 0, $this->cashier['user']['app_id'] ?? 0);
                 if ($buffetSetting['is_buy_continue'] != 1) {
@@ -1233,7 +1233,7 @@ class Order extends BaseModel
         // 判断库存
         $deductStockType = ProductModel::where('product_id', $data['product_id'])->value('deduct_stock_type');
         if ($deductStockType == DeductStockTypeEnum::CREATE) {
-            $stockStatus = $this->productStockState($data['product_id'], $data['product_sku_id'], $orderId);
+            $stockStatus = $this->productStockState($data['product_id'], $data['product_sku_id'] ?? 0, $orderId);
             if (!$stockStatus) {
                 $this->error = '商品库存不足，请重新选择';
                 return false;
@@ -1281,7 +1281,7 @@ class Order extends BaseModel
                         'image_id' => $productDetail['logo']['image_id'],
                         'deduct_stock_type' => $productDetail['deduct_stock_type'],
                         'spec_type' => $productDetail['spec_type'],
-                        'product_sku_id' => $data['product_sku_id'],
+                        'product_sku_id' => $data['product_sku_id'] ?? 0,
                         'product_attr' => $data['describe'],
                         'content' => $productDetail['content'],
                         'product_price' => $data['price'],
@@ -1315,7 +1315,7 @@ class Order extends BaseModel
                         'image_id' => $productDetail['logo']['image_id'],
                         'deduct_stock_type' => $productDetail['deduct_stock_type'],
                         'spec_type' => $productDetail['spec_type'],
-                        'product_sku_id' => $data['product_sku_id'],
+                        'product_sku_id' => $data['product_sku_id'] ?? 0,
                         'product_attr' => $data['describe'],
                         'content' => $productDetail['content'],
                         'product_price' => $data['price'],
@@ -1356,7 +1356,7 @@ class Order extends BaseModel
                     'image_id' => $productDetail['logo']['image_id'],
                     'deduct_stock_type' => $productDetail['deduct_stock_type'],
                     'spec_type' => $productDetail['spec_type'],
-                    'product_sku_id' => $data['product_sku_id'],
+                    'product_sku_id' => $data['product_sku_id'] ?? 0,
                     'product_attr' => $data['describe'],
                     'content' => $productDetail['content'],
                     'product_price' => $data['price'],
@@ -1454,7 +1454,15 @@ class Order extends BaseModel
                     'is_comb' => $buffet['is_comb'],
                     'time_limit' => $buffet['time_limit'],
                 ];
-                $time_limit = max($time_limit, $buffet['time_limit']);
+                if ($time_limit != -1) {
+                    if ($buffet['time_limit'] == 0) {
+                        $time_limit = -1;
+                    } else {
+                        $time_limit = max($time_limit, $buffet['time_limit']);
+                    }
+
+                }
+
                 (new OrderBuffet)->save($inArr);
             }
         }
