@@ -902,15 +902,6 @@ class Cart extends CartModel
             $service_fee = 0;
         }
         $total_service_money = $table_service_money + $service_fee; // 总服务费
-        // 消费税
-        $consumeFee = SettingModel::getSupplierItem(SettingEnum::TAX_RATE, $shop_supplier_id);
-        $consume_fee = 0;
-        if ($consumeFee['is_open']) {
-            $consume_rate = helper::bcdiv($consumeFee['tax_rate'], 100, 4);
-            $consume_fee = helper::bcmul($total_product_pay_price, $consume_rate, 3);
-            $consume_fee = round($consume_fee, 2);
-        }
-        $total_consumption_tax_money = $consume_fee;    // 总消费税
         // 自助餐费用
         $buffetPrice = Order::getBuffetPrice($order_id);
         $buffetPrice = helper::bcmul($buffetPrice, $meal_num, 3);
@@ -919,6 +910,16 @@ class Cart extends CartModel
         $delayPrice = Order::getDelayPrice($order_id);
         $delayPrice = helper::bcmul($delayPrice, $meal_num, 3);
         $delayPrice = round($delayPrice, 2);
+        // 消费税
+        $consumeFee = SettingModel::getSupplierItem(SettingEnum::TAX_RATE, $shop_supplier_id);
+        $consume_fee = 0;
+        if ($consumeFee['is_open']) {
+            $consume_rate = helper::bcdiv($consumeFee['tax_rate'], 100, 4);
+            $total_product_pay_price = $total_product_pay_price + $buffetPrice + $delayPrice;
+            $consume_fee = helper::bcmul($total_product_pay_price, $consume_rate, 3);
+            $consume_fee = round($consume_fee, 2);
+        }
+        $total_consumption_tax_money = $consume_fee;    // 总消费税
         // 应付
         $pay_price = $total_consumption_tax_money + $total_product_pay_price + $total_service_money + $buffetPrice + $delayPrice;
         // 优惠折扣

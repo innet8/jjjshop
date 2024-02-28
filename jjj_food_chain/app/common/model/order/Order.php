@@ -1107,17 +1107,6 @@ class Order extends BaseModel
         } else {
             $service_fee = 0;
         }
-        // 消费税计算
-        $consumeFee = SettingModel::getSupplierItem(SettingEnum::TAX_RATE, $order['supplier']['shop_supplier_id']);
-        $consume_fee = 0;
-        $original_consume_fee = 0;
-        if ($consumeFee['is_open']) {
-            $consume_rate = helper::bcdiv($consumeFee['tax_rate'], 100, 4);
-            $consume_fee = helper::bcmul($total_price, $consume_rate, 3);
-            $original_consume_fee = helper::bcmul($order_price, $consume_rate, 3); // 原消费税
-            $consume_fee = round($consume_fee, 2);
-            $original_consume_fee = round($original_consume_fee, 2);
-        }
         // 自助餐费用
         $buffetPrice = Order::getBuffetPrice($order_id);
         $buffetPrice = helper::bcmul($buffetPrice, $meal_num, 3);
@@ -1126,6 +1115,18 @@ class Order extends BaseModel
         $delayPrice = Order::getDelayPrice($order_id);
         $delayPrice = helper::bcmul($delayPrice, $meal_num, 3);
         $delayPrice = round($delayPrice, 2);
+        // 消费税计算
+        $consumeFee = SettingModel::getSupplierItem(SettingEnum::TAX_RATE, $order['supplier']['shop_supplier_id']);
+        $consume_fee = 0;
+        $original_consume_fee = 0;
+        if ($consumeFee['is_open']) {
+            $consume_rate = helper::bcdiv($consumeFee['tax_rate'], 100, 4);
+            $total_price = $total_price + $buffetPrice + $delayPrice;
+            $consume_fee = helper::bcmul($total_price, $consume_rate, 3);
+            $original_consume_fee = helper::bcmul($order_price, $consume_rate, 3); // 原消费税
+            $consume_fee = round($consume_fee, 2);
+            $original_consume_fee = round($original_consume_fee, 2);
+        }
 
         // 应付
         $pay_price = $total_price + $service_money + $service_fee + $consume_fee + $buffetPrice + $delayPrice; // 应付金额 = 商品折扣总价（会员折扣） + 原服务费 + 新服务费用 + 消费税 + 自助餐 + 加钟费
