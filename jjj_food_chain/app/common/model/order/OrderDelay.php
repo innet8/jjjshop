@@ -16,8 +16,15 @@ class OrderDelay extends BaseModel
      * @var string[]
      */
     protected $append = [
-
+        'name_text',
     ];
 
+    /**
+     * 获取自助餐名称
+     */
+    public function getNameTextAttr($value, $data = [])
+    {
+        return extractLanguage($value ?: $data['name']);
+    }
 
 }
