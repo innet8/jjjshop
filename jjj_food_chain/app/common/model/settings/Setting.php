@@ -558,9 +558,7 @@ class Setting extends BaseModel
                     // 语言列表
                     'language_list' => $languageList,
                     // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zhtw'
-                    'language' => [
-                        'th', 'en', 'zh', 'zhtw', 'ja'
-                    ],
+                    'language' => [],
                     // 默认语言
                     'default_language' => 'en',
                 ],
@@ -584,9 +582,7 @@ class Setting extends BaseModel
                     // 语言列表
                     'language_list' => $languageList,
                     // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zhtw'
-                    'language' => [
-                        'th', 'en', 'zh', 'zhtw', 'ja'
-                    ],
+                    'language' => [],
                     'default_language' => 'en', // 默认语言
                 ],
             ],
@@ -607,9 +603,7 @@ class Setting extends BaseModel
                     // 语言列表
                     'language_list' => $languageList,
                     // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zhtw'
-                    'language' => [
-                        'th', 'en', 'zh', 'zhtw', 'ja'
-                    ],
+                    'language' => [],
                     'default_language' => 'en', // 默认语言
                 ],
             ],
