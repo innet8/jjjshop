@@ -117,10 +117,10 @@ class Clear extends Controller
             }
             // 
             if ($key === 'category') {
-                Cache::tag($item['key'] . '0' . '0')->clear();
-                Cache::tag($item['key'] . '0' . '1')->clear();
-                Cache::tag($item['key'] . '1' . '0')->clear();
-                Cache::tag($item['key'] . '1' . '1')->clear();
+                Cache::tag('category' . $app_id . '0' . '0')->clear();
+                Cache::tag('category' . $app_id . '0' . '1')->clear();
+                Cache::tag('category' . $app_id . '1' . '0')->clear();
+                Cache::tag('category' . $app_id . '1' . '1')->clear();
             } 
         }
     }

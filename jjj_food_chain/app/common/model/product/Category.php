@@ -50,7 +50,7 @@ class Category extends BaseModel
 
     public function child()
     {
-        return $this->hasMany('app\\common\\model\\product\\Category', 'parent_id', 'category_id')->order(['sort' => 'asc', 'create_time' => 'desc'])->with(['images', 'child']);
+        return $this->hasMany('app\\common\\model\\product\\Category', 'parent_id', 'category_id')->order(['sort' => 'asc', 'create_time' => 'desc'])->with(['images']);
     }
 
     /**
@@ -72,6 +72,11 @@ class Category extends BaseModel
      */
     public static function getALL($type, $is_special, $store = '', $name = '')
     {
+        $request = request();
+        $page = $request->param('page');
+        $list_rows = $request->param('list_rows');
+        $isPaginate = ($request->is_paginate !== false && $page != null && $list_rows != null);
+        
         $user = $store['user'];
         $supplier = $store['supplier'];
         if ($supplier['is_main'] == 1 || $supplier['category_set'] == 20) {
@@ -80,9 +85,10 @@ class Category extends BaseModel
             $detail = SupplierModel::where('is_main', '=', 1)->find();
             $shop_supplier_id = $detail['shop_supplier_id'];
         }
+
         $model = new static;
         $cacheKey = 'category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. '_' . checkDetect();
-        if ($name != '' || !($result = Cache::get($cacheKey))) {
+        if ($name != '' || $isPaginate || !($result = Cache::get($cacheKey))) {
             $data = $model->with(['images', 'child'])
                 ->where('parent_id', '=', 0)
                 ->where('type', '=', $type)
@@ -91,8 +97,9 @@ class Category extends BaseModel
                 ->where('shop_supplier_id', '=', $shop_supplier_id)
                 ->when($name != '', function($q) use($name) {
                     $q->like('name', $name);
-                })
-                ->select();
+                });
+
+            $data = $isPaginate ? $data->paginate(compact('page', 'list_rows')) : $data->select();
             $all = !empty($data) ? $data->toArray() : [];
             // doto 暂时不需要自动添加特殊分类
             // if ($is_special == 1 && empty($all)) {
@@ -110,7 +117,7 @@ class Category extends BaseModel
             // }
             // 
             $result = $all;
-            if ($name == '') {
+            if ($name == '' && !$isPaginate) {
                 Cache::tag('category'. $shop_supplier_id. $is_special . $type)->set($cacheKey, $all);
             }
         }
@@ -226,6 +233,7 @@ class Category extends BaseModel
      */
     public static function getCacheTree($type, $is_special, $store = '', $name = '')
     {
+        request()->is_paginate = false;
         return self::getALL($type, $is_special, $store, $name);
     }
 

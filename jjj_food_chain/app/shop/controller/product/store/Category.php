@@ -18,6 +18,7 @@ class Category extends Controller
      * @Apidoc\Method ("POST")
      * @Apidoc\Url("/index.php/shop/product.store.category/index")
      * @Apidoc\Param("name", type="string", require=false, desc="分类名称")
+     * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Category\getCacheAll", desc="列表")
      */
     public function index()
@@ -33,12 +34,14 @@ class Category extends Controller
      * @Apidoc\Title("特殊商品分类列表")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url("/index.php/shop/product.store.category/list")
+     * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Category\getCacheAll", desc="列表")
      */
     public function list()
     {
         $model = new CategoryModel;
-        $list = $model->getCacheAll(1, 1, $this->store) ?: [];
+        $name = isset($params['name']) ? $params['name'] : '';
+        $list = $model->getCacheAll(1, 1, $this->store, $name) ?: [];
         return $this->renderSuccess('', compact('list'));
     }
 

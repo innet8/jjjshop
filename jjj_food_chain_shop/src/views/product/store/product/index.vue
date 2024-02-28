@@ -166,30 +166,29 @@ export default {
                 Params.category_id = Number(Params.category_id[Params.category_id.length - 1])
             }
             self.loading = true;
-            PorductApi.storeProductList(Params, true)
-                .then(data => {
-                    self.loading = false;
-                    self.tableData = data.data.list.data;
-                    self.categoryList = [];
-                    data.data.category.map((item, index) => {
-                        self.categoryList.push({
-                            value: item.category_id,
-                            label: item.name_text,
-                            children: [],
-                        })
-                        item.child.map((items, indexs) => {
-                            self.categoryList[index].children.push({
-                                value: items.category_id,
-                                label: items.name_text,
-                            })
+            PorductApi.storeProductList(Params, true).then(data => {
+                self.loading = false;
+                self.tableData = data.data.list.data;
+                self.categoryList = [];
+                data.data.category.map((item, index) => {
+                    self.categoryList.push({
+                        value: item.category_id,
+                        label: item.name_text,
+                        children: [],
+                    })
+                    item.child.map((items, indexs) => {
+                        self.categoryList[index].children.push({
+                            value: items.category_id,
+                            label: items.name_text,
                         })
                     })
-                    self.totalDataNumber = data.data.list.total;
-                    self.product_count = data.data.product_count;
                 })
-                .catch(error => {
-                    self.loading = false;
-                });
+                self.totalDataNumber = data.data.list.total;
+                self.product_count = data.data.product_count;
+            })
+            .catch(error => {
+                self.loading = false;
+            });
         },
 
         /*搜索查询*/
