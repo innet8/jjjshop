@@ -18,7 +18,7 @@
                 </el-form-item>
             </el-form>
             <el-button size="small" type="primary" icon="Plus" v-auth="'/product/buffet/list/add'" @click="addClick">{{
-                $t('添加商品') }}</el-button>
+                $t('添加自助餐') }}</el-button>
         </div>
 
         <!--内容-->
