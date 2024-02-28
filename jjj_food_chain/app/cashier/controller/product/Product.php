@@ -30,17 +30,19 @@ class Product extends Controller
         // 获取全部商品列表
         $param = $this->postData();
         $model = new ProductModel;
-        $list = $model->list(array_merge(['shop_supplier_id' => $this->cashier['user']['shop_supplier_id']], $param));
-        // 如果选择自助餐
+        $order = null;
         if (isset($param['table_id'])) {
             $order = Order::detail([
                 ['table_id', '=', $param['table_id']],
                 ['order_status', '=', OrderStatusEnum::NORMAL]
             ]);
-            if ($order && $order['is_buffet'] == 1) {
-                $buffetProductArr = Order::getOrderBuffetProductArr($order['order_id']);
-                $list['data'] = Order::handleBuffetProductIndex($list['data'], $buffetProductArr);
-            }
+            $param['order_id'] = $order['order_id'];
+        }
+        $list = $model->list(array_merge(['shop_supplier_id' => $this->cashier['user']['shop_supplier_id']], $param));
+        // 如果选择自助餐
+        if ($order && $order['is_buffet'] == 1) {
+            $buffetProductArr = Order::getOrderBuffetProductArr($order['order_id']);
+            $list['data'] = Order::handleBuffetProductIndex($list['data'], $buffetProductArr, $order['meal_num']);
         }
 
         return $this->renderSuccess('', compact('list'));

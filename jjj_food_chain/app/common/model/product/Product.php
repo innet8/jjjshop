@@ -142,6 +142,14 @@ class Product extends BaseModel
     }
 
     /**
+     * 关联订单商品
+     */
+    public function orderProducts()
+    {
+        return $this->hasMany(OrderProduct::class, 'product_id', 'product_id');
+    }
+
+    /**
      * 商品状态
      */
     public function getProductStatusAttr($value, $data)
