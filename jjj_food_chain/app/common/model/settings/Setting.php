@@ -210,6 +210,8 @@ class Setting extends BaseModel
                     'avatarUrl' => base_url() . 'image/user/avatarUrl.png',
                     //商城logo
                     'logoUrl' => base_url() . 'image/diy/logo.png',
+                    // 系统语言
+                    'language' => [],
                 ],
             ],
             SettingEnum::TRADE => [
