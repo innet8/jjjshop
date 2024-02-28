@@ -117,9 +117,9 @@ export default {
                 },
                 carousel: [],
                 is_auto_send: 1,
-                auto_lock_screen: 300,
+                auto_lock_screen: null,
                 language: [],
-                default_language: 'th',
+                default_language: null,
                 cashier_password: false,
             },
             password: '',
@@ -185,10 +185,11 @@ export default {
                 if (self.form.cashier_password) {
                     self.password = 666666
                 }
-                self.form.language.map((item)=>{
-                    if(!self.languageList.find(obj => obj.key == item)){
-                        self.form.language = self.form.language.filter(element => element !== item);
-                    }
+                // 
+                self.form.auto_lock_screen = Number(self.form.auto_lock_screen || 0);
+                // 
+                self.form.language = self.form.language.filter(lang => {
+                    return self.languageList.map(h=>h.key).indexOf(lang) != -1;
                 })
             }).catch(error => {
                 self.loading = false;
