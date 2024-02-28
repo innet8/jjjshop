@@ -116,7 +116,6 @@
             @closeDialogFunc="closeDialogFunc($event)">
         </productList>
     </el-dialog>
-
 </template>
 <script>
 import PorductApi from '@/api/product.js';
@@ -182,9 +181,34 @@ export default {
         title: {
             default: '',
         },
+        editData: {
+            default: '',
+        },
     },
     created() {
         this.dialogVisible = this.open_dialog;
+        if (this.editData) {
+            this.form = JSON.parse(JSON.stringify(this.editData));
+            this.form.name = JSON.parse(this.form.name);
+            this.form.time_limit > 0 ? this.form.is_time_limit = 1 : this.form.is_time_limit = 0;
+            this.select_list = this.form.buffetProducts;
+            this.form.product_ids = [];
+            this.select_list.map((item,index) => {
+                this.select_list[index].product_name_text = item.product.product_name_text;
+                this.form.product_ids.push(item.product_id)
+            })
+            this.limit_ids = this.form.product_ids.join(',')
+            this.limit_list = this.form.buffetLimitProducts;
+                this.form.buy_limit_products = []
+                this.limit_list.map(item => {
+                    this.form.buy_limit_products.push({
+                        name: item.product.product_name_text,
+                        product_id: item.product_id,
+                        limit_num: item.limit_num,
+                    })
+                })
+            console.log(this.form);
+        }
     },
     methods: {
 
@@ -192,20 +216,39 @@ export default {
             let self = this;
             self.$refs.form.validate((valid) => {
                 if (valid) {
-                    let params = JSON.parse(JSON.stringify(self.form));
-                    params.name = JSON.stringify(params.name)
-                    params.product_ids = params.product_ids.join(',')
-                    self.loading = true;
-                    PorductApi.addBuffet(params, true).then(data => {
-                        self.loading = false;
-                        this.$ElMessage({
-                            message: $t('添加成功'),
-                            type: 'success'
+                    if(this.editData){
+                        let params = JSON.parse(JSON.stringify(self.form));
+                        params.name = JSON.stringify(params.name);
+                        params.buffet_id = params.id;
+                        params.product_ids = params.product_ids.join(',')
+                        self.loading = true;
+                        PorductApi.editBuffet(params, true).then(data => {
+                            self.loading = false;
+                            this.$ElMessage({
+                                message: $t('添加成功'),
+                                type: 'success'
+                            });
+                            self.dialogFormVisible(true);
+                        }).catch(error => {
+                            self.loading = false;
                         });
-                        self.dialogFormVisible(true);
-                    }).catch(error => {
-                        self.loading = false;
-                    });
+                    }
+                    else{
+                        let params = JSON.parse(JSON.stringify(self.form));
+                        params.name = JSON.stringify(params.name)
+                        params.product_ids = params.product_ids.join(',')
+                        self.loading = true;
+                        PorductApi.addBuffet(params, true).then(data => {
+                            self.loading = false;
+                            this.$ElMessage({
+                                message: $t('添加成功'),
+                                type: 'success'
+                            });
+                            self.dialogFormVisible(true);
+                        }).catch(error => {
+                            self.loading = false;
+                        });
+                    }
                 }
             });
         },
@@ -263,6 +306,7 @@ export default {
             this.limit_ids = this.form.product_ids.join(',')
             this.$refs.form.validateField('product_ids');
         },
+
         handleDelete(index) {
             this.form.buy_limit_products.splice(index, 1)
             this.limit_list.splice(index, 1)

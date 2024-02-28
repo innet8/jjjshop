@@ -241,9 +241,25 @@ let ProductApi = {
     getBuffetList(data, errorback) {
         return request._post('/shop/product.buffet.buffet/list', data, errorback);
     },
-    // 自助餐
+    // 添加自助餐
     addBuffet(data, errorback) {
         return request._post('/shop/product.buffet.buffet/add', data, errorback);
+    },
+    // 编辑自助餐
+    editBuffet(data, errorback) {
+        return request._post('/shop/product.buffet.buffet/edit', data, errorback);
+    },
+    // 删除自助餐
+    deleteBuffet(data, errorback) {
+        return request._post('/shop/product.buffet.buffet/delete', data, errorback);
+    },
+    // 自助餐状态
+    stateBuffet(data, errorback) {
+        return request._post('/shop/product.buffet.buffet/state', data, errorback);
+    },
+    // 自助餐状态
+    combBuffet(data, errorback) {
+        return request._post('/shop/product.buffet.buffet/comb', data, errorback);
     },
     
 }
