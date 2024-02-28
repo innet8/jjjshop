@@ -22,6 +22,7 @@ class Buffet extends Controller
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("list", type="array", ref="app\shop\model\buffet\Buffet\getShopBuffetList", children={
      *  @Apidoc\Returned("name_text", type="string", desc="自助餐名称(多语言)"),
+     *  @Apidoc\Returned("can_delete", type="string", desc="是否能删除 0-否 1-是"),
      * })
      */
     public function list()

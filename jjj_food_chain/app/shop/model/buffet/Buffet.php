@@ -35,6 +35,9 @@ class Buffet extends BuffetModel
         $list = $model->with(['buffetProducts', 'buffetLimitProducts'])
             ->order(['sort' => 'asc', 'create_time' => 'desc'])
             ->paginate($params);
+        foreach ($list as &$item) {
+           $item['can_delete'] = $this->getCanDelete($item);
+        }
         return $list;
     }
 

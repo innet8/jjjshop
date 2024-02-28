@@ -3,8 +3,8 @@
         <div class="common-seach-wrap">
             <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
 
-                <el-form-item :label="$t('商品状态')">
-                    <el-select size="small" v-model="searchForm.status" :placeholder="$t('商品状态')">
+                <el-form-item :label="$t('状态')">
+                    <el-select size="small" v-model="searchForm.status" :placeholder="$t('全部状态')">
                         <el-option :label="$t('全部状态')" value=""></el-option>
                         <el-option :label="$t('开启')" value="1"></el-option>
                         <el-option :label="$t('关闭')" value="0"></el-option>
@@ -18,7 +18,7 @@
                 </el-form-item>
             </el-form>
             <el-button size="small" type="primary" icon="Plus" v-auth="'/product/buffet/list/add'" @click="addClick">{{
-                $t('添加商品') }}</el-button>
+                $t('添加自助餐') }}</el-button>
         </div>
 
         <!--内容-->
@@ -62,7 +62,7 @@
                         <template #default="scope">
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
                                 v-auth="'/product/buffet/list/edit'">{{ $t('编辑') }}</el-button>
-                            <el-button @click="deleteClick(scope.row)" type="primary" link size="small"
+                            <el-button @click="deleteClick(scope.row)" :disabled="scope.row.can_delete == 0" type="primary" link size="small"
                                 v-auth="'/product/buffet/list/delete'">{{ $t('删除') }}</el-button>
                         </template>
                     </el-table-column>
