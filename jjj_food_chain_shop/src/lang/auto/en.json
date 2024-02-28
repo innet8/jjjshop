@@ -845,5 +845,7 @@
     "分": "point",
     "非自助餐商品到时继续选购": "Continue to purchase non-buffet items when the time comes",
     "加钟": "add clock",
-    "请输入时间": "Please enter time"
+    "请输入时间": "Please enter time",
+    "请选中商品": "Please select the product",
+    "编辑自助餐": "Edit Buffet"
 }
