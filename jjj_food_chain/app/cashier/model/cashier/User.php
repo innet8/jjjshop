@@ -46,12 +46,13 @@ class User extends UserModel
             $this->error = '当前无权限，请联系管理员';
             return false;
         }
+        // DOTO 先注释方便测试人员测试
         // 检查是否有未交班的收银员
-        $cashierUser = $this->where(['cashier_online' => 1])->find();
-        if ($cashierUser && $cashierUser['shop_user_id'] != $user['shop_user_id']) {
-            $this->error = __('收银员') . ' ' . $cashierUser['real_name'] . ' ' . __('未交班，请先交班');
-            return false;
-        }
+        // $cashierUser = $this->where(['cashier_online' => 1])->find();
+        // if ($cashierUser && $cashierUser['shop_user_id'] != $user['shop_user_id']) {
+        //     $this->error = __('收银员') . ' ' . $cashierUser['real_name'] . ' ' . __('未交班，请先交班');
+        //     return false;
+        // }
         // 保存登录状态
         $user['token'] = signToken($user['shop_user_id'], 'cashier');
         // 更新收银员信息
