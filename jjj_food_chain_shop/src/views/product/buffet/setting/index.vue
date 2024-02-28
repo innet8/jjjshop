@@ -32,13 +32,13 @@
 
                     <div class="limit-product-list">
                         <template v-for="item, index in form.add_clock" :key="index">
-                            <div class="limit-product-box">
+                            <div v-if="item.action != 'delete'" class="limit-product-box">
                                 <el-input type="text" v-model="item.name" :placeholder="$t('名称')"></el-input>
                                 <el-input-number :controls="false" :min="0" :max="999" style="width: 200px !important;"
-                                    :placeholder="$t('请输入时间')" v-model.number="item.time"></el-input-number>
-                                <p>{{ $t('分') }}</p>
+                                    :placeholder="$t('请输入时间')" v-model.number="item.delay_time"></el-input-number>
+                                <p class="limit-product-p">{{ $t('分') }}</p>
                                 <el-input-number :controls="false" :min="0" :max="999" style="width: 200px !important;"
-                                    :placeholder="$t('请输入价格')" v-model.number="item.value"></el-input-number>
+                                    :placeholder="$t('请输入价格')" v-model.number="item.price"></el-input-number>
                                 <el-icon class="delete-icon" @click="handleDelete(index)">
                                     <Delete />
                                 </el-icon>
@@ -82,6 +82,10 @@ export default {
             PorductApi.getSettingBuffet().then(data => {
                 self.loading = false;
                 this.form = data.data.vars.values;
+                this.form.add_clock.map((item,index)=>{
+                    this.form.add_clock[index].action = 'edit';
+                })
+            
             }).catch(error => {
                 self.loading = false;
             });
@@ -96,20 +100,23 @@ export default {
                     message: $t('保存成功'),
                     type: 'success'
                 });
+                this.getData();
             }).catch(error => {
                 self.loading = false;
             });
         },
         add(){
             this.form.add_clock.push({
+                id:0,
                 name:'',
-                time:null,
-                value:null,
+                delay_time:null,
+                price:null,
+                action:'add',
             })
         },
 
         handleDelete(index) {
-            this.form.add_clock.splice(index, 1);
+            this.form.add_clock[index].action = 'delete';
         },
     },
 }
@@ -137,7 +144,9 @@ export default {
             display: flex;
             gap: 12px;
             align-items: center;
-
+            .limit-product-p{
+                flex-shrink: 0;
+            }
             .delete-icon {
                 font-size: 24px;
                 cursor: pointer;
