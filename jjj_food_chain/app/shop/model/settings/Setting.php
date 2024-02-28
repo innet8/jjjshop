@@ -17,7 +17,7 @@ class Setting extends SettingModel
         // 删除系统设置缓存
         Cache::set('setting_' . self::$app_id . '_' . $shop_supplier_id, null);
         Cache::tag('common'.$shop_supplier_id)->clear();
-        // 
+        //
         $data = [
             'key' => $key,
             'describe' => SettingEnum::data()[$key]['describe'],
@@ -33,7 +33,7 @@ class Setting extends SettingModel
                 $setting = self::detail($enum, $shop_supplier_id);
                 $settingDefaultLanguage = $setting['values']['default_language'] ?? '';
                 if (!in_array($settingDefaultLanguage, $names)) {
-                    $settingValues = $setting['values'];
+                    $settingValues = $setting['values'] ?? [];
                     if (isset($settingValues['language']) && !in_array($names[0], $settingValues['language']) ) {
                         $settingValues['language'][] = $names[0];
                         // 对比并删除不匹配的值
@@ -45,12 +45,23 @@ class Setting extends SettingModel
                         $settingValues['language'] = array_values($settingValues['language']);
                     }
                     $settingValues['default_language'] = $names[0];
-                    $setting->values = $settingValues;
-                    $setting->save();
+                    //
+                    if (!$setting->isEmpty()) {
+                        $setting->values = $settingValues;
+                        $setting->save();
+                    } else {
+                        $settingValues['language'] = $names;
+                        $setting->save([
+                            'key' => $enum,
+                            'values' => $settingValues,
+                            'app_id' => self::$app_id,
+                            'shop_supplier_id' => $shop_supplier_id
+                        ]);
+                    }
                 }
             }
         }
-        // 
+        //
         return $res;
     }
 
