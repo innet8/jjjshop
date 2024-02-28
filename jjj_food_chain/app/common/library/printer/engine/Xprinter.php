@@ -21,6 +21,9 @@ class Xprinter extends Basics
     {
         $config = json_decode($this->config, true);
         $content = hex2bin($content);
+        // 因为打印机识别不了，所以替换日语的长音为 -
+        $content = str_replace("ー", "-", $content);
+        // 
         try {
             $fp = @fsockopen( $config['IP'] ?? self::PRINTER_IP, $config['PORT'] ??  self::PRINTER_PORT, $errno, $errstr, 3);
             if($fp===false) { //连接打印机出错
