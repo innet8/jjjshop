@@ -5,7 +5,6 @@ namespace app\common\model\order;
 use app\common\model\buffet\Buffet;
 use app\common\model\buffet\BuffetProduct;
 use app\common\model\delay\Delay;
-use think\facade\Log;
 use app\common\library\helper;
 use app\common\model\BaseModel;
 use think\model\concern\SoftDelete;

@@ -5,7 +5,7 @@
             <template v-for="(item, index) in languageList" :key="index">
                 <el-form-item :label="$t('自助餐名称') + `(${item.value})`" :prop="`name.${[item.key]}`"
                     :rules="[{ required: true, message: $t('请输入自助餐名称') }]">
-                    <el-input type="text" v-model="form.name[item.key]" :placeholder="$t('请输入自助餐名称')"></el-input>
+                    <el-input type="text" v-model="form.name[item.key]" :placeholder="$t('请输入自助餐名称')" :maxlength="50"></el-input>
                 </el-form-item>
             </template>
 
@@ -58,7 +58,7 @@
                         <el-tooltip class="box-item" effect="dark" :content="item.product_name_text" placement="top">
                             <div class="select-button">
                                 <p>{{ item.product_name_text }}</p>
-                                <el-icon class="select-icon" @click="deleteOne(index)">
+                                <el-icon class="select-icon" @click="deleteOne(index, item.product_id)">
                                     <CircleCloseFilled />
                                 </el-icon>
                             </div>
@@ -302,13 +302,19 @@ export default {
             }
         },
 
-        deleteOne(index) {
+        deleteOne(index, product_id) {
+
             this.select_list.splice(index, 1)
             this.form.product_ids = []
             this.select_list.map(item => {
                 this.form.product_ids.push(item.product_id)
             })
             this.limit_ids = this.form.product_ids.join(',')
+            this.form.buy_limit_products.map((item, index) => {
+                if (product_id == item.product_id) {
+                    this.handleDelete(index)
+                }
+            })
             this.$refs.form.validateField('product_ids');
         },
 

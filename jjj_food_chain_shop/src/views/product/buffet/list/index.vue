@@ -36,7 +36,12 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="sale_num" :label="$t('实际销量')"></el-table-column>
-                    <el-table-column prop="time_limit" :label="$t('用餐时间')"></el-table-column>
+                    <el-table-column prop="time_limit" :label="$t('用餐时间')">
+                        <template #default="scope">
+                                    <div class="name">{{ scope.row.time_limit == 0 ? $t('不限制') : scope.row.time_limit}}</div>
+                    
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="is_comb" :label="$t('组合')" width="100">
                         <template #default="scope">
                             <el-switch :disabled="!this.$filter.isAuth('/product/buffet/list/assembly')"

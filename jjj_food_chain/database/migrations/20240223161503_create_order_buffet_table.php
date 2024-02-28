@@ -32,7 +32,7 @@ class CreateOrderBuffetTable extends Migrator
         $table = $this->table('order_buffet', ['engine' => 'InnoDB', 'collation' => 'utf8mb4_unicode_ci', 'comment' => '订单自助餐表']);
         $table->addColumn('order_id', 'integer', ['comment' => '关联订单id']);
         $table->addColumn('buffet_id', 'integer', ['comment' => '关联自助餐id']);
-        $table->addColumn('name', 'string', ['limit' => 255, 'default' => '', 'comment' => '名称']);
+        $table->addColumn('name', 'string', ['limit' => 2000, 'default' => '', 'comment' => '名称']);
         $table->addColumn('price', 'decimal', ['precision' => 12, 'scale' => 2, 'default' => 0, 'comment' => '价格']);
         $table->addColumn('buy_limit_status', 'integer', ['default' => 0, 'comment' => '是否限购 0-否 1-是']);
         $table->addColumn('is_comb', 'integer', ['default' => 0, 'comment' => '是否组合 0-否 1-是']);

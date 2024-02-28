@@ -106,7 +106,7 @@ export default {
                 is_auto_send: 0,
                 auto_lock_screen: 300,
                 language: [],
-                default_language: 'th',
+                default_language: null,
                 advanced_password: false,
                 server: {
                     ip: '',
@@ -172,10 +172,8 @@ export default {
                 if (self.form.advanced_password) {
                     self.password = 666666
                 }
-                self.form.language.map((item)=>{
-                    if(!self.languageList.find(obj => obj.key == item)){
-                        self.form.language = self.form.language.filter(element => element !== item);
-                    }
+                self.form.language = self.form.language.filter(lang => {
+                    return self.languageList.map(h=>h.key).indexOf(lang) != -1;
                 })
             }).catch(error => {
                 self.loading = false;
