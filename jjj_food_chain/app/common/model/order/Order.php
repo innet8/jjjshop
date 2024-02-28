@@ -1451,7 +1451,7 @@ class Order extends BaseModel
         $arr = [];
         foreach ($list as $buffet) {
             foreach ($buffet['buffetProduct'] as $product) {
-                if (isset($arr[$product['product_id']]) && $arr[$product['product_id']] < $product['limit_num']) {
+                if (isset($arr[$product['product_id']]) && ($arr[$product['product_id']] < $product['limit_num'] && $product['limit_num'] != 0) || $product['limit_num'] == 0) {
                     $arr[$product['product_id']] = [
                         'product_id' => $product['product_id'],
                         'limit_num' => $product['limit_num'],
@@ -1552,7 +1552,12 @@ class Order extends BaseModel
     public static function getBuffetProductLimitNum($order_id, $product_id)
     {
         $buffet_ids = (new OrderBuffet)->where('order_id', '=', $order_id)->column('buffet_id');
-        return  (new BuffetProduct)->where('buffet_id', 'in', $buffet_ids)->where('product_id', '=', $product_id)->max('limit_num');
+        $limit_num = (new BuffetProduct)->where('buffet_id', 'in', $buffet_ids)->where('product_id', '=', $product_id)->where('limit_num', '=', 0)->find();
+        if ($limit_num) {
+            return 0;
+        } else {
+            return  (new BuffetProduct)->where('buffet_id', 'in', $buffet_ids)->where('product_id', '=', $product_id)->max('limit_num');
+        }
     }
 
     // 订单自助餐费用
