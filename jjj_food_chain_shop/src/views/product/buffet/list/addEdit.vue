@@ -141,7 +141,7 @@ export default {
                 time_limit: null,
                 status: 1,
                 is_comb: 1,
-                buy_limit_status: 1,
+                buy_limit_status: 0,
                 buy_limit_products: [],
                 product_ids: '',
             },
