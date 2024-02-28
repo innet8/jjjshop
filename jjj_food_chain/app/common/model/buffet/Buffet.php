@@ -4,6 +4,9 @@ namespace app\common\model\buffet;
 
 use app\common\model\BaseModel;
 use think\model\concern\SoftDelete;
+use app\common\model\order\OrderBuffet as OrderBuffetModel;
+use app\common\enum\order\OrderPayStatusEnum;
+use app\common\model\order\Order as OrderModel;
 
 /**
  *
@@ -45,6 +48,27 @@ class Buffet extends BaseModel
     public function getNameTextAttr($value, $data = [])
     {
         return extractLanguage($value ?: $data['name']);
+    }
+
+    /**
+     * 获取自助餐是否能删除 0-否 1-是
+     */
+    public function getCanDelete($data = [])
+    {
+        $isDeletable = 1;
+        $orderBuffetModel = new OrderBuffetModel();
+        $orderModel = new OrderModel();
+        $buffetOrders = $orderBuffetModel->where('buffet_id', '=', $data['id'] ?? 0)->column('order_id');
+        if (!empty($buffetOrders)) {
+            $pendingOrderCount = $orderModel->whereIn('order_id', $buffetOrders)
+                ->where('order_status', '=', OrderPayStatusEnum::PENDING)
+                ->count();
+
+            if ($pendingOrderCount > 0) {
+                $isDeletable = 0;
+            }
+        }
+        return $isDeletable;
     }
 
     public static function getList()
