@@ -1156,7 +1156,7 @@ class Order extends BaseModel
             'order_no' => $re_order_no ? $this->newOrderNo($order['order_source']) : $order['order_no'],
             'discount_money' => $discount_money,  // 折扣优惠重置
             'total_price' => $total_price,
-            'order_price' => $order_price + $service_money + $service_fee + $consume_fee, // 订单总额 = 商品原始总价 + 原服务费 + 新服务费用 + 消费税
+            'order_price' => $order_price + $service_money + $service_fee + $consume_fee + $buffetPrice + $delayPrice, // 订单总额 = 商品原始总价 + 原服务费 + 新服务费用 + 消费税 + 自助餐费用 + 加钟费用
             'original_price' => $order_price + $service_money + $service_fee + $original_consume_fee, // 订单总额 = 商品原始总价 + 原服务费 + 新服务费用 + 消费税
             'pay_price' => $pay_price,  // 应付
             'points_bonus' => $points_bonus,

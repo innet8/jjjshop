@@ -714,6 +714,7 @@ class Cart extends CartModel
     // 获取购物车 + 订单统计数据
     public function getOrderCartDetail($cashier, $table_id, $order_id = 0)
     {
+        $meal_num = 0;
         if ($order_id > 0) {
             $order = OrderModel::detail([
                 ['order_id', '=', $order_id],
@@ -725,6 +726,7 @@ class Cart extends CartModel
                 ->where('order_id', '=', $order_id)
                 ->where('is_stay', '=', 0)
                 ->select();
+            $meal_num = $order['meal_num'];
         } else if($table_id > 0){
             // 购物车商品列表
             $cartList = (new static())->with('product')
@@ -737,6 +739,7 @@ class Cart extends CartModel
                 ['table_id', '=', $table_id],
                 ['order_status', '=', OrderStatusEnum::NORMAL]
             ]);
+            $meal_num = $order['meal_num'];
         } else {
             // 购物车商品列表
             $cartList = (new static())->with('product')
@@ -800,8 +803,19 @@ class Cart extends CartModel
             $order_original_price = 0;
         }
         // 订单 + 购物车 统计
-        $total_num = helper::bcadd($order_total_num, $cart_total_num, 0);                                     // 商品总数量
-        $total_price = helper::bcadd($order_total_price, $cart_product_pay_price);                         // 小计
+        $buffetPrice = 0;
+        $delayPrice = 0;
+        if ($order) {
+            // 自助餐费用
+            $buffetPrice = Order::getBuffetPrice($order['order_id']);
+            $buffetPrice = helper::bcmul($buffetPrice, $meal_num, 3);
+            // 加钟费用
+            $delayPrice = Order::getDelayPrice($order['order_id']);
+            $delayPrice = helper::bcmul($delayPrice, $meal_num, 3);
+        }
+        $total_num = helper::bcadd($order_total_num, $cart_total_num, 0);                            // 商品总数量
+        // 小计
+        $total_price = helper::bcadd(helper::bcadd($order_total_price, $cart_product_pay_price), helper::bcadd($buffetPrice, $delayPrice));
         $service_money = helper::bcadd($order_service_money, $order_setting_service_money);                // 服务费
         $special_discount = $order_discount_money;                                                         // 優惠折扣
         $total_consumption_tax_money = helper::bcadd($order_consumption_tax_money, $cart_consume_fee);     // 消费税
@@ -875,6 +889,7 @@ class Cart extends CartModel
                 ->select();
             $cart_arr = self::prePriceByCart($cartList, $user);
         } else {
+            $order = null;
             $order_arr = [
                 'order_total_product_price' => 0,
                 'order_total_pay_price' => 0,
@@ -902,14 +917,18 @@ class Cart extends CartModel
             $service_fee = 0;
         }
         $total_service_money = $table_service_money + $service_fee; // 总服务费
-        // 自助餐费用
-        $buffetPrice = Order::getBuffetPrice($order_id);
-        $buffetPrice = helper::bcmul($buffetPrice, $meal_num, 3);
-        $buffetPrice = round($buffetPrice, 2);
-        // 加钟费用
-        $delayPrice = Order::getDelayPrice($order_id);
-        $delayPrice = helper::bcmul($delayPrice, $meal_num, 3);
-        $delayPrice = round($delayPrice, 2);
+        $buffetPrice = 0;
+        $delayPrice = 0;
+        if ($order) {
+            // 自助餐费用
+            $buffetPrice = Order::getBuffetPrice($order['order_id']);
+            $buffetPrice = helper::bcmul($buffetPrice, $meal_num, 3);
+            $buffetPrice = round($buffetPrice, 2);
+            // 加钟费用
+            $delayPrice = Order::getDelayPrice($order['order_id']);
+            $delayPrice = helper::bcmul($delayPrice, $meal_num, 3);
+            $delayPrice = round($delayPrice, 2);
+        }
         // 消费税
         $consumeFee = SettingModel::getSupplierItem(SettingEnum::TAX_RATE, $shop_supplier_id);
         $consume_fee = 0;
