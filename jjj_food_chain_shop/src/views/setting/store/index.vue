@@ -126,7 +126,6 @@ export default {
         /*提交*/
         onSubmit() {
             let self = this;
-            let params = this.form;
             let language = []
             this.form.lang.map((item, index) => {
                 this.langList.map(items => {
@@ -140,6 +139,7 @@ export default {
                 })
             })
             this.form.language = language;
+            let { lang, ...params } =  this.form;
             self.$refs.form.validate((valid) => {
                 if (valid) {
                     self.loading = true;
