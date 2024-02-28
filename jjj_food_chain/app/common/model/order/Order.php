@@ -1479,20 +1479,40 @@ class Order extends BaseModel
     }
 
     // 点餐商品列表按自助餐优惠显示
-    public static function handleBuffetProductIndex($product_list, $buffet_arr)
+    public static function handleBuffetProductIndex($product_list, $buffet_arr, $meal_num)
     {
         foreach ($product_list as &$product) {
+            // 已购买商品数量
+            $current_add_num = 0;
+            foreach ($product['orderProducts'] as $order_products) {
+                $current_add_num += $order_products['total_num'];
+            }
+
             if (array_key_exists($product['product_id'], $buffet_arr)) {
                 $product['is_buffet'] = 1;
-                $product['buffet_limit_num'] = $buffet_arr[$product['product_id']]['limit_num'];
+                $product['buffet_limit_num'] = $buffet_arr[$product['product_id']]['limit_num'] * $meal_num;
                 $product['product_price'] = 0;
                 foreach ($product['sku'] as &$item) {
                     $item['product_price'] = 0;
                 }
+                $product['current_add_num'] = $current_add_num;
+                if ($product['buffet_limit_num'] == 0) {
+                    $product['limit_num_status'] = 0;
+                } else {
+                    $product['limit_num_status'] = $current_add_num >= $product['buffet_limit_num'] ? 1 : 0;
+                }
             } else {
                 $product['is_buffet'] = 0;
                 $product['buffet_limit_num'] = 0;
+                $product['current_add_num'] = $current_add_num;
+                if ($product['limit_num'] == 0) {
+                    $product['limit_num_status'] = 0;
+                } else {
+                    $product['limit_num_status'] = $current_add_num >= $product['limit_num'] ? 1 : 0;
+                }
+
             }
+
         }
         return $product_list;
     }
