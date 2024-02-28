@@ -13,7 +13,7 @@
                     <el-input-number :controls="false" :min="0" :max="999" style="width: 200px !important;"
                         :placeholder="$t('请输入平板结束时间提醒')" v-model.number="form.tablet_end_time"></el-input-number>
                     {{ $t('分') }}
-                    <div class="tips">{{ $t('注：最大1-999') }}</div>
+                    <p class="p-tips">{{ $t('注：最大1-999') }}</p>
                 </div>
             </el-form-item>
 
@@ -198,7 +198,9 @@ export default {
     align-items: center;
     gap: 12px;
 }
-
+.p-tips{
+    color: var(--el-color-tips);
+}
 .limit-list {
     width: 100%;
     margin-top: 12px;
@@ -225,7 +227,7 @@ export default {
             }
             .delete-icon-none{
                 cursor: not-allowed;
-                color: #ccc;
+                color: var(--el-color-tips);
             }
         }
     }

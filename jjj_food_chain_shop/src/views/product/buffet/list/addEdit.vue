@@ -24,10 +24,11 @@
                 </el-radio-group>
             </el-form-item>
 
-            <el-form-item v-if="form.is_time_limit == 1" :label="$t('')" prop="time_limit"
+            <el-form-item v-if="form.is_time_limit == 1" :label="$t('')" class="display-none" prop="time_limit"
                 :rules="[{ required: true, message: $t('请输入用餐时间') }]">
                 <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('请输入用餐时间')"
                     v-model.number="form.time_limit"></el-input-number>
+                {{ $t('分') }}
             </el-form-item>
 
             <el-form-item :label="$t('状态')" prop="status" :rules="[{ required: true, message: '' }]">
@@ -193,20 +194,20 @@ export default {
             this.form.time_limit > 0 ? this.form.is_time_limit = 1 : this.form.is_time_limit = 0;
             this.select_list = this.form.buffetProducts;
             this.form.product_ids = [];
-            this.select_list.map((item,index) => {
+            this.select_list.map((item, index) => {
                 this.select_list[index].product_name_text = item.product.product_name_text;
                 this.form.product_ids.push(item.product_id)
             })
             this.limit_ids = this.form.product_ids.join(',')
             this.limit_list = this.form.buffetLimitProducts;
-                this.form.buy_limit_products = []
-                this.limit_list.map(item => {
-                    this.form.buy_limit_products.push({
-                        name: item.product.product_name_text,
-                        product_id: item.product_id,
-                        limit_num: item.limit_num,
-                    })
+            this.form.buy_limit_products = []
+            this.limit_list.map(item => {
+                this.form.buy_limit_products.push({
+                    name: item.product.product_name_text,
+                    product_id: item.product_id,
+                    limit_num: item.limit_num,
                 })
+            })
             console.log(this.form);
         }
     },
@@ -216,7 +217,7 @@ export default {
             let self = this;
             self.$refs.form.validate((valid) => {
                 if (valid) {
-                    if(this.editData){
+                    if (this.editData) {
                         let params = JSON.parse(JSON.stringify(self.form));
                         params.name = JSON.stringify(params.name);
                         params.buffet_id = params.id;
@@ -233,7 +234,7 @@ export default {
                             self.loading = false;
                         });
                     }
-                    else{
+                    else {
                         let params = JSON.parse(JSON.stringify(self.form));
                         params.name = JSON.stringify(params.name)
                         params.product_ids = params.product_ids.join(',')
@@ -364,6 +365,15 @@ export default {
             }
         }
     }
+}
+
+.display-none {
+    :deep(.el-form-item__content) {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 12px;
+    }
+
 }
 
 .select-button {
