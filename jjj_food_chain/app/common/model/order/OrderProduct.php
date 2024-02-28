@@ -2,8 +2,10 @@
 
 namespace app\common\model\order;
 
+use app\common\enum\settings\SettingEnum;
 use app\common\library\helper;
 use app\common\model\BaseModel;
+use app\common\model\settings\Setting as SettingModel;
 use think\model\concern\SoftDelete;
 use app\common\enum\order\OrderStatusEnum;
 use app\common\model\order\Order as OrderModel;
@@ -198,9 +200,19 @@ class OrderProduct extends BaseModel
     public function sub($param)
     {
         // 判断是否被锁定
+        $order = $this->orderM()->find();
         if ($this->orderM()->value('is_lock') == 1) {
             $this->error = '当前订单已被锁定';
             return false;
+        }
+        // 检查自助餐商品可添加状态
+        if ($order['is_buffet'] == 1 && $order['buffet_expired_time'] < time()) {
+            // 自助餐设置
+            $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $this->cashier['user']['shop_supplier_id'] ?? 0, $this->cashier['user']['app_id'] ?? 0);
+            if ($buffetSetting['is_buy_continue'] != 1) {
+                $this->error = '用餐时间已到，无法添加商品';
+                return false;
+            }
         }
 
         //判断商品是否下架
