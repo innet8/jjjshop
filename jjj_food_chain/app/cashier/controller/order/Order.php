@@ -6,6 +6,7 @@ use app\cashier\model\order\Order as OrderModel;
 use app\cashier\model\store\Table as TableModel;
 use app\common\enum\order\OrderStatusEnum;
 use app\common\enum\settings\DeliveryTypeEnum;
+use app\common\enum\settings\SettingEnum;
 use app\common\model\order\Order as CommonOrderModel;
 use app\cashier\service\order\settled\CashierOrderSettledService;
 use app\cashier\controller\Controller;
@@ -129,6 +130,11 @@ class Order extends Controller
         }
         // 自助餐
         if (($params['is_buffet'] ?? 0) == 1) {
+            // 自助餐设置
+            $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $this->cashier['user']['shop_supplier_id'] ?? 0, $this->cashier['user']['app_id'] ?? 0);
+            if ($buffetSetting['is_open'] != 1) {
+                return $this->renderError('未开启自助餐');
+            }
             if (empty($params['buffet_ids'])) {
                 return $this->renderError('请选择自助餐');
             }

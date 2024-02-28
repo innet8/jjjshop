@@ -106,12 +106,12 @@ class Table extends Controller
             $detail = OrderModel::getTableUnderwayOrder($tableId);
             if ($detail) {
                 // 自助餐设置
-                $buffet = SettingModel::getSupplierItem(SettingEnum::BUFFET, $detail['shop_supplier_id'] ?? 0, $detail['app_id'] ?? 0);
+                $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $detail['shop_supplier_id'] ?? 0, $detail['app_id'] ?? 0);
                 $is_lock = $detail->is_lock;
                 $buffet_time_remind = [
                     'is_buffet' => $detail['is_buffet'],
-                    'remind' => OrderModel::buffetTimeRemind($tableId, $detail['buffet_expired_time'], $buffet['tablet_end_time']),
-                    'minute' => $buffet['tablet_end_time'],
+                    'remind' => OrderModel::buffetTimeRemind($tableId, $detail['buffet_expired_time'], $buffetSetting['tablet_end_time']),
+                    'minute' => $buffetSetting['tablet_end_time'],
                     'buffet_remaining_time' => OrderModel::getBuffetRemainingTime($detail['buffet_expired_time'])
                 ];
             }

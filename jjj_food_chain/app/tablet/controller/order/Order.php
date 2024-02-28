@@ -2,9 +2,11 @@
 
 namespace app\tablet\controller\order;
 
+use app\common\enum\settings\SettingEnum;
 use app\common\library\helper;
 use app\common\model\buffet\Buffet;
 use app\common\model\order\OrderProduct;
+use app\common\model\settings\Setting as SettingModel;
 use app\tablet\model\store\Table as TableModel;
 use app\cashier\service\order\settled\CashierOrderSettledService;
 use app\tablet\model\order\Cart as CartModel;
@@ -24,6 +26,8 @@ class Order extends Controller
      * @Apidoc\Url ("/index.php/tablet/order.Order/tableBuy")
      * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
      * @Apidoc\Param("meal_num", type="int", require=true, desc="就餐人数")
+     * @Apidoc\Param("is_buffet", type="int", require=true, desc="是否自助餐 0-否 1-是")
+     * @Apidoc\Param("user_id", type="int", require=false, desc="会员ID（会员自己开台必填）")
      * @Apidoc\Returned()
      */
     public function tableBuy()
@@ -42,6 +46,17 @@ class Order extends Controller
         if ($table['status'] == 30) {
             return $this->renderError('桌台已开台');
         }
+        // 自助餐
+        if (($params['is_buffet'] ?? 0) == 1) {
+            // 自助餐设置
+            $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
+            if ($buffetSetting['is_open'] != 1) {
+                return $this->renderError('未开启自助餐');
+            }
+            if (empty($params['buffet_ids'])) {
+                return $this->renderError('请选择自助餐');
+            }
+        }
 
         // 实例化订单service
         $user = [
@@ -53,9 +68,8 @@ class Order extends Controller
             'name' => '',
         ];
         $orderService = new CashierOrderSettledService($user, [], $params);
-        // 获取订单信息
+        // 订单信息初始化
         $orderInfo = $orderService->settlement();
-        // 订单结算提交
         if ($orderService->hasError()) {
             return $this->renderError($orderService->getError());
         }
@@ -64,9 +78,6 @@ class Order extends Controller
         if (!$order_id) {
             return $this->renderError($orderService->getError() ?: '订单创建失败');
         }
-        // 移出购物车中已下单的商品
-        $CartModel = new CartModel;
-        $CartModel->deleteTableAll($this->table['shop_supplier_id'], $params['table_id']);
        // 修改桌台状态
         TableModel::open($params['table_id']);
         // 返回结算信息
