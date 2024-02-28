@@ -34,7 +34,7 @@
                         },
                         message: $t('请选择语言')
                     }]">
-                    <el-select v-model="form.lang[index]" clearable class="max-w460" size="default">
+                    <el-select v-model="form.lang[index]" clearable class="max-w460" :placeholder="$t('请选择语言')" size="default">
                         <template v-for="cat in langList" :key="cat.name">
                             <el-option :value="cat.name" :label="cat.value" :disabled="selectOne(cat.name)"></el-option>
                         </template>
