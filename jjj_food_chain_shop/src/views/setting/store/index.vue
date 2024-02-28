@@ -26,8 +26,15 @@
                 <el-input v-model="form.shop.device_code" disabled placeholder="" class="max-w460"></el-input>
             </el-form-item>
             <template v-for="(item, index) in 4" :key="index">
-                <el-form-item :label="$t('语言') + (index + 1) + (index == 0 ? '(' + $t('默认') + ')' : '')" prop="lang">
-                    <el-select v-model="lang[index]" clearable class="max-w460" size="default">
+                <el-form-item :label="$t('语言') + (index + 1) + (index == 0 ? '(' + $t('默认') + ')' : '')" :prop="`lang[${index}]`"
+                    :rules="[{
+                        required: true,
+                        validator: () => {
+                            return form.lang[index] ? true : false;
+                        },
+                        message: $t('请选择语言')
+                    }]">
+                    <el-select v-model="form.lang[index]" clearable class="max-w460" size="default">
                         <template v-for="cat in langList" :key="cat.name">
                             <el-option :value="cat.name" :label="cat.value" :disabled="selectOne(cat.name)"></el-option>
                         </template>
@@ -70,8 +77,8 @@ export default {
                 avatarUrl: '',
                 shop: {
                 },
+                lang: [],
             },
-            lang: [],
             all_type: [],
             type: [],
             /*是否打开图片选择*/
@@ -87,7 +94,7 @@ export default {
 
         selectOne(lang) {
             let result = false;
-            this.lang.map(item => {
+            this.form.lang.map(item => {
                 if (lang == item) {
                     result = true
                 }
@@ -98,14 +105,17 @@ export default {
         /*获取配置数据*/
         getParams() {
             let self = this;
+            self.loading = true;
             SettingApi.storeDetail({}, true).then(res => {
                 let vars = res.data.vars.values;
                 // self.form = formatModel(self.form, vars);
                 self.form = Object.assign(self.form, vars);
                 self.form.shop = res.data.shop;
+                self.form.lang = [];
                 res.data.vars.values.language.map(item => {
-                    self.lang.push(item.name)
+                    self.form.lang.push(item.name)
                 })
+
                 self.langList = res.data.shop.language;
                 self.loading = false;
             })
@@ -118,7 +128,7 @@ export default {
             let self = this;
             let params = this.form;
             let language = []
-            this.lang.map((item, index) => {
+            this.form.lang.map((item, index) => {
                 this.langList.map(items => {
                     if (items.name == item) {
                         language.push({
@@ -137,15 +147,14 @@ export default {
                         .then(data => {
                             self.loading = false;
                             let nowLanguage = JSON.parse(localStorage.getItem("Language")).language;
-                            if (self.lang.indexOf(nowLanguage) == -1) {
-                                languageStore().setLanguage(self.lang[0])
+                            if (self.form.lang.indexOf(nowLanguage) == -1) {
+                                languageStore().setLanguage(self.form.lang[0])
                             }
                             this.$ElMessage({
                                 message: $t('操作成功'),
                                 type: 'success'
                             });
                             setTimeout(() => {
-
                                 location.reload();
                             }, 1000)
                         })
