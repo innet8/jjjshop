@@ -39,6 +39,7 @@ class Category extends Controller
      */
     public function list()
     {
+        $params = $this->postData();
         $model = new CategoryModel;
         $name = isset($params['name']) ? $params['name'] : '';
         $list = $model->getCacheAll(1, 1, $this->store, $name) ?: [];
