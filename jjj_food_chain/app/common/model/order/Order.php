@@ -1215,7 +1215,7 @@ class Order extends BaseModel
                 return false;
             }
             // 检查自助餐商品可添加状态
-            if ($detail['is_buffet'] == 1 && $detail['buffet_expired_time'] < time()) {
+            if ($detail['is_buffet'] == 1 && $detail['buffet_expired_time'] != -1 && $detail['buffet_expired_time'] < time()) {
                 // 自助餐设置
                 $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $this->cashier['user']['shop_supplier_id'] ?? 0, $this->cashier['user']['app_id'] ?? 0);
                 if ($buffetSetting['is_buy_continue'] != 1) {
@@ -1455,7 +1455,15 @@ class Order extends BaseModel
                     'is_comb' => $buffet['is_comb'],
                     'time_limit' => $buffet['time_limit'],
                 ];
-                $time_limit = max($time_limit, $buffet['time_limit']);
+                if ($time_limit != -1) {
+                    if ($buffet['time_limit'] == 0) {
+                        $time_limit = -1;
+                    } else {
+                        $time_limit = max($time_limit, $buffet['time_limit']);
+                    }
+
+                }
+
                 (new OrderBuffet)->save($inArr);
             }
         }

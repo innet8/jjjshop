@@ -373,7 +373,11 @@ abstract class CashierSettledService extends BaseService
         // 创建自助餐
         if ($this->params['is_buffet']) {
             $buffet_time_limit = OrderModel::createOrderBuffet($this->model['order_id'], $this->params['buffet_ids']);
-            $buffet_expired_time = time() + $buffet_time_limit * 60;
+            if ($buffet_time_limit == -1) {
+                $buffet_expired_time = -1;
+            } else {
+                $buffet_expired_time = time() + $buffet_time_limit * 60;
+            }
             $this->model->save(['buffet_expired_time' => $buffet_expired_time]);
         }
         return $new_order_id;
