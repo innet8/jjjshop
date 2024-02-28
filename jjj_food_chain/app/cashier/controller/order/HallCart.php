@@ -6,9 +6,11 @@ use app\cashier\controller\Controller;
 use app\cashier\model\order\Cart as CartModel;
 use app\cashier\model\order\Order as OrderModel;
 use app\cashier\model\store\Table as TableModel;
+use app\common\enum\settings\SettingEnum;
 use app\common\model\buffet\Buffet;
 use app\common\model\delay\Delay;
 use app\common\model\order\OrderProduct;
+use app\common\model\settings\Setting as SettingModel;
 use hg\apidoc\annotation as Apidoc;
 
 /**
@@ -266,6 +268,11 @@ class HallCart extends Controller
         }
         if (empty($delay_ids)) {
             return $this->renderError('请选择加钟');
+        }
+        // 自助餐设置
+        $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $this->cashier['user']['shop_supplier_id'] ?? 0, $this->cashier['user']['app_id'] ?? 0);
+        if ($buffetSetting['is_add_clock'] != 1) {
+            return $this->renderError('未开启加钟');
         }
         if (OrderModel::addDelay($detail['order_id'], $delay_ids)) {
             (new OrderModel())->reloadPrice($detail['order_id']);
