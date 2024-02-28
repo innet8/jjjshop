@@ -62,7 +62,7 @@
                         <template #default="scope">
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
                                 v-auth="'/product/buffet/list/edit'">{{ $t('编辑') }}</el-button>
-                            <el-button @click="deleteClick(scope.row)" type="primary" link size="small"
+                            <el-button @click="deleteClick(scope.row)" :disabled="scope.row.can_delete == 0" type="primary" link size="small"
                                 v-auth="'/product/buffet/list/delete'">{{ $t('删除') }}</el-button>
                         </template>
                     </el-table-column>
