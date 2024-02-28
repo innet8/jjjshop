@@ -185,6 +185,11 @@ export default {
                 if (self.form.cashier_password) {
                     self.password = 666666
                 }
+                self.form.language.map((item)=>{
+                    if(!self.languageList.find(obj => obj.key == item)){
+                        self.form.language = self.form.language.filter(element => element !== item);
+                    }
+                })
             }).catch(error => {
                 self.loading = false;
             });
