@@ -101,21 +101,6 @@ class Category extends BaseModel
 
             $data = $isPaginate ? $data->paginate(compact('page', 'list_rows')) : $data->select();
             $all = !empty($data) ? $data->toArray() : [];
-            // doto 暂时不需要自动添加特殊分类
-            // if ($is_special == 1 && empty($all)) {
-            //     (new static)->addSpecial($model::$app_id, $shop_supplier_id);
-            //     $data = $model->with(['images'])
-            //         ->where('type', '=', $type)
-            //         ->where('is_special', '=', $is_special)
-            //         ->when($name != '', function($q) use($name) {
-            //             $q->like('name', $name);
-            //         })
-            //         ->order(['sort' => 'asc', 'create_time' => 'desc'])
-            //         ->where('shop_supplier_id', '=', $shop_supplier_id)
-            //         ->select();
-            //     $all = !empty($data) ? $data->toArray() : [];
-            // }
-            // 
             $result = $all;
             if ($name == '' && !$isPaginate) {
                 Cache::tag('category'. $shop_supplier_id. $is_special . $type)->set($cacheKey, $all);
@@ -148,17 +133,6 @@ class Category extends BaseModel
                 ->where('shop_supplier_id', '=', $shop_supplier_id)
                 ->select();
             $all = !empty($data) ? $data->toArray() : [];
-            // doto 暂时不需要自动添加特殊分类;
-            // if ($is_special == 1 && empty($all)) {
-            //     (new static)->addSpecial($model::$app_id, $shop_supplier_id);
-            //     $data = $model->with(['images'])
-            //         ->where('type', '=', $type)
-            //         ->where('is_special', '=', $is_special)
-            //         ->order(['sort' => 'asc', 'create_time' => 'asc'])
-            //         ->where('shop_supplier_id', '=', $shop_supplier_id)
-            //         ->select();
-            //     $all = !empty($data) ? $data->toArray() : [];
-            // }
             Cache::tag('category'. $shop_supplier_id. $is_special . $type)->set($cacheKey, $all);
         }
         return Cache::get($cacheKey);
