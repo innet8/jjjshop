@@ -1121,8 +1121,12 @@ class Order extends BaseModel
         }
         // 自助餐费用
         $buffetPrice = Order::getBuffetPrice($order_id);
+        $buffetPrice = helper::bcmul($buffetPrice, $meal_num, 3);
+        $buffetPrice = round($buffetPrice, 2);
         // 加钟费用
         $delayPrice = Order::getDelayPrice($order_id);
+        $delayPrice = helper::bcmul($delayPrice, $meal_num, 3);
+        $delayPrice = round($delayPrice, 2);
 
         // 应付
         $pay_price = $total_price + $service_money + $service_fee + $consume_fee + $buffetPrice + $delayPrice; // 应付金额 = 商品折扣总价（会员折扣） + 原服务费 + 新服务费用 + 消费税 + 自助餐 + 加钟费
@@ -1174,6 +1178,7 @@ class Order extends BaseModel
     {
         $param = $data;
         $orderId = 0;
+        $meal_num = 1;
         //
         if (isset($data['order_id']) && $data['order_id'] > 0) {
             // 检查订单状态
@@ -1186,6 +1191,7 @@ class Order extends BaseModel
                 return false;
             }
             $orderId = $detail['order_id'];
+            $meal_num = $detail['meal_num'];
         }
         //
         if(isset($data['table_id']) && $data['table_id'] > 0) {
@@ -1199,6 +1205,7 @@ class Order extends BaseModel
                 return false;
             }
             $orderId = $detail['order_id'];
+            $meal_num = $detail['meal_num'];
         }
 
         if ($orderId > 0) {
@@ -1236,7 +1243,7 @@ class Order extends BaseModel
 
         // 判断限购
         if (isset($data['is_buffet']) && $data['is_buffet'] == 1) {
-            $limitNum = Order::getBuffetProductLimitNum($orderId, $data['product_id']);
+            $limitNum = Order::getBuffetProductLimitNum($orderId, $data['product_id']) * $meal_num;
         } else {
             $limitNum = ProductModel::getProductLimitNum($data['product_id']);
         }

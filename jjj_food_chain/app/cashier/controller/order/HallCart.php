@@ -263,6 +263,9 @@ class HallCart extends Controller
         if (!$detail) {
             return $this->renderError('当前状态不可操作');
         }
+        if ($detail->is_lock == 1) {
+            return $this->renderError('当前订单已被锁定');
+        }
         if (!is_array($delay_ids)) {
             return $this->renderError('参数错误');
         }
@@ -279,6 +282,5 @@ class HallCart extends Controller
             return $this->renderSuccess('加钟成功');
         }
         return $this->renderError('加钟失败');
-
     }
 }

@@ -141,7 +141,7 @@ export default {
                 time_limit: null,
                 status: 1,
                 is_comb: 1,
-                buy_limit_status: 1,
+                buy_limit_status: 0,
                 buy_limit_products: [],
                 product_ids: '',
             },
@@ -208,7 +208,6 @@ export default {
                     limit_num: item.limit_num,
                 })
             })
-            console.log(this.form);
         }
     },
     methods: {
@@ -286,13 +285,18 @@ export default {
                 let map = new Map();
                 [this.limit_list, e.data].flat().forEach(obj => map.set(obj.product_id, obj));
                 this.limit_list = Array.from(map.values());
-                this.form.buy_limit_products = []
+                let arr = []
+                this.form.buy_limit_products.map(item => {
+                    arr.push(item.product_id)
+                })
                 this.limit_list.map(item => {
-                    this.form.buy_limit_products.push({
-                        name: item.product_name_text,
-                        product_id: item.product_id,
-                        limit_num: null,
-                    })
+                    if (!arr.includes(item.product_id)) {
+                        this.form.buy_limit_products.push({
+                            name: item.product_name_text,
+                            product_id: item.product_id,
+                            limit_num: null,
+                        })
+                    }
                 })
                 this.$refs.form.validateField('buy_limit_products');
             }
