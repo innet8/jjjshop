@@ -1200,13 +1200,24 @@ class Order extends BaseModel
             }
             $orderId = $detail['order_id'];
         }
-        // 检查锁定
+
         if ($orderId > 0) {
+            // 检查锁定
             if ($detail->is_lock) {
                 $this->error = '当前订单已被锁定';
                 return false;
             }
+            // 检查自助餐商品可添加状态
+            if ($detail['is_buffet'] == 1 && $detail['buffet_expired_time'] < time()) {
+                // 自助餐设置
+                $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $this->cashier['user']['shop_supplier_id'] ?? 0, $this->cashier['user']['app_id'] ?? 0);
+                if ($buffetSetting['is_buy_continue'] != 1) {
+                    $this->error = '用餐时间已到，无法添加商品';
+                    return false;
+                }
+            }
         }
+
         //判断商品是否下架
         $product = $this->productState($data['product_id']);
         if (!$product) {
