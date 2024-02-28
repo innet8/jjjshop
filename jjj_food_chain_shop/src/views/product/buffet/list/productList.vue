@@ -50,9 +50,7 @@
 
                     <el-table-column prop="product_status.text" :label="$t('状态')" width="100">
                         <template #default="scope">
-                            <el-switch :disabled="!this.$filter.isAuth('/product/buffet/list/status')"
-                                :model-value="scope.row.product_status.value == 10 ? true : false">
-                            </el-switch>
+                            {{ scope.row.product_status.value == 10 ? $t('开启') :  $t('关闭') }}
                         </template>
                     </el-table-column>
                     <el-table-column prop="create_time" :label="$t('添加时间')"  width="180">
