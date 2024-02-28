@@ -845,6 +845,7 @@ class Cart extends CartModel
 
         // 桌台
         $table_service_money = 0;
+        $meal_num = 0;
         if ($table_id > 0) {
             // 计算订单会员优惠后价格
             $order = (new OrderModel())->getOrderInfo($table_id);
@@ -912,8 +913,12 @@ class Cart extends CartModel
         $total_consumption_tax_money = $consume_fee;    // 总消费税
         // 自助餐费用
         $buffetPrice = Order::getBuffetPrice($order_id);
+        $buffetPrice = helper::bcmul($buffetPrice, $meal_num, 3);
+        $buffetPrice = round($buffetPrice, 2);
         // 加钟费用
         $delayPrice = Order::getDelayPrice($order_id);
+        $delayPrice = helper::bcmul($delayPrice, $meal_num, 3);
+        $delayPrice = round($delayPrice, 2);
         // 应付
         $pay_price = $total_consumption_tax_money + $total_product_pay_price + $total_service_money + $buffetPrice + $delayPrice;
         // 优惠折扣

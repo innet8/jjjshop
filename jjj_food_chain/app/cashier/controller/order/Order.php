@@ -369,7 +369,7 @@ class Order extends Controller
      * @Apidoc\Url("/index.php/cashier/order.order/useMember")
      * @Apidoc\Param("user_id", type="int",require=true, default=0, desc="会员ID")
      * @Apidoc\Param("order_id", type="int",require=false, default=0, desc="订单ID")
-     * @Apidoc\Param("table_id", type="int",require=false, default=0, desc="订单ID")
+     * @Apidoc\Param("table_id", type="int",require=false, default=0, desc="桌台ID")
      */
     public function useMember($user_id, $order_id = 0, $table_id = 0)
     {

@@ -234,7 +234,7 @@ class OrderProduct extends BaseModel
             }
             // 判断限购
             if ($this['is_buffet_product'] == 1) {
-                $limitNum = Order::getBuffetProductLimitNum($this['order_id'], $this['product_id']);
+                $limitNum = Order::getBuffetProductLimitNum($this['order_id'], $this['product_id'])  * $order['meal_num'];
             } else {
                 $limitNum = ProductModel::getProductLimitNum($this['product_id']);
             }
