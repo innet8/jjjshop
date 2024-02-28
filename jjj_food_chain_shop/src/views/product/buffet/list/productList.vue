@@ -55,7 +55,12 @@
                             </el-switch>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="create_time" :label="$t('添加时间')"  width="180"></el-table-column>
+                    <el-table-column prop="create_time" :label="$t('添加时间')"  width="180">
+                        <template #default="scope">
+                                <p class="create-time">{{ scope.row.create_time.split(" ")[0] || '-' }}</p>
+                                <p class="create-time">{{ scope.row.create_time.split(" ")[1] || '' }}</p>
+                        </template>
+                    </el-table-column>
                     <el-table-column fixed="right" type="selection" width="40" :reserve-selection="true"></el-table-column>
                 </el-table>
             </div>
@@ -226,5 +231,7 @@ export default {
     justify-content: space-between;
     margin-bottom: 0;
 }
-
+.create-time{
+    line-height: 24px !important;
+}
 </style>

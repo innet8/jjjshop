@@ -5,7 +5,7 @@
             <template v-for="(item, index) in languageList" :key="index">
                 <el-form-item :label="$t('自助餐名称') + `(${item.value})`" :prop="`name.${[item.key]}`"
                     :rules="[{ required: true, message: $t('请输入自助餐名称') }]">
-                    <el-input type="text" v-model="form.name[item.key]" :placeholder="$t('请输入自助餐名称')"></el-input>
+                    <el-input type="text" v-model="form.name[item.key]" :placeholder="$t('请输入自助餐名称')" :maxlength="50"></el-input>
                 </el-form-item>
             </template>
 
