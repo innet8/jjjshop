@@ -30,7 +30,7 @@ class CreateDelayTable extends Migrator
     public function change()
     {
         $table = $this->table('delay', ['engine' => 'InnoDB', 'collation' => 'utf8mb4_unicode_ci', 'comment' => '加钟表']);
-        $table->addColumn('name', 'string', ['limit' => 255, 'default' => '', 'comment' => '名称']);
+        $table->addColumn('name', 'string', ['limit' => 2000, 'default' => '', 'comment' => '名称']);
         $table->addColumn('delay_time', 'integer', ['default' => 0, 'comment' => '加钟时间（分）']);
         $table->addColumn('status', 'integer', ['default' => 1, 'comment' => '状态']);
         $table->addColumn('price', 'decimal', ['precision' => 12, 'scale' => 2, 'default' => 0, 'comment' => '价格']);
