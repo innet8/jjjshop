@@ -55,9 +55,7 @@
                             </el-switch>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
-                    <el-table-column prop="product_sort" :label="$t('排序')"></el-table-column>
-
+                    <el-table-column prop="create_time" :label="$t('添加时间')"  width="180"></el-table-column>
                     <el-table-column fixed="right" type="selection" width="40" :reserve-selection="true"></el-table-column>
                 </el-table>
             </div>
