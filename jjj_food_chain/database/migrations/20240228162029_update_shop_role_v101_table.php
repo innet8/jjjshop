@@ -5,7 +5,7 @@ use think\migration\db\Column;
 use app\shop\model\auth\Role as RoleModel;
 use app\shop\model\auth\User as UserModel;
 
-class InitShopRoleTable extends Migrator
+class UpdateShopRoleV101Table extends Migrator
 {
     /**
      * Change Method.
