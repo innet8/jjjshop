@@ -50,8 +50,12 @@ class AuthService
         '/order/cart/pick', // 取单
         '/order/cart/stayList',
         '/order/order/useMember',
+        '/order/order/unlock', // 解锁
 
         '/order/hallcart/add', // 桌台-加入购物车
+        '/order/hallcart/buffetList', // 自助餐列表
+        '/order/hallcart/addDelay', // 自助餐加钟
+        '/order/hallcart/delayList', // 自助餐加钟列表
         '/order/hallcart/delProduct',
         '/order/hallcart/getSendKitchen',
         '/order/hallcart/tableProductList',
