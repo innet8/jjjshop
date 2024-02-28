@@ -465,7 +465,7 @@ class Order extends BaseModel
     {
         $filter = is_array($where) ? $where : ['order_id' => (int)$where];
         $query =  self::with([
-            'user', 'address', 'extract', 'supplier', 'cashier',
+            'user', 'address', 'buffet', 'delay', 'extract', 'supplier', 'cashier',
             'product.image' => function($query){
                 $query->withTrashed();
             }
