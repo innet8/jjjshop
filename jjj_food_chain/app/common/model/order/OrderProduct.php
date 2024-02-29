@@ -391,15 +391,21 @@ class OrderProduct extends BaseModel
             return false;
         }
 
-        // 检查自助餐商品状态
+        // 检查待送厨商品状态
         if ($type != 'payment') {
+            // 自助餐设置
+            $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $order['shop_supplier_id'], $order['app_id']);
+            $buffet_expired_time = Order::getBuffetRemainingTime($order['buffet_expired_time']);
             foreach ($order['unSendKitchenProduct'] as $order_product) {
                 if ($order_product['is_buffet_product'] == 1) {
-                    if (Order::getBuffetRemainingTime($order['buffet_expired_time']) <= 0 && $order['buffet_expired_time'] != -1) {
+                    if ($buffet_expired_time <= 0 && $order['buffet_expired_time'] != -1) {
                         $this->error = '自助餐时间已到达，自助餐商品不可继续下单';
                         return false;
-                    } else {
-                        break;
+                    }
+                } else {
+                    if ($buffetSetting['is_buy_continue'] != 1 && $buffet_expired_time <= 0 && $order['buffet_expired_time'] != -1) {
+                        $this->error = '自助餐时间已到达，自助餐商品不可继续下单';
+                        return false;
                     }
                 }
             }
