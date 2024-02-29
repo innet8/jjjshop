@@ -852,5 +852,11 @@
     "开启组合": "Open combination",
     "请选择语言": "Please select language",
     "注：最大1-999": "Note: Maximum 1-999",
-    "自助餐：": "buffet:"
+    "自助餐：": "buffet:",
+    "确认要禁用吗?": "Are you sure you want to disable it?",
+    "确认要启用吗?": "Are you sure you want to enable it?",
+    "确认要关闭组合吗?": "Are you sure you want to close the combination?",
+    "确认要开启组合吗?": "Are you sure you want to activate the combination?",
+    "确认要强制下架吗?": "Are you sure you want to force removal?",
+    "确认要重新上架吗?": "Are you sure you want to re-list it?"
 }
