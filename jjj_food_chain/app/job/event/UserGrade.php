@@ -48,6 +48,10 @@ class UserGrade
                 break;
             }
         }
+        // 如果自定义设置会员的权重比升级的权重大，则不升级
+        if ($user['grade']['weight'] > $upgradeGrade['weight']) {
+            return false;
+        }
         if ($upgradeGrade &&  $user['grade_id'] != $upgradeGrade['grade_id']) {
             $this->dologs('setUserGrade', [
                 'user_id' => $user['user_id'],
