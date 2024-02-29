@@ -387,9 +387,10 @@ class Order extends Controller
         if (!$detail) {
             return $this->renderError('订单不存在');
         }
-        if ($detail?->useMember($user_id)) {
+        $is_change_price = $detail['is_change_price'];
+        if ($detail->useMember($user_id)) {
             $reset_notice = 0;
-            if ($detail->discount_money != 0 || $detail->discount_ratio != 0) {
+            if ($is_change_price != $detail['is_change_price']) {
                 $reset_notice = 1;
             }
             return $this->renderSuccess('使用会员成功', ['reset_notice' => $reset_notice]);
