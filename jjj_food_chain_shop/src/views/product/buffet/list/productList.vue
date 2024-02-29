@@ -40,9 +40,9 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="product_stock" :label="$t('分类')"></el-table-column>
+                    <el-table-column prop="category.path_name_text" width="200" :label="$t('分类名称')"></el-table-column>
                     <el-table-column prop="sales_actual" :label="$t('实际销量')"></el-table-column>
-                    <el-table-column prop="sales_actual" :label="$t('库存')"></el-table-column>
+                    <el-table-column prop="product_stock" :label="$t('库存')"></el-table-column>
 
                     <el-table-column prop="product_status.text" :label="$t('状态')" width="100">
                         <template #default="scope">
@@ -153,7 +153,6 @@ export default {
                             this.multiple_selection.forEach(item => {  // 勾选到的数据
                                 if (row.product_id == item.product_id) {
                                     this.$refs.multipleTable.toggleRowSelection(this.tableData[index], true); // 若有重合，则回显该条数据
-                                    console.log(this.tableData[index]);
                                     this.tableData[index].select_open = 1;
                                 }
                             });
@@ -166,7 +165,6 @@ export default {
         },
 
         selectable(row, index) {
-            console.log(row.select_open);
             if (row.select_open != undefined) {
                 if (row.select_open == 1) {
                     return false
@@ -174,7 +172,6 @@ export default {
             }else{
                 return true
             }
-
         },
 
 

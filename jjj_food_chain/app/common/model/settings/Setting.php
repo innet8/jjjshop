@@ -624,7 +624,7 @@ class Setting extends BaseModel
                     // 平板结束时间提醒（分）
                     'tablet_end_time' => '5',
                     // 非自助餐商品到时是否能继续选购 0-关闭 1-开启
-                    'is_buy_continue' => '1',
+                    'is_buy_continue' => '0',
                     // 是否开启加钟 0-关闭 1-开启
                     'is_add_clock' => '0',
                     // 名称 - 加钟时间（分）- 价格
