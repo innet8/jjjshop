@@ -1008,4 +1008,5 @@ return [
     "未开启加钟" => "Saat etkin değil",
     "加钟成功" => "Saati başarıyla ekle",
     "加钟失败" => "Saat başarısız oldu",
+    "自助餐正在使用中，不可删除" => "Büfe kullanımdadır ve silinemez",
 ];
