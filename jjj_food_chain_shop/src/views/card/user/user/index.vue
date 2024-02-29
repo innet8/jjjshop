@@ -22,7 +22,7 @@
                     <div class="block">
                         <span class="demonstration"></span>
                         <el-date-picker v-model="formInline.reg_date" type="daterange" value-format="YYYY-MM-DD"
-                        :range-separator="$t('至')" :start-placeholder="$t('开始日期')" :end-placeholder="$t('结束日期')"></el-date-picker>
+                        range-separator="~" :start-placeholder="$t('开始日期')" :end-placeholder="$t('结束日期')"></el-date-picker>
                     </div>
                 </el-form-item>
                 <el-form-item><el-button class="search-button" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button></el-form-item>

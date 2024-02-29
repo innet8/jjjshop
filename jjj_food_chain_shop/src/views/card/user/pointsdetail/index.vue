@@ -23,7 +23,7 @@
                     <div class="block">
                         <span class="demonstration"></span>
                         <el-date-picker v-model="formInline.date" type="daterange" value-format="YYYY-MM-DD"
-                            :range-separator="$t('至')" :start-placeholder="$t('开始日期')" :end-placeholder="$t('结束日期')">
+                        range-separator="~" :start-placeholder="$t('开始日期')" :end-placeholder="$t('结束日期')">
                         </el-date-picker>
                     </div>
                 </el-form-item>

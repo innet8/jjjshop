@@ -1,6 +1,5 @@
 <template >
-    <el-dialog :title="$t('选择商品')" v-model="dialogVisible" @close="dialogFormVisible"  append-to-body :close-on-click-modal="false"
-        :close-on-press-escape="false">
+    <el-dialog :title="$t('选择商品')" v-model="dialogVisible" @close="dialogFormVisible" append-to-body :close-on-click-modal="false" :close-on-press-escape="false">
         <div class="common-seach-wrap">
             <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
 
@@ -12,15 +11,13 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('商品分类')">
-                    <el-cascader :options="categoryList" :props="{ checkStrictly: true, expandTrigger: 'hover' }"
-                        v-model="searchForm.category_id" clearable :placeholder="$t('请选择分类')">
+                    <el-cascader :options="categoryList" :props="{ checkStrictly: true, expandTrigger: 'hover' }" v-model="searchForm.category_id" clearable :placeholder="$t('请选择分类')">
                         <template #default="{ data }">
                             <span @click="handleValue(data)">{{ data.label }}</span>
                         </template>
                     </el-cascader>
                 </el-form-item>
-                <el-form-item :label="$t('商品名称')"><el-input size="small" v-model="searchForm.product_name"
-                        :placeholder="$t('商品名称')"></el-input></el-form-item>
+                <el-form-item :label="$t('商品名称')"><el-input size="small" v-model="searchForm.product_name" :placeholder="$t('商品名称')"></el-input></el-form-item>
                 <el-form-item>
                     <el-button class="search-button" size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询')
                     }}</el-button>
@@ -31,8 +28,7 @@
         <!--内容-->
         <div class="product-content">
             <div class="table-wrap">
-                <el-table size="small" ref="multipleTable" :data="tableData" border style="width: 100%" v-loading="loading"
-                    @selection-change="handleSelectionChange" :row-key="getRowKey">
+                <el-table size="small" ref="multipleTable" :data="tableData" border style="width: 100%" v-loading="loading" @selection-change="handleSelectionChange" :row-key="getRowKey">
                     <el-table-column prop="product_name" :label="$t('商品名称')" width="300px">
                         <template #default="scope">
                             <div class="product-info">
@@ -50,24 +46,22 @@
 
                     <el-table-column prop="product_status.text" :label="$t('状态')" width="100">
                         <template #default="scope">
-                            {{ scope.row.product_status.value == 10 ? $t('开启') :  $t('关闭') }}
+                            {{ scope.row.product_status.value == 10 ? $t('开启') : $t('关闭') }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="create_time" :label="$t('添加时间')"  width="180">
+                    <el-table-column prop="create_time" :label="$t('添加时间')" width="180">
                         <template #default="scope">
-                                <p class="create-time">{{ scope.row.create_time.split(" ")[0] || '-' }}</p>
-                                <p class="create-time">{{ scope.row.create_time.split(" ")[1] || '' }}</p>
+                            <p class="create-time">{{ scope.row.create_time.split(" ")[0] || '-' }}</p>
+                            <p class="create-time">{{ scope.row.create_time.split(" ")[1] || '' }}</p>
                         </template>
                     </el-table-column>
-                    <el-table-column fixed="right" type="selection" width="40" :reserve-selection="true"></el-table-column>
+                    <el-table-column fixed="right" type="selection" :selectable="selectable" width="40" :reserve-selection="true"></el-table-column>
                 </el-table>
             </div>
         </div>
         <!--分页-->
         <div class="pagination">
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" background
-                :current-page="curPage" :page-size="pageSize" layout="total, prev, pager, next, jumper"
-                :total="totalDataNumber"></el-pagination>
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" background :current-page="curPage" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalDataNumber"></el-pagination>
         </div>
         <template #footer>
             <div class="dialog-footer">
@@ -113,6 +107,10 @@ export default {
             type: String,
             default: '',
         },
+        multiple_selection: {
+            type: Array,
+            default: [],
+        },
 
     },
     created() {
@@ -150,12 +148,35 @@ export default {
                             })
                         })
                     })
-
+                    if (this.multiple_selection.length > 0) { // 判断是否存在勾选过的数据
+                        this.tableData.forEach((row, index) => {  // 获取数据列表接口请求到的数据
+                            this.multiple_selection.forEach(item => {  // 勾选到的数据
+                                if (row.product_id == item.product_id) {
+                                    this.$refs.multipleTable.toggleRowSelection(this.tableData[index], true); // 若有重合，则回显该条数据
+                                    console.log(this.tableData[index]);
+                                    this.tableData[index].select_open = 1;
+                                }
+                            });
+                        })
+                    }
                 })
                 .catch(error => {
                     console.log(error);
                 });
         },
+
+        selectable(row, index) {
+            console.log(row.select_open);
+            if (row.select_open != undefined) {
+                if (row.select_open == 1) {
+                    return false
+                }
+            }else{
+                return true
+            }
+
+        },
+
 
         /*搜索查询*/
         onSubmit() {
@@ -229,7 +250,8 @@ export default {
     justify-content: space-between;
     margin-bottom: 0;
 }
-.create-time{
+
+.create-time {
     line-height: 24px !important;
 }
 </style>
