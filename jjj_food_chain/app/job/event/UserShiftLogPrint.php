@@ -2,7 +2,6 @@
 
 namespace app\job\event;
 
-use think\facade\Cache;
 use app\common\model\settings\Setting as SettingModel;
 use app\common\service\order\OrderHandoverPrinterService;
 use app\common\model\shop\UserShiftLog as UserShiftLogModel;

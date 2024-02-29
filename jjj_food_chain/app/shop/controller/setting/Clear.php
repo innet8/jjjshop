@@ -3,7 +3,6 @@
 namespace app\shop\controller\setting;
 
 use app\shop\controller\Controller;
-use app\shop\model\settings\Setting as SettingModel;
 use hg\apidoc\annotation as Apidoc;
 use think\facade\Cache;
 

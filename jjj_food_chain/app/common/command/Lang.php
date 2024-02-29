@@ -7,7 +7,6 @@ use think\console\Input;
 use think\console\Output;
 use think\console\Command;
 use think\console\input\Option;
-use think\console\input\Argument;
 use app\common\library\language\Language;
 
 // 语言翻译
