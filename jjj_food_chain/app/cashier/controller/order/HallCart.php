@@ -9,6 +9,8 @@ use app\cashier\model\store\Table as TableModel;
 use app\common\enum\settings\SettingEnum;
 use app\common\model\buffet\Buffet;
 use app\common\model\delay\Delay;
+use app\common\model\order\OrderBuffet;
+use app\common\model\order\OrderDelay;
 use app\common\model\order\OrderProduct;
 use app\common\model\settings\Setting as SettingModel;
 use hg\apidoc\annotation as Apidoc;
@@ -282,5 +284,37 @@ class HallCart extends Controller
             return $this->renderSuccess('加钟成功');
         }
         return $this->renderError('加钟失败');
+    }
+
+    /**
+     * @Apidoc\Title("删除订单自助餐")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/delOrderBuffet")
+     * @Apidoc\Param("order_buffet_id", type="int", require=true, desc="订单自助餐id")
+     * @Apidoc\Returned()
+     */
+    public function delOrderBuffet($order_buffet_id)
+    {
+        $model = new OrderBuffet();
+        if ($model->del($order_buffet_id)) {
+            return $this->renderSuccess('删除成功');
+        }
+        return $this->renderError($model->getError() ?: '删除失败');
+    }
+
+    /**
+     * @Apidoc\Title("删除订单加钟")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/delOrderDelay")
+     * @Apidoc\Param("order_delay_id", type="int", require=true, desc="自助餐id")
+     * @Apidoc\Returned()
+     */
+    public function delOrderDelay($order_delay_id)
+    {
+        $model = new OrderDelay();
+        if ($model->del($order_delay_id)) {
+            return $this->renderSuccess('删除成功');
+        }
+        return $this->renderError($model->getError() ?: '删除失败');
     }
 }
