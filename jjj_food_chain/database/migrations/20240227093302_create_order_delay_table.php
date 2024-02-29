@@ -35,6 +35,8 @@ class CreateOrderDelayTable extends Migrator
         $table->addColumn('name', 'string', ['limit' => 2000, 'default' => '', 'comment' => '名称']);
         $table->addColumn('delay_time', 'integer', ['default' => 0, 'comment' => '加钟时间（分）']);
         $table->addColumn('price', 'decimal', ['precision' => 12, 'scale' => 2, 'default' => 0, 'comment' => '价格']);
+        $table->addColumn('num', 'integer', ['default' => 0, 'comment' => '数量']);
+        $table->addColumn('total_price', 'decimal', ['precision' => 12, 'scale' => 2, 'default' => 0, 'comment' => '总价']);
         $table->addColumn('app_id', 'integer', ['default' => 0, 'comment' => '应用id']);
         $table->addColumn('create_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'signed' => true, 'comment' => '创建时间']);
         $table->addColumn('update_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'signed' => true, 'comment' => '更新时间']);

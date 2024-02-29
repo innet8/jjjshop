@@ -1439,7 +1439,7 @@ class Order extends BaseModel
     }
 
     // 创建订单自助餐关联信息
-    public static function createOrderBuffet($order_id, array $buffet_ids)
+    public static function createOrderBuffet($order_id, array $buffet_ids, $meal_num)
     {
         $time_limit = 0;
         foreach ($buffet_ids as $id) {
@@ -1451,6 +1451,8 @@ class Order extends BaseModel
                     'buffet_id' => $id,
                     'name' => $buffet['name'],
                     'price' => $buffet['price'],
+                    'num' => $meal_num,
+                    'total_price' => round(helper::bcmul($buffet['price'], $meal_num, 3), 2),
                     'buy_limit_status' => $buffet['buy_limit_status'],
                     'is_comb' => $buffet['is_comb'],
                     'time_limit' => $buffet['time_limit'],
@@ -1561,6 +1563,11 @@ class Order extends BaseModel
     // 订单加钟
     public static function addDelay($order_id, $delay_ids)
     {
+        $order = (new Order)->where('order_id', '=', $order_id)->find();
+        if (!$order) {
+            return 0;
+        }
+
         $i = 0;
         $delay_time = 0;
         foreach ($delay_ids as $delay_id) {
@@ -1572,16 +1579,14 @@ class Order extends BaseModel
                     'delay_id' => $delay_id,
                     'name' => $delay['name'],
                     'price' => $delay['price'],
+                    'num' => $order['meal_num'],
+                    'total_price' => round(helper::bcmul($delay['price'], $order['meal_num'], 3), 2),
                     'delay_time' => $delay['delay_time'],
                 ];
                 (new OrderDelay())->save($inArr);
                 $delay_time = max($delay_time, $delay['delay_time']);
                 $i++;
             }
-        }
-        $order = (new Order)->where('order_id', '=', $order_id)->find();
-        if (!$order) {
-            return 0;
         }
         $now_timestamp = time();
         $delay_time_second = $delay_time * 60;

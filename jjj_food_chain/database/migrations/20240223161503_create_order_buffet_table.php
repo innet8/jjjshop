@@ -34,6 +34,8 @@ class CreateOrderBuffetTable extends Migrator
         $table->addColumn('buffet_id', 'integer', ['comment' => '关联自助餐id']);
         $table->addColumn('name', 'string', ['limit' => 2000, 'default' => '', 'comment' => '名称']);
         $table->addColumn('price', 'decimal', ['precision' => 12, 'scale' => 2, 'default' => 0, 'comment' => '价格']);
+        $table->addColumn('num', 'integer', ['default' => 0, 'comment' => '数量']);
+        $table->addColumn('total_price', 'decimal', ['precision' => 12, 'scale' => 2, 'default' => 0, 'comment' => '总价']);
         $table->addColumn('buy_limit_status', 'integer', ['default' => 0, 'comment' => '是否限购 0-否 1-是']);
         $table->addColumn('is_comb', 'integer', ['default' => 0, 'comment' => '是否组合 0-否 1-是']);
         $table->addColumn('time_limit', 'integer', ['default' => 0, 'comment' => '用餐时间（分）']);
