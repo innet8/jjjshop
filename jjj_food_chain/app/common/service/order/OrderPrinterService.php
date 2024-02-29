@@ -221,11 +221,11 @@ class OrderPrinterService
             // 自助餐
             if ($order->is_buffet == 1) {
                 foreach ($order['buffet'] ?? [] as $buffet) {
-                    $printer->printInColumns($buffet['name_text'], strval($order['meal_num']), $this->currencyUnit . strval($buffet['price']));
+                    $printer->printInColumns($buffet['name_text'], strval($buffet['num']), $this->currencyUnit . strval($buffet['total_price']));
                     $printer->lineFeed();
                 }
                 foreach ($order['delay'] ?? [] as $delay) {
-                    $printer->printInColumns($delay['name_text'], strval($order['meal_num']), $this->currencyUnit . strval($delay['price']));
+                    $printer->printInColumns($delay['name_text'], strval($delay['num']), $this->currencyUnit . strval($delay['total_price']));
                     $printer->lineFeed();
                 }
             }
@@ -338,12 +338,12 @@ class OrderPrinterService
             // 自助餐
             if ($order->is_buffet == 1) {
                 foreach ($order['buffet'] ?? [] as $buffet) {
-                    $printer->appendText(printText($buffet['name_text'], strval($order['meal_num']), $this->currencyUnit . strval($buffet['price']) , $width, $leftWidth + 2));
+                    $printer->appendText(printText($buffet['name_text'], strval($buffet['num']), $this->currencyUnit . strval($buffet['total_price']) , $width, $leftWidth + 2));
                     $printer->lineFeed();
                     $printer->lineFeed();
                 }
                 foreach ($order['delay'] ?? [] as $delay) {
-                    $printer->appendText(printText($delay['name_text'], strval($order['meal_num']) , $this->currencyUnit . strval($delay['price']) , $width, $leftWidth + 2));
+                    $printer->appendText(printText($delay['name_text'], strval($delay['num']) , $this->currencyUnit . strval($delay['total_price']) , $width, $leftWidth + 2));
                     $printer->lineFeed();
                     $printer->lineFeed();
                 }
@@ -445,10 +445,10 @@ class OrderPrinterService
         // 自助餐
         if ($order->is_buffet == 1) {
             foreach ($order['buffet'] ?? [] as $buffet) {
-                $content .= printText($buffet['name_text'], strval($order['meal_num']), $this->currencyUnit . strval($buffet['price']) , $width, $leftWidth + 2);
+                $content .= printText($buffet['name_text'], strval($buffet['num']), $this->currencyUnit . strval($buffet['total_price']) , $width, $leftWidth + 2);
             }
             foreach ($order['delay'] ?? [] as $delay) {
-                $content .= printText($delay['name_text'], strval($order['meal_num']), $this->currencyUnit . strval($delay['price']) , $width, $leftWidth + 2);
+                $content .= printText($delay['name_text'], strval($delay['num']), $this->currencyUnit . strval($delay['total_price']) , $width, $leftWidth + 2);
             }
         }
         foreach ($products as $product) {

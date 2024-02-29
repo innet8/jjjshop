@@ -33,7 +33,8 @@
                         <div class="pb16">
                             <span class="gray9">{{ $t('订单金额：') }}</span>
                             {{ currency.unit }}{{ detail.order_price }}
-                            <template v-if="currency.is_open ==1">{{ currency.vices?.vice_unit }}{{ (Number(detail.order_price) * Number(currency.vices?.unit_rate)).toFixed(2) }}</template>
+                            <template v-if="currency.is_open == 1">{{ currency.vices?.vice_unit }}{{
+                                (Number(detail.order_price) * Number(currency.vices?.unit_rate)).toFixed(2) }}</template>
                         </div>
                     </el-col>
                     <el-col :span="6" v-if="detail.express_price > 0">
@@ -78,16 +79,16 @@
 							{{ detail.discount_money }}
 						</div>
 					</el-col> -->
-                    <el-col :span="6" v-if=" detail.order_status.value == 30">
+                    <el-col :span="6" v-if="detail.order_status.value == 30">
                         <div class="pb16">
                             <span class="gray9">{{ $t('实付款金额：') }}</span>
                             {{ currency.unit }}{{ detail.pay_price }}
-                            <span  v-if="detail.refund_money > 0">({{ $t('已退款：') }}
+                            <span v-if="detail.refund_money > 0">({{ $t('已退款：') }}
                                 {{ currency.unit }}{{ detail.refund_money }})
-                                </span> 
+                            </span>
                         </div>
                     </el-col>
-                    <el-col :span="6" v-if=" detail.order_status.value == 30">
+                    <el-col :span="6" v-if="detail.order_status.value == 30">
                         <div class="pb16">
                             <span class="gray9">{{ $t('支付方式：') }}</span>
                             {{ detail.pay_type.text }}
@@ -126,30 +127,29 @@
                             {{ detail.cashier?.real_name }}
                         </div>
                     </el-col>
+                    <el-col :span="6" v-if="detail.is_buffet == 1">
+                        <div class="pb16">
+                            <span class="gray9">{{ $t('自助餐：') }}</span>
+                            <template v-if="detail?.buffet?.length > 0">{{ buffet }}</template>
+                            <template v-else>-</template>
+                        </div>
+                    </el-col>
                 </el-row>
             </div>
-            <!--商户信息-->
-            <!-- <div class="common-form mt16">门店信息</div>
-			<div class="table-wrap">
-				<el-row>
-					<el-col :span="6">
-						<div class="pb16">
-							<span class="gray9">门店名称：</span>
-							{{ detail.supplier.name }}
-						</div>
-					</el-col>
-				</el-row>
-			</div> -->
-            <!--商品信息-->
+
             <div class="common-form mt16">{{ $t('商品信息') }}</div>
             <div class="table-wrap">
-                <el-table size="small" :data="detail.product" border style="width: 100%">
-                    <el-table-column prop="product_name_text" :label="$t('商品')" width="400">
+                <el-table size="small" :data="tableData" border style="width: 100%">
+                    <el-table-column prop="name_text" :label="$t('商品')" width="400">
                         <template #default="scope">
                             <div class="product-info">
-                                <div class="pic"><img v-img-url="scope.row.image.file_path" /></div>
+                                <div class="pic">
+                                    <img v-if="scope.row.image.file_path=='buffet'" src="../../../assets/img/buffet.png" />
+                                    <img v-else-if="scope.row.image.file_path=='clock'" src="../../../assets/img/clock.png" />
+                                    <img v-else v-img-url="scope.row.image.file_path" />
+                                </div>
                                 <div class="info">
-                                    <div class="name">{{ scope.row.product_name_text }}</div>
+                                    <div class="name">{{ scope.row.name_text }}</div>
                                     <div class="gray9" v-if="scope.row.product_attr != ''">{{ scope.row.product_attr }}
                                     </div>
                                     <div class="orange" v-if="scope.row.refund">
@@ -158,7 +158,9 @@
                                     <div class="price">
                                         <span class="ml10">
                                             {{ currency.unit }}{{ scope.row.product_price }}
-                                            <template v-if="currency.is_open ==1">{{ currency.vices?.vice_unit }}{{ (Number(scope.row.product_price) * Number(currency.vices?.unit_rate)).toFixed(2) }}</template>
+                                            <template v-if="currency.is_open == 1">{{ currency.vices?.vice_unit }}{{
+                                                (Number(scope.row.product_price) *
+                                                    Number(currency.vices?.unit_rate)).toFixed(2) }}</template>
                                         </span>
                                     </div>
                                 </div>
@@ -172,135 +174,16 @@
                     </el-table-column>
                     <el-table-column prop="product_price" :label="$t('商品总价')">
                         <template #default="scope">
-                            <p>{{ currency.unit }}{{ (Number(scope.row.product_price)*Number(scope.row.total_num)).toFixed(2) }}
-                            <span v-if="currency.is_open ==1">{{ currency.vices?.vice_unit }}{{ (Number(scope.row.product_price)*Number(scope.row.total_num) * Number(currency.vices?.unit_rate)).toFixed(2) }}</span>
+                            <p>{{ currency.unit }}{{
+                                (Number(scope.row.product_price) * Number(scope.row.total_num)).toFixed(2) }}
+                                <span v-if="currency.is_open == 1">{{ currency.vices?.vice_unit }}{{
+                                    (Number(scope.row.product_price) * Number(scope.row.total_num) *
+                                        Number(currency.vices?.unit_rate)).toFixed(2) }}</span>
                             </p>
                         </template>
                     </el-table-column>
                 </el-table>
             </div>
-
-            <!--收货信息-->
-            <!-- <div v-if="detail.delivery_type.value == 10">
-				<div class="common-form mt16">配送信息</div>
-				<div class="table-wrap">
-					<el-row>
-						<el-col :span="6">
-							<div class="pb16">
-								<span class="gray9">联系人：</span>
-								{{ detail.address.name }}
-							</div>
-						</el-col>
-						<el-col :span="6">
-							<div class="pb16">
-								<span class="gray9">联系电话：</span>
-								{{ detail.address.phone }}
-							</div>
-						</el-col>
-						<el-col :span="9">
-							<div class="pb16">
-								<span class="gray9">联系地址：</span>
-								{{ detail.address.detail }}{{ detail.address.address }}
-							</div>
-						</el-col>
-					</el-row>
-					<el-row>
-						<el-col :span="25">
-							<div class="pb16">
-								<span class="gray9">备注：</span>
-								{{ detail.buyer_remark }}
-							</div>
-						</el-col>
-					</el-row>
-				</div>
-			</div> -->
-
-            <!--自提门店信息-->
-            <!-- <template v-if="detail.delivery_type.value == 20">
-				<div class="common-form mt16">自提用户信息</div>
-				<div class="table-wrap" v-if="detail.extract">
-					<el-row>
-						<el-col :span="6">
-							<div class="pb16">
-								<span class="gray9">联系电话：</span>
-								{{ detail.extract.phone }}
-							</div>
-						</el-col>
-					</el-row>
-					<el-row>
-						<el-col :span="25">
-							<div class="pb16">
-								<span class="gray9">备注：</span>
-								{{ detail.buyer_remark }}
-							</div>
-						</el-col>
-					</el-row>
-				</div>
-			</template> -->
-
-            <!--付款信息-->
-            <!-- <div class="table-wrap" v-if="detail.pay_status.value == 20">
-				<div class="common-form mt16">付款信息</div>
-				<div class="table-wrap">
-					<el-row>
-						<el-col :span="6">
-							<div class="pb16">
-								<span class="gray9">应付款金额：</span>
-								{{ detail.pay_price }}
-							</div>
-						</el-col>
-						<el-col :span="6">
-							<div class="pb16">
-								<span class="gray9">支付方式：</span>
-								{{ detail.pay_type.text }}
-							</div>
-						</el-col>
-						<el-col :span="6">
-							<div class="pb16">
-								<span class="gray9">支付流水号：</span>
-								{{ detail.transaction_id }}
-							</div>
-						</el-col>
-						<el-col :span="6">
-							<div class="pb16">
-								<span class="gray9">付款状态：</span>
-								{{ detail.pay_status.text }}
-							</div>
-						</el-col>
-						<el-col :span="6">
-							<div class="pb16">
-								<span class="gray9">付款时间：</span>
-								{{ detail.pay_time }}
-							</div>
-						</el-col>
-						<el-col :span="6" v-if="detail.refund_money>0">
-							<div class="pb16">
-								<span class="gray9">退款金额：</span>
-								{{ detail.refund_money }}
-							</div>
-						</el-col>
-					</el-row>
-				</div>
-			</div> -->
-
-            <!--发货信息-->
-            <!-- <div v-if="detail.delivery_type.value == 10">
-				<div>
-					<div class="common-form mt16">配送信息</div>
-					<div class="table-wrap">
-						<el-row>
-							<el-col :span="6">
-								<div class="pb16">
-									<span class="gray9">配送状态：</span>
-									{{ detail.delivery_status.text }}
-								</div>
-							</el-col>
-						</el-row>
-					</div>
-				</div>
-			</div> -->
-
-            <!--取消信息-->
             <div class="table-wrap" v-if="detail.order_status.value == 20 && detail.cancel_remark != ''">
                 <div class="common-form mt16">{{ $t('取消信息') }}</div>
                 <div class="table-wrap">
@@ -316,7 +199,7 @@
             </div>
         </div>
         <div class="common-button-wrapper">
-            <el-button size="small"  @click="cancelFunc">{{ $t('返回') }}</el-button>
+            <el-button size="small" @click="cancelFunc">{{ $t('返回') }}</el-button>
             <el-button v-if="detail.order_status.value == 30" @click="refundClick(detail)" type="danger" size="small"
                 v-auth="'/store/operate/refund'">{{ $t('退款')
                 }}</el-button>
@@ -332,8 +215,8 @@
             @closeDialog="closeDialogFunc($event, 'edit')">
         </Cancel>
         <!--处理-->
-        <refund v-if="open_refund" :open_edit="open_refund" :order_no="order_no" :order_id="order_id"
-        :pay_price="pay_price"  @closeDialog="closerefundDialogFunc($event, 'edit')">
+        <refund v-if="open_refund" :open_edit="open_refund" :order_no="order_no" :order_id="order_id" :pay_price="pay_price"
+            @closeDialog="closerefundDialogFunc($event, 'edit')">
         </refund>
     </div>
 </template>
@@ -378,12 +261,15 @@ export default {
             order_no: 0,
             order_id: 0,
             pay_price: 0,
+            buffet: [],
+            tableData: [],
         };
     },
     created() {
         /*获取列表*/
         this.getParams();
     },
+
     methods: {
         next() {
             if (this.active++ > 4) this.active = 0;
@@ -399,6 +285,42 @@ export default {
                 .then(data => {
                     self.loading = false;
                     self.detail = data.data.detail;
+                    self.detail.buffet.map(item => {
+                        self.buffet.push(item.name_text)
+                        self.tableData.push({
+                            name_text: item.name_text,
+                            image: { file_path:'buffet' },
+                            product_attr: '',
+                            refund: '',
+                            product_price: item.price,
+                            total_num: self.detail.meal_num,
+                        })
+                    })
+                    self.buffet = self.buffet.join('+')
+
+                    self.detail.delay.map(item => {
+                        self.tableData.push({
+                            name_text: item.name_text,
+                            image: { file_path:'clock' },
+                            product_attr: '',
+                            refund: '',
+                            product_price: item.price,
+                            total_num: self.detail.meal_num,
+                        })
+                    })
+
+
+                    self.detail.product.map(item => {
+                        self.tableData.push({
+                            name_text: item.product_name_text,
+                            image: item.image,
+                            product_attr: item.product_attr,
+                            refund: item.refund,
+                            product_price: item.product_price,
+                            total_num: item.total_num,
+                        })
+                    })
+
                 })
                 .catch(error => {
                     self.loading = false;
@@ -462,8 +384,6 @@ export default {
     }
 };
 </script>
-<style scoped lang="scss">
-.common-button-wrapper {
+<style scoped lang="scss">.common-button-wrapper {
     justify-content: flex-end;
-}
-</style>
+}</style>

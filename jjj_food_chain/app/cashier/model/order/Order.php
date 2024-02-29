@@ -2,9 +2,7 @@
 
 namespace app\cashier\model\order;
 
-use think\facade\Log;
 use app\common\library\helper;
-use app\common\model\store\PayType;
 use app\shop\model\product\Category;
 use app\api\model\order\OrderProduct;
 use app\common\model\supplier\Supplier;

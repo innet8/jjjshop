@@ -33,7 +33,7 @@ class LanguageEnum extends Enum
             ],
             [
                 'name' => 'ja',
-                'value' => '日本語です',
+                'value' => '日本語',
             ],
             [
                 'name' => 'ko',
@@ -75,7 +75,7 @@ class LanguageEnum extends Enum
             [
                 'key' => 4,
                 'name' => 'ja',
-                'value' => '日本語です',
+                'value' => '日本語',
             ]
         ];
     }
