@@ -27,7 +27,7 @@ class Table extends BaseModel
      */
     public function underwayOrder()
     {
-        return $this->hasOne('app\\common\\model\\order\\Order', 'table_id', 'table_id')->where('order_status', 10);
+        return $this->hasOne('app\\common\\model\\order\\Order', 'table_id', 'table_id')->where('order_status', 10)->order('order_id desc');
     }
 
     /**
