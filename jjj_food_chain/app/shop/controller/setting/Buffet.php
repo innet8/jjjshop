@@ -47,8 +47,8 @@ class Buffet extends Controller
             if (empty($data['add_clock'])) {
                 return $this->renderError('加钟设置不能为空');
             }
-            $delayModel = new DelayModel;
-            foreach ($data['add_clock'] as &$clock) {
+            foreach ($data['add_clock'] as $clock) {
+                $delayModel = new DelayModel;
                 if (empty($clock['name']) || empty($clock['delay_time']) || empty($clock['price'])) {
                     return $this->renderError('加钟设置参数错误');
                 }
