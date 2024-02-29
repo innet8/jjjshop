@@ -175,12 +175,12 @@ class OrderProduct extends BaseModel
             ->when( $deductStockType == DeductStockTypeEnum::CREATE , function($q){
                 $q->where('is_send_kitchen', 0);
             })
-            // 
+            //
             ->where('order_product_id', '<>', $this->order_product_id)
             ->where('product_id', '=', $this->product_id)
             ->where('product_sku_id', '=', $this->product_sku_id)
             ->sum('total_num');
-        // 
+        //
         return (new ProductSkuModel)->where('product_id', '=', $this->product_id)
             ->where('product_sku_id', '=', $this->product_sku_id)
             ->where('stock_num', '>', $orderProductNum + $product_num - 1)
@@ -221,9 +221,9 @@ class OrderProduct extends BaseModel
             $this->error = '商品已下架';
             return false;
         }
-        // 
+        //
         if ($param['type'] != 'down') {
-            // 
+            //
             $deductStockType = ProductModel::where('product_id', $this->product_id)->value('deduct_stock_type');
             if ($deductStockType == DeductStockTypeEnum::CREATE) {
                 $stockStatus = $this->getStockState($param['product_num']);
@@ -319,17 +319,17 @@ class OrderProduct extends BaseModel
     {
         $orderProduct = $this->where('order_product_id', '=', $order_product_id)->find();
         if (empty($orderProduct)) {
-            $this->error = '商品不存';
+            $this->error = '商品不存在';
             return false;
         }
         if ($orderProduct->orderM()->value('is_lock') == 1) {
             $this->error = '当前订单已被锁定';
             return false;
         }
-        // 
+        //
         $orderProduct->remark = $remark;
         $orderProduct->save();
-        // 
+        //
         return true;
     }
 
@@ -407,14 +407,14 @@ class OrderProduct extends BaseModel
 
         $this->startTrans();
         try {
-            // 
+            //
             $res = ProductFactory::getFactory($order['order_source'])->updateOrderProductStock($order['unSendKitchenProduct'], $type);
             if ($res !== true) {
                 $this->error = "商品库存不足，请重新选择";
                 $this->errorData = $res;
                 return false;
             }
-            // 
+            //
             $order->where('order_id', $order_id)->inc('extra_times', 1)->update();
             // 送厨更新取单号
             if ($order->table_id == 0){
