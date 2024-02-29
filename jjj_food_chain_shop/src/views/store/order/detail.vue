@@ -127,10 +127,11 @@
                             {{ detail.cashier?.real_name }}
                         </div>
                     </el-col>
-                    <el-col :span="6" v-if="detail?.buffet?.length > 0">
+                    <el-col :span="6" v-if="detail.is_buffet == 1">
                         <div class="pb16">
                             <span class="gray9">{{ $t('自助餐：') }}</span>
-                            {{ buffet }}
+                            <template v-if="detail?.buffet?.length > 0">{{ buffet }}</template>
+                            <template v-else>-</template>
                         </div>
                     </el-col>
                 </el-row>
