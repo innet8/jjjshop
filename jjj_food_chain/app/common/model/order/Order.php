@@ -899,6 +899,10 @@ class Order extends BaseModel
                 $this->error = '订单已结束';
                 return false;
             }
+            if ($this['is_buffet']) {
+                $this->updateBuffetMealNum($this['order_id'], $meal_num);
+                $this->updateDelayMealNum($this['order_id'], $meal_num);
+            }
             $this->save(['meal_num' => $meal_num]);
             $this->reloadPrice($this['order_id']);
             $this->commit();
@@ -1634,4 +1638,31 @@ class Order extends BaseModel
     {
         return (new OrderDelay)->where('order_id', '=', $order_id)->sum('num');
     }
+
+    // 更新订单自助餐人数
+    public function updateBuffetMealNum($order_id, $meal_num)
+    {
+        $list = (new OrderBuffet)->where('order_id', '=', $order_id)->select();
+        foreach ($list as $item) {
+            $updateArr = [
+                'num' => $meal_num,
+                'total_price' => round(helper::bcmul($item['price'], $meal_num, 3), 2),
+            ];
+            $item->save($updateArr);
+        }
+    }
+
+    // 更新订单加钟人数
+    public function updateDelayMealNum($order_id, $meal_num)
+    {
+        $list = (new OrderDelay())->where('order_id', '=', $order_id)->select();
+        foreach ($list as $item) {
+            $updateArr = [
+                'num' => $meal_num,
+                'total_price' => round(helper::bcmul($item['price'], $meal_num, 3), 2),
+            ];
+            $item->save($updateArr);
+        }
+    }
+
 }
