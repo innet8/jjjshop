@@ -208,6 +208,8 @@ export default {
     .limit-product-list {
         width: 100%;
         max-width: 600px;
+        max-height: 320px;
+        overflow-y: auto;
         display: flex;
         flex-direction: column;
         margin-top: 16px;
