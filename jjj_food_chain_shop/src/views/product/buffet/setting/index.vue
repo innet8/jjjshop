@@ -40,7 +40,7 @@
                                     validator: () => {
                                         return item.name ? true : false;
                                     },
-                                    message: $t('请输入时间')
+                                    message: $t('请输入名称')
                                 }]">
                                     <el-input type="text" style="margin-top: 16px;min-width: 160px;" v-model="item.name"
                                         :placeholder="$t('名称')"></el-input>
