@@ -218,13 +218,13 @@ export default {
             let war = "";
             let war_ = '';
             if (state == 20) {
-                war = $t("强制下架"),
+                war = $t("确认要强制下架吗?"),
                     war_ = $t('下架')
             } else if (state == 10) {
-                war = $t("重新上架"),
+                war = $t("确认要重新上架吗?"),
                     war_ = $t('上架')
             }
-            ElMessageBox.confirm($t("确认要") + war + $t("吗?"), $t('提示'), {
+            ElMessageBox.confirm(war , $t('提示'), {
                 type: 'warning'
             })
                 .then(() => {
