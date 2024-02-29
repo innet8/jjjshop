@@ -66,7 +66,7 @@ class Buffet extends BuffetModel
             $this->error = '请选择组合产品';
             return false;
         }
-        $productIds = $data['is_comb'] == 1 ? explode(',', $data['product_ids']) : [];
+        $productIds = explode(',', $data['product_ids']);
 
         // 如果开启限购，则必须填写限购数量
         if ($data['buy_limit_status'] == 1 && ($data['buy_limit_products'] ?? []) == []) {
@@ -143,7 +143,7 @@ class Buffet extends BuffetModel
             $this->error = '请选择组合产品';
             return false;
         }
-        $productIds = $data['is_comb'] == 1 ? explode(',', $data['product_ids']) : [];
+        $productIds = explode(',', $data['product_ids']);
 
         // 如果开启限购，则必须填写限购数量
         if ($data['buy_limit_status'] == 1 && ($data['buy_limit_products'] ?? []) == []) {
