@@ -339,9 +339,9 @@ class Order extends OrderModel
     }
 
     // 自助餐到期提醒
-    public static function buffetTimeRemind($tid, $buffet_expired_time, $minute)
+    public static function buffetTimeRemind($tid, $buffet_expired_time, $tablet_end_time_minute)
     {
-        $second = $minute * 60;
+        $second = $tablet_end_time_minute * 60;
         $now_timestamp = time();
         $buffet_remaining_time = $buffet_expired_time - $now_timestamp;
         $lock = Cache::get("remind::{$tid}");
