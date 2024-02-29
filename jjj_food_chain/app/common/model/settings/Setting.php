@@ -58,7 +58,7 @@ class Setting extends BaseModel
         $model = new static;
         $result = $model->withoutGlobalScope()->where('key', '=', SettingEnum::SYS_CONFIG)->value('values');
         if (!$result) {
-            $languageList = self::getSupplierItem(SettingEnum::STORE, User::getShopInfo('shop_supplier_id'))['language'] ?? [];
+            $languageList = self::getSupplierLanguage(User::getShopInfo('shop_supplier_id'))['language'] ?? [];
             $result = $model->defaultData(null,$languageList)[SettingEnum::SYS_CONFIG]['values'];
         } else {
             $result = json_decode($result, true);
@@ -67,11 +67,26 @@ class Setting extends BaseModel
     }
 
     /**
+     * 获取指定项语言设置
+     */
+    public static function getSupplierLanguage($shop_supplier_id, $app_id = null)
+    {
+        $data = self::getAll($app_id, $shop_supplier_id);
+        $data_key = $data[SettingEnum::STORE]['values'] ?? [];
+        if (isset($data_key['language'])) {
+            $data_key['language'] = $data_key['language'] ?: LanguageEnum::default();
+        } else {
+            $data_key['language'] = LanguageEnum::default();
+        }
+        return $data_key['language'];
+    }
+
+    /**
      * 获取指定项设置
      */
     public static function getSupplierItem($key, $shop_supplier_id, $app_id = null)
     {
-        $languageList = $key != SettingEnum::STORE ? (self::getSupplierItem(SettingEnum::STORE, $shop_supplier_id)['language'] ?? []) : [];
+        $languageList = $key != SettingEnum::STORE ? self::getSupplierLanguage($shop_supplier_id,$app_id) : [];
         $data = self::getAll($app_id, $shop_supplier_id, $languageList);
         $data_key = $data[$key];
         if (isset($data_key)) {
@@ -79,13 +94,6 @@ class Setting extends BaseModel
             jsonRecursive($data_key);
         } else {
             $data_key = [];
-        }
-        if ($key == SettingEnum::STORE) {
-            if (isset($data_key['language'])) {
-                $data_key['language'] = $data_key['language'] ?: LanguageEnum::default();
-            } else {
-                $data_key['language'] = LanguageEnum::default();
-            }
         }
         return $data_key;
     }

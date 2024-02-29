@@ -764,7 +764,7 @@ function getSettingLanguages()
         Cache::tag('common'. $shop_supplier_id)->set('common_shop_supplier_id', $shop_supplier_id);
     }
     if (!$languages = Cache::get('common_setting_languages' . $shop_supplier_id)) {
-        $languages = SettingModel::getSupplierItem(SettingEnum::STORE, $shop_supplier_id)['language'];
+        $languages = SettingModel::getSupplierLanguage($shop_supplier_id);
         Cache::tag('common'. $shop_supplier_id)->set('common_setting_languages' . $shop_supplier_id, $languages);
     }
     return $languages;

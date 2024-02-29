@@ -1007,4 +1007,5 @@ return [
     "未开启加钟" => "Clock is not enabled",
     "加钟成功" => "Add clock successfully",
     "加钟失败" => "Clock failed",
+    "自助餐正在使用中，不可删除" => "The buffet is currently in use and cannot be deleted",
 ];

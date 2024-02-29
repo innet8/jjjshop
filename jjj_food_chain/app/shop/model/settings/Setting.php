@@ -17,7 +17,7 @@ class Setting extends SettingModel
         // 删除系统设置缓存
         Cache::set('setting_' . self::$app_id . '_' . $shop_supplier_id, null);
         Cache::tag('common'.$shop_supplier_id)->clear();
-        //
+        // 
         $data = [
             'key' => $key,
             'describe' => SettingEnum::data()[$key]['describe'],
