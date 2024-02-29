@@ -113,7 +113,7 @@
                 <el-button type="primary" @click="submit" :loading="loading">{{ $t('确定') }}</el-button>
             </div>
         </template>
-        <productList v-if="open_product" :open_product="open_product" :limit_ids="limit_ids" :selectType="selectType"
+        <productList v-if="open_product" :open_product="open_product" :limit_ids="limit_ids" :selectType="selectType" :multiple_selection="multiple_selection"
             @closeDialogFunc="closeDialogFunc($event)">
         </productList>
     </el-dialog>
