@@ -343,7 +343,9 @@ class Order extends OrderModel
     {
         $second = $minute * 60;
         $now_timestamp = time();
-        if (($buffet_expired_time - $now_timestamp < $second) && Cache::get("remind::{$tid}")) {
+        $buffet_remaining_time = $buffet_expired_time - $now_timestamp;
+        $lock = Cache::get("remind::{$tid}");
+        if (($buffet_remaining_time < $second) && !$lock) {
             Cache::set("remind::{$tid}", 1, $second);
             return 1;
         }
