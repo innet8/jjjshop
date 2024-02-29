@@ -1617,9 +1617,21 @@ class Order extends BaseModel
         return (new OrderBuffet)->where('order_id', '=', $order_id)->sum('price');
     }
 
+    // 订单自助餐数量
+    public static function getBuffetNum($order_id)
+    {
+        return (new OrderBuffet)->where('order_id', '=', $order_id)->sum('num');
+    }
+
     // 订单加钟费用
     public static function getDelayPrice($order_id)
     {
         return (new OrderDelay())->where('order_id', '=', $order_id)->sum('price');
+    }
+
+    // 订单自助餐数量
+    public static function getDelayNum($order_id)
+    {
+        return (new OrderDelay)->where('order_id', '=', $order_id)->sum('num');
     }
 }
