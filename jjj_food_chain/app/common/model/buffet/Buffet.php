@@ -74,7 +74,7 @@ class Buffet extends BaseModel
     public static function getList()
     {
         return (new self())->where('status', '=', 1)
-            ->order('sort asc')
+            ->order('sort asc,id desc')
             ->select();
     }
 }
