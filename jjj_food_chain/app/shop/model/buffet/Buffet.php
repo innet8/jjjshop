@@ -60,6 +60,10 @@ class Buffet extends BuffetModel
             $this->error = '请输入自助餐名称';
             return false;
         }
+        // 如果name为数组，则转为json_encode保存
+        if (is_array($data['name'])) {
+            $data['name'] = json_encode($data['name'], JSON_UNESCAPED_UNICODE);
+        }
 
         // 如果开启组合产品，则必须填写组合产品
         if ($data['is_comb'] == 1 && ($data['product_ids'] ?? '') == '') {
@@ -136,6 +140,10 @@ class Buffet extends BuffetModel
         if(hasEmptyValue($data['name'])){
             $this->error = '请输入自助餐名称';
             return false;
+        }
+        // 如果name为数组，则转为json_encode保存
+        if (is_array($data['name'])) {
+            $data['name'] = json_encode($data['name'], JSON_UNESCAPED_UNICODE);
         }
 
         // 如果开启组合产品，则必须填写组合产品
