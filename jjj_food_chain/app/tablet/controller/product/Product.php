@@ -53,23 +53,19 @@ class Product extends Controller
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/tablet/product.product/detail")
      * @Apidoc\Param("product_id", type="int", require=false, default="0", desc="商品id")
-     * @Apidoc\Param("table_id", type="int", require=false, desc="桌台ID")
      * @Apidoc\Returned("list",type="array",ref="app\common\model\product\Product\detail")
      */
-    public function detail($product_id, $table_id = 0)
+    public function detail($product_id)
     {
         // 商品详情
         $detail = ProductModel::detail($product_id);
-        // 如果选择自助餐
-        if ($table_id > 0) {
-            $order = Order::detail([
-                ['table_id', '=', $table_id],
-                ['order_status', '=', OrderStatusEnum::NORMAL]
-            ]);
-            if ($order) {
-                $buffetProductArr = Order::getOrderBuffetProductArr($order['order_id']);
-                $detail = Order::handleBuffetProductDetail($detail, $buffetProductArr);
-            }
+        $order = Order::detail([
+            ['table_id', '=', $this->table['table_id']],
+            ['order_status', '=', OrderStatusEnum::NORMAL]
+        ]);
+        if ($order) {
+            $buffetProductArr = Order::getOrderBuffetProductArr($order['order_id']);
+            $detail = Order::handleBuffetProductDetail($detail, $buffetProductArr);
         }
         return $this->renderSuccess('', $detail);
     }
