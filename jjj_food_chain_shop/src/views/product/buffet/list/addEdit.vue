@@ -260,6 +260,7 @@ export default {
             }
             if (e == 'limit') {
                 this.selectType = e;
+                this.multiple_selection = this.limit_list;
                 this.limit_ids = this.form.product_ids.join(',');
             }
             this.open_product = true;

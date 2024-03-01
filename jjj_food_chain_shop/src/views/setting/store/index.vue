@@ -150,6 +150,7 @@ export default {
                             if (self.form.lang.indexOf(nowLanguage) == -1) {
                                 languageStore().setLanguage(self.form.lang[0])
                             }
+                            languageStore().setLanguageList(params.language)
                             this.$ElMessage({
                                 message: $t('操作成功'),
                                 type: 'success'
