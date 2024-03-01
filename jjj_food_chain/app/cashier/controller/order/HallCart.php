@@ -197,7 +197,6 @@ class HallCart extends Controller
             return $this->renderError('订单不存在');
         }
         $order_id = $detail['order_id'];
-
         $model = new OrderProduct();
         if ($model->sendKitchen($order_id)) {
             return $this->renderSuccess('送厨成功');
