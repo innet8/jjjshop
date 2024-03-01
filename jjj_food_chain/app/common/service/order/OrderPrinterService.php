@@ -30,7 +30,7 @@ class OrderPrinterService
     public function printTicket($order)
     {
         // 打印机设置
-        $printerConfig = SettingModel::getSupplierItem('printer', $order['shop_supplier_id'], $order['app_id']);
+        $printerConfig = SettingModel::getSupplierItem(SettingEnum::PRINTER, $order['shop_supplier_id'], $order['app_id']);
         //
         if (($printerConfig['cashier_open'] ?? '') != 1){
             return;
@@ -148,6 +148,10 @@ class OrderPrinterService
      */
     private function getPrintContent($order, $printers = null)
     {
+        // 打印机设置
+        $printerConfig = SettingModel::getSupplierItem(SettingEnum::PRINTER, $order['shop_supplier_id'], $order['app_id']);
+        $buffetSignOpen = (int)($printerConfig['buffet_sign_open'] ?? 1);
+        //  
         $currency = SettingModel::getSupplierItem(SettingEnum::CURRENCY, $order['shop_supplier_id'], $order['app_id']);
         if ($currency['unit'] ?? '') {
             $this->currencyUnit = $currency['unit'];
@@ -155,15 +159,16 @@ class OrderPrinterService
         //
         $shop = SettingModel::getSupplierItem(SettingEnum::STORE, $order['shop_supplier_id'], $order['app_id']);
         $shopName = $shop['name'] ?? $order['supplier']['name'];
-
+        // 
         $products = [];
         foreach ($order['product'] as $product) {
             if (($product['is_buffet_product'] ?? 0) == 1 && $product['total_price'] <= 0) {
                 continue;
             }
+            $buffetText = ($buffetSignOpen && $product['is_buffet_product'] == 1) ? (__('自助餐').'-') : '';
             $key = $product['product_id'] . $product['product_sku_id'] . $product['product_attr'];
             $products[$key] = [
-                'product_name' => $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : ''),
+                'product_name' => $buffetText . $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : ''),
                 "total_num" => bcadd($product['total_num'], $products[$key]['total_num'] ?? 0),
                 "total_price" => bcadd($product['total_price'], $products[$key]['total_price'] ?? 0)
             ];

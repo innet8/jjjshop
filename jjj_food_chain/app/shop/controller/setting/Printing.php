@@ -45,6 +45,10 @@ class Printing extends Controller
         if (isset($postData['default_language'])) {
             $printerSettings['default_language'] = $postData['default_language'];
         }
+        // 自助餐标识
+        if (isset($postData['buffet_sign_open'])) {
+            $printerSettings['buffet_sign_open'] = $postData['buffet_sign_open'];
+        }
         if (isset($printerSettings['language_list'])) {
             unset($printerSettings['language_list']);
         }
