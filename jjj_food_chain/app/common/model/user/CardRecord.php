@@ -32,7 +32,10 @@ class CardRecord extends BaseModel
      */
     public function getExpireTimeTextAttr($value, $data)
     {
-        return isset($data['expire_time']) ? date('Y-m-d', $data['expire_time']) : __('永久有效');
+        if (!isset($data['expire_time'])) {
+            return __('无效有效期');
+        }
+        return $data['expire_time'] > 0 ? date('Y-m-d', $data['expire_time']) : __('永久有效');
     }
 
     /**
@@ -132,14 +135,11 @@ class CardRecord extends BaseModel
      */
     public static function checkExistByUserId($user_id, $order_id = 0)
     {
-        $model = new static;
+        $model = (new static)->where('is_delete', '=', 0)->where('pay_status', '=', 20)->where('user_id', '=', $user_id);
         if ($order_id) {
             $model = $model->where('order_id', '=', $order_id);
         }
-        return $model->where('is_delete', '=', 0)
-            ->where('pay_status', '=', 20)
-            ->where('user_id', '=', $user_id)
-            ->findOrEmpty();
+        return $model->findOrEmpty();
     }
 
     /**

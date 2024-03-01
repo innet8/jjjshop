@@ -193,6 +193,7 @@ export default {
             this.form.name = JSON.parse(this.form.name);
             this.form.time_limit > 0 ? this.form.is_time_limit = 1 : this.form.is_time_limit = 0;
             this.select_list = this.form.buffetProducts;
+            this.form.price = Number(this.form.price)
             this.form.product_ids = [];
             this.select_list.map((item, index) => {
                 this.select_list[index].product_name_text = item.product.product_name_text;

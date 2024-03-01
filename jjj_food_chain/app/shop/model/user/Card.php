@@ -72,10 +72,7 @@ class Card extends CardModel
         $userIdsArr = array_unique(explode(',', $userIds));
         foreach ($userIdsArr as $userId) {
             $isExist = (new CardRecord())->checkExistByUserId($userId);
-            trace("用户信息=====");
-            trace("用户ID：".$userId);
-            trace($isExist);
-            if (!$isExist->isEmpty()) {
+            if (!$isExist?->isEmpty()) {
                 if ($data['card_id'] == $isExist['card_id']) {
                     $this->error = "会员已拥有此会员卡";
                     return false;
@@ -86,11 +83,9 @@ class Card extends CardModel
             }
 
             $detail = self::detail($data['card_id']);
-            trace("会员卡信息=====");
-            trace("会员卡ID：".$data['card_id']);
-            trace($detail);
             $this->startTrans();
             try {
+                trace("1111111=====");
                 //添加会员卡
                 $record = [
                     'user_id' => $userId,
@@ -110,31 +105,42 @@ class Card extends CardModel
                     'app_id' => self::$app_id,
                 ];
                 $CardRecordModel = new CardRecordModel;
+                trace("2222222=====");
                 $CardRecordModel->save($record);
                 $user = (new User)::detail($userId);
+                trace("会员信息=====");
+                trace("会员ID：".$userId);
+                trace($user);
+                trace("3333333=====");
                 // 会员卡id
                 if ($data['card_id']) {
                     $user->setCardId($data['card_id']);
                 }
+                trace("4444444=====");
+                trace("会员信息=====");
+                trace($user);
+                trace("open_points=====".$detail['open_points']);
+                trace("open_points_num=====".$detail['open_points_num']);
                 // 赠送积分
                 if ($detail['open_points'] && $detail['open_points_num']) {
                     $user->setIncPoints($detail['open_points_num'], '发会员卡获取积分');
                 }
+                trace("555555=====");
                 // 赠送优惠券
                 if ($detail['open_coupon'] && $detail['open_coupons']) {
                     (new UserCouponModel)->addUserCardCoupon($detail['open_coupons'], $user, $CardRecordModel['order_id']);
                 }
+                trace("66666=====");
                 // 赠送余额
                 if ($detail['open_money'] && $detail['open_money_num']) {
-                    (new User())->where('user_id', '=', $user['user_id'])
-                        ->inc('balance', $detail['open_money_num'])->update();
-
+                    (new User())->where('user_id', '=', $user['user_id'])->inc('balance', $detail['open_money_num'])->update();
                     BalanceLogModel::add(BalanceLogSceneEnum::ADMIN, [
                         'user_id' => $user['user_id'],
                         'card_id' => $data['card_id'],
                         'money' => $detail['open_money_num'],
                     ], ['order_no' => '后台发放会员卡赠送']);
                 }
+                trace("777777=====");
                 $detail->save(['receive_num' => $detail['receive_num'] + 1]);
                 $this->commit();
             } catch (\Exception $e) {
