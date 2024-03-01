@@ -32,7 +32,7 @@ class CardRecord extends BaseModel
      */
     public function getExpireTimeTextAttr($value, $data)
     {
-        return $data['expire_time'] ? date('Y-m-d', $data['expire_time']) : __('永久有效');
+        return isset($data['expire_time']) ? date('Y-m-d', $data['expire_time']) : __('永久有效');
     }
 
     /**
