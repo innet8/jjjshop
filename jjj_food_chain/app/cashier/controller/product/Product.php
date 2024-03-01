@@ -39,8 +39,8 @@ class Product extends Controller
             $param['order_id'] = $order['order_id'];
         }
         $list = $model->list(array_merge(['shop_supplier_id' => $this->cashier['user']['shop_supplier_id']], $param));
-        // 如果选择自助餐
-        if ($order && $order['is_buffet'] == 1) {
+        if ($order) {
+            // 根据订单显示列表内容
             $buffetProductArr = Order::getOrderBuffetProductArr($order['order_id']);
             $list['data'] = Order::handleBuffetProductIndex($list['data'], $buffetProductArr, $order['meal_num']);
         }
