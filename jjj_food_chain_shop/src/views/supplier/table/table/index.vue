@@ -57,7 +57,7 @@
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
                                 v-auth="'/supplier/table/table/edit'">{{ $t('编辑') }}
                             </el-button>
-                            <el-button :disabled="scope.row.is_bind == 0" @click="untieClick(scope.row)" type="primary" link size="small"
+                            <el-button :disabled="scope.row.is_bind == 0 || scope.row.status == 30" @click="untieClick(scope.row)" type="primary" link size="small"
                                 v-auth="'/supplier/table/table/untie'">{{ $t('解绑') }}
                             </el-button>
                             <el-button @click="deleteClick(scope.row)" type="primary" :disabled="scope.row.status == 30" link size="small"
