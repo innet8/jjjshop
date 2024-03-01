@@ -1223,7 +1223,7 @@ class Order extends BaseModel
             // 检查自助餐商品可添加状态
             if ($detail['is_buffet'] == 1 && $detail['buffet_expired_time'] != -1 && $detail['buffet_expired_time'] < time()) {
                 // 自助餐设置
-                $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $this->cashier['user']['shop_supplier_id'] ?? 0, $this->cashier['user']['app_id'] ?? 0);
+                $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $user['shop_supplier_id'] ?? 0, $user['app_id'] ?? 0);
                 if ($buffetSetting['is_buy_continue'] != 1) {
                     $this->error = '用餐时间已到，无法添加商品';
                     return false;
