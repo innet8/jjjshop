@@ -1665,4 +1665,23 @@ class Order extends BaseModel
         }
     }
 
+    // 订单已送厨商品数量
+    public static function getSendKitchenNum($order_id, $product_id)
+    {
+        return (new OrderProduct)
+            ->where('order_id', '=', $order_id)
+            ->where('product_id', '=', $product_id)
+            ->where('is_send_kitchen', '=', 1)
+            ->sum('total_num');
+    }
+
+    // 订单未送出商品数量
+    public static function getUnSendKitchenNum($order_id, $product_id)
+    {
+        return (new OrderProduct)
+            ->where('order_id', '=', $order_id)
+            ->where('product_id', '=', $product_id)
+            ->where('is_send_kitchen', '=', 0)
+            ->sum('total_num');
+    }
 }

@@ -716,17 +716,22 @@ class Cart extends CartModel
     {
         $meal_num = 0;
         if ($order_id > 0) {
-            $order = OrderModel::detail([
-                ['order_id', '=', $order_id],
-                ['order_status', '=', OrderStatusEnum::NORMAL]
-            ]);
             // 购物车商品列表
             $cartList = (new static())->with('product')
                 ->where('cashier_id', '=', $cashier['cashier_id'])
                 ->where('order_id', '=', $order_id)
                 ->where('is_stay', '=', 0)
                 ->select();
-            $meal_num = $order['meal_num'];
+            // 是否存在订单
+            $order = OrderModel::detail([
+                ['order_id', '=', $order_id],
+                ['order_status', '=', OrderStatusEnum::NORMAL]
+            ]);
+            if (!$order) {
+                $order = null;
+            } else {
+                $meal_num = $order['meal_num'];
+            }
         } else if($table_id > 0){
             // 购物车商品列表
             $cartList = (new static())->with('product')
@@ -736,10 +741,14 @@ class Cart extends CartModel
                 ->select();
             // 是否存在订单
             $order = OrderModel::detail([
-                ['table_id', '=', $table_id],
+                ['order_id', '=', $order_id],
                 ['order_status', '=', OrderStatusEnum::NORMAL]
             ]);
-            $meal_num = $order['meal_num'];
+            if (!$order) {
+                $order = null;
+            } else {
+                $meal_num = $order['meal_num'];
+            }
         } else {
             // 购物车商品列表
             $cartList = (new static())->with('product')

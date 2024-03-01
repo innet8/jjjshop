@@ -408,6 +408,17 @@ class OrderProduct extends BaseModel
                         return false;
                     }
                 }
+                // 判断限购
+                if ($order_product['is_buffet_product'] == 1) {
+                    $limitNum = Order::getBuffetProductLimitNum($order['order_id'], $order_product['product_id']) * $order['meal_num'];
+                } else {
+                    $limitNum = ProductModel::getProductLimitNum($order_product['product_id']);
+                }
+                $total_num = Order::getSendKitchenNum($order['order_id'], $order_product['product_id']) + Order::getUnSendKitchenNum($order['order_id'], $order_product['product_id']);
+                if ($limitNum && $total_num > $limitNum) {
+                    $this->error = '超过限购数量';
+                    return false;
+                }
             }
         }
 
