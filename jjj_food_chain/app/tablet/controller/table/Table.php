@@ -81,7 +81,7 @@ class Table extends Controller
         unset($tablet['advanced_password']);
         $table['tablet'] = $tablet;
         // 桌台当前进行中订单
-        $table['order'] = OrderModel::getTableUnderwayOrder($table_id) ?? [];
+        $table['order'] = OrderModel::getTableUnderwayOrder($table_id);
         return $this->renderSuccess('桌台信息', $table);
     }
 
