@@ -114,7 +114,8 @@ class Table extends Controller
                     'is_buffet' => $detail['is_buffet'],
                     'remind' => OrderModel::buffetTimeRemind($tableId, $detail['buffet_expired_time'], $buffetSetting['tablet_end_time']),
                     'minute' => $buffetSetting['tablet_end_time'],
-                    'buffet_remaining_time' => OrderModel::getBuffetRemainingTime($detail['buffet_expired_time'])
+                    'buffet_remaining_time' => OrderModel::getBuffetRemainingTime($detail['buffet_expired_time']),
+                    'buffet_expired_time' => $detail['buffet_expired_time'],
                 ];
             }
         }
