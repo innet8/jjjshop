@@ -90,6 +90,11 @@ class Controller extends JjjController
             throw new BaseException(['msg' => '绑定失效', 'code' => -3]);
         }
         $tid = Request()->header('tid');
+        if ($tid) {
+            if (!Table::isBind($tid)){
+                throw new BaseException(['msg' => '桌台未绑定', 'code' => -3]);
+            }
+        }
         $this->table = [
             'shop_supplier_id' => $sid ?? 0,
             'table_id' => $tid ?? 0,

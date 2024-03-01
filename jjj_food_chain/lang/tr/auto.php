@@ -1019,4 +1019,5 @@ return [
     "订单已被锁定，请解锁后重新操作" => "Sipariş kilitlendi, lütfen kilidini açın ve tekrar deneyin.",
     "用餐时间已到，无法继续下单" => "Yemek süresi doldu ve sipariş verilemiyor.",
     "日本語" => "Japonca",
+    "桌台未绑定" => "Tablo bağlı değil",
 ];

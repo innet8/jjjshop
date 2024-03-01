@@ -53,6 +53,12 @@ class Table extends BaseModel
         return $tableStatus == 30;
     }
 
+    // 查询桌台是否绑定中 1:绑定  0:未绑定
+    public static function isBind($table_id)
+    {
+        return static::where('table_id', '=', $table_id)->value('is_bind') == 1;
+    }
+
     // 获取桌台分类
     public static function getAreaType($shop_supplier_id)
     {

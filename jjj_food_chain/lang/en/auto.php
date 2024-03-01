@@ -1018,4 +1018,5 @@ return [
     "订单已被锁定，请解锁后重新操作" => "The order has been locked, please unlock it and try again.",
     "用餐时间已到，无法继续下单" => "Meal time has expired and order cannot be placed.",
     "日本語" => "Japanese",
+    "桌台未绑定" => "The table is not bound",
 ];
