@@ -8,24 +8,26 @@
         <!--form表单-->
         <el-form size="small" ref="form" :model="form" label-position="top" label-width="200px">
 
-            <el-form-item :label="$t('默认语言')"  class="cashier-item" prop="default_language" :rules="[{ required: true, message: ' ' }]">
+            <el-form-item :label="$t('默认语言')" class="cashier-item" prop="default_language" :rules="[{ required: true, message: ' ' }]">
                 <el-select class="max-w460" v-model="form.default_language" :placeholder="$t('请选择')">
-                    <el-option v-for="(item, index) in langList" :key="index" :label="item.value"
-                        :value="item.key">
+                    <el-option v-for="(item, index) in langList" :key="index" :label="item.value" :value="item.key">
                     </el-option>
                 </el-select>
             </el-form-item>
-            <div  class="cashier-desc">{{ $t('小票显示的语言将根据选择的语言打印') }}</div>
+            <div class="cashier-desc">{{ $t('小票显示的语言将根据选择的语言打印') }}</div>
 
-            <el-form-item :label="$t('自助餐标识')" :rules="[{ required: true, message: '' }]">
-                    <el-radio-group v-model="form.buffet_sign_open">
-                        <el-radio label="1">{{ $t('开') }}</el-radio>
-                        <el-radio label="0">{{ $t('关') }}</el-radio>
-                    </el-radio-group>
-                </el-form-item>
+            <el-form-item :label="$t('自助餐标识')" class="cashier-item" :rules="[{ required: true, message: '' }]">
+                <el-radio-group v-model="form.buffet_sign_open">
+                    <el-radio label="1">{{ $t('开') }}</el-radio>
+                    <el-radio label="0">{{ $t('关') }}</el-radio>
+                </el-radio-group>
+
+            </el-form-item>
+            <div class="cashier-desc">{{ $t('开启后将在送厨小票中对自助餐商品增加标识') }}</div>
+
             <!--提交-->
             <div class="common-button-wrapper">
-                <el-button  @click="getData" :loading="loading">{{ $t('重置') }}</el-button>
+                <el-button @click="getData" :loading="loading">{{ $t('重置') }}</el-button>
                 <el-button type="primary" @click="onSubmit" :loading="loading">{{ $t('保存') }}</el-button>
             </div>
         </el-form>
@@ -43,7 +45,7 @@ export default {
             /*form表单数据*/
             form: {
                 default_language: 'en',
-                buffet_sign_open:'1',
+                buffet_sign_open: '1',
             },
             checked: false,
             langList: [],
@@ -105,10 +107,12 @@ export default {
 .tips {
     color: #ccc;
 }
-.cashier-item{
+
+.cashier-item {
     margin-bottom: 0 !important;
 }
-.cashier-desc{
+
+.cashier-desc {
     font-size: 14px;
     color: #ccc;
     margin-bottom: 20px;
