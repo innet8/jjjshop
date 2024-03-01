@@ -398,23 +398,26 @@ class OrderProduct extends BaseModel
             // 自助餐设置
             $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $order['shop_supplier_id'], $order['app_id']);
             $buffet_remaining_time = Order::getBuffetRemainingTime($order['buffet_expired_time']);
-            trace('bbbbbbbbbb');
+
+            trace('aaaaaaaa');
             trace('$buffet_remaining_time');
             trace($buffet_remaining_time);
+            trace('is_buy_continue');
+            trace($buffetSetting['is_buy_continue']);
+            trace('buffet_expired_time');
+            trace($order['buffet_expired_time']);
             foreach ($order['unSendKitchenProduct'] as $order_product) {
                 if ($order_product['is_buffet_product'] == 1) {
                     if ($buffet_remaining_time <= 0 && $order['buffet_expired_time'] != -1) {
                         $this->error = '自助餐时间已到达，自助餐商品不可继续下单';
                         return false;
                     }
-                } else {
-                    if ($buffetSetting['is_buy_continue'] != 1 && $buffet_remaining_time <= 0 && $order['buffet_expired_time'] != -1) {
+                } else if ($buffetSetting['is_buy_continue'] != 1 && $buffet_remaining_time <= 0 && $order['buffet_expired_time'] != -1) {
                         trace('bbbbbbbbbb');
                         trace('$buffet_remaining_time');
                         trace($buffet_remaining_time);
                         $this->error = '用餐时间已到，无法继续下单';
                         return false;
-                    }
                 }
                 // 判断限购
                 if ($order_product['is_buffet_product'] == 1) {
