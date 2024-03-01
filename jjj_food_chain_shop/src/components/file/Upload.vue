@@ -235,9 +235,9 @@ export default {
 
         /*删除类别提示*/
         deleteCategoryFunc(e) {
-            ElMessageBox.confirm("此操作将永久删除该记录, 是否继续?", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            ElMessageBox.confirm($t("此操作将永久删除该记录, 是否继续?"), $t("提示"), {
+                confirmButtonText: $t("确定"),
+                cancelButtonText: $t("取消"),
                 type: "warning",
             })
                 .then(() => {
@@ -246,7 +246,7 @@ export default {
                 .catch(() => {
                     this.$ElMessage({
                         type: "info",
-                        message: "已取消删除",
+                        message: $t("已取消"),
                     });
                 });
         },
@@ -385,7 +385,7 @@ export default {
                     loading.close();
                     self.getData();
                     this.$ElMessage({
-                        message: $t("本次上传图成功"),
+                        message: $t("本次上传图片成功"),
                         type: "success",
                     });
                     self.cropperShow = false
