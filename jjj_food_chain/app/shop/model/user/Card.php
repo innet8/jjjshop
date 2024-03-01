@@ -119,14 +119,17 @@ class Card extends CardModel
                 if ($data['card_id']) {
                     $user->setCardId($data['card_id']);
                 }
+                trace("444444444=====");
                 // 赠送积分
                 if ($detail['open_points'] && $detail['open_points_num']) {
                     $user->setIncPoints($detail['open_points_num'], '发会员卡获取积分');
                 }
+                trace("555555=====");
                 // 赠送优惠券
                 if ($detail['open_coupon'] && $detail['open_coupons']) {
                     (new UserCouponModel)->addUserCardCoupon($detail['open_coupons'], $user, $CardRecordModel['order_id']);
                 }
+                trace("66666=====");
                 // 赠送余额
                 if ($detail['open_money'] && $detail['open_money_num']) {
                     (new User())->where('user_id', '=', $user['user_id'])->inc('balance', $detail['open_money_num'])->update();
@@ -136,7 +139,7 @@ class Card extends CardModel
                         'money' => $detail['open_money_num'],
                     ], ['order_no' => '后台发放会员卡赠送']);
                 }
-                trace("444444444=====");
+                trace("777777=====");
                 $detail->save(['receive_num' => $detail['receive_num'] + 1]);
                 $this->commit();
             } catch (\Exception $e) {
