@@ -56,6 +56,8 @@ class AuthService
         '/order/hallcart/buffetList', // 自助餐列表
         '/order/hallcart/addDelay', // 自助餐加钟
         '/order/hallcart/delayList', // 自助餐加钟列表
+        '/order/hallcart/delOrderDelay', // 自助餐删除加钟
+        '/order/hallcart/delOrderBuffet', // 自助餐删除
         '/order/hallcart/delProduct',
         '/order/hallcart/getSendKitchen',
         '/order/hallcart/tableProductList',
