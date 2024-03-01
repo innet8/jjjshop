@@ -405,7 +405,7 @@ class OrderProduct extends BaseModel
                         }
                     } else {
                         if ($buffetSetting['is_buy_continue'] != 1 && $buffet_expired_time <= 0 && $order['buffet_expired_time'] != -1) {
-                            $this->error = '自助餐时间已到达，自助餐商品不可继续下单';
+                            $this->error = '用餐时间已到，无法继续下单';
                             return false;
                         }
                     }
