@@ -2,6 +2,7 @@
 
 namespace app\common\model\order;
 
+use app\common\enum\order\OrderErrorEnum;
 use app\common\enum\settings\SettingEnum;
 use app\common\library\helper;
 use app\common\model\BaseModel;
@@ -395,6 +396,7 @@ class OrderProduct extends BaseModel
         if ($type != 'payment') {
             // 自助餐设置
             if ($order['is_buffet'] == 1) {
+                $out_limit_num = [];
                 $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $order['shop_supplier_id'], $order['app_id']);
                 $buffet_expired_time = Order::getBuffetRemainingTime($order['buffet_expired_time']);
                 foreach ($order['unSendKitchenProduct'] as $order_product) {
@@ -417,9 +419,14 @@ class OrderProduct extends BaseModel
                     }
                     $total_num = Order::getSendKitchenNum($order['order_id'], $order_product['product_id']) + Order::getUnSendKitchenNum($order['order_id'], $order_product['product_id']);
                     if ($limitNum && $total_num > $limitNum) {
-                        $this->error = '超过限购数量';
-                        return false;
+                        $out_limit_num[] = $order_product;
                     }
+                }
+                if (count($out_limit_num) > 0) {
+                    $this->error = "超过限购数量";
+                    $this->errorData = $out_limit_num;
+                    $this->errorCode = OrderErrorEnum::OUT_LIMIT_NUM;
+                    return false;
                 }
             }
         }

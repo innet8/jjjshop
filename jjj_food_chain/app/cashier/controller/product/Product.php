@@ -22,6 +22,7 @@ class Product extends Controller
      * @Apidoc\Param("search", type="string", require=false, default="", desc="搜索关键字")
      * @Apidoc\Param("is_special", type="int", require=false, default="", desc="是否特色分类 0-否 1-是")
      * @Apidoc\Param("table_id", type="int", require=false, desc="桌台ID")
+     * @Apidoc\Param("order_id", type="int", require=false, desc="订单ID")
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("list",type="array",ref="app\cashier\model\product\Product\list")
      */
@@ -37,6 +38,11 @@ class Product extends Controller
                 ['order_status', '=', OrderStatusEnum::NORMAL]
             ]);
             $param['order_id'] = $order['order_id'];
+        } else if (isset($param['order_id'])) {
+            $order = Order::detail([
+                ['order_id', '=', $param['order_id']],
+                ['order_status', '=', OrderStatusEnum::NORMAL]
+            ]);
         }
         $list = $model->list(array_merge(['shop_supplier_id' => $this->cashier['user']['shop_supplier_id']], $param));
         if ($order) {
