@@ -75,7 +75,7 @@ class Card extends CardModel
             trace("用户信息=====");
             trace("用户ID：".$userId);
             trace($isExist);
-            if (!$isExist->isEmpty()) {
+            if (!$isExist?->isEmpty()) {
                 if ($data['card_id'] == $isExist['card_id']) {
                     $this->error = "会员已拥有此会员卡";
                     return false;
@@ -91,6 +91,7 @@ class Card extends CardModel
             trace($detail);
             $this->startTrans();
             try {
+                trace("1111111=====");
                 //添加会员卡
                 $record = [
                     'user_id' => $userId,
@@ -110,8 +111,10 @@ class Card extends CardModel
                     'app_id' => self::$app_id,
                 ];
                 $CardRecordModel = new CardRecordModel;
+                trace("2222222=====");
                 $CardRecordModel->save($record);
                 $user = (new User)::detail($userId);
+                trace("3333333=====");
                 // 会员卡id
                 if ($data['card_id']) {
                     $user->setCardId($data['card_id']);
@@ -126,15 +129,14 @@ class Card extends CardModel
                 }
                 // 赠送余额
                 if ($detail['open_money'] && $detail['open_money_num']) {
-                    (new User())->where('user_id', '=', $user['user_id'])
-                        ->inc('balance', $detail['open_money_num'])->update();
-
+                    (new User())->where('user_id', '=', $user['user_id'])->inc('balance', $detail['open_money_num'])->update();
                     BalanceLogModel::add(BalanceLogSceneEnum::ADMIN, [
                         'user_id' => $user['user_id'],
                         'card_id' => $data['card_id'],
                         'money' => $detail['open_money_num'],
                     ], ['order_no' => '后台发放会员卡赠送']);
                 }
+                trace("444444444=====");
                 $detail->save(['receive_num' => $detail['receive_num'] + 1]);
                 $this->commit();
             } catch (\Exception $e) {
