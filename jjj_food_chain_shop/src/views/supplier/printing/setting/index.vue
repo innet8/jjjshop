@@ -16,6 +16,13 @@
                 </el-select>
             </el-form-item>
             <div  class="cashier-desc">{{ $t('小票显示的语言将根据选择的语言打印') }}</div>
+
+            <el-form-item :label="$t('自助餐标识')" :rules="[{ required: true, message: '' }]">
+                    <el-radio-group v-model="form.buffet_sign_open">
+                        <el-radio label="1">{{ $t('开') }}</el-radio>
+                        <el-radio label="0">{{ $t('关') }}</el-radio>
+                    </el-radio-group>
+                </el-form-item>
             <!--提交-->
             <div class="common-button-wrapper">
                 <el-button  @click="getData" :loading="loading">{{ $t('重置') }}</el-button>
@@ -36,7 +43,7 @@ export default {
             /*form表单数据*/
             form: {
                 default_language: 'en',
-
+                buffet_sign_open:'1',
             },
             checked: false,
             langList: [],
@@ -55,9 +62,8 @@ export default {
             SettingApi.printingDetail({}, true)
                 .then(data => {
                     self.form.default_language = '' + data.data.vars.values.default_language;
+                    self.form.buffet_sign_open = '' + data.data.vars.values.buffet_sign_open;
                     self.langList = data.data.vars.values.language_list;
-                    console.log( self.langList);
-
                 })
                 .catch(error => { });
         },

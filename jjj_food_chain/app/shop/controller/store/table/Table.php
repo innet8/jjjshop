@@ -94,12 +94,11 @@ class Table extends Controller
      */
     public function delete($table_id)
     {
-        // 详情
         $model = TableModel::detail($table_id);
-        if (!$model->setDelete()) {
-            return $this->renderError('删除失败');
+        if ($model->setDelete()) {
+            return $this->renderSuccess('', '删除成功');
         }
-        return $this->renderSuccess('', $model->getError() ?: '删除成功');
+        return $this->renderError($model->getError() ?: '删除失败');
     }
 
     /**
@@ -114,5 +113,21 @@ class Table extends Controller
     {
         $Qrcode = new TableService($id, $source);
         $Qrcode->getImage();
+    }
+
+    /**
+     * @Apidoc\Title("解绑")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/store.table.table/unbind")
+     * @Apidoc\Param("table_id", type="int", require=true, default=0, desc="桌位id")
+     * @Apidoc\Returned()
+     */
+    public function unbind($table_id)
+    {
+        $model = TableModel::detail($table_id);
+        if ($model->setUnbind()) {
+            return $this->renderSuccess('', '解绑成功');
+        }
+        return $this->renderError($model->getError() ?: '解绑失败');
     }
 }

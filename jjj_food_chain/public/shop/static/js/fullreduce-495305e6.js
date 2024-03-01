@@ -1,1 +1,0 @@
-import{r as e}from"./index-c02e7b4f.js";let s={getList:(s,l)=>e._post("/shop/plus.fullreduce/index",s,l),add:(s,l)=>e._post("/shop/plus.fullreduce/add",s,l),edit:(s,l)=>e._post("/shop/plus.fullreduce/edit",s,l),del:(s,l)=>e._post("/shop/plus.fullreduce/delete",s,l)};export{s as F};

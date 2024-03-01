@@ -38,7 +38,7 @@ class Base extends Controller
      *       @Apidoc\Param ("ip",type="string",desc="ip地址"),
      *      @Apidoc\Param ("port",type="float",desc="端口号"),
      *   }),
-     *    @Apidoc\Param ("language",type="array",desc="常用语言，默认th, en, zh, zh-tw"),
+     *    @Apidoc\Param ("language",type="array",desc="常用语言，默认th, en, zh, zhtw"),
      *    @Apidoc\Param ("default_language",type="array",desc="默认语言，默认en"),
      * })
      * @Apidoc\Returned("buffet", type="object", desc="自助餐设置", children={

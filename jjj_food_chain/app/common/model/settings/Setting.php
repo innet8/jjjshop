@@ -324,6 +324,7 @@ class Setting extends BaseModel
                     'order_status' => [], // 订单类型 10下单打印 20付款打印 30确认收货打印
                     'language_list' => $languageList, // 语言列表
                     'default_language' => 'en', // 默认语言
+                    'buffet_sign_open' => '1', // 自助餐标识设置（默认开启）
                 ],
             ],
             SettingEnum::FULL_FREE => [

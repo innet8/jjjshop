@@ -74,7 +74,23 @@ class Table extends TableModel
      */
     public function setDelete()
     {
+        if ($this['status'] == 30) {
+            $this->error = '当前桌位已开启，不允许该操作';
+            return false;
+        }
         return $this->delete();
+    }
+
+    /**
+     * 解绑
+     */
+    public function setUnbind()
+    {
+        if ($this['status'] == 30) {
+            $this->error = '当前桌位已开启，不允许该操作';
+            return false;
+        }
+        return $this->save(['is_bind' => 0]);
     }
 
     /**
