@@ -266,7 +266,7 @@ class HallCart extends Controller
             return $this->renderError('当前状态不可操作');
         }
         if ($detail->is_lock == 1) {
-            return $this->renderError('当前订单已被锁定');
+            return $this->renderError('订单已被锁定，请解锁后重新操作');
         }
         if (!is_array($delay_ids)) {
             return $this->renderError('参数错误');

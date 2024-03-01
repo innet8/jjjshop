@@ -1217,7 +1217,7 @@ class Order extends BaseModel
         if ($orderId > 0) {
             // 检查锁定
             if ($detail->is_lock) {
-                $this->error = '当前订单已被锁定';
+                $this->error = '订单已被锁定，请解锁后重新操作';
                 return false;
             }
             // 检查自助餐商品可添加状态

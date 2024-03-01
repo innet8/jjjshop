@@ -202,7 +202,7 @@ class OrderProduct extends BaseModel
         // 判断是否被锁定
         $order = $this->orderM()->find();
         if ($this->orderM()->value('is_lock') == 1) {
-            $this->error = '当前订单已被锁定';
+            $this->error = '订单已被锁定，请解锁后重新操作';
             return false;
         }
         // 检查自助餐商品可添加状态
@@ -283,7 +283,7 @@ class OrderProduct extends BaseModel
                 }
                 if ($detail->is_lock == 1) {
                     $this->rollback();
-                    $this->error = '当前订单已被锁定';
+                    $this->error = '订单已被锁定，请解锁后重新操作';
                     return false;
                 }
                 if ($model->is_send_kitchen == 1) {
@@ -323,7 +323,7 @@ class OrderProduct extends BaseModel
             return false;
         }
         if ($orderProduct->orderM()->value('is_lock') == 1) {
-            $this->error = '当前订单已被锁定';
+            $this->error = '订单已被锁定，请解锁后重新操作';
             return false;
         }
         //
@@ -357,7 +357,7 @@ class OrderProduct extends BaseModel
                 return false;
             }
             if ($detail->is_lock == 1) {
-                $this->error = '当前订单已被锁定';
+                $this->error = '订单已被锁定，请解锁后重新操作';
                 return false;
             }
             $p->product_price = $money;
@@ -387,7 +387,7 @@ class OrderProduct extends BaseModel
             return false;
         }
         if ($type != 'payment' && $order->is_lock == 1) {
-            $this->error = '当前订单已被锁定';
+            $this->error = '订单已被锁定，请解锁后重新操作';
             return false;
         }
 

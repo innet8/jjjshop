@@ -270,7 +270,7 @@ class Cart extends Controller
             return $this->renderError('当前状态不可操作');
         }
         if ($detail->is_lock) {
-            return $this->renderError('当前订单已被锁定');
+            return $this->renderError('订单已被锁定，请解锁后重新操作');
         }
         if ($detail?->moveProduct($order_product_id, $num, $return_reason)) {
             return $this->renderSuccess('退菜成功');

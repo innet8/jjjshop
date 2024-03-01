@@ -51,7 +51,7 @@ class OrderDelay extends BaseModel
             }
             if ($order['is_lock'] == 1) {
                 $this->rollback();
-                $this->error = '当前订单已被锁定';
+                $this->error = '订单已被锁定，请解锁后重新操作';
                 return false;
             }
             $del_model_delay_time = $model['delay_time'];
