@@ -95,7 +95,7 @@ class Table extends Controller
     public function delete($table_id)
     {
         $model = TableModel::detail($table_id);
-        if (!$model->setDelete()) {
+        if ($model->setDelete()) {
             return $this->renderSuccess('', '删除成功');
         }
         return $this->renderError($model->getError() ?: '删除失败');
