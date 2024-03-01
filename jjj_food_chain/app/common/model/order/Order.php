@@ -1134,6 +1134,8 @@ class Order extends BaseModel
 
         // 应付
         $pay_price = $total_price + $service_money + $service_fee + $consume_fee + $buffetPrice + $delayPrice; // 应付金额 = 商品折扣总价（会员折扣） + 原服务费 + 新服务费用 + 消费税 + 自助餐 + 加钟费
+        // 合计
+        $total_price = $total_price + $buffetPrice + $delayPrice;
         // 优惠折扣
         $discount_money = 0;
         if ($order['discount_ratio'] > 0) {
