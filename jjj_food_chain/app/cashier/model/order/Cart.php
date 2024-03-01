@@ -741,7 +741,7 @@ class Cart extends CartModel
                 ->select();
             // 是否存在订单
             $order = OrderModel::detail([
-                ['order_id', '=', $order_id],
+                ['table_id', '=', $table_id],
                 ['order_status', '=', OrderStatusEnum::NORMAL]
             ]);
             if (!$order) {
