@@ -186,7 +186,6 @@ class User extends BaseModel
      */
     public function setIncPoints($points, $describe)
     {
-        trace("setIncPoints111111");
         // 新增积分变动明细
         PointsLogModel::add([
             'scene' => PointsLogSceneEnum::ADMIN,
@@ -196,7 +195,6 @@ class User extends BaseModel
             'describe' => $describe,
             'app_id' => $this['app_id'],
         ]);
-        trace("setIncPoints222222");
 
         // 更新用户可用积分
         $data['points'] = ($this['points'] + $points <= 0) ? 0 : $this['points'] + $points;
@@ -205,11 +203,7 @@ class User extends BaseModel
             $data['total_points'] = $this['total_points'] + $points;
         }
         $this->where('user_id', '=', $this['user_id'])->update($data);
-        trace("setIncPoints333333");
-
         event('UserGrade', $this['user_id']);
-        trace("setIncPoints4444444");
-
         return true;
     }
 
