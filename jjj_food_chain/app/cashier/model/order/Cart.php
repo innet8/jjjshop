@@ -829,7 +829,7 @@ class Cart extends CartModel
         }
         $total_num = helper::bcadd($order_total_num, $cart_total_num, 0);                            // 商品总数量
         // 小计
-        $total_price = helper::bcadd(helper::bcadd($order_total_price, $cart_product_pay_price), helper::bcadd($buffetPrice, $delayPrice));
+        $total_price = helper::bcadd($order_total_price, $cart_product_pay_price);
         $service_money = helper::bcadd($order_service_money, $order_setting_service_money);                // 服务费
         $special_discount = $order_discount_money;                                                         // 優惠折扣
         $total_consumption_tax_money = helper::bcadd($order_consumption_tax_money, $cart_consume_fee);     // 消费税
