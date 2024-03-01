@@ -134,7 +134,9 @@ export default {
                 this.form = data.data.vars.values;
                 this.form.add_clock.map((item, index) => {
                     this.form.add_clock[index].action = 'edit';
+                    this.form.add_clock[index].price = Number(item.price)
                 })
+                this.form.tablet_end_time = Number(this.form.tablet_end_time);
 
             }).catch(error => {
                 self.loading = false;
