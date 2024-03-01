@@ -80,6 +80,8 @@ class Table extends Controller
         $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
         unset($tablet['advanced_password']);
         $table['tablet'] = $tablet;
+        // 桌台当前进行中订单
+        $table['order'] = OrderModel::getTableUnderwayOrder($table_id) ?? [];
         return $this->renderSuccess('桌台信息', $table);
     }
 
