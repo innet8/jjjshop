@@ -18,6 +18,10 @@ let StoreApi = {
   deleteTable(data, errorback) {
     return request._post('/shop/store.table.table/delete', data, errorback);
   },
+  /*解除桌位*/
+  unbindTable(data, errorback) {
+    return request._post('/shop/store.table.table/unbind', data, errorback);
+  },
   /*区域列表*/
   arealist(data, errorback) {
     return request._post('/shop/store.table.area/index', data, errorback);

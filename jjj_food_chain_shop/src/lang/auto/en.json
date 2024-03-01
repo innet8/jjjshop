@@ -860,5 +860,7 @@
     "确认要强制下架吗?": "Are you sure you want to force removal?",
     "确认要重新上架吗?": "Are you sure you want to re-list it?",
     "本次上传图片成功": "The image upload was successful this time",
-    "自助餐标识": "Buffet logo"
+    "自助餐标识": "Buffet logo",
+    "解绑": "unbundle",
+    "确定解除与平板设备的绑定关系吗？": "Are you sure you want to unbind the tablet?"
 }

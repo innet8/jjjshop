@@ -148,10 +148,6 @@ class OrderPrinterService
      */
     private function getPrintContent($order, $printers = null)
     {
-        // 打印机设置
-        $printerConfig = SettingModel::getSupplierItem(SettingEnum::PRINTER, $order['shop_supplier_id'], $order['app_id']);
-        $buffetSignOpen = (int)($printerConfig['buffet_sign_open'] ?? 1);
-        //  
         $currency = SettingModel::getSupplierItem(SettingEnum::CURRENCY, $order['shop_supplier_id'], $order['app_id']);
         if ($currency['unit'] ?? '') {
             $this->currencyUnit = $currency['unit'];
@@ -165,10 +161,9 @@ class OrderPrinterService
             if (($product['is_buffet_product'] ?? 0) == 1 && $product['total_price'] <= 0) {
                 continue;
             }
-            $buffetText = ($buffetSignOpen && $product['is_buffet_product'] == 1) ? (__('自助餐').'-') : '';
             $key = $product['product_id'] . $product['product_sku_id'] . $product['product_attr'];
             $products[$key] = [
-                'product_name' => $buffetText . $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : ''),
+                'product_name' => $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : ''),
                 "total_num" => bcadd($product['total_num'], $products[$key]['total_num'] ?? 0),
                 "total_price" => bcadd($product['total_price'], $products[$key]['total_price'] ?? 0)
             ];
@@ -181,6 +176,7 @@ class OrderPrinterService
         */
         if ($printers == PrinterTypeEnum::SUNMI_LAN || $printers['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
             $printer = new SunmiCloudPrinter(567);
+            $printer->appendText( $order->pay_time ? __("结账单") : __("预结账单"));
             $printer->lineFeed();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
             $printer->appendText("***{$shopName}***\n");
@@ -307,6 +303,8 @@ class OrderPrinterService
             $width = 47;
             $leftWidth = 29;
             $printer = new SunmiCloudPrinter(567);
+            $printer->appendText( $order->pay_time ? __("结账单") : __("预结账单"));
+            $printer->lineFeed();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
             $printer->appendText("***{$shopName}***\n");
             $printer->lineFeed();
@@ -432,7 +430,8 @@ class OrderPrinterService
         */
         $width = 32;
         $leftWidth = 16;
-        $content = "<C>***{$shopName}***</C><BR>";
+        $content = ($order->pay_time ? __("结账单") : __("预结账单")).'<BR><BR>';
+        $content .= "<C>***{$shopName}***</C><BR>";
         if ($order['table_no']) {
             $content .= "<CB>".__('桌号')."：{$order['table_no']}</CB><BR>";
         }
@@ -543,7 +542,7 @@ class OrderPrinterService
     public function printProductTicket($order, $print_type)
     {
         // 打印机设置
-        $printerConfig = SettingModel::getSupplierItem('printer', $order['shop_supplier_id'], $order['app_id']);
+        $printerConfig = SettingModel::getSupplierItem(SettingEnum::PRINTER, $order['shop_supplier_id'], $order['app_id']);
         request()->language = $printerConfig['default_language'] ?? '';
         //打印列表
         $list = (new PrintingModel)->getList($print_type, $order['shop_supplier_id'], $order['order_type']);
@@ -614,6 +613,10 @@ class OrderPrinterService
         $printerType = $printer['printer_type']['value'];
         $isThai =  preg_match('/[\p{Thai}]/u', __("金额"));
 
+        // 打印机设置
+        $printerConfig = SettingModel::getSupplierItem(SettingEnum::PRINTER, $order['shop_supplier_id'], $order['app_id']);
+        $buffetSignOpen = (int)($printerConfig['buffet_sign_open'] ?? 1);
+
         /* *
         *
         *商米 和 芯烨 打印机
@@ -672,8 +675,10 @@ class OrderPrinterService
                 if ($products && md5(json_encode($products)) != md5(json_encode($product))) {
                     continue;
                 }
+
+                $buffetText = ($buffetSignOpen && $product['is_buffet_product'] == 1) ? (__('自助餐').'-') : '';
                 $productAttr = (new OrderProduct)->getProductAttrAttr($product['product_attr']);
-                $productName = $prodcutDetail['product_name_text'] . ($productAttr ?  ' (' . $productAttr . ')'  : '');
+                $productName = $buffetText . $prodcutDetail['product_name_text'] . ($productAttr ?  ' (' . $productAttr . ')'  : '');
                 $printer->printInColumns($productName, $product['total_num'] . '');
                 if ($product['remark']  ?? '') {
                     $printer->printInColumns($product['remark']);
@@ -731,8 +736,10 @@ class OrderPrinterService
             if ($products && md5(json_encode($products)) != md5(json_encode($product))) {
                 continue;
             }
+
+            $buffetText = ($buffetSignOpen && $product['is_buffet_product'] == 1) ? (__('自助餐').'-') : '';
             $productAttr = (new OrderProduct)->getProductAttrAttr($product['product_attr']);
-            $productName = $prodcutDetail['product_name_text'] . ($productAttr ?  ' (' . $productAttr . ')'  : '');
+            $productName = $buffetText . $prodcutDetail['product_name_text'] . ($productAttr ?  ' (' . $productAttr . ')'  : '');
             $content .= printText($productName, '', ''.$product['total_num'], $width, 26);
             if ($product['remark'] ?? '') {
                 $content .= '<TEXT x="10" y="180" font="10" w="-1" h="-1" r="0">' . $product['remark'] . '</TEXT>';
