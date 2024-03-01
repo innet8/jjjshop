@@ -13,7 +13,6 @@
                     <el-input-number :controls="false" :min="0" :max="999" style="width: 200px !important;"
                         :placeholder="$t('请输入平板结束时间提醒')" v-model.number="form.tablet_end_time"></el-input-number>
                     {{ $t('分') }}
-                    <p class="p-tips">{{ $t('注：最大1-999') }}</p>
                 </div>
             </el-form-item>
 
