@@ -184,6 +184,7 @@ class Order extends OrderModel
             if (!$model->sendKitchen($this['order_id'], 'payment')) {
                 $this->error = $model->getError();
                 $this->errorData = $model->getErrorData();
+                $this->errorCode = $model->getErrorCode();
                 return false;
             }
             //
