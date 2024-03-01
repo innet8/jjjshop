@@ -36,18 +36,18 @@ class CardRecord extends BaseModel
     }
 
     /**
-     * 会员卡有效期
+     * 付款时间
      * @param $value
      * @param $data
      * @return string
      */
     public function getPayTimeTextAttr($value, $data)
     {
-        return date('Y-m-d H:i:s', $data['pay_time']);
+        return isset($data['pay_time']) ? date('Y-m-d H:i:s', $data['pay_time']) : __('无效付款时间');
     }
 
     /**
-     * 会员卡有效期
+     * 支付方式
      * @param $value
      * @param $data
      * @return string
@@ -55,7 +55,7 @@ class CardRecord extends BaseModel
     public function getPayTypeTextAttr($value, $data)
     {
         $pay_type = [10 => __('余额支付'), 20 => __('微信支付'), 30 => __('支付宝支付'), 40 => __('后台发卡')];
-        return $pay_type[$data['pay_type']];
+        return isset($data['pay_type']) && isset($pay_type[$data['pay_type']]) ? $pay_type[$data['pay_type']] : __('无效支付方式');
     }
 
     /**
