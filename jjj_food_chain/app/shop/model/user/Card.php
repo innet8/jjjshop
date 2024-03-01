@@ -72,9 +72,6 @@ class Card extends CardModel
         $userIdsArr = array_unique(explode(',', $userIds));
         foreach ($userIdsArr as $userId) {
             $isExist = (new CardRecord())->checkExistByUserId($userId);
-            trace("用户信息=====");
-            trace("用户ID：".$userId);
-            trace($isExist);
             if (!$isExist?->isEmpty()) {
                 if ($data['card_id'] == $isExist['card_id']) {
                     $this->error = "会员已拥有此会员卡";
@@ -86,9 +83,6 @@ class Card extends CardModel
             }
 
             $detail = self::detail($data['card_id']);
-            trace("会员卡信息=====");
-            trace("会员卡ID：".$data['card_id']);
-            trace($detail);
             $this->startTrans();
             try {
                 trace("1111111=====");
@@ -114,12 +108,19 @@ class Card extends CardModel
                 trace("2222222=====");
                 $CardRecordModel->save($record);
                 $user = (new User)::detail($userId);
+                trace("会员信息=====");
+                trace("会员ID：".$userId);
+                trace($user);
                 trace("3333333=====");
                 // 会员卡id
                 if ($data['card_id']) {
                     $user->setCardId($data['card_id']);
                 }
-                trace("444444444=====");
+                trace("4444444=====");
+                trace("会员信息=====");
+                trace($user);
+                trace("open_points=====".$detail['open_points']);
+                trace("open_points_num=====".$detail['open_points_num']);
                 // 赠送积分
                 if ($detail['open_points'] && $detail['open_points_num']) {
                     $user->setIncPoints($detail['open_points_num'], '发会员卡获取积分');
