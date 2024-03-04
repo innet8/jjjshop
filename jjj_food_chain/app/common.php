@@ -635,7 +635,7 @@ function extractLanguage($json)
         // 
         $languages = getSettingLanguages();
         foreach ($languages as $language) {
-            $name = $language['name'] ?? 'en';
+            $name = $language['name'] ?? '';
             $name = $name == 'zhtw' ? 'zhtw' : $name;
             if ($name == $lang && array_key_exists($language['key'] ?? '', $texts)) {
                 return $texts[$language['key']];
@@ -647,6 +647,9 @@ function extractLanguage($json)
         }
         if (array_key_exists("en", $texts)) {
             return $texts["en"];
+        }
+        if (array_key_exists("1", $texts)) {
+            return $texts["1"];
         }
         //
         return  $json;
