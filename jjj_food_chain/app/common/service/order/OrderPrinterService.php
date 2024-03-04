@@ -158,14 +158,14 @@ class OrderPrinterService
         // 
         $products = [];
         foreach ($order['product'] as $product) {
-            if (($product['is_buffet_product'] ?? 0) == 1 && $product['total_price'] <= 0) {
+            if (($product['is_buffet_product'] ?? 0) == 1 && $product['total_product_price'] <= 0) {
                 continue;
             }
             $key = $product['product_id'] . $product['product_sku_id'] . $product['product_attr'];
             $products[$key] = [
                 'product_name' => $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : ''),
                 "total_num" => bcadd($product['total_num'], $products[$key]['total_num'] ?? 0),
-                "total_price" => bcadd($product['total_price'], $products[$key]['total_price'] ?? 0)
+                "total_product_price" => bcadd($product['total_product_price'], $products[$key]['total_product_price'] ?? 0)
             ];
         }
 
@@ -222,17 +222,17 @@ class OrderPrinterService
             // 自助餐
             if ($order->is_buffet == 1) {
                 foreach ($order['buffet'] ?? [] as $buffet) {
-                    $printer->printInColumns($buffet['name_text'], strval($buffet['num']), $this->currencyUnit . strval($buffet['total_price']));
+                    $printer->printInColumns($buffet['name_text'], strval($buffet['num']), $this->currencyUnit . strval($buffet['total_product_price']));
                     $printer->lineFeed();
                 }
                 foreach ($order['delay'] ?? [] as $delay) {
-                    $printer->printInColumns($delay['name_text'], strval($delay['num']), $this->currencyUnit . strval($delay['total_price']));
+                    $printer->printInColumns($delay['name_text'], strval($delay['num']), $this->currencyUnit . strval($delay['total_product_price']));
                     $printer->lineFeed();
                 }
             }
             // 
             foreach ($products as $product) {
-                $printer->printInColumns($product['product_name'], $product['total_num'] . '', $this->currencyUnit . strval($product['total_price']));
+                $printer->printInColumns($product['product_name'], $product['total_num'] . '', $this->currencyUnit . strval($product['total_product_price']));
                 $printer->lineFeed();
             }
             //
@@ -241,7 +241,7 @@ class OrderPrinterService
                 [320, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
             );
-            $printer->printInColumns(__("合计金额"), $this->currencyUnit . strval($order['total_price']));
+            $printer->printInColumns(__("合计金额"), $this->currencyUnit . strval($order['total_product_price']));
             if ($order['setting_service_money'] > 0) {
                 $printer->printInColumns(__("服务费"), $this->currencyUnit . strval($order['setting_service_money']));
             }
@@ -341,25 +341,25 @@ class OrderPrinterService
             // 自助餐
             if ($order->is_buffet == 1) {
                 foreach ($order['buffet'] ?? [] as $buffet) {
-                    $printer->appendText(printText($buffet['name_text'], strval($buffet['num']), $this->currencyUnit . strval($buffet['total_price']) , $width, $leftWidth + 2));
+                    $printer->appendText(printText($buffet['name_text'], strval($buffet['num']), $this->currencyUnit . strval($buffet['total_product_price']) , $width, $leftWidth + 2));
                     $printer->lineFeed();
                     $printer->lineFeed();
                 }
                 foreach ($order['delay'] ?? [] as $delay) {
-                    $printer->appendText(printText($delay['name_text'], strval($delay['num']) , $this->currencyUnit . strval($delay['total_price']) , $width, $leftWidth + 2));
+                    $printer->appendText(printText($delay['name_text'], strval($delay['num']) , $this->currencyUnit . strval($delay['total_product_price']) , $width, $leftWidth + 2));
                     $printer->lineFeed();
                     $printer->lineFeed();
                 }
             }
             // 
             foreach ($products as $product) {
-                $printer->appendText(printText($product['product_name'], $product['total_num'] . '', $this->currencyUnit . strval($product['total_price']) , $width, $leftWidth + 2));
+                $printer->appendText(printText($product['product_name'], $product['total_num'] . '', $this->currencyUnit . strval($product['total_product_price']) , $width, $leftWidth + 2));
                 $printer->lineFeed();
                 $printer->lineFeed();
             }
             //
             $printer->appendText("------------------------------------------------\n");
-            $printer->appendText(printText(__("合计金额"),'', $this->currencyUnit . strval($order['total_price']) , $width, $leftWidth));
+            $printer->appendText(printText(__("合计金额"),'', $this->currencyUnit . strval($order['total_product_price']) , $width, $leftWidth));
             $printer->lineFeed();
             if ($order['setting_service_money'] > 0) {
                 $printer->appendText(printText(__("服务费"),'', $this->currencyUnit . strval($order['setting_service_money']) ,$width, $leftWidth));
@@ -449,18 +449,18 @@ class OrderPrinterService
         // 自助餐
         if ($order->is_buffet == 1) {
             foreach ($order['buffet'] ?? [] as $buffet) {
-                $content .= printText($buffet['name_text'], strval($buffet['num']), $this->currencyUnit . strval($buffet['total_price']) , $width, $leftWidth + 2);
+                $content .= printText($buffet['name_text'], strval($buffet['num']), $this->currencyUnit . strval($buffet['total_product_price']) , $width, $leftWidth + 2);
             }
             foreach ($order['delay'] ?? [] as $delay) {
-                $content .= printText($delay['name_text'], strval($delay['num']), $this->currencyUnit . strval($delay['total_price']) , $width, $leftWidth + 2);
+                $content .= printText($delay['name_text'], strval($delay['num']), $this->currencyUnit . strval($delay['total_product_price']) , $width, $leftWidth + 2);
             }
         }
         foreach ($products as $product) {
-            $content .= printText($product['product_name'], $product['total_num'] . '', $this->currencyUnit . strval($product['total_price']) , $width, $leftWidth + 2);
+            $content .= printText($product['product_name'], $product['total_num'] . '', $this->currencyUnit . strval($product['total_product_price']) , $width, $leftWidth + 2);
         }
         //
         $content .= "--------------------------------<BR>";
-        $content .= printText(__('合计金额'), '', $this->currencyUnit . strval($order['total_price'])) . "<BR>";
+        $content .= printText(__('合计金额'), '', $this->currencyUnit . strval($order['total_product_price'])) . "<BR>";
         if ($order['setting_service_money'] > 0) {
             $content .= printText(__('服务费'), '', $this->currencyUnit . strval($order['setting_service_money'])) . "<BR>";
         }
@@ -485,7 +485,7 @@ class OrderPrinterService
         if ($order['fullreduce_money'] > 0) {
             $content .= printText(__('满减优惠'), '', $this->currencyUnit . strval($order['fullreduce_money'])) . "<BR>";
         }
-        $content .= '<BOLD>' . printText(__('应收'), '', $this->currencyUnit . strval($order['total_price'])) . "</BOLD><BR>";
+        $content .= '<BOLD>' . printText(__('应收'), '', $this->currencyUnit . strval($order['total_product_price'])) . "</BOLD><BR>";
         //
         $content .= '--------------------------------<BR>';
         $content .= printText(__('支付方式'), '', $order['pay_type']['text']) . "<BR>";
