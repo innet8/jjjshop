@@ -158,6 +158,7 @@ class Order extends Controller
      * @Apidoc\Param("product_price", type="float", require=true, desc="商品价格")
      * @Apidoc\Param("bag_price", type="float", require=true, desc="打包费")
      * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+     * @Apidoc\Param("is_buffet", type="int", require=true, desc="是否自助餐 0-否 1-是")
      * @Apidoc\Returned()
      */
     public function add($table_id)

@@ -397,13 +397,6 @@ class OrderProduct extends BaseModel
             // 自助餐设置
             $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $order['shop_supplier_id'], $order['app_id']);
             $buffet_remaining_time = Order::getBuffetRemainingTime($order['buffet_expired_time']);
-            // 检查自助餐商品超时
-            foreach ($order['unSendKitchenProduct'] as $order_product) {
-                if ($order_product['is_buffet_product'] == 1 && $buffet_remaining_time <= 0 && $order['buffet_expired_time'] != -1) {
-                    $this->error = '自助餐时间已到达，自助餐商品不可继续下单';
-                    return false;
-                }
-            }
             // 检查非自助餐商品超时
             foreach ($order['unSendKitchenProduct'] as $order_product) {
                 if ($order_product['is_buffet_product'] != 1 && $buffet_remaining_time <= 0 && $order['buffet_expired_time'] != -1 && $buffetSetting['is_buy_continue'] != 1 ) {
@@ -411,10 +404,16 @@ class OrderProduct extends BaseModel
                     return false;
                 }
             }
+            // 检查自助餐商品超时
+            foreach ($order['unSendKitchenProduct'] as $order_product) {
+                if ($order_product['is_buffet_product'] == 1 && $buffet_remaining_time <= 0 && $order['buffet_expired_time'] != -1) {
+                    $this->error = '自助餐时间已到达，自助餐商品不可继续下单';
+                    return false;
+                }
+            }
             // 检查限购
             $out_limit_num = [];
             foreach ($order['unSendKitchenProduct'] as $order_product) {
-                // 判断限购
                 if ($order_product['is_buffet_product'] == 1) {
                     $limitNum = Order::getBuffetProductLimitNum($order['order_id'], $order_product['product_id']) * $order['meal_num'];
                 } else {
