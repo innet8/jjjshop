@@ -1084,10 +1084,11 @@ class Order extends BaseModel
                 // 计算抵扣积分数量
                 $product_points_bonus = !$product['product']['is_points_gift'] ? 0 : helper::bcmul($product['total_price'], $ratio, 2);
             }
+            $total_pay_price = $product['product_price'] * $product['total_num'];
             $updateArr = [
                 'user_id' => $order['user_id'],
                 'total_price' => $product['total_price'],   // 商品总价(数量×单价)
-                'total_pay_price' => $product['total_price'],   //  订单副表的total_pay_price 业务好像没有用到
+                'total_pay_price' => $total_pay_price,   //  商品总价(数量×单价)原价
                 'points_bonus' => $product_points_bonus,    // 奖励积分
                 'is_user_grade' => (int)$is_user_grade, //  是否存在会员等级折扣
                 'grade_ratio' => $grade_ratio,  // 会员折扣比例(0-10)
@@ -1099,7 +1100,7 @@ class Order extends BaseModel
             // 主表order数据累加
             $points_bonus += $product_points_bonus; // 积分
             $pay_money += $product['total_price'];  // 实付金额
-            $order_price += $product['product_price'] * $product['total_num'];  // 商品原价
+            $order_price += $total_pay_price;  // 商品原价
             $user_discount_money += $grade_total_money; // 商品优惠金额
         }
 
@@ -1162,6 +1163,7 @@ class Order extends BaseModel
             'order_no' => $re_order_no ? $this->newOrderNo($order['order_source']) : $order['order_no'],
             'discount_money' => $discount_money,  // 折扣优惠重置
             'total_price' => $total_price,
+            'total_product_price' => $order_price,
             'order_price' => $order_price + $service_money + $service_fee + $consume_fee + $buffetPrice + $delayPrice, // 订单总额 = 商品原始总价 + 原服务费 + 新服务费用 + 消费税 + 自助餐费用 + 加钟费用
             'original_price' => $order_price + $service_money + $service_fee + $original_consume_fee, // 订单总额 = 商品原始总价 + 原服务费 + 新服务费用 + 消费税
             'pay_price' => $pay_price,  // 应付
