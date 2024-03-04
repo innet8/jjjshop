@@ -81,8 +81,11 @@ class Index extends Controller
         $user = $this->cashier;
         $shopSupplierId = $this->cashier['user']['shop_supplier_id'];
         $appId = $this->cashier['user']['app_id'];
+        // 
+        $languageList = SettingModel::getSupplierLanguage($shopSupplierId,$appId);
+        $settingData = SettingModel::getAll($appId, $shopSupplierId, $languageList);
         // 货币信息
-        $currency = SettingModel::getSupplierItem(SettingEnum::CURRENCY, $shopSupplierId, $appId);
+        $currency = $settingData[SettingEnum::CURRENCY]['values'] ?? [];
         $user['currency'] = [
             'unit' => $currency['unit'],
             'is_open' => $currency['is_open'],
@@ -92,16 +95,17 @@ class Index extends Controller
             ],
         ];
         // 收银机设置
-        $cashier = SettingModel::getSupplierItem(SettingEnum::CASHIER, $shopSupplierId, $appId);
+        $cashier = $settingData[SettingEnum::CASHIER]['values'] ?? [];
         unset($cashier['cashier_password']);
         unset($cashier['advanced_password']);
         $user['cashier'] = $cashier;
         // 平板端设置
-        $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $shopSupplierId, $appId);
+        $tablet = $settingData[SettingEnum::TABLET]['values'] ?? [];
         $user['tablet']['is_show_sold_out'] = $tablet['is_show_sold_out'];
         // 自助餐设置
-        $buffet = SettingModel::getSupplierItem(SettingEnum::BUFFET, $shopSupplierId, $appId);
+        $buffet = $settingData[SettingEnum::BUFFET]['values'] ?? [];
         $user['buffet'] = $buffet;
+       
         // 
         return $this->renderSuccess('', compact('user'));
     }

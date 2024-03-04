@@ -4,10 +4,11 @@ namespace app\cashier\controller;
 
 use think\facade\Env;
 use app\JjjController;
+use think\facade\Cache;
 use app\cashier\service\AuthService;
+use app\common\model\settings\Setting;
 use app\common\exception\BaseException;
 use app\common\enum\settings\SettingEnum;
-use app\common\model\settings\Setting;
 use app\cashier\model\cashier\User as UserModel;
 use app\common\model\shop\Access as AccessModel;
 use app\common\model\shop\OptLog as OptLogModel;
@@ -106,32 +107,40 @@ class Controller extends JjjController
         if ($data['data']['type'] != 'cashier') {
             throw new BaseException(['msg' => '用户信息错误', 'code' => -1]);
         }
-        if (!$user = UserModel::getUser($data['data'])) {
-            throw new BaseException(['msg' => '没有找到用户信息', 'code' => -1]);
+        // 
+        if (!$cashier = Cache::get('cashier_user_info' . $token)) {
+            // 
+            if (!$user = UserModel::getUser($data['data'])) {
+                throw new BaseException(['msg' => '没有找到用户信息', 'code' => -1]);
+            }
+            // 商家后台设置的名称
+            $shop = SettingModel::getSupplierItem(SettingEnum::STORE, $user['shop_supplier_id'] ?? 0, $user['app_id'] ?? 0);
+            // 权限
+            $supplier = [
+                'name' => isset($user['supplier']) && $user['supplier'] ? $user['supplier']['name'] : '',
+                'category_set' => isset($user['supplier']) && $user['supplier'] ? $user['supplier']['category_set'] : 10,
+                'is_main' => isset($user['supplier']) && $user['supplier'] ? $user['supplier']['is_main'] : 1,
+            ];
+            $permission = (new AccessModel)->getPermission(AccessModel::CASHIER_ROUTE_NAME, $user, $supplier);
+            $cashier = [
+                'user' => [
+                    'shop_user_id' => $user['shop_user_id'],
+                    'cashier_id' => $user['shop_user_id'],
+                    'user_name' => $user['user_name'],
+                    'account' => $user['user_name'],
+                    'mobile' => $user['mobile'],
+                    'shop_supplier_id' => $user['shop_supplier_id'],
+                    'name' => $shop['name'],
+                    'app_id' => $user['app_id'],
+                    'permission' => $permission,
+                ],
+                'app' => $user['app']->toArray(),
+            ];
+            Cache::tag('cashier')->set('cashier_user_info' . $token, $cashier);
         }
-        // 商家后台设置的名称
-        $shop = SettingModel::getSupplierItem(SettingEnum::STORE, $user['shop_supplier_id'] ?? 0, $user['app_id'] ?? 0);
-        // 权限
-        $supplier = [
-            'name' => isset($user['supplier']) && $user['supplier'] ? $user['supplier']['name'] : '',
-            'category_set' => isset($user['supplier']) && $user['supplier'] ? $user['supplier']['category_set'] : 10,
-            'is_main' => isset($user['supplier']) && $user['supplier'] ? $user['supplier']['is_main'] : 1,
-        ];
-        $permission = (new AccessModel)->getPermission(AccessModel::CASHIER_ROUTE_NAME, $user, $supplier);
-        $this->cashier = [
-            'user' => [
-                'shop_user_id' => $user['shop_user_id'],
-                'cashier_id' => $user['shop_user_id'],
-                'user_name' => $user['user_name'],
-                'account' => $user['user_name'],
-                'mobile' => $user['mobile'],
-                'shop_supplier_id' => $user['shop_supplier_id'],
-                'name' => $shop['name'],
-                'app_id' => $user['app_id'],
-                'permission' => $permission,
-            ],
-            'app' => $user['app']->toArray(),
-        ];
+        // 
+        $this->cashier = $cashier;
+        // 
         return true;
     }
 
@@ -170,6 +179,9 @@ class Controller extends JjjController
             '/product/product/index',
             '/product/category/index',
             '/order/cart/add',
+            '/order/hallcart/tableProductList',
+            '/index/index',
+            '/index/lang',
         ];
         if (in_array($this->routeUri, $allowLoopUrl)) {
             return;

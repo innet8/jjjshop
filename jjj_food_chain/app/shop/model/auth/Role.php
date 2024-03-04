@@ -2,6 +2,7 @@
 
 namespace app\shop\model\auth;
 
+use think\facade\Cache;
 use app\common\model\shop\Role as RoleModel;
 use app\shop\model\auth\UserRole as UserRoleModel;
 
@@ -172,6 +173,9 @@ class Role extends RoleModel
             $access_model->saveAll($access_list);
             // 事务提交
             $this->commit();
+            // 删除收银机缓存
+            Cache::tag('cashier')->clear();
+            // 
             return true;
         } catch (\Exception $e) {
             $this->error = $e->getMessage();
