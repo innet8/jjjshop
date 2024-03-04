@@ -111,6 +111,7 @@ class Clear extends Controller
             } elseif ($item['type'] === 'common') {
                 Cache::tag($item['key'])->clear();
                 Cache::tag('firstshop')->clear();
+                Cache::tag('cashier')->clear();
             } elseif ($item['type'] === 'file') {
                 $this->deltree($item['dirPath']);
             }
