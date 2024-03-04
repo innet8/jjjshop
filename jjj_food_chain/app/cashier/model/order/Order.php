@@ -190,9 +190,11 @@ class Order extends OrderModel
             }
             // 如果是自助餐，给自助餐增销量
             if ($this['is_buffet'] == 1) {
-               $buffet = OrderBuffetModel::where('order_id', $this['order_id'])->find();
-                if ($buffet) {
-                    $buffet->buffet()->setInc('sale_num', $buffet['num']);
+               $orderBuffets = OrderBuffetModel::where('order_id', $this['order_id'])->select();
+                if ($orderBuffets) {
+                    foreach ($orderBuffets as $orderBuffet) {
+                        $orderBuffet->buffet()->setInc('sale_num', $orderBuffet['num']);
+                    }
                 }
             }
             //
