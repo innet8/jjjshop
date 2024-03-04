@@ -207,6 +207,7 @@ export default {
                             _this.$router.push({
                                 path: '/home'
                             })
+                            location.reload();
                             // useLockscreen.setLock(false);
                         })
                         .catch(error => {
