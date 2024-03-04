@@ -95,4 +95,13 @@ export default defineComponent({
     }
 })
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+.common-seach-wrap{
+    position: absolute;
+    top: 70px;
+    left: 16px;
+    right: 16px;
+    bottom: 20px;
+}
+</style>

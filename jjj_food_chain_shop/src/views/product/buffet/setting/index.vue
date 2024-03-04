@@ -1,6 +1,6 @@
 <template >
     <div class="setting">
-        <el-form size="small" ref="form" :model="form" label-position="top">
+        <el-form class="form-setting" size="small" ref="form" :model="form" label-position="top">
             <el-form-item :label="$t('自助餐')" :rules="[{ required: true, message: '' }]">
                 <el-radio-group v-model="form.is_open">
                     <el-radio label="1">{{ $t('开') }}</el-radio>
@@ -194,6 +194,22 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.setting{
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100%;
+}
+.form-setting{
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.common-button-wrapper{
+    flex:  0 0 auto;
+    flex-shrink: 0;
+}
 .color-box {
     display: flex;
     align-items: center;
@@ -209,7 +225,6 @@ export default {
     .limit-product-list {
         width: 100%;
         max-width: 600px;
-        max-height: 320px;
         overflow-y: auto;
         display: flex;
         flex-direction: column;
