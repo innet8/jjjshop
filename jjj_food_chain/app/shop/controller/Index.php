@@ -99,22 +99,31 @@ class Index extends Controller
     }
 
     /**
-     * @Apidoc\Title("登录数据")
+     * @Apidoc\Title("公共语言列表")
+     * @Apidoc\Method ("POST")
+     * @Apidoc\Url ("/index.php/shop/index/lang")
+     * @Apidoc\Returned()
+     */
+    public function lang()
+    {
+        $language = getSettingLanguages();
+        return $this->renderSuccess('', compact('language'));
+    }
+
+    /**
+     * @Apidoc\Title("基础数据")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/shop/index/base")
      * @Apidoc\Returned()
      */
     public function base()
     {
-        $config = SettingModel::getSysConfig();
+        $store = SettingModel::getSupplierItem(SettingEnum::STORE, $this->store['user']['shop_supplier_id'] ?? 0, $this->store['app']['app_id'] ?? 0);
         $settings = [
-            'shop_name' => $config['shop_name'],
-            'shop_bg_img' => $config['shop_bg_img'],
-            'shop_logo_img' => isset($config['shop_logo_img']) ? $config['shop_logo_img'] : '',
+            'shop_name' => $store['name'] ?? '',
+            'shop_bg_img' => $store['logoUrl'] ?? '',
         ];
-        // 
         $language = getSettingLanguages();
-        // 
         return $this->renderSuccess('', compact('settings', 'language'));
     }
 }
