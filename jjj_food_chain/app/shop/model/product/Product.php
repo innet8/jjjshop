@@ -2,10 +2,9 @@
 
 namespace app\shop\model\product;
 
-use think\facade\Cache;
 use app\common\library\helper;
 use app\common\model\product\Product as ProductModel;
-use app\shop\model\product\Category as CategoryModel;
+use \app\common\model\buffet\BuffetProduct as BuffetProductModel;
 
 /**
  * 商品模型
@@ -168,7 +167,7 @@ class Product extends ProductModel
             (new Feed)->updateFeed($data['product_feed'], $this['shop_supplier_id']);
             // 更新单位
             (new Unit)->updateUnit($data['product_unit'], $this['shop_supplier_id']);
-            // 
+            //
             return true;
         });
     }
@@ -239,7 +238,19 @@ class Product extends ProductModel
      */
     public function setDelete()
     {
-        return $this->save(['is_delete' => 1]);
+        // 开启事务
+        $this->startTrans();
+        try {
+            $this->save(['is_delete' => 1]);
+            // 删除自助餐关联产品
+            (new BuffetProductModel)->where('product_id', '=', $this['product_id'])->delete();
+            $this->commit();
+            return true;
+        } catch (\Exception $e) {
+            $this->error = $e->getMessage();
+            $this->rollback();
+            return false;
+        }
     }
 
 
