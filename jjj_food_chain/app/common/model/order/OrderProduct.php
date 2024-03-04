@@ -445,7 +445,7 @@ class OrderProduct extends BaseModel
             //
             $order->where('order_id', $order_id)->inc('extra_times', 1)->update();
             // 送厨更新取单号
-            if ($order->table_id == 0){
+            if ($order->table_id == 0 && $order->callNo == ''){
                 $order->callNo = getTableNumber();
                 $order->save();
             }
