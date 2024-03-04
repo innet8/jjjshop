@@ -31,6 +31,14 @@ class OrderBuffet extends BaseModel
     }
 
     /**
+     * 关联自助餐表
+     */
+    public function buffet()
+    {
+        return $this->belongsTo('app\\common\\model\\buffet\\Buffet', 'buffet_id', 'id');
+    }
+
+    /**
      * 订单商品列表
      */
     public function buffetProduct()

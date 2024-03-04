@@ -23,6 +23,7 @@ use app\shop\model\user\PointsLog as PointsLogModel;
 use app\common\enum\user\pointsLog\PointsLogSceneEnum;
 use app\common\model\settings\Setting as SettingModel;
 use app\common\service\product\factory\ProductFactory;
+use app\common\model\order\OrderBuffet as OrderBuffetModel;
 use app\common\model\order\OrderProduct as OrderProductModel;
 use app\cashier\service\order\paysuccess\type\MasterPaySuccessService;
 
@@ -186,6 +187,13 @@ class Order extends OrderModel
                 $this->errorData = $model->getErrorData();
                 $this->errorCode = $model->getErrorCode();
                 return false;
+            }
+            // 如果是自助餐，给自助餐增销量
+            if ($this['is_buffet'] == 1) {
+               $buffet = OrderBuffetModel::where('order_id', $this['order_id'])->find();
+                if ($buffet) {
+                    $buffet->buffet()->setInc('sale_num', $buffet['num']);
+                }
             }
             //
             $status = $PaySuccess->onPaySuccess($pay_type);
