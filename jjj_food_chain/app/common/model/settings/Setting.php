@@ -414,7 +414,7 @@ class Setting extends BaseModel
                 'key' => 'sys_config',
                 'describe' => '系统设置',
                 'values' => [
-                    'shop_name' => '点餐管理系统', // 商城名称
+                    'shop_name' => 'XXX shop', // 商城名称
                     'shop_bg_img' => '', // 商城背景图
                     'shop_logo_img' => '', // 商城logo
                     'cashier_name' => '收银台', // 收银台名称
