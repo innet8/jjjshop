@@ -612,6 +612,7 @@ class OrderPrinterService
     {
         $printerType = $printer['printer_type']['value'];
         $isThai =  preg_match('/[\p{Thai}]/u', __("金额"));
+        $isEn =  preg_match('/^[A-Za-z]+$/u', __("数量"));
 
         // 打印机设置
         $printerConfig = SettingModel::getSupplierItem(SettingEnum::PRINTER, $order['shop_supplier_id'], $order['app_id']);
@@ -650,8 +651,17 @@ class OrderPrinterService
             $printer->printInColumns(__("时间"), $order->update_time);
             $printer->lineFeed();
             //
-            $printer->appendText(printText(__("商品"), '',__("数量"), $width));
-            $printer->appendText("\n------------------------------------------------\n");
+            $printer->setupColumns(
+                [360, SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
+            );
+            if ($printerType != PrinterTypeEnum::SUNMI_LAN && $isEn) {
+                $printer->appendText(printText(__("商品"), '',__("数量"), $width));
+                $printer->appendText("\n------------------------------------------------\n");
+            } else {
+                $printer->printInColumns(__("商品"), __("数量"));
+                $printer->appendText("------------------------------------------------\n");
+            }
             $printer->setupColumns(
                 [360 , SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
