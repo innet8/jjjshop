@@ -202,7 +202,7 @@ class Setting extends BaseModel
                 'describe' => '商城设置',
                 'values' => [
                     // 商城名称
-                    'name' => $storeName ?: '点餐系统连锁店版本',
+                    'name' => $storeName ?: 'XXX shop',
                     // 快递100
                     'kuaidi100' => [
                         'customer' => '',
