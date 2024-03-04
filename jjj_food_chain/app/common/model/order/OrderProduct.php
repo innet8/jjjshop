@@ -210,7 +210,11 @@ class OrderProduct extends BaseModel
         if ($order['is_buffet'] == 1 && $order['buffet_expired_time'] != -1 && $order['buffet_expired_time'] < time()) {
             // 自助餐设置
             $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $order['shop_supplier_id'] ?? 0, $order['app_id'] ?? 0);
-            if ($buffetSetting['is_buy_continue'] != 1) {
+            if ($this['is_buffet_product'] == 1) {
+                $this->error = '自助餐时间已到达，自助餐商品不可继续下单';
+                return false;
+            }
+            if ($this['is_buffet_product'] != 1 && $buffetSetting['is_buy_continue'] != 1) {
                 $this->error = '用餐时间已到，无法添加商品';
                 return false;
             }
