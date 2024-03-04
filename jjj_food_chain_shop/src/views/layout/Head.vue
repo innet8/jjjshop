@@ -121,6 +121,7 @@ export default defineComponent({
             })
                 .then(() => {
                     this.logout();
+                    location.reload();
                 })
                 .catch(() => {
                     this.$ElMessage({
