@@ -3,7 +3,7 @@
         <div class="breadcrumb">
             <!--一般的标题显示-->
             <div class="baseInfo-left-base d-s-c">
-                <span class="name"><img src="/src/assets/logo.png" /></span>
+                <span class="name"><img src="/src/assets/logo_svg.svg" /></span>
 
             </div>
 
