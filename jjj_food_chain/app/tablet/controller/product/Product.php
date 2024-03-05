@@ -40,7 +40,7 @@ class Product extends Controller
         }
         $list = $model->list(array_merge(['shop_supplier_id' => $this->table['shop_supplier_id']], $param));
         // 如果选择自助餐
-        if ($order && $order['is_buffet'] == 1) {
+        if ($order) {
             $buffetProductArr = Order::getOrderBuffetProductArr($order['order_id']);
             $list['data'] = Order::handleBuffetProductIndex($list['data'], $buffetProductArr, $order['meal_num']);
         }
