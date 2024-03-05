@@ -390,7 +390,7 @@ class Order extends Controller
         $is_change_price = $detail['is_change_price'];
         if ($detail->useMember($user_id)) {
             $reset_notice = 0;
-            if ($is_change_price != $detail['is_change_price']) {
+            if ($is_change_price != $detail['is_change_price'] && $detail['discount_ratio'] == 0) {
                 $reset_notice = 1;
             }
             return $this->renderSuccess('使用会员成功', ['reset_notice' => $reset_notice]);
