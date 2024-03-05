@@ -11,4 +11,5 @@ class OrderErrorEnum extends Enum
 {
     // 商城订单
     const OUT_LIMIT_NUM = -11;
+    const OUT_LIMIT_TIME = -12;
 }

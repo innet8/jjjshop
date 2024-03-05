@@ -398,13 +398,13 @@ class OrderProduct extends BaseModel
         }
 
         // 检查待送厨商品状态
-        if ($order['is_buffet'] == 1) {
+        if ($order['is_buffet'] == 1 && $type != 'payment') {
             // 自助餐设置
             $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $order['shop_supplier_id'], $order['app_id']);
             $buffet_remaining_time = Order::getBuffetRemainingTime($order['buffet_expired_time']);
             // 检查非自助餐商品超时
             foreach ($order['unSendKitchenProduct'] as $order_product) {
-                if ($order_product['is_buffet_product'] != 1 && $buffet_remaining_time <= 0 && $order['buffet_expired_time'] != -1 && $buffetSetting['is_buy_continue'] != 1 ) {
+                if ($order_product['is_buffet_product'] != 1 && $buffet_remaining_time <= 0 && $order['buffet_expired_time'] != -1 && $buffetSetting['is_buy_continue'] != 1) {
                     $this->error = '用餐时间已到，无法继续下单';
                     return false;
                 }
@@ -433,6 +433,35 @@ class OrderProduct extends BaseModel
                 $this->error = "超过限购数量";
                 $this->errorData = $out_limit_num;
                 $this->errorCode = OrderErrorEnum::OUT_LIMIT_NUM;
+                return false;
+            }
+        }
+
+        // 结账送厨判断
+        if ($order['is_buffet'] == 1 && $type == 'payment') {
+            // 自助餐设置
+            $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $order['shop_supplier_id'], $order['app_id']);
+            $buffet_remaining_time = Order::getBuffetRemainingTime($order['buffet_expired_time']);
+            // 检查非自助餐商品超时
+            $product_list = [];
+            $buffet_product_list = [];
+            foreach ($order['unSendKitchenProduct'] as $order_product) {
+                if ($order_product['is_buffet_product'] != 1 && $buffet_remaining_time <= 0 && $order['buffet_expired_time'] != -1 && $buffetSetting['is_buy_continue'] != 1) {
+                    $product_list[] = $order_product;
+                } else if($order_product['is_buffet_product'] == 1 && $buffet_remaining_time <= 0 && $order['buffet_expired_time'] != -1) {
+                    $buffet_product_list[] = $order_product;
+                }
+            }
+            $notice_list = array_merge($product_list, $buffet_product_list);
+            if ($buffetSetting['is_buy_continue'] != 1) {
+                $this->error = '用餐时间已到，请先删除未送厨商品';
+            } else {
+                $this->error = '自助餐时间已到达，请先删除未送厨商品';
+            }
+
+            if (count($notice_list) > 0) {
+                $this->errorData = $notice_list;
+                $this->errorCode = OrderErrorEnum::OUT_LIMIT_TIME;
                 return false;
             }
         }
