@@ -6,8 +6,8 @@
                 <el-form-item :label="$t('商品状态')">
                     <el-select size="small" v-model="searchForm.type" :placeholder="$t('商品状态')">
                         <el-option :label="$t('全部')" value="all"></el-option>
-                        <el-option :label="$t('上架中')" value="sell"></el-option>
-                        <el-option :label="$t('下架中')" value="lower"></el-option>
+                        <el-option :label="$t('开启')" value="sell"></el-option>
+                        <el-option :label="$t('关闭')" value="lower"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('商品分类')">
