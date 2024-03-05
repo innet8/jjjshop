@@ -207,7 +207,7 @@ class OrderProduct extends BaseModel
             return false;
         }
         // 检查自助餐商品可添加状态
-        if ($order['is_buffet'] == 1 && $order['buffet_expired_time'] != -1 && $order['buffet_expired_time'] < time()) {
+        if ($order['is_buffet'] == 1 && $order['buffet_expired_time'] != -1 && $order['buffet_expired_time'] < time() && $param['type'] != 'down') {
             // 自助餐设置
             $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $order['shop_supplier_id'] ?? 0, $order['app_id'] ?? 0);
             if ($this['is_buffet_product'] == 1) {
