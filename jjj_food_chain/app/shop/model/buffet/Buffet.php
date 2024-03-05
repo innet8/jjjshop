@@ -243,7 +243,7 @@ class Buffet extends BuffetModel
      */
     public function setDelete()
     {
-        if ($this->getCanDelete($this)) {
+        if (!$this->getCanDelete($this)) {
             $this->error = '自助餐正在使用中，不可删除';
             return false;
         }
