@@ -1,21 +1,17 @@
-<template >
-    <el-dialog :title="title" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false"
-        :close-on-press-escape="false">
+<template>
+    <el-dialog :title="title" v-model="dialogVisible" @close="dialogFormVisible" :close-on-click-modal="false" :close-on-press-escape="false">
         <el-form size="small" :model="form" label-position="top" :rules="formRules" ref="form">
             <template v-for="(item, index) in languageList" :key="index">
-                <el-form-item :label="$t('自助餐名称') + `(${item.value})`" :prop="`name.${[item.key]}`"
-                    :rules="[{ required: true, message: $t('请输入自助餐名称') }]">
+                <el-form-item :label="$t('自助餐名称') + `(${item.value})`" :prop="`name.${[item.key]}`" :rules="[{ required: true, message: $t('请输入自助餐名称') }]">
                     <el-input type="text" v-model="form.name[item.key]" :placeholder="$t('请输入自助餐名称')" :maxlength="50"></el-input>
                 </el-form-item>
             </template>
 
             <el-form-item :label="$t('排序')" prop="sort">
-                <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('接近0，排序等级越高')"
-                    v-model.number="form.sort"></el-input-number>
+                <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('接近0，排序等级越高')" v-model.number="form.sort"></el-input-number>
             </el-form-item>
             <el-form-item :label="$t('价格')" prop="price">
-                <el-input-number :controls="false" :min="0" :max="1000000" :placeholder="$t('请输入价格')"
-                    v-model.number="form.price"></el-input-number>
+                <el-input-number :controls="false" :min="0" :max="1000000" :placeholder="$t('请输入价格')" v-model.number="form.price"></el-input-number>
             </el-form-item>
             <el-form-item :label="$t('限制用餐时间')" prop="is_time_limit" :rules="[{ required: true, message: '' }]">
                 <el-radio-group v-model="form.is_time_limit">
@@ -24,10 +20,8 @@
                 </el-radio-group>
             </el-form-item>
 
-            <el-form-item v-if="form.is_time_limit == 1" :label="$t('')" class="display-none" prop="time_limit"
-                :rules="[{ required: true, message: $t('请输入用餐时间') }]">
-                <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('请输入用餐时间')"
-                    v-model.number="form.time_limit"></el-input-number>
+            <el-form-item v-if="form.is_time_limit == 1" :label="$t('')" class="display-none" prop="time_limit" :rules="[{ required: true, message: $t('请输入用餐时间') }]">
+                <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('请输入用餐时间')" v-model.number="form.time_limit"></el-input-number>
                 {{ $t('分') }}
             </el-form-item>
 
@@ -46,62 +40,69 @@
             </el-form-item>
 
             <el-form-item :label="$t('商品')" prop="product_ids" :rules="[{
-                required: true,
-                validator: () => {
-                    return form.product_ids.length > 0 ? true : false;
-                },
-                message: $t('请选中商品')
-            }]">
+        required: true,
+        validator: () => {
+            return form.product_ids.length > 0 ? true : false;
+        },
+        message: $t('请选中商品')
+    }]">
                 <el-button type="primary" @click="selectList('select')">{{ $t('选中商品') }}</el-button>
                 <div class="select-list" v-if="select_list.length > 0">
+
                     <template v-for="item, index in select_list">
-                        <el-tooltip class="box-item" effect="dark" :content="item.product_name_text" placement="top">
-                            <div class="select-button">
-                                <p>{{ item.product_name_text }}</p>
-                                <el-icon class="select-icon" @click="deleteOne(index, item.product_id)">
-                                    <CircleCloseFilled />
-                                </el-icon>
+
+                        <div class="select-button">
+                            <div class="select-p">
+                                <autoTips :content="item.product_name_text">{{ item.product_name_text }}</autoTips>
                             </div>
-                        </el-tooltip>
+
+                            <el-icon class="select-icon" @click="deleteOne(index, item.product_id)">
+                                <CircleCloseFilled />
+                            </el-icon>
+                        </div>
+
                     </template>
                 </div>
             </el-form-item>
 
             <el-form-item :label="$t('限购')" prop="buy_limit_products" :rules="[{
-                required: true,
-                validator: () => {
-                    return (form.buy_limit_products.length == 0 && form.buy_limit_status == 1) ? false : true;
-                },
-                message: $t('请选中商品')
-            }]">
+        required: true,
+        validator: () => {
+            return (form.buy_limit_products.length == 0 && form.buy_limit_status == 1) ? false : true;
+        },
+        message: $t('请选中商品')
+    }]">
                 <el-radio-group v-model="form.buy_limit_status">
                     <el-radio :label="1">{{ $t('开启') }}</el-radio>
                     <el-radio :label="0">{{ $t('关闭') }}</el-radio>
                 </el-radio-group>
                 <div class="limit-list" v-if="form.buy_limit_status == 1">
                     <el-button type="primary" @click="selectList('limit')" :disabled="!limit_ids">{{ $t('选中商品')
-                    }}</el-button>
-                    <template v-for="item, index in form.buy_limit_products">
-                        <div class="limit-product-list">
-                            <div class="limit-product-box">
-                                <el-input type="text" v-model="item.name" readonly></el-input>
-                                <el-form-item label="" style="margin-top: 16px;" prop="item.limit_num" :rules="[{
-                                    required: true,
-                                    validator: () => {
-                                        return item.limit_num ? true : false;
-                                    },
-                                    message: $t('请输入限购数量')
-                                }]">
-                                    <el-input-number :controls="false" :min="0" :max="999" style="width: 200px !important;"
-                                        :placeholder="$t('请输入限购数量')" v-model.number="item.limit_num"></el-input-number>
-                                </el-form-item>
+                        }}</el-button>
+                    <div class="limit-product">
 
-                                <el-icon class="delete-icon" @click="handleDelete(index)">
-                                    <Delete />
-                                </el-icon>
+                        <template v-for="item, index in form.buy_limit_products">
+                            <div class="limit-product-list">
+                                <div class="limit-product-box">
+                                    <el-input type="text" v-model="item.name" readonly></el-input>
+                                    <el-form-item label="" style="margin-top: 16px;" prop="item.limit_num" :rules="[{
+        required: true,
+        validator: () => {
+            return item.limit_num ? true : false;
+        },
+        message: $t('请输入限购数量')
+    }]">
+                                        <el-input-number :controls="false" :min="0" :max="999" style="width: 200px !important;" :placeholder="$t('请输入限购数量')" v-model.number="item.limit_num"></el-input-number>
+                                    </el-form-item>
+
+                                    <el-icon class="delete-icon" @click="handleDelete(index)">
+                                        <Delete />
+                                    </el-icon>
+                                </div>
                             </div>
-                        </div>
-                    </template>
+                        </template>
+                    </div>
+
 
                 </div>
             </el-form-item>
@@ -113,19 +114,20 @@
                 <el-button type="primary" @click="submit" :loading="loading">{{ $t('确定') }}</el-button>
             </div>
         </template>
-        <productList v-if="open_product" :open_product="open_product" :limit_ids="limit_ids" :selectType="selectType" :multiple_selection="multiple_selection"
-            @closeDialogFunc="closeDialogFunc($event)">
+        <productList v-if="open_product" :open_product="open_product" :limit_ids="limit_ids" :selectType="selectType" :multiple_selection="multiple_selection" @closeDialogFunc="closeDialogFunc($event)">
         </productList>
     </el-dialog>
 </template>
+
 <script>
 import PorductApi from '@/api/product.js';
 import { languageStore } from '@/store/model/language.js';
+import autoTips from './autoTips.vue';
 import productList from './productList.vue';
 const languageData = JSON.stringify(languageStore().languageData);
 const languageList = languageStore().languageList;
 export default {
-    components: { productList },
+    components: { productList, autoTips },
     data() {
         return {
             languageList: languageList,
@@ -343,6 +345,7 @@ export default {
     },
 }
 </script>
+
 <style lang="scss" scoped>
 .select-list {
     width: 100%;
@@ -350,11 +353,19 @@ export default {
     flex-wrap: wrap;
     gap: 12px;
     margin-top: 16px;
+    padding: 7px 7px 0 0;
+    max-height: 400px;
+    overflow: auto;
 }
 
 .limit-list {
     width: 100%;
     margin-top: 12px;
+
+    .limit-product {
+        max-height: 400px;
+        overflow: auto;
+    }
 
     .limit-product-list {
         width: 100%;
@@ -394,14 +405,14 @@ export default {
     min-width: 30%;
     border: solid 1px var(--el-color-tips);
     color: var(--el-color-tips);
-    padding: 0 16px;
     border-radius: 4px;
     position: relative;
 
-    p {
+    .select-p {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        position: relative;
     }
 
     .select-icon {
