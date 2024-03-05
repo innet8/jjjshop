@@ -1019,4 +1019,6 @@ return [
     "用餐时间已到，无法继续下单" => "Meal time has expired and order cannot be placed.",
     "日本語" => "Japanese",
     "桌台未绑定" => "The table is not bound",
+    "用餐时间已到，请先删除未送厨商品" => "Meal time has arrived, please delete undelivered items first",
+    "自助餐时间已到达，请先删除未送厨商品" => "The buffet time has arrived, please delete the undelivered items first",
 ];

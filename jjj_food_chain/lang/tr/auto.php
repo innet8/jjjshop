@@ -1020,4 +1020,6 @@ return [
     "用餐时间已到，无法继续下单" => "Yemek süresi doldu ve sipariş verilemiyor.",
     "日本語" => "Japonca",
     "桌台未绑定" => "Tablo bağlı değil",
+    "用餐时间已到，请先删除未送厨商品" => "Yemek zamanı geldi, lütfen önce teslim edilmeyen ürünleri silin",
+    "自助餐时间已到达，请先删除未送厨商品" => "Büfe saati geldi, lütfen önce teslim edilmeyen ürünleri silin",
 ];
