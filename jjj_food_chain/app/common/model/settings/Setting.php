@@ -23,7 +23,7 @@ class Setting extends BaseModel
      */
     public function getValuesAttr($value)
     {
-        return json_decode($value, true);
+        return $value ? json_decode($value, true) : [];
     }
 
     /**
@@ -556,7 +556,7 @@ class Setting extends BaseModel
                     'is_auto_send' => '0', // 收银结账自动送厨房 0-关闭 1-开启
                     // 收银机服务器连接
                     'server' => [
-                        'ip' => Env::get('HARDWARE_SERVER_URL', getLanIp()),
+                        'ip' => str_replace('addr:', '', Env::get('HARDWARE_SERVER_URL', getLanIp())),
                         'port' => Env::get('HARDWARE_SERVER_PORT', '8080'),
                     ],
                     // 高级设置密码
@@ -583,7 +583,7 @@ class Setting extends BaseModel
                     'is_show_sold_out' => '0', // 是否显示售罄商品 0-关闭 1-开启
                     // 平板服务器连接
                     'server' => [
-                        'ip' => Env::get('HARDWARE_SERVER_URL', getLanIp()),
+                        'ip' => str_replace('addr:', '', Env::get('HARDWARE_SERVER_URL', getLanIp())),
                         'port' => Env::get('HARDWARE_SERVER_PORT', '8080'),
                     ],
                     // 高级设置密码
@@ -601,7 +601,7 @@ class Setting extends BaseModel
                 'values' => [
                     // 厨显服务器连接
                     'server' => [
-                        'ip' => Env::get('HARDWARE_SERVER_URL', getLanIp()),
+                        'ip' => str_replace('addr:', '', Env::get('HARDWARE_SERVER_URL', getLanIp())),
                         'port' => Env::get('HARDWARE_SERVER_PORT', '8080'),
                     ],
                     // 高级设置密码
