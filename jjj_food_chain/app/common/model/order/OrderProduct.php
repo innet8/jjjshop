@@ -211,7 +211,7 @@ class OrderProduct extends BaseModel
             // 自助餐设置
             $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $order['shop_supplier_id'] ?? 0, $order['app_id'] ?? 0);
             if ($buffetSetting['is_buy_continue'] != 1) {
-                $this->error = '用餐时间已到，无法添加商品';
+                $this->error = '用餐时间已到，无法继续下单';
                 return false;
             }
             if ($buffetSetting['is_buy_continue'] == 1 && $this['is_buffet_product'] == 1) {
