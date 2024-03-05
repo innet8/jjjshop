@@ -2,6 +2,7 @@
 
 namespace app\admin\model;
 
+use think\facade\Cache;
 use app\common\model\shop\Access as AccessModel;
 
 /**
@@ -63,6 +64,9 @@ class Access extends AccessModel
 
         $data['redirect_name'] = ($data['is_route'] == 1) ? $data['redirect_name'] : '';
         $data['icon'] = $data['icon'];
+        // 删除收银机缓存
+        Cache::tag('cashier')->clear();
+        //  
         return $this->save($data);
     }
 
