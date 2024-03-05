@@ -23,7 +23,7 @@ class Setting extends BaseModel
      */
     public function getValuesAttr($value)
     {
-        return json_decode($value, true);
+        return $value ? json_decode($value, true) : [];
     }
 
     /**
