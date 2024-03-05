@@ -67,6 +67,7 @@
                                         style="width: 160px !important;margin-top: 16px;" :placeholder="$t('请输入价格')"
                                         v-model.number="item.price"></el-input-number>
                                 </el-form-item>
+                                <p class="limit-product-p">{{ currency.unit }}</p>
                                 <el-icon class="delete-icon" :class="unDelete ? 'delete-icon-none':''" @click="handleDelete(index)">
                                     <Delete />
                                 </el-icon>
@@ -88,9 +89,12 @@
 </template>
 <script>
 import PorductApi from '@/api/product.js';
+import { useUserStore } from '@/store';
+const { currency } = useUserStore();
 export default {
     data() {
         return {
+            currency:currency,
             loading: false,
             form: {
                 is_open: "1",
