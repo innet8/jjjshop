@@ -90,7 +90,7 @@ class Table extends TableModel
             $this->error = '当前桌位已开台，不允许该操作';
             return false;
         }
-        return $this->save(['is_bind' => 0]);
+        return $this->save(['is_bind' => 0, 'bind_info' => '']);
     }
 
     /**

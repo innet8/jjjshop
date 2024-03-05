@@ -35,12 +35,13 @@ class Table extends Controller
      * @Apidoc\Method("POST")
      * @Apidoc\Param("table_id", type="int", require=true, desc="桌号ID")
      * @Apidoc\Param("old_table_id", type="int", require=false, desc="解绑桌号ID")
+     * @Apidoc\Param("key", type="string", require=true, desc="唯一设备标识")
      * @Apidoc\Url("/index.php/tablet/table.table/bind")
      */
-    public function bind($table_id, $old_table_id = 0)
+    public function bind($table_id, $old_table_id = 0, $key = '')
     {
         $model = new TableModel;
-        if (!$model->bindTable($this->table['shop_supplier_id'], $table_id)) {
+        if (!$model->bindTable($this->table['shop_supplier_id'], $table_id, $key)) {
             return $this->renderError($model->getError() ?: '绑定桌台失败');
         }
         if ($old_table_id > 0) {
@@ -95,7 +96,7 @@ class Table extends Controller
     {
         // Tid
         $tableId = $this->table['table_id'] ?? 0;
-        // 
+        //
         $is_lock = 0;
         $buffet = [
             'is_buffet' => 0,
@@ -104,7 +105,7 @@ class Table extends Controller
             'buffet_remaining_time' => 0,
             'is_buy_continue' => 1,
         ];
-        // 
+        //
         if ($tableId > 0) {
             $detail = OrderModel::getTableUnderwayOrder($tableId);
             if ($detail) {
@@ -121,7 +122,7 @@ class Table extends Controller
                 ];
             }
         }
-        // 
+        //
         return $this->renderSuccess('请求成功', compact('is_lock', 'buffet'));
     }
 }
