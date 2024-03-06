@@ -71,7 +71,7 @@ class Call extends BaseModel
             $isAndroid = strpos($header['platform'], 'android') !== false;
         }
         //
-        $unSendList = $this->withoutGlobalScope()->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->limit(5)->order(['create_time' => 'desc'])->select();
+        $unSendList = $this->withoutGlobalScope()->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->limit(5)->group('table_id')->order(['create_time' => 'desc'])->select();
         if ($isAndroid) {
             $this->withoutGlobalScope()->where('is_send', 0)->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->limit(5)->order(['create_time' => 'desc'])->update(['is_send' => 1]);
         }
