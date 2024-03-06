@@ -58,7 +58,7 @@ class Job extends Command
             try {
                 event('JobScheduler');
                 // 
-                Log::channel("task")->write('job');
+                // Log::channel("task")->write('job');
                 // 
             } catch (\Throwable $e) {
                 echo 'ERROR: ' . $e->getMessage() . PHP_EOL;
