@@ -78,6 +78,7 @@ class Order extends Controller
         if (!$order_id) {
             return $this->renderError($orderService->getError() ?: '订单创建失败');
         }
+        (new OrderModel())->reloadPrice($order_id);
        // 修改桌台状态
         TableModel::open($params['table_id']);
         // 返回结算信息
