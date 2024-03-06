@@ -316,4 +316,21 @@ class HallCart extends Controller
         }
         return $this->renderError($model->getError() ?: '删除失败');
     }
+
+    /**
+     * @Apidoc\Title("查询桌台信息")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/getTableInfo")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+     * @Apidoc\Returned()
+     */
+    public function getTableInfo($table_id)
+    {
+        $detail = TableModel::detail($table_id);
+        if (!$detail) {
+            return $this->renderError('桌台不存在');
+
+        }
+        return $this->renderSuccess('桌台信息', $detail);
+    }
 }
