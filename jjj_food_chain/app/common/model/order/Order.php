@@ -1441,7 +1441,7 @@ class Order extends BaseModel
     //查询桌号订单已送厨商品
     public function getSendKitchen($table_id)
     {
-        return $this->with('sendKitchenProduct')
+        return $this->with(['sendKitchenProduct', 'buffet', 'delay'])
             ->where('table_id', '=', $table_id)
             ->where('order_status', '=', OrderStatusEnum::NORMAL)
             ->where('is_delete', '=', 0)

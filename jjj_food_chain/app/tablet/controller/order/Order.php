@@ -115,15 +115,21 @@ class Order extends Controller
     {
         $model = new OrderModel();
         $order = $model->getSendKitchen($table_id);
-        $sendKitchenProductTotalPrice = 0;
+        $buffet = $order['buffet'];
+        $delay = $order['delay'];
         $list = [];
+        $total_price = 0;
 
         if ($order) {
-            $sendKitchenProductTotalPrice = helper::getArrayColumnSum($order['sendKitchenProduct'], 'total_price');
-            $list = OrderProduct::getGroupByTime($order['order_id']);
+            $buffetTotalPrice = helper::getArrayColumnSum($order['buffet'], 'total_price');
+            $delayTotalPrice = helper::getArrayColumnSum($order['delay'], 'total_price');
+            $sendKitchenProductTotalPrice = helper::getArrayColumnSum($order['sendKitchenProduct'], 'total_product_price');
+            $total_price = helper::bcadd(helper::bcadd($buffetTotalPrice, $delayTotalPrice), $sendKitchenProductTotalPrice);
+
+            $list = OrderProduct::getGroupByTime($order['order_id'], $buffet, $delay);
             array_multisort(array_column($list,'timestamp'), SORT_DESC, $list); //SORT_DESC降序，SORT_ASC升序
         }
-        return $this->renderSuccess('请求成功', compact('list', 'sendKitchenProductTotalPrice'));
+        return $this->renderSuccess('请求成功', compact('list', 'total_price'));
     }
 
     /**
