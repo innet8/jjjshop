@@ -80,10 +80,13 @@ class Order
         // 执行自动关闭
         $service->close($this->appId);
         // 记录日志
-        $this->dologs('close', [
-            'orderIds' => json_encode($service->getCloseOrderIds()),
-            'close_days' => $config['order']['close_days']
-        ]);
+        $closeOrderIds = $service->getCloseOrderIds(); 
+        if (!empty($closeOrderIds)) {
+            $this->dologs('close', [
+                'orderIds' => json_encode($closeOrderIds),
+                'close_days' => $config['order']['close_days']
+            ]);
+        }
         return true;
     }
 
@@ -112,11 +115,11 @@ class Order
             ]);
             // 批量处理已完成的订单
             $this->onReceiveCompleted($orderIds);
+            // 记录日志
+            $this->dologs('receiveTable', [
+                'orderIds' => json_encode($orderIds),
+            ]);
         }
-        // 记录日志
-        $this->dologs('receiveTable', [
-            'orderIds' => json_encode($orderIds),
-        ]);
         return true;
     }
 
@@ -155,13 +158,13 @@ class Order
                 ->update(['deliver_status' => 4, 'deliver_time' => time(), 'status' => 30]);
             // 批量处理已完成的订单
             $this->onReceiveCompleted($orderIds);
+            // 记录日志
+            $this->dologs('receive', [
+                'receive_days' => $receiveDays,
+                'deadline_time' => $deadlineTime,
+                'orderIds' => json_encode($orderIds),
+            ]);
         }
-        // 记录日志
-        $this->dologs('receive', [
-            'receive_days' => $receiveDays,
-            'deadline_time' => $deadlineTime,
-            'orderIds' => json_encode($orderIds),
-        ]);
         return true;
     }
 
@@ -237,13 +240,13 @@ class Order
                 $data['money'] = $item['pay_price'];
                 $data['money'] && (new UserModel)->IncExpendMoney($data);
             }
+            // 记录日志
+            $this->dologs('pointsReceive', [
+                'points_days' => (int)$points_days,
+                'deadline_time' => $deadlineTime,
+                'orderIds' => json_encode($orderIds),
+            ]);
         }
-        // 记录日志
-        $this->dologs('pointsReceive', [
-            'points_days' => (int)$points_days,
-            'deadline_time' => $deadlineTime,
-            'orderIds' => json_encode($orderIds),
-        ]);
         return true;
     }
 
