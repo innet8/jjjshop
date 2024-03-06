@@ -1022,4 +1022,5 @@ return [
     "桌台未绑定" => "Tablo bağlı değil",
     "用餐时间已到，请先删除未送厨商品" => "Yemek zamanı geldi, lütfen önce teslim edilmeyen ürünleri silin",
     "自助餐时间已到达，请先删除未送厨商品" => "Büfe saati geldi, lütfen önce teslim edilmeyen ürünleri silin",
+    "该用户已在其它收银机登录，请先退出" => "Bu kullanıcı zaten başka bir kasada oturum açmış, lütfen önce oturumu kapatın.",
 ];

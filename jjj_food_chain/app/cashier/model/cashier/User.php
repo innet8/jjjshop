@@ -48,6 +48,11 @@ class User extends UserModel
         }
         // 检查是否有未交班的收银员
         $cashierUser = $this->where(['cashier_online' => 1])->find();
+        // 产品设计人机只能登录一个收银员
+        if ($cashierUser && $cashierUser['shop_user_id'] == $user['shop_user_id']) {
+            $this->error = '该用户已在其它收银机登录，请先退出';
+            return false;
+        }
         if ($cashierUser && $cashierUser['shop_user_id'] != $user['shop_user_id']) {
             $this->error = __('收银员') . ' ' . $cashierUser['real_name'] . ' ' . __('未交班，请先交班');
             return false;
