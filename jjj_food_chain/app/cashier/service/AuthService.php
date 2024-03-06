@@ -61,6 +61,7 @@ class AuthService
         '/order/hallcart/delProduct',
         '/order/hallcart/getSendKitchen',
         '/order/hallcart/tableProductList',
+        '/order/hallcart/getTableInfo', // 获取桌台信息
 
         '/product/product/index',
         '/product/product/detail',
