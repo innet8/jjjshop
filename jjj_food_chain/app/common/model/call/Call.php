@@ -15,7 +15,6 @@ class Call extends BaseModel
      */
     public function getList($params, int $status = 0, int $shopSupplierId = 0)
     {
-//        return $this->withoutGlobalScope()->where('status', $status)->where('shop_supplier_id', $shopSupplierId)->paginate($params);
         return $this->withoutGlobalScope()
             ->alias('t1')
             ->where('status', $status)->where('shop_supplier_id', $shopSupplierId)
@@ -73,7 +72,13 @@ class Call extends BaseModel
             $isAndroid = strpos($header['platform'], 'android') !== false;
         }
         //
-        $unSendList = $this->withoutGlobalScope()->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->limit(5)->group('table_id')->order(['create_time' => 'desc'])->select();
+        $unSendList = $this->withoutGlobalScope()
+            ->alias('t1')
+            ->where('status', 0)->where('shop_supplier_id', $shopSupplierId)
+            ->where('(SELECT MAX(create_time) as max_time FROM jjjfood_call t2  WHERE t2.table_id = t1.table_id) = create_time')
+            ->order('create_time', 'desc')
+            ->limit(5)
+            ->select()->toArray();
         if ($isAndroid) {
             $this->withoutGlobalScope()->where('is_send', 0)->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->limit(5)->order(['create_time' => 'desc'])->update(['is_send' => 1]);
         }
