@@ -37,9 +37,6 @@ class Terminal extends Controller
         if (empty($data['carousel'])) {
             return $this->renderError('轮播内容不能为空');
         }
-        if (empty($data['server']['ip']) || empty($data['server']['port'])) {
-            return $this->renderError('收银机服务器连接的 IP 和端口不能为空');
-        }
         if (empty($data['auto_lock_screen'])) {
             return $this->renderError('自动锁屏不能为空');
         }
@@ -144,9 +141,6 @@ class Terminal extends Controller
         if (empty($data['carousel'])) {
             return $this->renderError('轮播内容不能为空');
         }
-        if (empty($data['server']['ip']) || empty($data['server']['port'])) {
-            return $this->renderError('平板服务器连接的 IP 和端口不能为空');
-        }
         if (empty($data['language'])) {
             return $this->renderError('常用语言不能为空');
         }
@@ -216,9 +210,6 @@ class Terminal extends Controller
         $model = new SettingModel;
         $data = $this->request->param();
         //
-        if (empty($data['server']['ip']) || empty($data['server']['port'])) {
-            return $this->renderError('厨显服务器连接的 IP 和端口不能为空');
-        }
         if (empty($data['language'])) {
             return $this->renderError('常用语言不能为空');
         }
