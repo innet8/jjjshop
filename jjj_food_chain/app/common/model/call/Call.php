@@ -3,6 +3,7 @@
 namespace app\common\model\call;
 
 use app\common\model\BaseModel;
+use think\facade\Db;
 
 /**
  * 呼叫模型
@@ -64,6 +65,7 @@ class Call extends BaseModel
      */
     public function getUnSendList(int $shopSupplierId = 0)
     {
+        Db::connect()->execute("SET SESSION sql_mode = ''");
         // 判断是否时安卓还是h5 android web
         $header = request()->header();
         $isAndroid = false;
