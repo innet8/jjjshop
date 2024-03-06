@@ -19,6 +19,7 @@ class OrderDelay extends BaseModel
      */
     protected $append = [
         'name_text',
+        'total_product_price',
     ];
 
     /**
@@ -27,6 +28,14 @@ class OrderDelay extends BaseModel
     public function getNameTextAttr($value, $data = [])
     {
         return extractLanguage($value ?: $data['name']);
+    }
+
+    /**
+     * 兼容商品列表时的价格字段
+     */
+    public function getTotalProductPriceAttr($value, $data = [])
+    {
+        return $data['total_price'];
     }
 
     // 删除订单加钟
