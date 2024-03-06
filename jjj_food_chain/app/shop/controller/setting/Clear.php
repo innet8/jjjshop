@@ -2,9 +2,10 @@
 
 namespace app\shop\controller\setting;
 
+use help\SystemHelp;
+use think\facade\Cache;
 use app\shop\controller\Controller;
 use hg\apidoc\annotation as Apidoc;
-use think\facade\Cache;
 
 /**
  * 清理缓存
@@ -25,11 +26,17 @@ class Clear extends Controller
         if($this->request->isGet()){
             return $this->fetchData();
         }
+        // 
         $keys = $this->postData()['keys'] ?? '';
         if (!$keys) {
             return $this->renderError('请选择数据');
         }
+        // 
         $this->rmCache( $this->postData()['keys'] );
+        // 
+        $cachePath = root_path('runtime') . 'cache';
+        SystemHelp::cmd("chmod -R 777 $cachePath");
+        // 
         return $this->renderSuccess('操作成功');
     }
 
