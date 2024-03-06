@@ -100,7 +100,10 @@ class Order extends Controller
             $detail['unSendKitchenProductTotalPrice'] = helper::getArrayColumnSum($detail['unSendKitchenProduct'], 'total_price');
             $detail['unSendKitchenProductTotalNum'] = helper::getArrayColumnSum($detail['unSendKitchenProduct'], 'total_num');
             $detail['totalPrice'] = helper::getArrayColumnSum($detail['product'], 'total_price');
-            $detail['totalNum'] = helper::getArrayColumnSum($detail['product'], 'total_num');
+            $totalBuffetNum = helper::getArrayColumnSum($detail['buffet'], 'num');
+            $totalDelayNum = helper::getArrayColumnSum($detail['delay'], 'num');
+            $totalProductNum = helper::getArrayColumnSum($detail['product'], 'total_num');
+            $detail['totalNum'] = $totalBuffetNum + $totalDelayNum + $totalProductNum;
         }
         return $this->renderSuccess('', compact('detail'));
     }
