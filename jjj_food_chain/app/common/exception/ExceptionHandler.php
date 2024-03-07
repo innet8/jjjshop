@@ -59,7 +59,7 @@ class ExceptionHandler extends Handle
     private function recordErrorLog(Throwable $e)
     {
         try {
-            Log::write($this->message, 'error');
+            Log::write($e->getMessage() ?: '服务器内部错误', 'error');
             Log::write($e->getTraceAsString() , 'error');
         } catch (\Throwable $th) {
             //throw $th;
