@@ -33,6 +33,9 @@ class ExceptionHandler extends Handle
         } else if ($e instanceof BaseException) {
             $this->code = $e->code;
             $this->message = $e->message;
+        } else if ($e instanceof \hg\apidoc\exception\HttpException) {
+            $this->code = $e->getCode();
+            $this->message = $e->getMessage();
         } else {
             if (Env::get('APP_DEBUG')) {
                 return parent::render($request, $e);
@@ -47,6 +50,7 @@ class ExceptionHandler extends Handle
             'line' => $e->getline() ?: '',
             'file' => $e->getFile() ?: ''
         ]);
+
     }
 
     /**
