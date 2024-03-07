@@ -58,7 +58,11 @@ class ExceptionHandler extends Handle
      */
     private function recordErrorLog(Throwable $e)
     {
-        Log::write($e->getMessage(), 'error');
-        Log::write($e->getTraceAsString(), 'error');
+        try {
+            Log::write($this->message, 'error');
+            Log::write($e->getTraceAsString() , 'error');
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 }
