@@ -29,8 +29,6 @@ class Product extends Controller
      */
     public function index()
     {
-        // 
-        file_get_contents("dd");
         // 获取全部商品列表
         $model = new ProductModel;
         $list = $model->getList(array_merge([
