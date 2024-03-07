@@ -16,6 +16,7 @@ class User extends UserModel
      */
     public function checkLogin($user)
     {
+        $key = $user['key'] ?? '';
         $where['user_name'] = $user['user_name'];
         $where['password'] = $user['password'];
         //
@@ -60,7 +61,7 @@ class User extends UserModel
         // 保存登录状态
         $user['token'] = signToken($user['shop_user_id'], 'cashier');
         // 更新收银员信息
-        $userData = ['cashier_online' => 1];
+        $userData = ['cashier_online' => 1, 'bind_key' => $key];
         if ($user['cashier_login_time'] == 0) {
             $userData['cashier_login_time'] = time();
         }

@@ -18,6 +18,7 @@ class Passport extends Controller
      * @Apidoc\Url ("/index.php/cashier/passport/login")
      * @Apidoc\Param("user_name", type="string", require=true, default="001", desc="用户名")
      * @Apidoc\Param("password", type="string", require=true, default="123456", desc="密码")
+     * @Apidoc\Param("key", type="string", require=true, default="", desc="设备key")
      * @Apidoc\Returned()
      */
     public function login()
