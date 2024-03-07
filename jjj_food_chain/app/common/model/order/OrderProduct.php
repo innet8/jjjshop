@@ -2,8 +2,11 @@
 
 namespace app\common\model\order;
 
+use app\common\enum\order\OrderErrorEnum;
+use app\common\enum\settings\SettingEnum;
 use app\common\library\helper;
 use app\common\model\BaseModel;
+use app\common\model\settings\Setting as SettingModel;
 use think\model\concern\SoftDelete;
 use app\common\enum\order\OrderStatusEnum;
 use app\common\model\order\Order as OrderModel;
@@ -173,12 +176,12 @@ class OrderProduct extends BaseModel
             ->when( $deductStockType == DeductStockTypeEnum::CREATE , function($q){
                 $q->where('is_send_kitchen', 0);
             })
-            // 
+            //
             ->where('order_product_id', '<>', $this->order_product_id)
             ->where('product_id', '=', $this->product_id)
             ->where('product_sku_id', '=', $this->product_sku_id)
             ->sum('total_num');
-        // 
+        //
         return (new ProductSkuModel)->where('product_id', '=', $this->product_id)
             ->where('product_sku_id', '=', $this->product_sku_id)
             ->where('stock_num', '>', $orderProductNum + $product_num - 1)
@@ -194,18 +197,39 @@ class OrderProduct extends BaseModel
             ->count();
     }
 
-    //
+    // 更改商品数量
     public function sub($param)
     {
+        // 判断是否被锁定
+        $order = $this->orderM()->find();
+        if ($this->orderM()->value('is_lock') == 1) {
+            $this->error = '订单已被锁定，请解锁后重新操作';
+            return false;
+        }
+        // 检查自助餐商品可添加状态
+        if ($order['is_buffet'] == 1 && $order['buffet_expired_time'] != -1 && $order['buffet_expired_time'] < time() && $param['type'] != 'down') {
+            // 自助餐设置
+            $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $order['shop_supplier_id'] ?? 0, $order['app_id'] ?? 0);
+            if ($buffetSetting['is_buy_continue'] != 1) {
+                $this->error = '用餐时间已到，无法继续下单';
+                return false;
+            }
+            if ($buffetSetting['is_buy_continue'] == 1 && $this['is_buffet_product'] == 1) {
+                $this->error = '自助餐时间已到达，自助餐商品不可继续下单';
+                return false;
+            }
+
+        }
+
         //判断商品是否下架
         $product = $this->productState($this['product_id']);
         if (!$product && $param['type'] != 'down') {
             $this->error = '商品已下架';
             return false;
         }
-        // 
+        //
         if ($param['type'] != 'down') {
-            // 
+            //
             $deductStockType = ProductModel::where('product_id', $this->product_id)->value('deduct_stock_type');
             if ($deductStockType == DeductStockTypeEnum::CREATE) {
                 $stockStatus = $this->getStockState($param['product_num']);
@@ -215,7 +239,11 @@ class OrderProduct extends BaseModel
                 }
             }
             // 判断限购
-            $limitNum = ProductModel::getProductLimitNum($this['product_id']);
+            if ($this['is_buffet_product'] == 1) {
+                $limitNum = Order::getBuffetProductLimitNum($this['order_id'], $this['product_id'])  * $order['meal_num'];
+            } else {
+                $limitNum = ProductModel::getProductLimitNum($this['product_id']);
+            }
             if ($limitNum && $param['product_num'] > $limitNum) {
                 $this->error = '超过限购数量';
                 return false;
@@ -259,6 +287,11 @@ class OrderProduct extends BaseModel
                     $this->error = '当前订单不可修改';
                     return false;
                 }
+                if ($detail->is_lock == 1) {
+                    $this->rollback();
+                    $this->error = '订单已被锁定，请解锁后重新操作';
+                    return false;
+                }
                 if ($model->is_send_kitchen == 1) {
                     $this->rollback();
                     $this->error = '商品已送厨，禁止删除';
@@ -290,7 +323,20 @@ class OrderProduct extends BaseModel
     // 未送厨商品备注
     public function updateKitchenRemark($order_product_id, $remark)
     {
-        return $this->where('order_product_id', '=', $order_product_id)->update(['remark' => $remark]);
+        $orderProduct = $this->where('order_product_id', '=', $order_product_id)->find();
+        if (empty($orderProduct)) {
+            $this->error = '商品不存在';
+            return false;
+        }
+        if ($orderProduct->orderM()->value('is_lock') == 1) {
+            $this->error = '订单已被锁定，请解锁后重新操作';
+            return false;
+        }
+        //
+        $orderProduct->remark = $remark;
+        $orderProduct->save();
+        //
+        return true;
     }
 
     // 收银端列表商品改价
@@ -314,6 +360,10 @@ class OrderProduct extends BaseModel
             ]);
             if (!$detail) {
                 $this->error = '当前订单不可修改';
+                return false;
+            }
+            if ($detail->is_lock == 1) {
+                $this->error = '订单已被锁定，请解锁后重新操作';
                 return false;
             }
             $p->product_price = $money;
@@ -342,20 +392,93 @@ class OrderProduct extends BaseModel
             $this->error = "订单不存在";
             return false;
         }
+        if ($type != 'payment' && $order->is_lock == 1) {
+            $this->error = '订单已被锁定，请解锁后重新操作';
+            return false;
+        }
+
+        // 检查待送厨商品状态
+        if ($order['is_buffet'] == 1 && $type != 'payment') {
+            // 自助餐设置
+            $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $order['shop_supplier_id'], $order['app_id']);
+            $buffet_remaining_time = Order::getBuffetRemainingTime($order['buffet_expired_time']);
+            // 检查非自助餐商品超时
+            foreach ($order['unSendKitchenProduct'] as $order_product) {
+                if ($order_product['is_buffet_product'] != 1 && $buffet_remaining_time <= 0 && $order['buffet_expired_time'] != -1 && $buffetSetting['is_buy_continue'] != 1) {
+                    $this->error = '用餐时间已到，无法继续下单';
+                    return false;
+                }
+            }
+            // 检查自助餐商品超时
+            foreach ($order['unSendKitchenProduct'] as $order_product) {
+                if ($order_product['is_buffet_product'] == 1 && $buffet_remaining_time <= 0 && $order['buffet_expired_time'] != -1) {
+                    $this->error = '自助餐时间已到达，自助餐商品不可继续下单';
+                    return false;
+                }
+            }
+            // 检查限购
+            $out_limit_num = [];
+            foreach ($order['unSendKitchenProduct'] as $order_product) {
+                if ($order_product['is_buffet_product'] == 1) {
+                    $limitNum = Order::getBuffetProductLimitNum($order['order_id'], $order_product['product_id']) * $order['meal_num'];
+                } else {
+                    $limitNum = ProductModel::getProductLimitNum($order_product['product_id']);
+                }
+                $total_num = Order::getSendKitchenNum($order['order_id'], $order_product['product_id']) + Order::getUnSendKitchenNum($order['order_id'], $order_product['product_id']);
+                if ($limitNum && $total_num > $limitNum) {
+                    $out_limit_num[] = $order_product;
+                }
+            }
+            if (count($out_limit_num) > 0) {
+                $this->error = "超过限购数量";
+                $this->errorData = $out_limit_num;
+                $this->errorCode = OrderErrorEnum::OUT_LIMIT_NUM;
+                return false;
+            }
+        }
+
+        // 结账送厨判断
+        if ($order['is_buffet'] == 1 && $type == 'payment') {
+            // 自助餐设置
+            $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $order['shop_supplier_id'], $order['app_id']);
+            $buffet_remaining_time = Order::getBuffetRemainingTime($order['buffet_expired_time']);
+            // 检查非自助餐商品超时
+            $product_list = [];
+            $buffet_product_list = [];
+            foreach ($order['unSendKitchenProduct'] as $order_product) {
+                if ($order_product['is_buffet_product'] != 1 && $buffet_remaining_time <= 0 && $order['buffet_expired_time'] != -1 && $buffetSetting['is_buy_continue'] != 1) {
+                    $product_list[] = $order_product;
+                } else if($order_product['is_buffet_product'] == 1 && $buffet_remaining_time <= 0 && $order['buffet_expired_time'] != -1) {
+                    $buffet_product_list[] = $order_product;
+                }
+            }
+            $notice_list = array_merge($product_list, $buffet_product_list);
+            if ($buffetSetting['is_buy_continue'] != 1) {
+                $this->error = '用餐时间已到，请先删除未送厨商品';
+            } else {
+                $this->error = '自助餐时间已到达，请先删除未送厨商品';
+            }
+
+            if (count($notice_list) > 0) {
+                $this->errorData = $notice_list;
+                $this->errorCode = OrderErrorEnum::OUT_LIMIT_TIME;
+                return false;
+            }
+        }
 
         $this->startTrans();
         try {
-            // 
+            //
             $res = ProductFactory::getFactory($order['order_source'])->updateOrderProductStock($order['unSendKitchenProduct'], $type);
             if ($res !== true) {
                 $this->error = "商品库存不足，请重新选择";
                 $this->errorData = $res;
                 return false;
             }
-            // 
+            //
             $order->where('order_id', $order_id)->inc('extra_times', 1)->update();
             // 送厨更新取单号
-            if ($order->table_id == 0){
+            if ($order->table_id == 0 && $order->callNo == ''){
                 $order->callNo = getTableNumber();
                 $order->save();
             }
@@ -379,10 +502,31 @@ class OrderProduct extends BaseModel
     }
 
     // 订单送厨商品按送厨时间分组
-    public static function getGroupByTime($order_id)
+    public static function getGroupByTime($order_id, $buffet_list = [], $delay_list = [])
     {
         $orderProductList = OrderProduct::where('order_id', '=', $order_id)->where('is_send_kitchen', '=', 1)->select();
         $result = [];
+        // 自助餐
+        foreach ($buffet_list as $buffet) {
+            $addTime = strtotime($buffet->create_time);
+            if (!isset($result[$addTime])) {
+                $result[$addTime] = [];
+            }
+            $result[$addTime]['plist'][] = $buffet;
+            $result[$addTime]['timestamp'] = $addTime;
+            $result[$addTime]['date'] = $buffet->create_time;
+        }
+        // 加钟
+        foreach ($delay_list as $delay) {
+            $addTime = strtotime($delay->create_time);
+            if (!isset($result[$addTime])) {
+                $result[$addTime] = [];
+            }
+            $result[$addTime]['plist'][] = $delay;
+            $result[$addTime]['timestamp'] = $addTime;
+            $result[$addTime]['date'] = $delay->create_time;
+        }
+        // 商品
         foreach ($orderProductList as $orderProduct) {
             $sendKitchenTime = $orderProduct->send_kitchen_time;
             if (!isset($result[$sendKitchenTime])) {

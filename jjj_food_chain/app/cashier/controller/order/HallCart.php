@@ -6,7 +6,13 @@ use app\cashier\controller\Controller;
 use app\cashier\model\order\Cart as CartModel;
 use app\cashier\model\order\Order as OrderModel;
 use app\cashier\model\store\Table as TableModel;
+use app\common\enum\settings\SettingEnum;
+use app\common\model\buffet\Buffet;
+use app\common\model\delay\Delay;
+use app\common\model\order\OrderBuffet;
+use app\common\model\order\OrderDelay;
 use app\common\model\order\OrderProduct;
+use app\common\model\settings\Setting as SettingModel;
 use hg\apidoc\annotation as Apidoc;
 
 /**
@@ -65,6 +71,7 @@ class HallCart extends Controller
      * @Apidoc\Param("product_price", type="float", require=true, desc="商品价格")
      * @Apidoc\Param("bag_price", type="float", require=true, desc="打包费")
      * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+     * @Apidoc\Param("is_buffet", type="int", require=true, desc="是否自助餐 0-否 1-是")
      * @Apidoc\Returned()
      */
     public function add()
@@ -190,12 +197,11 @@ class HallCart extends Controller
             return $this->renderError('订单不存在');
         }
         $order_id = $detail['order_id'];
-
         $model = new OrderProduct();
         if ($model->sendKitchen($order_id)) {
             return $this->renderSuccess('送厨成功');
         }
-        return $this->renderError($model->getError() ?: '送厨失败', $model->getErrorData());
+        return $this->renderError($model->getError() ?: '送厨失败', $model->getErrorData(), $model->getErrorCode());
     }
 
     /**
@@ -218,5 +224,113 @@ class HallCart extends Controller
             return $this->renderSuccess('退菜成功');
         }
         return $this->renderError($detail?->getError() ?: '退菜失败');
+    }
+
+    /**
+     * @Apidoc\Title("桌台-自助餐列表")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/buffetList")
+     * @Apidoc\Returned()
+     */
+    public function buffetList()
+    {
+        $list = Buffet::getList();
+        return $this->renderSuccess('',$list);
+    }
+
+    /**
+     * @Apidoc\Title("桌台-加钟列表")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/delayList")
+     * @Apidoc\Returned()
+     */
+    public function delayList()
+    {
+        $list = Delay::getList();
+        return $this->renderSuccess('',$list);
+    }
+
+    /**
+     * @Apidoc\Title("桌台-加钟")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/addDelay")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台id")
+     * @Apidoc\Param("delay_ids", type="int", require=true, desc="加钟id组")
+     * @Apidoc\Returned()
+     */
+    public function addDelay($table_id, $delay_ids)
+    {
+        $detail = OrderModel::getTableUnderwayOrder($table_id);
+        if (!$detail) {
+            return $this->renderError('当前状态不可操作');
+        }
+        if ($detail->is_lock == 1) {
+            return $this->renderError('订单已被锁定，请解锁后重新操作');
+        }
+        if (!is_array($delay_ids)) {
+            return $this->renderError('参数错误');
+        }
+        if (empty($delay_ids)) {
+            return $this->renderError('请选择加钟');
+        }
+        // 自助餐设置
+        $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $this->cashier['user']['shop_supplier_id'] ?? 0, $this->cashier['user']['app_id'] ?? 0);
+        if ($buffetSetting['is_add_clock'] != 1) {
+            return $this->renderError('未开启加钟');
+        }
+        if (OrderModel::addDelay($detail['order_id'], $delay_ids)) {
+            (new OrderModel())->reloadPrice($detail['order_id']);
+            return $this->renderSuccess('加钟成功');
+        }
+        return $this->renderError('加钟失败');
+    }
+
+    /**
+     * @Apidoc\Title("删除订单自助餐")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/delOrderBuffet")
+     * @Apidoc\Param("order_buffet_id", type="int", require=true, desc="订单自助餐id")
+     * @Apidoc\Returned()
+     */
+    public function delOrderBuffet($order_buffet_id)
+    {
+        $model = new OrderBuffet();
+        if ($model->del($order_buffet_id)) {
+            return $this->renderSuccess('删除成功');
+        }
+        return $this->renderError($model->getError() ?: '删除失败');
+    }
+
+    /**
+     * @Apidoc\Title("删除订单加钟")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/delOrderDelay")
+     * @Apidoc\Param("order_delay_id", type="int", require=true, desc="自助餐id")
+     * @Apidoc\Returned()
+     */
+    public function delOrderDelay($order_delay_id)
+    {
+        $model = new OrderDelay();
+        if ($model->del($order_delay_id)) {
+            return $this->renderSuccess('删除成功');
+        }
+        return $this->renderError($model->getError() ?: '删除失败');
+    }
+
+    /**
+     * @Apidoc\Title("查询桌台信息")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/getTableInfo")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+     * @Apidoc\Returned()
+     */
+    public function getTableInfo($table_id)
+    {
+        $detail = TableModel::detail($table_id);
+        if (!$detail) {
+            return $this->renderError('桌台不存在');
+
+        }
+        return $this->renderSuccess('桌台信息', $detail);
     }
 }

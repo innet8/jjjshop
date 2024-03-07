@@ -66,15 +66,26 @@ class Index extends Controller
      *       @Apidoc\Param ("ip",type="string",desc="ip地址"),
      *      @Apidoc\Param ("port",type="float",desc="端口号"),
      *   }),
-     *    @Apidoc\Param ("language",type="array",desc="常用语言，默认th, en, zh, zh-tw"),
+     *    @Apidoc\Param ("language",type="array",desc="常用语言，默认th, en, zh, zhtw"),
      *    @Apidoc\Param ("default_language",type="array",desc="默认语言，默认en"),
+     * })
+     * @Apidoc\Returned("buffet", type="object", desc="自助餐设置", children={
+     *    @Apidoc\Param ("is_open",type="string",desc="是否开启自助餐 0-关闭 1-开启"),
+     *    @Apidoc\Param ("tablet_end_time",type="string",desc="平板结束时间提醒（分）"),
+     *    @Apidoc\Param ("is_buy_continue",type="string",desc="非自助餐商品到时是否能继续选购 0-关闭 1-开启"),
+     *    @Apidoc\Param ("is_add_clock",type="string",desc="是否开启加钟 0-关闭 1-开启"),
      * })
      */
     public function index()
     {
         $user = $this->cashier;
+        $shopSupplierId = $this->cashier['user']['shop_supplier_id'];
+        $appId = $this->cashier['user']['app_id'];
+        // 
+        $languageList = SettingModel::getSupplierLanguage($shopSupplierId,$appId);
+        $settingData = SettingModel::getAll($appId, $shopSupplierId, $languageList);
         // 货币信息
-        $currency = SettingModel::getSupplierItem(SettingEnum::CURRENCY, $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
+        $currency = $settingData[SettingEnum::CURRENCY]['values'] ?? [];
         $user['currency'] = [
             'unit' => $currency['unit'],
             'is_open' => $currency['is_open'],
@@ -84,14 +95,18 @@ class Index extends Controller
             ],
         ];
         // 收银机设置
-        $cashier = SettingModel::getSupplierItem(SettingEnum::CASHIER, $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
+        $cashier = $settingData[SettingEnum::CASHIER]['values'] ?? [];
         unset($cashier['cashier_password']);
         unset($cashier['advanced_password']);
-        unset($cashier['language_list']);
         $user['cashier'] = $cashier;
         // 平板端设置
-        $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $this->cashier['user']['shop_supplier_id'], $this->cashier['user']['app_id']);
+        $tablet = $settingData[SettingEnum::TABLET]['values'] ?? [];
         $user['tablet']['is_show_sold_out'] = $tablet['is_show_sold_out'];
+        // 自助餐设置
+        $buffet = $settingData[SettingEnum::BUFFET]['values'] ?? [];
+        $user['buffet'] = $buffet;
+       
+        // 
         return $this->renderSuccess('', compact('user'));
     }
 
@@ -126,7 +141,7 @@ class Index extends Controller
         $cashier = SettingModel::detail(SettingEnum::CASHIER, $shop_supplier_id);
         $lang['language'] = $cashier['values']['language'] ?? [];
         $lang['language_list'] = [];
-        $languageList = SettingModel::getSupplierItem(SettingEnum::STORE, $shop_supplier_id)['language'] ?? [];
+        $languageList = SettingModel::getSupplierLanguage($shop_supplier_id) ?? [];
         foreach ($languageList as $language) {
             if (in_array($language['name'], $lang['language'])) {
                 $language['key'] = $language['name'];

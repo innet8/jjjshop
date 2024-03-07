@@ -5,6 +5,7 @@ namespace app\shop\controller\setting;
 use app\shop\controller\Controller;
 use app\shop\model\settings\Setting as SettingModel;
 use app\common\enum\settings\SettingEnum;
+use app\shop\model\delay\Delay as DelayModel;
 use hg\apidoc\annotation as Apidoc;
 
 /**
@@ -22,9 +23,12 @@ class Buffet extends Controller
      * @Apidoc\Param("tablet_end_time", type="string", require=true, default="5", desc="平板结束时间提醒（分）")
      * @Apidoc\Param("is_buy_continue", type="string", require=true, desc="非自助餐商品到时是否能继续选购")
      * @Apidoc\Param("is_add_clock", type="string", require=true, desc="是否开启加钟")
-     * @Apidoc\Param("add_clock", type="array", require=true, desc="加钟时间（分）- 价格", children={
-     *     @Apidoc\Returned("time", type="string", desc="时间（分）"),
-     *     @Apidoc\Returned("value", type="string", desc="价格"),
+     * @Apidoc\Param("add_clock", type="array", require=true, desc="名称 - 加钟时间（分）- 价格", children={
+     *     @Apidoc\Returned("id", type="int", desc="加钟id"),
+     *     @Apidoc\Returned("name", type="string", desc="名称"),
+     *     @Apidoc\Returned("delay_time", type="string", desc="时间（分）"),
+     *     @Apidoc\Returned("price", type="string", desc="价格"),
+     *     @Apidoc\Returned("action", type="string", desc="操作结果 delete-删除 edit-编辑 add-新增"),
      * })
      * @Apidoc\Returned()
      */
@@ -36,26 +40,48 @@ class Buffet extends Controller
         $model = new SettingModel;
         $data = $this->request->param();
         //
+        if (empty($data['tablet_end_time'])) {
+            return $this->renderError('平板结束时间提醒不能为空');
+        }
         if (!empty($data['is_add_clock']) && isset($data['add_clock'])) {
             if (empty($data['add_clock'])) {
                 return $this->renderError('加钟设置不能为空');
             }
             foreach ($data['add_clock'] as $clock) {
-                if (empty($clock['time']) || empty($clock['value'])) {
+                $delayModel = new DelayModel;
+                if (empty($clock['name']) || empty($clock['delay_time']) || empty($clock['price'])) {
                     return $this->renderError('加钟设置参数错误');
+                }
+                // 如果是新增
+                if (isset($clock['action']) && $clock['action'] == 'add') {
+                    $clock['app_id'] = $this->store['app']['app_id'];
+                    unset($clock['action']);
+                    $delayModel->save($clock);
+                    continue;
+                }
+                // 如果是删除 - 保留数据，只是修改状态
+                if (isset($clock['action']) && $clock['action'] == 'delete') {
+                    if (isset($clock['id'])) {
+                        $delayModel->where('id', $clock['id'])->save(['status' => 0]);
+                    }
+                    continue;
+                }
+                // 如果是编辑
+                if (isset($clock['action']) && $clock['action'] == 'edit') {
+                    if (isset($clock['id'])) {
+                        unset($clock['action']);
+                        $delayModel->update($clock, ['id' => $clock['id']]);
+                    }
+                    continue;
                 }
             }
         }
-        if (empty($data['tablet_end_time'])) {
-            return $this->renderError('平板结束时间提醒不能为空');
-        }
-
         $arr = [
             'is_open' => $data['is_open'] ?? 0, // 是否开启自助餐
             'tablet_end_time' => $data['tablet_end_time'], // 平板结束时间提醒（分）
             'is_buy_continue' => $data['is_buy_continue'] ?? 0, // 非自助餐商品到时是否能继续选购
             'is_add_clock' => $data['is_add_clock'] ?? 0, // 是否开启加钟
-            'add_clock' => $data['add_clock'] ??  [], // 加钟时间（分）- 价格
+            'add_clock' => [], // 名称 - 加钟时间（分）- 价格（放表，不放设置里）
         ];
         $shop_supplier_id = $this->store['user']['shop_supplier_id'];
         if ($model->edit(SettingEnum::BUFFET, $arr, $shop_supplier_id)) {
@@ -73,6 +99,9 @@ class Buffet extends Controller
             return $this->renderError('缺少参数');
         }
         $ret = SettingModel::getSupplierItem($key, $this->store['user']['shop_supplier_id']);
+        // 获取加钟列表
+        $delay = DelayModel::getList();
+        $ret['add_clock'] = $delay;
         $vars['values'] = $ret;
         return $this->renderSuccess('', compact('vars'));
     }

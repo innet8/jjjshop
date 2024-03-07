@@ -22,19 +22,21 @@ class JobScheduler
         foreach ($appList as $app){
             // 订单任务
             event('Order', $app['app_id']);
-            // 同步直播
-            event('Live', $app['app_id']);
+            // doto 暂时用不到该业务，先注释
+            // 同步直播 
+            // event('Live', $app['app_id']);
             // 同步直播商品
-            event('LiveProduct', $app['app_id']);
+            // event('LiveProduct', $app['app_id']);
         }
+        // doto 暂时用不到该业务，先注释
         // 用户优惠券
-        event('UserCoupon');
+        // event('UserCoupon');
         // 用户生日信息
-        event('User');
+        // event('User');
         // 分销商订单结算
-        event('AgentOrder');
+        // event('AgentOrder');
         // 团购订单
-        event('GroupOrder');
+        // event('GroupOrder');
         // 交班打印
         event('UserShiftLogPrint');
         //

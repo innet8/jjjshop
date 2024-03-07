@@ -28,6 +28,10 @@ class Attribute extends AttributeModel
      */
     public function add($data, $shop_supplier_id)
     {
+        if(hasEmptyValue($data['attribute_name'] ?? '')){
+            $this->error = '属性名称不能为空';
+            return false;
+        }
         $isExist = $this->where('shop_supplier_id', '=', $shop_supplier_id)
             ->where('attribute_name', '=', $data['attribute_name'])
             ->count();
@@ -45,6 +49,10 @@ class Attribute extends AttributeModel
      */
     public function edit($data)
     {
+        if(hasEmptyValue($data['attribute_name'] ?? '')){
+            $this->error = '属性名称不能为空';
+            return false;
+        }
         $isExist = $this->where('shop_supplier_id', '=', $this['shop_supplier_id'])
             ->where('attribute_name', '=', $data['attribute_name'])
             ->where('attribute_id', '<>', $this['attribute_id'])

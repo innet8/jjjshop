@@ -30,7 +30,7 @@ class OrderPrinterService
     public function printTicket($order)
     {
         // 打印机设置
-        $printerConfig = SettingModel::getSupplierItem('printer', $order['shop_supplier_id'], $order['app_id']);
+        $printerConfig = SettingModel::getSupplierItem(SettingEnum::PRINTER, $order['shop_supplier_id'], $order['app_id']);
         //
         if (($printerConfig['cashier_open'] ?? '') != 1){
             return;
@@ -155,6 +155,19 @@ class OrderPrinterService
         //
         $shop = SettingModel::getSupplierItem(SettingEnum::STORE, $order['shop_supplier_id'], $order['app_id']);
         $shopName = $shop['name'] ?? $order['supplier']['name'];
+        // 
+        $products = [];
+        foreach ($order['product'] as $product) {
+            if (($product['is_buffet_product'] ?? 0) == 1 && $product['total_product_price'] <= 0) {
+                continue;
+            }
+            $key = $product['product_id'] . $product['product_sku_id'] . $product['product_attr'];
+            $products[$key] = [
+                'product_name' => $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : ''),
+                "total_num" => bcadd($product['total_num'], $products[$key]['total_num'] ?? 0),
+                "total_product_price" => bcadd($product['total_product_price'], $products[$key]['total_product_price'] ?? 0)
+            ];
+        }
 
         /* *
         *
@@ -163,6 +176,7 @@ class OrderPrinterService
         */
         if ($printers == PrinterTypeEnum::SUNMI_LAN || $printers['printer_type']['value'] == PrinterTypeEnum::SUNMI_LAN) {
             $printer = new SunmiCloudPrinter(567);
+            $printer->appendText( $order->pay_time ? __("结账单") : __("预结账单"));
             $printer->lineFeed();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
             $printer->appendText("***{$shopName}***\n");
@@ -205,12 +219,20 @@ class OrderPrinterService
             );
             $printer->printInColumns(__("商品"), __("数量"), __("金额"));
             $printer->appendText("------------------------------------------------\n");
-            foreach ($order['product'] as $key => $product) {
-                $productName = $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : '');
-                $printer->printInColumns($productName, $product['total_num'] . '', $this->currencyUnit . strval($product['total_price']));
-                if ($product['remark']) {
-                    $printer->printInColumns($product['remark']);
+            // 自助餐
+            if ($order->is_buffet == 1) {
+                foreach ($order['buffet'] ?? [] as $buffet) {
+                    $printer->printInColumns($buffet['name_text'], strval($buffet['num']), $this->currencyUnit . strval($buffet['total_price']));
+                    $printer->lineFeed();
                 }
+                foreach ($order['delay'] ?? [] as $delay) {
+                    $printer->printInColumns($delay['name_text'], strval($delay['num']), $this->currencyUnit . strval($delay['total_price']));
+                    $printer->lineFeed();
+                }
+            }
+            // 
+            foreach ($products as $product) {
+                $printer->printInColumns($product['product_name'], $product['total_num'] . '', $this->currencyUnit . strval($product['total_product_price']));
                 $printer->lineFeed();
             }
             //
@@ -219,7 +241,7 @@ class OrderPrinterService
                 [320, SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
             );
-            $printer->printInColumns(__("合计金额"), $this->currencyUnit . strval($order['total_price']));
+            $printer->printInColumns(__("合计金额"), $this->currencyUnit . strval($order['total_product_price']));
             if ($order['setting_service_money'] > 0) {
                 $printer->printInColumns(__("服务费"), $this->currencyUnit . strval($order['setting_service_money']));
             }
@@ -281,6 +303,8 @@ class OrderPrinterService
             $width = 47;
             $leftWidth = 29;
             $printer = new SunmiCloudPrinter(567);
+            $printer->appendText( $order->pay_time ? __("结账单") : __("预结账单"));
+            $printer->lineFeed();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
             $printer->appendText("***{$shopName}***\n");
             $printer->lineFeed();
@@ -300,10 +324,11 @@ class OrderPrinterService
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->appendText(printText(__("订单号"), '', $order->order_no ,$width));
             $printer->lineFeed();
-            $printer->appendText(printText(__("收银员"), '', $order->cashier?->real_name ,$width));
+            $printer->appendText(printText(__("收银员"), '', $order->cashier?->real_name ?: '', $width));
             $printer->lineFeed();
             if ($order->pay_time) {
                 $printer->appendText(printText(__("时间"), '', date('Y-m-d H:i:s', $order->pay_time) ,$width));
+                $printer->lineFeed();
             }
             $printer->lineFeed();
             //
@@ -313,19 +338,28 @@ class OrderPrinterService
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->appendText(printText(__("商品"), __("数量"), __("金额"), $width, $leftWidth));
             $printer->appendText("\n------------------------------------------------\n");
-            foreach ($order['product'] as $key => $product) {
-                $productName = $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : '');
-                $printer->appendText(printText($productName, $product['total_num'] . '', $this->currencyUnit . $product['total_price'] , $width, $leftWidth + 2));
-                if ($product['remark']) {
-                    $printer->appendText(printText($product['remark'],'','' ,$width, $leftWidth + 2));
-                }else {
+            // 自助餐
+            if ($order->is_buffet == 1) {
+                foreach ($order['buffet'] ?? [] as $buffet) {
+                    $printer->appendText(printText($buffet['name_text'], strval($buffet['num']), $this->currencyUnit . strval($buffet['total_price']) , $width, $leftWidth + 2));
+                    $printer->lineFeed();
                     $printer->lineFeed();
                 }
+                foreach ($order['delay'] ?? [] as $delay) {
+                    $printer->appendText(printText($delay['name_text'], strval($delay['num']) , $this->currencyUnit . strval($delay['total_price']) , $width, $leftWidth + 2));
+                    $printer->lineFeed();
+                    $printer->lineFeed();
+                }
+            }
+            // 
+            foreach ($products as $product) {
+                $printer->appendText(printText($product['product_name'], $product['total_num'] . '', $this->currencyUnit . strval($product['total_product_price']) , $width, $leftWidth + 2));
+                $printer->lineFeed();
                 $printer->lineFeed();
             }
             //
             $printer->appendText("------------------------------------------------\n");
-            $printer->appendText(printText(__("合计金额"),'', $this->currencyUnit . strval($order['total_price']) , $width, $leftWidth));
+            $printer->appendText(printText(__("合计金额"),'', $this->currencyUnit . strval($order['total_product_price']) , $width, $leftWidth));
             $printer->lineFeed();
             if ($order['setting_service_money'] > 0) {
                 $printer->appendText(printText(__("服务费"),'', $this->currencyUnit . strval($order['setting_service_money']) ,$width, $leftWidth));
@@ -396,7 +430,8 @@ class OrderPrinterService
         */
         $width = 32;
         $leftWidth = 16;
-        $content = "<C>***{$shopName}***</C><BR>";
+        $content = ($order->pay_time ? __("结账单") : __("预结账单")).'<BR><BR>';
+        $content .= "<C>***{$shopName}***</C><BR>";
         if ($order['table_no']) {
             $content .= "<CB>".__('桌号')."：{$order['table_no']}</CB><BR>";
         }
@@ -411,16 +446,21 @@ class OrderPrinterService
         //
         $content .= printText(__('商品'), __('数量'),  __('金额'), $width, $leftWidth);
         $content .= "--------------------------------<BR>";
-        foreach ($order['product'] as $key => $product) {
-            $productName = $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : '');
-            $content .= printText($productName, $product['total_num'], $this->currencyUnit . strval($product['total_price']), $width, $leftWidth);
-            if ($product['remark']) {
-                $content .= '<TEXT x="10" y="180" font="10" w="-1" h="-1" r="0">' . $product['remark'] . '</TEXT><BR><BR>';
+        // 自助餐
+        if ($order->is_buffet == 1) {
+            foreach ($order['buffet'] ?? [] as $buffet) {
+                $content .= printText($buffet['name_text'], strval($buffet['num']), $this->currencyUnit . strval($buffet['total_price']) , $width, $leftWidth + 2);
             }
+            foreach ($order['delay'] ?? [] as $delay) {
+                $content .= printText($delay['name_text'], strval($delay['num']), $this->currencyUnit . strval($delay['total_price']) , $width, $leftWidth + 2);
+            }
+        }
+        foreach ($products as $product) {
+            $content .= printText($product['product_name'], $product['total_num'] . '', $this->currencyUnit . strval($product['total_product_price']) , $width, $leftWidth + 2);
         }
         //
         $content .= "--------------------------------<BR>";
-        $content .= printText(__('合计金额'), '', $this->currencyUnit . strval($order['total_price'])) . "<BR>";
+        $content .= printText(__('合计金额'), '', $this->currencyUnit . strval($order['total_product_price'])) . "<BR>";
         if ($order['setting_service_money'] > 0) {
             $content .= printText(__('服务费'), '', $this->currencyUnit . strval($order['setting_service_money'])) . "<BR>";
         }
@@ -445,7 +485,7 @@ class OrderPrinterService
         if ($order['fullreduce_money'] > 0) {
             $content .= printText(__('满减优惠'), '', $this->currencyUnit . strval($order['fullreduce_money'])) . "<BR>";
         }
-        $content .= '<BOLD>' . printText(__('应收'), '', $this->currencyUnit . strval($order['total_price'])) . "</BOLD><BR>";
+        $content .= '<BOLD>' . printText(__('应收'), '', $this->currencyUnit . strval($order['total_product_price'])) . "</BOLD><BR>";
         //
         $content .= '--------------------------------<BR>';
         $content .= printText(__('支付方式'), '', $order['pay_type']['text']) . "<BR>";
@@ -502,7 +542,7 @@ class OrderPrinterService
     public function printProductTicket($order, $print_type)
     {
         // 打印机设置
-        $printerConfig = SettingModel::getSupplierItem('printer', $order['shop_supplier_id'], $order['app_id']);
+        $printerConfig = SettingModel::getSupplierItem(SettingEnum::PRINTER, $order['shop_supplier_id'], $order['app_id']);
         request()->language = $printerConfig['default_language'] ?? '';
         //打印列表
         $list = (new PrintingModel)->getList($print_type, $order['shop_supplier_id'], $order['order_type']);
@@ -572,6 +612,11 @@ class OrderPrinterService
     {
         $printerType = $printer['printer_type']['value'];
         $isThai =  preg_match('/[\p{Thai}]/u', __("金额"));
+        $isEn =  preg_match('/^[A-Za-z]+$/u', __("数量"));
+
+        // 打印机设置
+        $printerConfig = SettingModel::getSupplierItem(SettingEnum::PRINTER, $order['shop_supplier_id'], $order['app_id']);
+        $buffetSignOpen = (int)($printerConfig['buffet_sign_open'] ?? 1);
 
         /* *
         *
@@ -606,8 +651,17 @@ class OrderPrinterService
             $printer->printInColumns(__("时间"), $order->update_time);
             $printer->lineFeed();
             //
-            $printer->appendText(printText(__("商品"), '',__("数量"), $width));
-            $printer->appendText("\n------------------------------------------------\n");
+            $printer->setupColumns(
+                [360, SunmiCloudPrinter::ALIGN_LEFT, 0],
+                [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
+            );
+            if ($printerType != PrinterTypeEnum::SUNMI_LAN && $isEn) {
+                $printer->appendText(printText(__("商品"), '',__("数量"), $width));
+                $printer->appendText("\n------------------------------------------------\n");
+            } else {
+                $printer->printInColumns(__("商品"), __("数量"));
+                $printer->appendText("------------------------------------------------\n");
+            }
             $printer->setupColumns(
                 [360 , SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
@@ -631,8 +685,10 @@ class OrderPrinterService
                 if ($products && md5(json_encode($products)) != md5(json_encode($product))) {
                     continue;
                 }
+
+                $buffetText = ($buffetSignOpen && $product['is_buffet_product'] == 1) ? (__('自助餐').'-') : '';
                 $productAttr = (new OrderProduct)->getProductAttrAttr($product['product_attr']);
-                $productName = $prodcutDetail['product_name_text'] . ($productAttr ?  ' (' . $productAttr . ')'  : '');
+                $productName = $buffetText . $prodcutDetail['product_name_text'] . ($productAttr ?  ' (' . $productAttr . ')'  : '');
                 $printer->printInColumns($productName, $product['total_num'] . '');
                 if ($product['remark']  ?? '') {
                     $printer->printInColumns($product['remark']);
@@ -690,8 +746,10 @@ class OrderPrinterService
             if ($products && md5(json_encode($products)) != md5(json_encode($product))) {
                 continue;
             }
+
+            $buffetText = ($buffetSignOpen && $product['is_buffet_product'] == 1) ? (__('自助餐').'-') : '';
             $productAttr = (new OrderProduct)->getProductAttrAttr($product['product_attr']);
-            $productName = $prodcutDetail['product_name_text'] . ($productAttr ?  ' (' . $productAttr . ')'  : '');
+            $productName = $buffetText . $prodcutDetail['product_name_text'] . ($productAttr ?  ' (' . $productAttr . ')'  : '');
             $content .= printText($productName, '', ''.$product['total_num'], $width, 26);
             if ($product['remark'] ?? '') {
                 $content .= '<TEXT x="10" y="180" font="10" w="-1" h="-1" r="0">' . $product['remark'] . '</TEXT>';

@@ -28,6 +28,10 @@ class Feed extends FeedModel
      */
     public function add($data,$shop_supplier_id)
     {
+        if(hasEmptyValue($data['feed_name'] ?? '')){
+            $this->error = '加料名称不能为空';
+            return false;
+        }
         $isExist = $this->where('shop_supplier_id', '=', $shop_supplier_id)
             ->where('feed_name', '=', $data['feed_name'])
             ->count();
@@ -45,6 +49,10 @@ class Feed extends FeedModel
      */
     public function edit($data)
     {
+        if(hasEmptyValue($data['feed_name'] ?? '')){
+            $this->error = '加料名称不能为空';
+            return false;
+        }
         $isExist = $this->where('shop_supplier_id', '=', $this['shop_supplier_id'])
             ->where('feed_name', '=', $data['feed_name'])
             ->where('feed_id', '<>', $this['feed_id'])

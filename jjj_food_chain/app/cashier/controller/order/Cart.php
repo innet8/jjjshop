@@ -36,6 +36,7 @@ class Cart extends Controller
     {
         $data = $this->postData();
         $data['eat_type'] = 20; // 10-堂食 20-快餐
+        $data['is_buffet'] = 0;
         $model = new OrderModel();
         $order_id = $model->addToOrder($data, $this->cashier['user']);
         if ($order_id > 0) {
@@ -62,6 +63,7 @@ class Cart extends Controller
         $stayNum = (new OrderModel)->stayOrderNum();
         // 购物车 + 送厨商品列表 + 购物车计算
         $allProductInfo = $model->getOrderCartDetail($this->cashier['user'], 0, $order_id);
+        // 
         return $this->renderSuccess('', compact('allProductInfo', 'delivery', 'stayNum', 'order_id'));
     }
 
@@ -266,6 +268,9 @@ class Cart extends Controller
         ]);
         if (!$detail) {
             return $this->renderError('当前状态不可操作');
+        }
+        if ($detail->is_lock) {
+            return $this->renderError('订单已被锁定，请解锁后重新操作');
         }
         if ($detail?->moveProduct($order_product_id, $num, $return_reason)) {
             return $this->renderSuccess('退菜成功');

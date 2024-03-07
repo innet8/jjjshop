@@ -4,15 +4,20 @@ import auto_en from "./auto/en.json"
 import auto_zhtw from "./auto/zh-tw.json"
 import auto_th from "./auto/th.json"
 import auto_ja from "./auto/ja.json"
+import auto_ko from "./auto/ko.json"
 
-let lang = 'en'
-if(JSON.parse(localStorage.getItem("Language"))){
-    lang = JSON.parse(localStorage.getItem("Language")).language 
+let lang = '';
+let defaultLang = ''
+let language = JSON.parse(localStorage.getItem("Language"))
+if(language){
+    lang = language.language;
+    defaultLang = language.languageList[0]?.name;
 }
+
 const i18n = createI18n({
     legacy: false,
-    locale: lang || "en",
-    fallbackLocale: "en",
+    locale: lang || defaultLang,
+    fallbackLocale: defaultLang,
     globalInjection: true,
     messages: {
         zh: { ...auto_zh },
@@ -20,6 +25,7 @@ const i18n = createI18n({
         zhtw: { ...auto_zhtw },
         th: { ...auto_th },
         ja: { ...auto_ja },
+        ko: { ...auto_ko },
     },
     warnHtmlMessage: false,
 })

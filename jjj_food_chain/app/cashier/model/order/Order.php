@@ -2,9 +2,7 @@
 
 namespace app\cashier\model\order;
 
-use think\facade\Log;
 use app\common\library\helper;
-use app\common\model\store\PayType;
 use app\shop\model\product\Category;
 use app\api\model\order\OrderProduct;
 use app\common\model\supplier\Supplier;
@@ -25,6 +23,7 @@ use app\shop\model\user\PointsLog as PointsLogModel;
 use app\common\enum\user\pointsLog\PointsLogSceneEnum;
 use app\common\model\settings\Setting as SettingModel;
 use app\common\service\product\factory\ProductFactory;
+use app\common\model\order\OrderBuffet as OrderBuffetModel;
 use app\common\model\order\OrderProduct as OrderProductModel;
 use app\cashier\service\order\paysuccess\type\MasterPaySuccessService;
 
@@ -186,7 +185,17 @@ class Order extends OrderModel
             if (!$model->sendKitchen($this['order_id'], 'payment')) {
                 $this->error = $model->getError();
                 $this->errorData = $model->getErrorData();
+                $this->errorCode = $model->getErrorCode();
                 return false;
+            }
+            // 如果是自助餐，给自助餐增销量
+            if ($this['is_buffet'] == 1) {
+               $orderBuffets = OrderBuffetModel::where('order_id', $this['order_id'])->select();
+                if ($orderBuffets) {
+                    foreach ($orderBuffets as $orderBuffet) {
+                        $orderBuffet->buffet()->setInc('sale_num', $orderBuffet['num']);
+                    }
+                }
             }
             //
             $status = $PaySuccess->onPaySuccess($pay_type);
@@ -375,7 +384,7 @@ class Order extends OrderModel
             }
 
             if ($data['type'] == 2) {
-                $detail->save(['discount_ratio' => $discount_ratio]);
+                $detail->save(['discount_ratio' => $discount_ratio, 'is_change_price' => 1]);
                 (new OrderModel())->reloadPrice($detail['order_id']);
             } else if ($data['type'] == 3) {
                 // 折扣抹零重置 （恢复旧版抹零就把这个判断删了。上面的case 3 注释恢复）
@@ -406,7 +415,8 @@ class Order extends OrderModel
                 $o->save([
                     'discount_money' => $discount_money < 0 ? 0 : $discount_money,
                     'pay_price' => $pay_price,
-                    'points_bonus' => $points_bonus
+                    'points_bonus' => $points_bonus,
+                    'is_change_price' => 1
                 ]);
 
             } else {
@@ -436,12 +446,14 @@ class Order extends OrderModel
                         'pay_price' => $pay_price,
                         'discount_ratio' => $discount_ratio,
                         'user_discount_money' => 0,
-                        'points_bonus' => $points_bonus
+                        'points_bonus' => $points_bonus,
+                        'is_change_price' => 1
                     ]);
                 } else {
                     $detail->save([
                         'discount_money' => $discount_money < 0 ? 0 : $discount_money,
-                        'pay_price' => $pay_price
+                        'pay_price' => $pay_price,
+                        'is_change_price' => 1
                     ]);
                 }
 
@@ -796,7 +808,7 @@ class Order extends OrderModel
         try {
             // 订单表更新user_id
             $user_id = !empty($user_id) ? $user_id : 0;
-            $this->save(['user_id' => $user_id]);
+            $this->save(['user_id' => $user_id, 'is_change_price' => 0]);
             // 重载订单价格信息
             $this->reloadPrice($this['order_id']);
             $this->commit();

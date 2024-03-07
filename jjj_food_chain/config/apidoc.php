@@ -6,14 +6,14 @@ return [
     'desc'               => '手册：https://docs.apidoc.icu/use/#%E4%B9%A6%E5%86%99%E8%A7%84%E8%8C%83',
     // （必须）设置文档的应用/版本
     'apps'           => [
-        [
-            // （必须）标题
-            'title'=>'Admin接口',
-            // （必须）控制器目录地址
-            'path'=>'app\admin\controller',
-            // （必须）唯一的key
-            'key'=>'admin',
-        ],
+        // [
+        //     // （必须）标题
+        //     'title'=>'Admin接口',
+        //     // （必须）控制器目录地址
+        //     'path'=>'app\admin\controller',
+        //     // （必须）唯一的key
+        //     'key'=>'admin',
+        // ],
         [
             // （必须）标题
             'title'=>'收银端接口',
@@ -47,14 +47,14 @@ return [
                 ['title'=>'系统设置','name'=>'system_setting'],
             ],
         ],
-        [
-            // （必须）标题
-            'title'=> 'Api接口',
-            // （必须）控制器目录地址
-            'path'=>'app\api\controller',
-            // （必须）唯一的key
-            'key'=>'api',
-        ],
+        // [
+        //     // （必须）标题
+        //     'title'=> 'Api接口',
+        //     // （必须）控制器目录地址
+        //     'path'=>'app\api\controller',
+        //     // （必须）唯一的key
+        //     'key'=>'api',
+        // ],
         [
             // （必须）标题
             'title'=> '平板端接口',

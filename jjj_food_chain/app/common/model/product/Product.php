@@ -142,6 +142,14 @@ class Product extends BaseModel
     }
 
     /**
+     * 关联订单商品
+     */
+    public function orderProducts()
+    {
+        return $this->hasMany(OrderProduct::class, 'product_id', 'product_id');
+    }
+
+    /**
      * 商品状态
      */
     public function getProductStatusAttr($value, $data)
@@ -170,6 +178,9 @@ class Product extends BaseModel
         $model = $this;
         if (isset($params['product_type'])) {
             $model = $model->where('product.product_type', '=', $params['product_type']);
+        }
+        if (($params['product_ids'] ?? '') != '') {
+            $model = $model->whereIn('product.product_id', explode(',', $params['product_ids']));
         }
         if ($params['category_id'] > 0) {
             $categoryIds =(new CategoryModel)

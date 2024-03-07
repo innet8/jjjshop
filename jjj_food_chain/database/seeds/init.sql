@@ -244,13 +244,13 @@ CREATE TABLE `jjjfood_app`  (
 -- Records of jjjfood_app
 -- ----------------------------
 INSERT INTO `jjjfood_app` VALUES (@appid, '三勾点餐平台', 0, 1, 10, 0, 0, 0, 0, 1, NULL, '', '', NULL, NULL, '', NULL, '', NULL, NULL, 0, 1529926348, 1599352830);
-INSERT INTO `jjjfood_app` VALUES (10026, '小淘宝商城', 0, 0, 10, 0, 0, 0, 0, 1, NULL, '', '', NULL, NULL, '', NULL, '', NULL, NULL, 1, 1592038202, 1595124409);
-INSERT INTO `jjjfood_app` VALUES (10029, 'test', 0, 0, 10, 0, 0, 0, 0, 1, NULL, '', '', NULL, NULL, '', NULL, '', NULL, NULL, 0, 1595742388, 1596245680);
-INSERT INTO `jjjfood_app` VALUES (10030, 'sky', 0, 0, 10, 0, 0, 0, 0, 1, NULL, '', '', NULL, NULL, '', NULL, '', NULL, NULL, 0, 1625540313, 1625540313);
-INSERT INTO `jjjfood_app` VALUES (10031, 'top', 0, 0, 10, 0, 0, 0, 0, 1, NULL, '', '', NULL, NULL, '', NULL, '', NULL, NULL, 0, 1625540507, 1625540507);
-INSERT INTO `jjjfood_app` VALUES (10032, 'fly', 0, 0, 10, 0, 0, 0, 0, 1, NULL, '', '', NULL, NULL, '', NULL, '', NULL, NULL, 0, 1625643221, 1625643221);
-INSERT INTO `jjjfood_app` VALUES (10034, '888', 0, 0, 10, 0, 1, 0, 0, 1, NULL, '', '', NULL, NULL, '', NULL, '', NULL, NULL, 0, 1625810696, 1625810697);
-INSERT INTO `jjjfood_app` VALUES (10035, '999', 0, 0, 10, 0, 0, 0, 0, 1, NULL, '', '', NULL, NULL, '', NULL, '', NULL, NULL, 0, 1625810913, 1625810913);
+-- INSERT INTO `jjjfood_app` VALUES (10026, '小淘宝商城', 0, 0, 10, 0, 0, 0, 0, 1, NULL, '', '', NULL, NULL, '', NULL, '', NULL, NULL, 1, 1592038202, 1595124409);
+-- INSERT INTO `jjjfood_app` VALUES (10029, 'test', 0, 0, 10, 0, 0, 0, 0, 1, NULL, '', '', NULL, NULL, '', NULL, '', NULL, NULL, 0, 1595742388, 1596245680);
+-- INSERT INTO `jjjfood_app` VALUES (10030, 'sky', 0, 0, 10, 0, 0, 0, 0, 1, NULL, '', '', NULL, NULL, '', NULL, '', NULL, NULL, 0, 1625540313, 1625540313);
+-- INSERT INTO `jjjfood_app` VALUES (10031, 'top', 0, 0, 10, 0, 0, 0, 0, 1, NULL, '', '', NULL, NULL, '', NULL, '', NULL, NULL, 0, 1625540507, 1625540507);
+-- INSERT INTO `jjjfood_app` VALUES (10032, 'fly', 0, 0, 10, 0, 0, 0, 0, 1, NULL, '', '', NULL, NULL, '', NULL, '', NULL, NULL, 0, 1625643221, 1625643221);
+-- INSERT INTO `jjjfood_app` VALUES (10034, '888', 0, 0, 10, 0, 1, 0, 0, 1, NULL, '', '', NULL, NULL, '', NULL, '', NULL, NULL, 0, 1625810696, 1625810697);
+-- INSERT INTO `jjjfood_app` VALUES (10035, '999', 0, 0, 10, 0, 0, 0, 0, 1, NULL, '', '', NULL, NULL, '', NULL, '', NULL, NULL, 0, 1625810913, 1625810913);
 
 -- ----------------------------
 -- Table structure for jjjfood_app_mp

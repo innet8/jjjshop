@@ -2,8 +2,9 @@
 
 namespace app\shop\model\auth;
 
-use app\common\model\shop\User as UserModel;
 use think\facade\Env;
+use think\facade\Cache;
+use app\common\model\shop\User as UserModel;
 
 
 /**
@@ -133,6 +134,9 @@ class User extends UserModel
             $model->saveAll($add_arr);
             // 事务提交
             $this->commit();
+            // 删除收银机缓存
+            Cache::tag('cashier')->clear();
+            // 
             return true;
         } catch (\Exception $e) {
             $this->error = $e->getMessage();
@@ -178,7 +182,9 @@ class User extends UserModel
             $this->error = '当前人员未交班，请先交班';
             return false;
         }
-
+        // 删除收银机缓存
+        Cache::tag('cashier')->clear();
+        // 
         return $this->save([
             'is_status' => $status
         ]);

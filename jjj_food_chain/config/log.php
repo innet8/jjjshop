@@ -28,7 +28,7 @@ return [
             // 单文件日志写入
             'single'         => false,
             // 独立日志级别
-            'apart_level'    => ['error','sql'],
+            'apart_level'    => ['error','sql','job'],
             // 最大日志文件数量
             'max_files'      => 0,
             // 使用JSON格式记录
@@ -49,11 +49,13 @@ return [
             // 日志保存目录
             'path'           => "{$rootPath}/runtime/logs/task/",
             // 单文件日志写入
-            'single'         => false,
+            'single'         => true,
             // 独立日志级别
             'apart_level'    => ['error','sql'],
             // 最大日志文件数量
-            'max_files'      => 0,
+            'max_files'      => 1,
+            // 最大日志文件数量
+            'file_size'      => 1024*1024*10,
             // 使用JSON格式记录
             'json'           => false,
             // 日志处理

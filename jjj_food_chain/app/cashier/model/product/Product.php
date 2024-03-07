@@ -45,15 +45,29 @@ class Product extends ProductModel
         if (isset($params['search']) && $params['search'] != '') {
             $model = $model->like('product_name', trim($params['search']));
         }
-        $model = $model->alias('product')
-            ->field(['product.*'])
-            ->with(['category', 'image.file', 'sku'])
-            ->where('product.is_delete', '=', 0)
-            ->where('product.product_type', '=', 1)
-            ->where('product.shop_supplier_id', '=', $params['shop_supplier_id'])
-            ->where('product_status', '=', 10)
-            ->order(['product_sort', 'product_id' => 'desc']);
-        $list = $model->paginate($params);
-        return $list;
+        if (isset($params['order_id'])) {
+            $order_id = $params['order_id'];
+            $model = $model->alias('product')
+                ->field(['product.*'])
+                ->with(['category', 'image.file', 'sku', 'orderProducts' => function ($query) use ($order_id) {
+                    $query->where('order_id', $order_id);
+                }])
+                ->where('product.is_delete', '=', 0)
+                ->where('product.product_type', '=', 1)
+                ->where('product.shop_supplier_id', '=', $params['shop_supplier_id'])
+                ->where('product_status', '=', 10)
+                ->order(['product_sort', 'product_id' => 'desc']);
+        } else {
+            $model = $model->alias('product')
+                ->field(['product.*'])
+                ->with(['category', 'image.file', 'sku'])
+                ->where('product.is_delete', '=', 0)
+                ->where('product.product_type', '=', 1)
+                ->where('product.shop_supplier_id', '=', $params['shop_supplier_id'])
+                ->where('product_status', '=', 10)
+                ->order(['product_sort', 'product_id' => 'desc']);
+        }
+
+        return $model->paginate($params)->toArray();
     }
 }

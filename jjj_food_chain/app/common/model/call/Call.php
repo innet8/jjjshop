@@ -3,6 +3,7 @@
 namespace app\common\model\call;
 
 use app\common\model\BaseModel;
+use think\facade\Db;
 
 /**
  * 呼叫模型
@@ -14,7 +15,6 @@ class Call extends BaseModel
      */
     public function getList($params, int $status = 0, int $shopSupplierId = 0)
     {
-//        return $this->withoutGlobalScope()->where('status', $status)->where('shop_supplier_id', $shopSupplierId)->paginate($params);
         return $this->withoutGlobalScope()
             ->alias('t1')
             ->where('status', $status)->where('shop_supplier_id', $shopSupplierId)
@@ -54,7 +54,6 @@ class Call extends BaseModel
      */
     public function getUnprocessedCount(int $shopSupplierId = 0)
     {
-//        return $this->withoutGlobalScope()->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->count();
         return $this->withoutGlobalScope()->where('status', 0)->where('shop_supplier_id', $shopSupplierId)
             ->group('table_id')
             ->count();
@@ -65,6 +64,7 @@ class Call extends BaseModel
      */
     public function getUnSendList(int $shopSupplierId = 0)
     {
+        Db::connect()->execute("SET SESSION sql_mode = ''");
         // 判断是否时安卓还是h5 android web
         $header = request()->header();
         $isAndroid = false;
@@ -72,9 +72,15 @@ class Call extends BaseModel
             $isAndroid = strpos($header['platform'], 'android') !== false;
         }
         //
-        $unSendList = $this->withoutGlobalScope()->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->limit(5)->order(['create_time' => 'asc'])->select();
+        $unSendList = $this->withoutGlobalScope()
+            ->alias('t1')
+            ->where('status', 0)->where('shop_supplier_id', $shopSupplierId)
+            ->where('(SELECT MAX(create_time) as max_time FROM jjjfood_call t2  WHERE t2.table_id = t1.table_id) = create_time')
+            ->order('create_time', 'desc')
+            ->limit(5)
+            ->select()->toArray();
         if ($isAndroid) {
-            $this->withoutGlobalScope()->where('is_send', 0)->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->limit(5)->order(['create_time' => 'asc'])->update(['is_send' => 1]);
+            $this->withoutGlobalScope()->where('is_send', 0)->where('status', 0)->where('shop_supplier_id', $shopSupplierId)->limit(5)->order(['create_time' => 'desc'])->update(['is_send' => 1]);
         }
         // 新增呼叫语音文字
         foreach ($unSendList as &$item) {

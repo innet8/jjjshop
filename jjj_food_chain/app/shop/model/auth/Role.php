@@ -2,6 +2,7 @@
 
 namespace app\shop\model\auth;
 
+use think\facade\Cache;
 use app\common\model\shop\Role as RoleModel;
 use app\shop\model\auth\UserRole as UserRoleModel;
 
@@ -59,22 +60,33 @@ class Role extends RoleModel
     }
 
     /**
-     * 添加
+     * 添加/编辑 - 自动识别添加或编辑
      *
      * @param array $data
      * @return bool
      */
-    public function addFromMigrate(array $data)
+    public function saveFromMigrate(array $data)
     {
         $this->startTrans();
         try {
-            $role = self::create([
-                'role_name' => $data['role_name'],
-                'sort' => max($data['sort'] ?? 1, 1),
-                'app_id' => $data['app_id']
-            ]);
-
             $roleAccessModel = new RoleAccess();
+            // 检查是否存在
+            $role = self::where('role_name', $data['role_name'])->where('app_id', $data['app_id'])->find();
+            if ($role) {
+                $role->save([
+                    'role_name' => $data['role_name'],
+                    'sort' => max($data['sort'] ?? 1, 1),
+                ]);
+                // 先删后增
+                $roleAccessModel->where(['role_id' => $role['role_id']])->delete();
+            } else {
+                $role = self::create([
+                    'role_name' => $data['role_name'],
+                    'sort' => max($data['sort'] ?? 1, 1),
+                    'app_id' => $data['app_id']
+                ]);
+            }
+
             $roleAccessData = array_map(function ($accessId) use ($role, $data) {
                 return [
                     'role_id' => $role['role_id'],
@@ -161,6 +173,9 @@ class Role extends RoleModel
             $access_model->saveAll($access_list);
             // 事务提交
             $this->commit();
+            // 删除收银机缓存
+            Cache::tag('cashier')->clear();
+            // 
             return true;
         } catch (\Exception $e) {
             $this->error = $e->getMessage();

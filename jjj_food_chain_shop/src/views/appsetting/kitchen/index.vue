@@ -77,7 +77,7 @@ export default {
                     port: 8080,
                 },
                 language: [],
-                default_language: 'th',
+                default_language: null,
                 advanced_password: false,
                 wait_color: ['', ''],
             },
@@ -120,6 +120,9 @@ export default {
                 if (self.form.advanced_password) {
                     self.password = 666666
                 }
+                self.form.language = self.form.language.filter(lang => {
+                    return self.languageList.map(h=>h.key).indexOf(lang) != -1;
+                })
             }).catch(error => {
                 self.loading = false;
             });

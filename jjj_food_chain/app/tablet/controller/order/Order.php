@@ -2,13 +2,15 @@
 
 namespace app\tablet\controller\order;
 
+use app\common\enum\settings\SettingEnum;
 use app\common\library\helper;
+use app\common\model\buffet\Buffet;
 use app\common\model\order\OrderProduct;
+use app\common\model\settings\Setting as SettingModel;
 use app\tablet\model\store\Table as TableModel;
 use app\cashier\service\order\settled\CashierOrderSettledService;
 use app\tablet\model\order\Cart as CartModel;
 use app\tablet\model\order\Order as OrderModel;
-use app\common\model\order\Order as CommonOrderModel;
 use app\tablet\controller\Controller;
 use hg\apidoc\annotation as Apidoc;
 /**
@@ -24,6 +26,8 @@ class Order extends Controller
      * @Apidoc\Url ("/index.php/tablet/order.Order/tableBuy")
      * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
      * @Apidoc\Param("meal_num", type="int", require=true, desc="就餐人数")
+     * @Apidoc\Param("is_buffet", type="int", require=true, desc="是否自助餐 0-否 1-是")
+     * @Apidoc\Param("user_id", type="int", require=false, desc="会员ID（会员自己开台必填）")
      * @Apidoc\Returned()
      */
     public function tableBuy()
@@ -39,6 +43,20 @@ class Order extends Controller
         if (!$table) {
             return $this->renderError('桌台不存在');
         }
+        if ($table['status'] == 30) {
+            return $this->renderError('桌台已开台');
+        }
+        // 自助餐
+        if (($params['is_buffet'] ?? 0) == 1) {
+            // 自助餐设置
+            $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
+            if ($buffetSetting['is_open'] != 1) {
+                return $this->renderError('未开启自助餐');
+            }
+            if (empty($params['buffet_ids'])) {
+                return $this->renderError('请选择自助餐');
+            }
+        }
 
         // 实例化订单service
         $user = [
@@ -50,9 +68,8 @@ class Order extends Controller
             'name' => '',
         ];
         $orderService = new CashierOrderSettledService($user, [], $params);
-        // 获取订单信息
+        // 订单信息初始化
         $orderInfo = $orderService->settlement();
-        // 订单结算提交
         if ($orderService->hasError()) {
             return $this->renderError($orderService->getError());
         }
@@ -61,9 +78,7 @@ class Order extends Controller
         if (!$order_id) {
             return $this->renderError($orderService->getError() ?: '订单创建失败');
         }
-        // 移出购物车中已下单的商品
-        $CartModel = new CartModel;
-        $CartModel->deleteTableAll($this->table['shop_supplier_id'], $params['table_id']);
+        (new OrderModel())->reloadPrice($order_id);
        // 修改桌台状态
         TableModel::open($params['table_id']);
         // 返回结算信息
@@ -85,7 +100,10 @@ class Order extends Controller
             $detail['unSendKitchenProductTotalPrice'] = helper::getArrayColumnSum($detail['unSendKitchenProduct'], 'total_price');
             $detail['unSendKitchenProductTotalNum'] = helper::getArrayColumnSum($detail['unSendKitchenProduct'], 'total_num');
             $detail['totalPrice'] = helper::getArrayColumnSum($detail['product'], 'total_price');
-            $detail['totalNum'] = helper::getArrayColumnSum($detail['product'], 'total_num');
+            $totalBuffetNum = helper::getArrayColumnSum($detail['buffet'], 'num');
+            $totalDelayNum = helper::getArrayColumnSum($detail['delay'], 'num');
+            $totalProductNum = helper::getArrayColumnSum($detail['product'], 'total_num');
+            $detail['totalNum'] = $totalBuffetNum + $totalDelayNum + $totalProductNum;
         }
         return $this->renderSuccess('', compact('detail'));
     }
@@ -101,15 +119,21 @@ class Order extends Controller
     {
         $model = new OrderModel();
         $order = $model->getSendKitchen($table_id);
-        $sendKitchenProductTotalPrice = 0;
+        $buffet = $order['buffet'];
+        $delay = $order['delay'];
         $list = [];
+        $total_price = 0;
 
         if ($order) {
-            $sendKitchenProductTotalPrice = helper::getArrayColumnSum($order['sendKitchenProduct'], 'total_price');
-            $list = OrderProduct::getGroupByTime($order['order_id']);
+            $buffetTotalPrice = helper::getArrayColumnSum($order['buffet'], 'total_price');
+            $delayTotalPrice = helper::getArrayColumnSum($order['delay'], 'total_price');
+            $sendKitchenProductTotalPrice = helper::getArrayColumnSum($order['sendKitchenProduct'], 'total_product_price');
+            $total_price = helper::bcadd(helper::bcadd($buffetTotalPrice, $delayTotalPrice), $sendKitchenProductTotalPrice);
+
+            $list = OrderProduct::getGroupByTime($order['order_id'], $buffet, $delay);
             array_multisort(array_column($list,'timestamp'), SORT_DESC, $list); //SORT_DESC降序，SORT_ASC升序
         }
-        return $this->renderSuccess('请求成功', compact('list', 'sendKitchenProductTotalPrice'));
+        return $this->renderSuccess('请求成功', compact('list', 'total_price'));
     }
 
     /**
@@ -144,6 +168,7 @@ class Order extends Controller
      * @Apidoc\Param("product_price", type="float", require=true, desc="商品价格")
      * @Apidoc\Param("bag_price", type="float", require=true, desc="打包费")
      * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+     * @Apidoc\Param("is_buffet", type="int", require=true, desc="是否自助餐 0-否 1-是")
      * @Apidoc\Returned()
      */
     public function add($table_id)
@@ -200,6 +225,18 @@ class Order extends Controller
             return $this->renderSuccess('删除成功');
         };
         return $this->renderError($model->getError() ?: '删除失败');
+    }
+
+    /**
+     * @Apidoc\Title("桌台-自助餐列表")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/tablet/order.Order/buffetList")
+     * @Apidoc\Returned()
+     */
+    public function buffetList()
+    {
+        $list = Buffet::getList();
+        return $this->renderSuccess('',$list);
     }
 
 }

@@ -166,30 +166,29 @@ export default {
                 Params.category_id = Number(Params.category_id[Params.category_id.length - 1])
             }
             self.loading = true;
-            PorductApi.storeProductList(Params, true)
-                .then(data => {
-                    self.loading = false;
-                    self.tableData = data.data.list.data;
-                    self.categoryList = [];
-                    data.data.category.map((item, index) => {
-                        self.categoryList.push({
-                            value: item.category_id,
-                            label: item.name_text,
-                            children: [],
-                        })
-                        item.child.map((items, indexs) => {
-                            self.categoryList[index].children.push({
-                                value: items.category_id,
-                                label: items.name_text,
-                            })
+            PorductApi.storeProductList(Params, true).then(data => {
+                self.loading = false;
+                self.tableData = data.data.list.data;
+                self.categoryList = [];
+                data.data.category.map((item, index) => {
+                    self.categoryList.push({
+                        value: item.category_id,
+                        label: item.name_text,
+                        children: [],
+                    })
+                    item.child.map((items, indexs) => {
+                        self.categoryList[index].children.push({
+                            value: items.category_id,
+                            label: items.name_text,
                         })
                     })
-                    self.totalDataNumber = data.data.list.total;
-                    self.product_count = data.data.product_count;
                 })
-                .catch(error => {
-                    self.loading = false;
-                });
+                self.totalDataNumber = data.data.list.total;
+                self.product_count = data.data.product_count;
+            })
+            .catch(error => {
+                self.loading = false;
+            });
         },
 
         /*搜索查询*/
@@ -219,13 +218,13 @@ export default {
             let war = "";
             let war_ = '';
             if (state == 20) {
-                war = $t("强制下架"),
+                war = $t("确认要强制下架吗?"),
                     war_ = $t('下架')
             } else if (state == 10) {
-                war = $t("重新上架"),
+                war = $t("确认要重新上架吗?"),
                     war_ = $t('上架')
             }
-            ElMessageBox.confirm($t("确认要") + war + $t("吗?"), $t('提示'), {
+            ElMessageBox.confirm(war , $t('提示'), {
                 type: 'warning'
             })
                 .then(() => {

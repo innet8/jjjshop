@@ -37,7 +37,7 @@
                     <div class="block">
                         <span class="demonstration"></span>
                         <el-date-picker size="small" v-model="searchForm.create_time" type="daterange"
-                            value-format="YYYY-MM-DD" :range-separator="$t('至')" :start-placeholder="$t('开始日期')"
+                            value-format="YYYY-MM-DD" range-separator="~" :start-placeholder="$t('开始日期')"
                             :end-placeholder="$t('结束日期')"></el-date-picker>
                     </div>
                 </el-form-item>

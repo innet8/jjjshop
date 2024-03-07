@@ -3,7 +3,8 @@
 namespace app\common\model\order;
 
 use app\common\model\buffet\Buffet;
-use think\facade\Log;
+use app\common\model\buffet\BuffetProduct;
+use app\common\model\delay\Delay;
 use app\common\library\helper;
 use app\common\model\BaseModel;
 use think\model\concern\SoftDelete;
@@ -63,6 +64,22 @@ class Order extends BaseModel
     public function product()
     {
         return $this->hasMany('app\\common\\model\\order\\OrderProduct', 'order_id', 'order_id')->hidden(['content']);
+    }
+
+    /**
+     * 订单自助餐列表
+     */
+    public function buffet()
+    {
+        return $this->hasMany('app\\common\\model\\order\\OrderBuffet', 'order_id', 'order_id');
+    }
+
+    /**
+     * 订单自助餐列表
+     */
+    public function delay()
+    {
+        return $this->hasMany('app\\common\\model\\order\\OrderDelay', 'order_id', 'order_id');
     }
 
     /**
@@ -429,7 +446,7 @@ class Order extends BaseModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public static function detail($where, $with = ['user', 'address', 'product' => ['image'], 'extract', 'supplier', 'cashier'])
+    public static function detail($where, $with = ['user', 'address', 'buffet', 'delay', 'product' => ['image'], 'extract', 'supplier', 'cashier'])
     {
         is_array($where) ? $filter = $where : $filter['order_id'] = (int)$where;
         return self::with($with)->where($filter)->order('order_id', 'desc')->find();
@@ -448,7 +465,7 @@ class Order extends BaseModel
     {
         $filter = is_array($where) ? $where : ['order_id' => (int)$where];
         $query =  self::with([
-            'user', 'address', 'extract', 'supplier', 'cashier',
+            'user', 'address', 'buffet', 'delay', 'extract', 'supplier', 'cashier',
             'product.image' => function($query){
                 $query->withTrashed();
             }
@@ -882,6 +899,10 @@ class Order extends BaseModel
                 $this->error = '订单已结束';
                 return false;
             }
+            if ($this['is_buffet']) {
+                $this->updateBuffetMealNum($this['order_id'], $meal_num);
+                $this->updateDelayMealNum($this['order_id'], $meal_num);
+            }
             $this->save(['meal_num' => $meal_num]);
             $this->reloadPrice($this['order_id']);
             $this->commit();
@@ -964,7 +985,7 @@ class Order extends BaseModel
     }
 
     /**
-     * 重新计算订单价格信息（服务费+消费税+会员折扣）（折扣抹零计算重置)
+     * 重新计算订单价格信息（服务费+消费税+会员折扣+自助餐+加钟费）（折扣抹零计算重置)
      * @param $order_id
      * @param $re_order_no
      * @return array|\think\Model|null
@@ -1063,10 +1084,12 @@ class Order extends BaseModel
                 // 计算抵扣积分数量
                 $product_points_bonus = !$product['product']['is_points_gift'] ? 0 : helper::bcmul($product['total_price'], $ratio, 2);
             }
+            $total_product_price = $product['product_price'] * $product['total_num'];
             $updateArr = [
                 'user_id' => $order['user_id'],
                 'total_price' => $product['total_price'],   // 商品总价(数量×单价)
-                'total_pay_price' => $product['total_price'],   //  订单副表的total_pay_price 业务好像没有用到
+                'total_pay_price' => $product['total_price'],
+                'total_product_price' => $total_product_price,   //  商品总价(数量×单价)原价
                 'points_bonus' => $product_points_bonus,    // 奖励积分
                 'is_user_grade' => (int)$is_user_grade, //  是否存在会员等级折扣
                 'grade_ratio' => $grade_ratio,  // 会员折扣比例(0-10)
@@ -1078,7 +1101,7 @@ class Order extends BaseModel
             // 主表order数据累加
             $points_bonus += $product_points_bonus; // 积分
             $pay_money += $product['total_price'];  // 实付金额
-            $order_price += $product['product_price'] * $product['total_num'];  // 商品原价
+            $order_price += $total_product_price;  // 商品原价
             $user_discount_money += $grade_total_money; // 商品优惠金额
         }
 
@@ -1090,19 +1113,33 @@ class Order extends BaseModel
         } else {
             $service_fee = 0;
         }
+        // 自助餐费用
+        $buffetPrice = Order::getBuffetPrice($order_id);
+        $buffetPrice = helper::bcmul($buffetPrice, $meal_num, 3);
+        $buffetPrice = round($buffetPrice, 2);
+        // 加钟费用
+        $delayPrice = Order::getDelayPrice($order_id);
+        $delayPrice = helper::bcmul($delayPrice, $meal_num, 3);
+        $delayPrice = round($delayPrice, 2);
         // 消费税计算
         $consumeFee = SettingModel::getSupplierItem(SettingEnum::TAX_RATE, $order['supplier']['shop_supplier_id']);
         $consume_fee = 0;
         $original_consume_fee = 0;
         if ($consumeFee['is_open']) {
             $consume_rate = helper::bcdiv($consumeFee['tax_rate'], 100, 4);
-            $consume_fee = helper::bcmul($total_price, $consume_rate, 3);
+            $consume_total_price = $total_price + $buffetPrice + $delayPrice;
+            $consume_fee = helper::bcmul($consume_total_price, $consume_rate, 3);
             $original_consume_fee = helper::bcmul($order_price, $consume_rate, 3); // 原消费税
             $consume_fee = round($consume_fee, 2);
             $original_consume_fee = round($original_consume_fee, 2);
         }
+
         // 应付
-        $pay_price = $total_price + $service_money + $service_fee + $consume_fee; // 应付金额 = 商品折扣总价（会员折扣） + 原服务费 + 新服务费用 + 消费税
+        $pay_price = $total_price + $service_money + $service_fee + $consume_fee + $buffetPrice + $delayPrice; // 应付金额 = 商品折扣总价（会员折扣） + 原服务费 + 新服务费用 + 消费税 + 自助餐 + 加钟费
+        // 合计
+        $total_price = $total_price + $buffetPrice + $delayPrice;
+        // 原价合计
+        $total_product_price = $order_price + $buffetPrice + $delayPrice;
         // 优惠折扣
         $discount_money = 0;
         if ($order['discount_ratio'] > 0) {
@@ -1129,7 +1166,8 @@ class Order extends BaseModel
             'order_no' => $re_order_no ? $this->newOrderNo($order['order_source']) : $order['order_no'],
             'discount_money' => $discount_money,  // 折扣优惠重置
             'total_price' => $total_price,
-            'order_price' => $order_price + $service_money + $service_fee + $consume_fee, // 订单总额 = 商品原始总价 + 原服务费 + 新服务费用 + 消费税
+            'total_product_price' => $total_product_price,
+            'order_price' => $order_price + $service_money + $service_fee + $consume_fee + $buffetPrice + $delayPrice, // 订单总额 = 商品原始总价 + 原服务费 + 新服务费用 + 消费税 + 自助餐费用 + 加钟费用
             'original_price' => $order_price + $service_money + $service_fee + $original_consume_fee, // 订单总额 = 商品原始总价 + 原服务费 + 新服务费用 + 消费税
             'pay_price' => $pay_price,  // 应付
             'points_bonus' => $points_bonus,
@@ -1151,6 +1189,7 @@ class Order extends BaseModel
     {
         $param = $data;
         $orderId = 0;
+        $meal_num = 1;
         //
         if (isset($data['order_id']) && $data['order_id'] > 0) {
             // 检查订单状态
@@ -1163,6 +1202,7 @@ class Order extends BaseModel
                 return false;
             }
             $orderId = $detail['order_id'];
+            $meal_num = $detail['meal_num'];
         }
         //
         if(isset($data['table_id']) && $data['table_id'] > 0) {
@@ -1176,7 +1216,26 @@ class Order extends BaseModel
                 return false;
             }
             $orderId = $detail['order_id'];
+            $meal_num = $detail['meal_num'];
         }
+
+        if ($orderId > 0) {
+            // 检查锁定
+            if ($detail->is_lock) {
+                $this->error = '订单已被锁定，请解锁后重新操作';
+                return false;
+            }
+            // 检查自助餐商品可添加状态
+            if ($detail['is_buffet'] == 1 && $detail['buffet_expired_time'] != -1 && $detail['buffet_expired_time'] < time()) {
+                // 自助餐设置
+                $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $user['shop_supplier_id'] ?? 0, $user['app_id'] ?? 0);
+                if ($buffetSetting['is_buy_continue'] != 1) {
+                    $this->error = '用餐时间已到，无法添加商品';
+                    return false;
+                }
+            }
+        }
+
         //判断商品是否下架
         $product = $this->productState($data['product_id']);
         if (!$product) {
@@ -1186,14 +1245,19 @@ class Order extends BaseModel
         // 判断库存
         $deductStockType = ProductModel::where('product_id', $data['product_id'])->value('deduct_stock_type');
         if ($deductStockType == DeductStockTypeEnum::CREATE) {
-            $stockStatus = $this->productStockState($data['product_id'], $data['product_sku_id'], $orderId);
+            $stockStatus = $this->productStockState($data['product_id'], $data['product_sku_id'] ?? 0, $orderId);
             if (!$stockStatus) {
                 $this->error = '商品库存不足，请重新选择';
                 return false;
             }
         }
+
         // 判断限购
-        $limitNum = ProductModel::getProductLimitNum($data['product_id']);
+        if (isset($data['is_buffet']) && $data['is_buffet'] == 1) {
+            $limitNum = Order::getBuffetProductLimitNum($orderId, $data['product_id']) * $meal_num;
+        } else {
+            $limitNum = ProductModel::getProductLimitNum($data['product_id']);
+        }
         if ($limitNum && $data['product_num'] > $limitNum) {
             $this->error = '超过限购数量';
             return false;
@@ -1229,7 +1293,7 @@ class Order extends BaseModel
                         'image_id' => $productDetail['logo']['image_id'],
                         'deduct_stock_type' => $productDetail['deduct_stock_type'],
                         'spec_type' => $productDetail['spec_type'],
-                        'product_sku_id' => $data['product_sku_id'],
+                        'product_sku_id' => $data['product_sku_id'] ?? 0,
                         'product_attr' => $data['describe'],
                         'content' => $productDetail['content'],
                         'product_price' => $data['price'],
@@ -1237,6 +1301,7 @@ class Order extends BaseModel
                         'total_num' => $data['product_num'],
                         'total_price' => $data['product_num'] * $data['price'],
                         'total_pay_price' => $data['product_num'] * $data['price'],
+                        'is_buffet_product' => $data['is_buffet'] ?? 0,
                     ];
 
                     $orderProduct->save($inArr);
@@ -1262,7 +1327,7 @@ class Order extends BaseModel
                         'image_id' => $productDetail['logo']['image_id'],
                         'deduct_stock_type' => $productDetail['deduct_stock_type'],
                         'spec_type' => $productDetail['spec_type'],
-                        'product_sku_id' => $data['product_sku_id'],
+                        'product_sku_id' => $data['product_sku_id'] ?? 0,
                         'product_attr' => $data['describe'],
                         'content' => $productDetail['content'],
                         'product_price' => $data['price'],
@@ -1270,6 +1335,7 @@ class Order extends BaseModel
                         'total_num' => $data['product_num'],
                         'total_price' => $data['product_num'] * $data['price'],
                         'total_pay_price' => $data['product_num'] * $data['price'],
+                        'is_buffet_product' => $data['is_buffet'],
                     ];
 
                     $orderProduct->save($inArr);
@@ -1302,7 +1368,7 @@ class Order extends BaseModel
                     'image_id' => $productDetail['logo']['image_id'],
                     'deduct_stock_type' => $productDetail['deduct_stock_type'],
                     'spec_type' => $productDetail['spec_type'],
-                    'product_sku_id' => $data['product_sku_id'],
+                    'product_sku_id' => $data['product_sku_id'] ?? 0,
                     'product_attr' => $data['describe'],
                     'content' => $productDetail['content'],
                     'product_price' => $data['price'],
@@ -1310,6 +1376,7 @@ class Order extends BaseModel
                     'total_num' => $data['product_num'],
                     'total_price' => $data['product_num'] * $data['price'],
                     'total_pay_price' => $data['product_num'] * $data['price'],
+                    'is_buffet_product' => $data['is_buffet'],
                 ];
 
                 (new OrderProductModel)->save($inArr);
@@ -1363,7 +1430,7 @@ class Order extends BaseModel
     //查询桌号订单未送厨商品
     public function getUnSendKitchen($table_id)
     {
-        return $this->with(['product', 'unSendKitchenProduct'])
+        return $this->with(['product', 'buffet', 'delay', 'unSendKitchenProduct'])
             ->where('table_id', '=', $table_id)
             ->where('order_status', '=', OrderStatusEnum::NORMAL)
             ->where('is_delete', '=', 0)
@@ -1374,7 +1441,7 @@ class Order extends BaseModel
     //查询桌号订单已送厨商品
     public function getSendKitchen($table_id)
     {
-        return $this->with('sendKitchenProduct')
+        return $this->with(['sendKitchenProduct', 'buffet', 'delay'])
             ->where('table_id', '=', $table_id)
             ->where('order_status', '=', OrderStatusEnum::NORMAL)
             ->where('is_delete', '=', 0)
@@ -1383,20 +1450,245 @@ class Order extends BaseModel
     }
 
     // 创建订单自助餐关联信息
-    public static function createOrderBuffet($order_id, array $buffet_ids)
+    public static function createOrderBuffet($order_id, array $buffet_ids, $meal_num)
     {
+        $time_limit = 0;
         foreach ($buffet_ids as $id) {
-            $buffet = (new Buffet)->withoutGlobalScope()->where('status', '=', 1)->where('id', '=', $id)->find();
-            $inArr = [
-                'order_id' => $order_id,
-                'buffet_id' => $id,
-                'name' => $buffet['name'],
-                'price' => $buffet['price'],
-                'buy_limit_status' => $buffet['buy_limit_status'],
-                'is_comb' => $buffet['is_comb'],
-                'time_limit' => $buffet['time_limit'],
-            ];
-            (new OrderBuffet)->insert($inArr);
+            $buffet = (new Buffet)->where('status', '=', 1)->where('id', '=', $id)->find();
+            if ($buffet) {
+                $inArr = [
+                    'order_id' => $order_id,
+                    'app_id' => self::$app_id,
+                    'buffet_id' => $id,
+                    'name' => $buffet['name'],
+                    'price' => $buffet['price'],
+                    'num' => $meal_num,
+                    'total_price' => round(helper::bcmul($buffet['price'], $meal_num, 3), 2),
+                    'buy_limit_status' => $buffet['buy_limit_status'],
+                    'is_comb' => $buffet['is_comb'],
+                    'time_limit' => $buffet['time_limit'],
+                ];
+                if ($time_limit != -1) {
+                    if ($buffet['time_limit'] == 0) {
+                        $time_limit = -1;
+                    } else {
+                        $time_limit = max($time_limit, $buffet['time_limit']);
+                    }
+
+                }
+
+                (new OrderBuffet)->save($inArr);
+            }
         }
+        return $time_limit;
+    }
+
+    // 获取订单自助餐商品列表
+    public static function getOrderBuffetProductArr($order_id)
+    {
+        $list = (new OrderBuffet)->with(['buffetProduct'])->where('order_id', '=', $order_id)->select();
+        $arr = [];
+        foreach ($list as $buffet) {
+            foreach ($buffet['buffetProduct'] as $product) {
+                if (isset($arr[$product['product_id']]) && ($arr[$product['product_id']] < $product['limit_num'] && $product['limit_num'] != 0) || $product['limit_num'] == 0) {
+                    $arr[$product['product_id']] = [
+                        'product_id' => $product['product_id'],
+                        'limit_num' => $product['limit_num'],
+                    ];
+                } else if (!isset($arr[$product['product_id']])) {
+                    $arr[$product['product_id']] = [
+                        'product_id' => $product['product_id'],
+                        'limit_num' => $product['limit_num'],
+                    ];
+                }
+            }
+        }
+        return $arr;
+    }
+
+    // 点餐商品列表按自助餐优惠显示
+    public static function handleBuffetProductIndex($product_list, $buffet_arr, $meal_num)
+    {
+        foreach ($product_list as &$product) {
+            // 已购买商品数量
+            $current_add_num = 0;
+            foreach ($product['orderProducts'] as $order_products) {
+                $current_add_num += $order_products['total_num'];
+            }
+
+            if (array_key_exists($product['product_id'], $buffet_arr)) {
+                $product['is_buffet'] = 1;
+                $product['buffet_limit_num'] = $buffet_arr[$product['product_id']]['limit_num'] * $meal_num;
+                $product['product_price'] = 0;
+                foreach ($product['sku'] as &$item) {
+                    $item['product_price'] = 0;
+                }
+                $product['current_add_num'] = $current_add_num;
+                if ($product['buffet_limit_num'] == 0) {
+                    $product['limit_num_status'] = 0;
+                } else {
+                    $product['limit_num_status'] = $current_add_num >= $product['buffet_limit_num'] ? 1 : 0;
+                }
+            } else {
+                $product['is_buffet'] = 0;
+                $product['buffet_limit_num'] = 0;
+                $product['current_add_num'] = $current_add_num;
+                if ($product['limit_num'] == 0) {
+                    $product['limit_num_status'] = 0;
+                } else {
+                    $product['limit_num_status'] = $current_add_num >= $product['limit_num'] ? 1 : 0;
+                }
+
+            }
+
+        }
+        return $product_list;
+    }
+
+    // 商品详情按自助餐优惠显示
+    public static function handleBuffetProductDetail($product, $buffet_arr)
+    {
+        if (array_key_exists($product['product_id'], $buffet_arr)) {
+            $product['is_buffet'] = 1;
+            $product['buffet_limit_num'] = $buffet_arr[$product['product_id']]['limit_num'];
+            $product['product_price'] = 0;
+            foreach ($product['sku'] as &$item) {
+                $item['product_price'] = 0;
+            }
+        } else {
+            $product['is_buffet'] = 0;
+            $product['buffet_limit_num'] = 0;
+        }
+
+        return $product;
+
+    }
+
+    // 获取自助餐订单剩余就餐时间
+    public static function getBuffetRemainingTime($buffet_expired_time)
+    {
+        $remaining_time = $buffet_expired_time - time();
+        return max($remaining_time, 0);
+    }
+
+    // 订单加钟
+    public static function addDelay($order_id, $delay_ids)
+    {
+        $order = (new Order)->where('order_id', '=', $order_id)->find();
+        if (!$order) {
+            return 0;
+        }
+
+        $i = 0;
+        $delay_time = 0;
+        foreach ($delay_ids as $delay_id) {
+            $delay = (new Delay)->where('status', '=', 1)->where('id', '=', $delay_id)->find();
+            if ($delay) {
+                $inArr = [
+                    'order_id' => $order_id,
+                    'app_id' => self::$app_id,
+                    'delay_id' => $delay_id,
+                    'name' => $delay['name'],
+                    'price' => $delay['price'],
+                    'num' => $order['meal_num'],
+                    'total_price' => round(helper::bcmul($delay['price'], $order['meal_num'], 3), 2),
+                    'delay_time' => $delay['delay_time'],
+                ];
+                (new OrderDelay())->save($inArr);
+                $delay_time = max($delay_time, $delay['delay_time']);
+                $i++;
+            }
+        }
+        $now_timestamp = time();
+        $delay_time_second = $delay_time * 60;
+        if ($order['buffet_expired_time'] >= $now_timestamp) {
+            $buffet_expired_time = $order['buffet_expired_time'] + $delay_time_second;
+        } else {
+            $buffet_expired_time = $now_timestamp + $delay_time_second;
+        }
+        $order->save(['buffet_expired_time' => $buffet_expired_time]);
+        return $i;
+    }
+
+    // 获取订单自助餐商品限购数
+    public static function getBuffetProductLimitNum($order_id, $product_id)
+    {
+        $buffet_ids = (new OrderBuffet)->where('order_id', '=', $order_id)->column('buffet_id');
+        $limit_num = (new BuffetProduct)->where('buffet_id', 'in', $buffet_ids)->where('product_id', '=', $product_id)->where('limit_num', '=', 0)->find();
+        if ($limit_num) {
+            return 0;
+        } else {
+            return  (new BuffetProduct)->where('buffet_id', 'in', $buffet_ids)->where('product_id', '=', $product_id)->max('limit_num');
+        }
+    }
+
+    // 订单自助餐费用
+    public static function getBuffetPrice($order_id)
+    {
+        return (new OrderBuffet)->where('order_id', '=', $order_id)->sum('price');
+    }
+
+    // 订单自助餐数量
+    public static function getBuffetNum($order_id)
+    {
+        return (new OrderBuffet)->where('order_id', '=', $order_id)->sum('num');
+    }
+
+    // 订单加钟费用
+    public static function getDelayPrice($order_id)
+    {
+        return (new OrderDelay())->where('order_id', '=', $order_id)->sum('price');
+    }
+
+    // 订单自助餐数量
+    public static function getDelayNum($order_id)
+    {
+        return (new OrderDelay)->where('order_id', '=', $order_id)->sum('num');
+    }
+
+    // 更新订单自助餐人数
+    public function updateBuffetMealNum($order_id, $meal_num)
+    {
+        $list = (new OrderBuffet)->where('order_id', '=', $order_id)->select();
+        foreach ($list as $item) {
+            $updateArr = [
+                'num' => $meal_num,
+                'total_price' => round(helper::bcmul($item['price'], $meal_num, 3), 2),
+            ];
+            $item->save($updateArr);
+        }
+    }
+
+    // 更新订单加钟人数
+    public function updateDelayMealNum($order_id, $meal_num)
+    {
+        $list = (new OrderDelay())->where('order_id', '=', $order_id)->select();
+        foreach ($list as $item) {
+            $updateArr = [
+                'num' => $meal_num,
+                'total_price' => round(helper::bcmul($item['price'], $meal_num, 3), 2),
+            ];
+            $item->save($updateArr);
+        }
+    }
+
+    // 订单已送厨商品数量
+    public static function getSendKitchenNum($order_id, $product_id)
+    {
+        return (new OrderProduct)
+            ->where('order_id', '=', $order_id)
+            ->where('product_id', '=', $product_id)
+            ->where('is_send_kitchen', '=', 1)
+            ->sum('total_num');
+    }
+
+    // 订单未送出商品数量
+    public static function getUnSendKitchenNum($order_id, $product_id)
+    {
+        return (new OrderProduct)
+            ->where('order_id', '=', $order_id)
+            ->where('product_id', '=', $product_id)
+            ->where('is_send_kitchen', '=', 0)
+            ->sum('total_num');
     }
 }

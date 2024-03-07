@@ -5,18 +5,14 @@ namespace app\common\service\order;
 use think\facade\Cache;
 use app\common\library\helper;
 use app\common\model\shop\User;
-use app\cashier\model\order\Order;
 use app\common\model\shop\UserShiftLog;
 use app\common\enum\settings\SettingEnum;
-use app\common\enum\order\OrderStatusEnum;
-use app\common\enum\order\OrderPayStatusEnum;
 use app\common\enum\settings\PrinterTypeEnum;
 use app\common\model\settings\Printer as PrinterModel;
 use app\common\model\settings\Setting as SettingModel;
 use app\common\library\printer\Driver as PrinterDriver;
 use app\common\library\printer\party\SunmiCloudPrinter;
 use app\common\model\product\Category as CategoryModel;
-use app\common\model\order\OrderProduct as OrderProductModel;
 
 /**
  * 交班数据打印服务类

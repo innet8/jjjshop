@@ -3,6 +3,7 @@ declare (strict_types = 1);
 
 namespace app\job\command;
 
+use think\facade\Log;
 use workermans\Worker;
 use think\console\Input;
 use Workerman\Lib\Timer;
@@ -56,6 +57,9 @@ class Job extends Command
         return $this->task = Timer::add($this->second, function () use (&$task) {
             try {
                 event('JobScheduler');
+                // 
+                // Log::channel("task")->write('job');
+                // 
             } catch (\Throwable $e) {
                 echo 'ERROR: ' . $e->getMessage() . PHP_EOL;
             }

@@ -68,6 +68,7 @@ export default defineComponent({
             menus,
             renderMenus,
         } = useUserStore();
+
         const route = useRoute();
         const state = reactive({
             route,

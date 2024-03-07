@@ -16,6 +16,7 @@ class User extends UserModel
      */
     public function checkLogin($user)
     {
+        $key = $user['key'] ?? '';
         $where['user_name'] = $user['user_name'];
         $where['password'] = $user['password'];
         //
@@ -48,6 +49,11 @@ class User extends UserModel
         }
         // 检查是否有未交班的收银员
         $cashierUser = $this->where(['cashier_online' => 1])->find();
+        // TODO 产品设计人机只能登录一个收银员
+        // if ($cashierUser && $cashierUser['shop_user_id'] == $user['shop_user_id']) {
+        //     $this->error = '该用户已在其它收银机登录，请先退出';
+        //     return false;
+        // }
         if ($cashierUser && $cashierUser['shop_user_id'] != $user['shop_user_id']) {
             $this->error = __('收银员') . ' ' . $cashierUser['real_name'] . ' ' . __('未交班，请先交班');
             return false;
@@ -55,7 +61,7 @@ class User extends UserModel
         // 保存登录状态
         $user['token'] = signToken($user['shop_user_id'], 'cashier');
         // 更新收银员信息
-        $userData = ['cashier_online' => 1];
+        $userData = ['cashier_online' => 1, 'bind_key' => $key];
         if ($user['cashier_login_time'] == 0) {
             $userData['cashier_login_time'] = time();
         }
@@ -99,7 +105,7 @@ class User extends UserModel
      */
     public static function getUser($data)
     {
-        return (new static())->where(['shop_user_id' => $data['uid']])->with(['app'])->find();
+        return self::where(['shop_user_id' => $data['uid']])->with(['app'])->find();
     }
 
 }

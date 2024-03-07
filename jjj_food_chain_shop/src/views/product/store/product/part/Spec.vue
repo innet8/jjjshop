@@ -27,7 +27,7 @@
                 :prop="`model.product_unit.${item.key}`">
                 <el-autocomplete :fetch-suggestions="(e, h) => querySearch(e, h, item.key)" @select="(e) => selectChange(e)"
                     class="inline-input" v-model="form.model.product_unit[item.key]"
-                    :placeholder="$t('请输入') + `(${item.label})`">
+                    :placeholder="$t('请输入') + `(${item.value})`">
                 </el-autocomplete>
             </el-form-item>
         </template>

@@ -32,22 +32,25 @@ class CardRecord extends BaseModel
      */
     public function getExpireTimeTextAttr($value, $data)
     {
-        return $data['expire_time'] ? date('Y-m-d', $data['expire_time']) : __('永久有效');
+        if (!isset($data['expire_time'])) {
+            return __('无效有效期');
+        }
+        return $data['expire_time'] > 0 ? date('Y-m-d', $data['expire_time']) : __('永久有效');
     }
 
     /**
-     * 会员卡有效期
+     * 付款时间
      * @param $value
      * @param $data
      * @return string
      */
     public function getPayTimeTextAttr($value, $data)
     {
-        return date('Y-m-d H:i:s', $data['pay_time']);
+        return isset($data['pay_time']) ? date('Y-m-d H:i:s', $data['pay_time']) : __('无效付款时间');
     }
 
     /**
-     * 会员卡有效期
+     * 支付方式
      * @param $value
      * @param $data
      * @return string
@@ -55,7 +58,7 @@ class CardRecord extends BaseModel
     public function getPayTypeTextAttr($value, $data)
     {
         $pay_type = [10 => __('余额支付'), 20 => __('微信支付'), 30 => __('支付宝支付'), 40 => __('后台发卡')];
-        return $pay_type[$data['pay_type']];
+        return isset($data['pay_type']) && isset($pay_type[$data['pay_type']]) ? $pay_type[$data['pay_type']] : __('无效支付方式');
     }
 
     /**
@@ -132,14 +135,11 @@ class CardRecord extends BaseModel
      */
     public static function checkExistByUserId($user_id, $order_id = 0)
     {
-        $model = new static;
+        $model = (new static)->where('is_delete', '=', 0)->where('pay_status', '=', 20)->where('user_id', '=', $user_id);
         if ($order_id) {
             $model = $model->where('order_id', '=', $order_id);
         }
-        return $model->where('is_delete', '=', 0)
-            ->where('pay_status', '=', 20)
-            ->where('user_id', '=', $user_id)
-            ->findOrEmpty();
+        return $model->findOrEmpty();
     }
 
     /**

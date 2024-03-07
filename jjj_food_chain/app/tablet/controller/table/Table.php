@@ -4,10 +4,11 @@ namespace app\tablet\controller\table;
 
 use app\common\enum\settings\SettingEnum;
 use app\common\model\settings\Setting as SettingModel;
+use app\tablet\controller\order\Order;
 use app\tablet\model\store\Table as TableModel;
 use app\tablet\controller\Controller;
 use hg\apidoc\annotation as Apidoc;
-
+use app\tablet\model\order\Order as OrderModel;
 
 /**
  * 桌台相关
@@ -34,12 +35,13 @@ class Table extends Controller
      * @Apidoc\Method("POST")
      * @Apidoc\Param("table_id", type="int", require=true, desc="桌号ID")
      * @Apidoc\Param("old_table_id", type="int", require=false, desc="解绑桌号ID")
+     * @Apidoc\Param("key", type="string", require=true, desc="唯一设备标识")
      * @Apidoc\Url("/index.php/tablet/table.table/bind")
      */
-    public function bind($table_id, $old_table_id = 0)
+    public function bind($table_id, $old_table_id = 0, $key = '')
     {
         $model = new TableModel;
-        if (!$model->bindTable($this->table['shop_supplier_id'], $table_id)) {
+        if (!$model->bindTable($this->table['shop_supplier_id'], $table_id, $key)) {
             return $this->renderError($model->getError() ?: '绑定桌台失败');
         }
         if ($old_table_id > 0) {
@@ -78,18 +80,49 @@ class Table extends Controller
         // 平板端设置
         $tablet = SettingModel::getSupplierItem(SettingEnum::TABLET, $this->table['shop_supplier_id'] ?? 0, $this->table['app_id'] ?? 0);
         unset($tablet['advanced_password']);
-        unset($tablet['language_list']);
         $table['tablet'] = $tablet;
+        // 桌台当前进行中订单
+        $table['order'] = OrderModel::getTableUnderwayOrder($table_id);
         return $this->renderSuccess('桌台信息', $table);
     }
 
     /**
      * @Apidoc\Title("桌台")
      * @Apidoc\Method("POST")
+     * @Apidoc\Param("table_id", type="int", require=false, desc="桌号ID")
      * @Apidoc\Url("/index.php/tablet/table.table/ping")
      */
     public function ping()
     {
-        return $this->renderSuccess('请求成功');
+        // Tid
+        $tableId = $this->table['table_id'] ?? 0;
+        //
+        $is_lock = 0;
+        $buffet = [
+            'is_buffet' => 0,
+            'remind' => 0,
+            'minute' => 0,
+            'buffet_remaining_time' => 0,
+            'is_buy_continue' => 1,
+        ];
+        //
+        if ($tableId > 0) {
+            $detail = OrderModel::getTableUnderwayOrder($tableId);
+            if ($detail) {
+                // 自助餐设置
+                $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $detail['shop_supplier_id'] ?? 0, $detail['app_id'] ?? 0);
+                $is_lock = $detail->is_lock;
+                $buffet = [
+                    'is_buffet' => $detail['is_buffet'],
+                    'remind' => OrderModel::buffetTimeRemind($tableId, $detail['buffet_expired_time'], $buffetSetting['tablet_end_time']),
+                    'minute' => $buffetSetting['tablet_end_time'],
+                    'buffet_remaining_time' => OrderModel::getBuffetRemainingTime($detail['buffet_expired_time']),
+                    'buffet_expired_time' => $detail['buffet_expired_time'],
+                    'is_buy_continue' => (int)($buffetSetting['is_buy_continue'] ?? 1),
+                ];
+            }
+        }
+        //
+        return $this->renderSuccess('请求成功', compact('is_lock', 'buffet'));
     }
 }

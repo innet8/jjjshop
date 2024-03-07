@@ -99,7 +99,7 @@ class User extends BaseModel
             $shop_supplier_id = $info?->shop_supplier_id ?: 0;
             $data = compact('shop_supplier_id', 'app_id');
             if ($shop_supplier_id) {
-                Cache::set('first_shop_info', $data);
+                Cache::tag('firstshop')->set('first_shop_info', $data);
             }
         }
         return $key ? ($data[$key] ?? 0) : $data;

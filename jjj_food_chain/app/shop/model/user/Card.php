@@ -72,7 +72,7 @@ class Card extends CardModel
         $userIdsArr = array_unique(explode(',', $userIds));
         foreach ($userIdsArr as $userId) {
             $isExist = (new CardRecord())->checkExistByUserId($userId);
-            if (!$isExist->isEmpty()) {
+            if (!$isExist?->isEmpty()) {
                 if ($data['card_id'] == $isExist['card_id']) {
                     $this->error = "会员已拥有此会员卡";
                     return false;
@@ -115,14 +115,13 @@ class Card extends CardModel
                     $user->setIncPoints($detail['open_points_num'], '发会员卡获取积分');
                 }
                 // 赠送优惠券
+
                 if ($detail['open_coupon'] && $detail['open_coupons']) {
                     (new UserCouponModel)->addUserCardCoupon($detail['open_coupons'], $user, $CardRecordModel['order_id']);
                 }
                 // 赠送余额
                 if ($detail['open_money'] && $detail['open_money_num']) {
-                    (new User())->where('user_id', '=', $user['user_id'])
-                        ->inc('balance', $detail['open_money_num'])->update();
-
+                    (new User())->where('user_id', '=', $user['user_id'])->inc('balance', $detail['open_money_num'])->update();
                     BalanceLogModel::add(BalanceLogSceneEnum::ADMIN, [
                         'user_id' => $user['user_id'],
                         'card_id' => $data['card_id'],

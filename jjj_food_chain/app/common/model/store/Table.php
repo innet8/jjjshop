@@ -27,7 +27,7 @@ class Table extends BaseModel
      */
     public function underwayOrder()
     {
-        return $this->hasOne('app\\common\\model\\order\\Order', 'table_id', 'table_id')->where('order_status', 10);
+        return $this->hasOne('app\\common\\model\\order\\Order', 'table_id', 'table_id')->where('order_status', 10)->order('order_id desc');
     }
 
     /**
@@ -51,6 +51,12 @@ class Table extends BaseModel
             return false;
         }
         return $tableStatus == 30;
+    }
+
+    // 查询桌台是否绑定中 1:绑定  0:未绑定
+    public static function isBind($table_id)
+    {
+        return static::where('table_id', '=', $table_id)->value('is_bind') == 1;
     }
 
     // 获取桌台分类

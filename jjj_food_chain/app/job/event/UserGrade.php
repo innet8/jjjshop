@@ -28,7 +28,7 @@ class UserGrade
     {
         // 用户模型
         $user = UserModel::detail($userId);
-        if (!$user) {
+        if (!$user || !isset($user['app_id'], $user['grade'], $user['grade_id'], $user['user_id'])) {
             return false;
         }
         // 获取所有等级
@@ -47,6 +47,10 @@ class UserGrade
                 $upgradeGrade = $grade;
                 break;
             }
+        }
+        // 如果自定义设置会员的权重比升级的权重大，则不升级
+        if ($upgradeGrade && isset($upgradeGrade['weight']) && $user['grade']['weight'] > $upgradeGrade['weight']) {
+            return false;
         }
         if ($upgradeGrade &&  $user['grade_id'] != $upgradeGrade['grade_id']) {
             $this->dologs('setUserGrade', [

@@ -36,8 +36,8 @@ class Controller extends JjjController
     protected $allowAllAction = [
         // 登录页面
         '/passport/login',
-        /*登录信息*/
-        '/index/base'
+        // 语言列表
+        '/index/lang'
     ];
 
     /**

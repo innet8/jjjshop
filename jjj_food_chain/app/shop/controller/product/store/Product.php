@@ -23,6 +23,7 @@ class Product extends Controller
      * @Apidoc\Param("category_id", type="int", default=0, require=false, desc="分类id")
      * @Apidoc\Param("type", type="string", require=false, desc="是否上架 sell-上架 lower-下架")
      * @Apidoc\Param("stock", type="int", default=0, require=false, desc="库存 0-全部 10-低于10 20-低于20 ....")
+     * @Apidoc\Param("product_ids", type="string", require=false, desc="商品ids，逗号分隔")
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Product\getList")
      */

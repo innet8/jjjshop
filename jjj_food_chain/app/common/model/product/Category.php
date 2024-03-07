@@ -4,7 +4,6 @@ namespace app\common\model\product;
 
 use think\facade\Cache;
 use app\common\model\BaseModel;
-use think\facade\Session;
 use app\common\model\supplier\Supplier as SupplierModel;
 
 /**
@@ -51,7 +50,7 @@ class Category extends BaseModel
 
     public function child()
     {
-        return $this->hasMany('app\\common\\model\\product\\Category', 'parent_id', 'category_id')->order(['sort' => 'asc', 'create_time' => 'desc'])->with(['images', 'child']);
+        return $this->hasMany('app\\common\\model\\product\\Category', 'parent_id', 'category_id')->order(['sort' => 'asc', 'create_time' => 'desc'])->with(['images']);
     }
 
     /**
@@ -73,6 +72,11 @@ class Category extends BaseModel
      */
     public static function getALL($type, $is_special, $store = '', $name = '')
     {
+        $request = request();
+        $page = $request->param('page');
+        $list_rows = $request->param('list_rows');
+        $isPaginate = ($request->is_paginate !== false && $page != null && $list_rows != null);
+        
         $user = $store['user'];
         $supplier = $store['supplier'];
         if ($supplier['is_main'] == 1 || $supplier['category_set'] == 20) {
@@ -81,9 +85,10 @@ class Category extends BaseModel
             $detail = SupplierModel::where('is_main', '=', 1)->find();
             $shop_supplier_id = $detail['shop_supplier_id'];
         }
+
         $model = new static;
-        // DOTO 去缓存
-        // if (!$name && !Cache::get('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. $name)) {
+        $cacheKey = 'category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. '_' . checkDetect();
+        if ($name != '' || $isPaginate || !($result = Cache::get($cacheKey))) {
             $data = $model->with(['images', 'child'])
                 ->where('parent_id', '=', 0)
                 ->where('type', '=', $type)
@@ -92,26 +97,16 @@ class Category extends BaseModel
                 ->where('shop_supplier_id', '=', $shop_supplier_id)
                 ->when($name != '', function($q) use($name) {
                     $q->like('name', $name);
-                })
-                ->select();
+                });
+
+            $data = $isPaginate ? $data->paginate(compact('page', 'list_rows')) : $data->select();
             $all = !empty($data) ? $data->toArray() : [];
-            if ($is_special == 1 && empty($all)) {
-                (new static)->addSpecial($model::$app_id, $shop_supplier_id);
-                $data = $model->with(['images'])
-                    ->where('type', '=', $type)
-                    ->where('is_special', '=', $is_special)
-                    ->when($name != '', function($q) use($name) {
-                        $q->like('name', $name);
-                    })
-                    ->order(['sort' => 'asc', 'create_time' => 'desc'])
-                    ->where('shop_supplier_id', '=', $shop_supplier_id)
-                    ->select();
-                $all = !empty($data) ? $data->toArray() : [];
+            $result = $all;
+            if ($name == '' && !$isPaginate) {
+                Cache::tag('category'. $shop_supplier_id. $is_special . $type)->set($cacheKey, $all);
             }
-            return $all;
-            // Cache::tag('cache')->set('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. $name, $all);
-        // }
-        // return Cache::get('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. $name);
+        }
+        return $result;
     }
 
     /**
@@ -128,7 +123,8 @@ class Category extends BaseModel
             $shop_supplier_id = $detail['shop_supplier_id'];
         }
         $model = new static;
-        if (!Cache::get('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special)) {
+        $cacheKey = 'category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. '_' . checkDetect();
+        if (!Cache::get($cacheKey)) {
             $data = $model->with(['images'])
                 ->where('parent_id', '=', 0)
                 ->where('type', '=', $type)
@@ -137,19 +133,9 @@ class Category extends BaseModel
                 ->where('shop_supplier_id', '=', $shop_supplier_id)
                 ->select();
             $all = !empty($data) ? $data->toArray() : [];
-            if ($is_special == 1 && empty($all)) {
-                (new static)->addSpecial($model::$app_id, $shop_supplier_id);
-                $data = $model->with(['images'])
-                    ->where('type', '=', $type)
-                    ->where('is_special', '=', $is_special)
-                    ->order(['sort' => 'asc', 'create_time' => 'asc'])
-                    ->where('shop_supplier_id', '=', $shop_supplier_id)
-                    ->select();
-                $all = !empty($data) ? $data->toArray() : [];
-            }
-            Cache::tag('cache')->set('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special, $all);
+            Cache::tag('category'. $shop_supplier_id. $is_special . $type)->set($cacheKey, $all);
         }
-        return Cache::get('category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special);
+        return Cache::get($cacheKey);
     }
 
     /**
@@ -163,7 +149,8 @@ class Category extends BaseModel
             $detail = SupplierModel::where('is_main', '=', 1)->find();
             $shop_supplier_id = $detail['shop_supplier_id'];
         }
-        if (!Cache::get('category_api_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special)) {
+        $cacheKey = 'category_api_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. '_' . checkDetect();
+        if (!Cache::get($cacheKey)) {
             $data = $model->with(['images'])
                 ->where('type', '=', $type)
                 ->where('status', '=', 1)
@@ -172,9 +159,9 @@ class Category extends BaseModel
                 ->where('shop_supplier_id', '=', $shop_supplier_id)
                 ->select();
             $all = !empty($data) ? $data->toArray() : [];
-            Cache::tag('cache')->set('category_api_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special, $all);
+            Cache::tag('category'. $shop_supplier_id. $is_special . $type)->set($cacheKey, $all);
         }
-        return Cache::get('category_api_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special);
+        return Cache::get($cacheKey);
     }
 
     /**
@@ -188,30 +175,23 @@ class Category extends BaseModel
             $detail = SupplierModel::where('is_main', '=', 1)->find();
             $shop_supplier_id = $detail['shop_supplier_id'];
         }
-        // TODO 干掉缓存
-        return $model->with(['images', 'child' => function ($query) {
-                $query->where('status', '=', 1);
-            }])
-            ->where('parent_id', '=', 0)
-            ->where('type', '=', $type)
-            ->where('status', '=', 1)
-            ->order(['is_special' => 'desc', 'sort' => 'asc', 'create_time' => 'asc'])
-            ->where('shop_supplier_id', '=', $shop_supplier_id)
-            ->select();
         //
-        if (!Cache::get('categ2ory_cashier_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special)) {
-            $data = $model->with(['images', 'child'])
+        $cacheKey = 'category_cashier_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. '_' . checkDetect();
+        if (!Cache::get($cacheKey)) {
+            $data = $model->with(['images', 'child'=> function ($query) {
+                    $query->where('status', '=', 1);
+                }])
                 ->where('parent_id', '=', 0)
                 ->where('type', '=', $type)
                 ->where('status', '=', 1)
                 ->where('is_special', '=', $is_special)
-                ->order(['sort' => 'asc', 'create_time' => 'asc'])
+                ->order(['is_special' => 'desc', 'sort' => 'asc', 'create_time' => 'asc'])
                 ->where('shop_supplier_id', '=', $shop_supplier_id)
                 ->select();
             $all = !empty($data) ? $data->toArray() : [];
-            Cache::tag('cache')->set('category_cashier_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special, $all);
+            Cache::tag('category'. $shop_supplier_id. $is_special . $type)->set($cacheKey, $all);
         }
-        return Cache::get('category_cashier_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special);
+        return Cache::get($cacheKey);
     }
 
     /**
@@ -227,16 +207,8 @@ class Category extends BaseModel
      */
     public static function getCacheTree($type, $is_special, $store = '', $name = '')
     {
+        request()->is_paginate = false;
         return self::getALL($type, $is_special, $store, $name);
-    }
-
-    /**
-     * 获取所有分类(树状结构)
-     * @return string
-     */
-    public static function getCacheTreeJson()
-    {
-        return json_encode(static::getCacheTree());
     }
 
     /**
@@ -330,34 +302,6 @@ class Category extends BaseModel
      */
     public static function getActiveALL($type, $is_special, $store = '', $name = '')
     {
-        $user = $store['user'];
-        $supplier = $store['supplier'];
-        $shop_supplier_id = $supplier['is_main'] == 1 || $supplier['category_set'] == 20
-                            ? $user['shop_supplier_id']
-                            : SupplierModel::where('is_main', '=', 1)->value('shop_supplier_id');
-
-        $model = new static;
-        $query = $model->with(['images', 'child' => function ($query) {
-                    $query->where('status', '=', 1);
-                }])
-                ->where('parent_id', '=', 0)
-                ->where('status',1)
-                ->where('type', '=', $type)
-                ->where('is_special', '=', $is_special)
-                ->order(['sort' => 'asc', 'create_time' => 'asc'])
-                ->where('shop_supplier_id', '=', $shop_supplier_id);
-
-        if ($name) {
-            $query = $query->like('name', "%{$name}%");
-        }
-
-        $all = $query->select()->toArray();
-
-        if ($is_special == 1 && empty($all)) {
-            (new static)->addSpecial($model::$app_id, $shop_supplier_id);
-            $all = $query->select()->toArray();
-        }
-
-        return $all;
+        return self::getALL($type, $is_special, $store, $name);
     }
 }

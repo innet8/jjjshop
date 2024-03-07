@@ -198,22 +198,22 @@ class Language
                 }
             }
 
-            // 有替换符的放最下面，按照长度排序
-            uksort($translation, function ($text1, $text2) {
-                $idx1 = strlen($text1);
-                $idx2 = strlen($text2);
-                if (preg_match('/:[a-zA-Z_]+/', $text1)) {
-                    $idx1 = 99999;
-                }
-                if (preg_match('/:[a-zA-Z_]+/', $text2)) {
-                    $idx2 = 99999;
-                }
-                if (99999 == $idx1 && $idx1 == $idx2) {
-                    $idx1 += strlen($text1);
-                    $idx2 += strlen($text2);
-                }
-                return $idx1 - $idx2;
-            });
+            // TODO 有替换符的放最下面，按照长度排序（产品不需要按长度排序）
+            // uksort($translation, function ($text1, $text2) {
+            //     $idx1 = strlen($text1);
+            //     $idx2 = strlen($text2);
+            //     if (preg_match('/:[a-zA-Z_]+/', $text1)) {
+            //         $idx1 = 99999;
+            //     }
+            //     if (preg_match('/:[a-zA-Z_]+/', $text2)) {
+            //         $idx2 = 99999;
+            //     }
+            //     if (99999 == $idx1 && $idx1 == $idx2) {
+            //         $idx1 += strlen($text1);
+            //         $idx2 += strlen($text2);
+            //     }
+            //     return $idx1 - $idx2;
+            // });
 
             $translationContent = '';
             foreach ($translation as $k => $v) {

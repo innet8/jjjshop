@@ -15,8 +15,11 @@ class Setting extends SettingModel
     {
         $model = self::detail($key, $shop_supplier_id) ?: $this;
         // 删除系统设置缓存
-        Cache::delete('setting_' . self::$app_id . '_' . $shop_supplier_id);
-
+        Cache::set('setting_' . self::$app_id . '_' . $shop_supplier_id, null);
+        Cache::tag('common'.$shop_supplier_id)->clear();
+        // 删除收银机缓存
+        Cache::tag('cashier')->clear();
+        //
         $data = [
             'key' => $key,
             'describe' => SettingEnum::data()[$key]['describe'],
@@ -24,8 +27,51 @@ class Setting extends SettingModel
             'app_id' => self::$app_id,
             'shop_supplier_id' => $shop_supplier_id
         ];
-
-        return $model->save($data) !== false;
+        $res = $model->save($data) !== false;
+        // 更新其他语言
+        if ($key == SettingEnum::STORE && isset($values['language']) && !empty($values['language'])) {
+            $names = array_column($values['language'], 'name');
+            foreach ([SettingEnum::PRINTER, SettingEnum::CASHIER, SettingEnum::TABLET, SettingEnum::KITCHEN] as $enum) {
+                $setting = self::detail($enum, $shop_supplier_id);
+                $settingDefaultLanguage = $setting['values']['default_language'] ?? '';
+                $settingValues = $setting['values'] ?? [];
+                // 对比并删除不匹配的值
+                if (isset($settingValues['language'])) {
+                    foreach ($settingValues['language'] as $key => $value) {
+                        if (!in_array($value, $names)) {
+                            unset($settingValues['language'][$key]);
+                        }
+                    }
+                    if ( !in_array($names[0], $settingValues['language']) ) {
+                        $settingValues['language'][] = $names[0];
+                    }
+                    $settingValues['language'] = array_values($settingValues['language']);
+                }
+                //
+                if (!in_array($settingDefaultLanguage, $names)) {
+                    $settingValues['default_language'] = $names[0];
+                }
+                //
+                if (isset($settingValues['language_list'])) {
+                    unset($settingValues['language_list']);
+                }
+                //
+                if (!$setting->isEmpty()) {
+                    $setting->values = $settingValues;
+                    $setting->save();
+                } else {
+                    $settingValues['language'] = $names;
+                    $setting->save([
+                        'key' => $enum,
+                        'values' => $settingValues,
+                        'app_id' => self::$app_id,
+                        'shop_supplier_id' => $shop_supplier_id
+                    ]);
+                }
+            }
+        }
+        //
+        return $res;
     }
 
     /**

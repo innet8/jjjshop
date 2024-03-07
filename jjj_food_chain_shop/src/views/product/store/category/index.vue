@@ -49,9 +49,12 @@
             </div>
         </div>
 
-        <!--添加产品分类-->
-
-
+        <!--分页-->
+        <div class="pagination">
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" background
+                :current-page="curPage" :page-size="pageSize" layout="total, prev, pager, next, jumper"
+                :total="totalDataNumber"></el-pagination>
+        </div>
 
 
         <!--添加-->
@@ -78,6 +81,14 @@ export default {
             /*是否加载完成*/
             loading: true,
             activeName: 'first',
+            /*是否正在加载*/
+            loading: true,
+            /*一页多少条*/
+            pageSize: 10,
+            /*一共多少条数据*/
+            totalDataNumber: 0,
+            /*当前是第几页*/
+            curPage: 1,
             /*列表数据*/
             tableData: [],
             /*是否打开添加弹窗*/
@@ -99,33 +110,47 @@ export default {
         this.getData();
     },
     methods: {
+        /*选择第几页*/
+        handleCurrentChange(val) {
+            this.loading = true;
+            this.curPage = val;
+            this.getData();
+        },
 
+        /*每页多少条*/
+        handleSizeChange(val) {
+            this.pageSize = val;
+            this.getData();
+        },
+        
         /*搜索查询*/
         onSubmit() {
             this.curPage = 1;
             this.getData();
         },
-
+        
+        /*切换菜单*/
         handleClick() {
+            this.curPage = 1;
             this.getData();
         },
+        
         /*获取列表*/
         getData() {
             let self = this;
             self.loading = true;
             PorductApi.storeCatList({
-                name: self.searchForm.name
-            }, true)
-                .then(data => {
-                    self.loading = false;
-                    self.tableData = data.data.list;
-                    self.categoryModel.catList = self.tableData;
-                })
-                .catch(error => {
-                    self.loading = false;
-                });
-
-
+                name: self.searchForm.name,
+                page: self.curPage,
+                list_rows: self.pageSize,
+            }, true).then(data => {
+                self.loading = false;
+                self.tableData = data.data.list.data || data.data.data || [];
+                self.categoryModel.catList = self.tableData;
+                self.totalDataNumber = data.data.list.total || 0;
+            }).catch(error => {
+                self.loading = false;
+            });
         },
         /*打开添加*/
         addClick() {

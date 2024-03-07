@@ -3,6 +3,7 @@
         <router-view />
     </el-config-provider>
 </template>
+
 <script setup>
 import {
     ref,
@@ -80,44 +81,77 @@ const state = reactive({});
 // };
 
 onMounted(() => {
-    /*获取基础配置*/
-    IndexApi.base(true)
-        .then(res => {
-            languageStore().setLanguageList(res.data.language)
-            const data = {}
-            res.data.language.map((item,index) => {
-                data[(index + 1).toString()] = ''
-            })
-            languageStore().setLanguageData(data)
-        })
-        .catch(error => {
-
-        });
     if (userInfo) {
-        const data = {
-            data: {
-                app_id: userInfo.AppID,
-                shop_name: userInfo.shopName,
-                shop_supplier_id: userInfo.shop_supplier_id,
-                supplier_name: userInfo.supplier_name,
-                token: token,
-                user_name: userInfo.userName,
-                user_type: userInfo.user_type,
-                version: userInfo.version,
-                logoUrl: userInfo.logoUrl,
-                currency: currency
-            },
-        }
-        afterLogin(data);
+        IndexApi.base(true)
+            .then(res => {
+                languageStore().setLanguageList(res.data.language)
+                const data = {}
+                res.data.language.map((item, index) => {
+                    data[(index + 1).toString()] = ''
+                })
+                languageStore().setLanguageData(data)
+                //刷新
+                let language = JSON.parse(localStorage.getItem("Language"));
+                if (!language) {
+                    location.reload();
+                }
+                //判断默认语言
+                if (language && language.language == '' && language.languageList[0]?.name) {
+                    languageStore().setLanguage(language.languageList[0]?.name)
+                }
+                /*获取基础配置*/
+                const dataInfo = {
+                    data: {
+                        app_id: userInfo.AppID,
+                        shop_name: res.data.settings.shop_name,
+                        shop_supplier_id: userInfo.shop_supplier_id,
+                        supplier_name: userInfo.supplier_name,
+                        token: token,
+                        user_name: userInfo.userName,
+                        user_type: userInfo.user_type,
+                        version: userInfo.version,
+                        logoUrl: res.data.settings.shop_bg_img,
+                        currency: currency
+                    },
+                }
+                afterLogin(dataInfo);
+                let auth = getSessionStorage('authlist');
+                let authlist = {}
+                auth = getStorage(menu);
+                createdAuth(auth, authlist);
+                setSessionStorage('authlist', authlist);
+                auth = authlist;
+            })
+            .catch(error => {
 
-        let auth = getSessionStorage('authlist');
-
-        let authlist = {}
-        auth = getStorage(menu);
-        createdAuth(auth, authlist);
-        setSessionStorage('authlist', authlist);
-        auth = authlist;
+            });
     }
+    else{
+        IndexApi.lang(true)
+            .then(res => {
+                languageStore().setLanguageList(res.data.language)
+                const data = {}
+                res.data.language.map((item, index) => {
+                    data[(index + 1).toString()] = ''
+                })
+                languageStore().setLanguageData(data)
+                //刷新
+                let language = JSON.parse(localStorage.getItem("Language"));
+                if (!language) {
+                    location.reload();
+                }
+                //判断默认语言
+                if (language && language.language == '' && language.languageList[0]?.name) {
+                    languageStore().setLanguage(language.languageList[0]?.name)
+                }
+            })
+            .catch(error => {
+
+            });
+    }
+
+
+
 });
 
 onUnmounted(() => {
@@ -125,6 +159,7 @@ onUnmounted(() => {
 });
 
 </script>
+
 <style lang="scss">
 @import '@/assets/font/iconfont.css';
 @import '@/assets/font/myIcon.css';

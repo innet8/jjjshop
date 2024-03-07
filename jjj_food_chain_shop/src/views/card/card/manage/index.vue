@@ -127,11 +127,11 @@ export default {
     methods: {
         handleChange(row) {
             let self = this;
-            let war = $t('禁用')
+            let war = $t('确认要禁用吗?')
             if (row.status == 1) {
-                war = $t('启用')
+                war = $t('确认要启用吗?')
             }
-            ElMessageBox.confirm($t("确认要") + war + $t("吗?"), $t('提示'), {type: 'warning' }).then(() => {
+            ElMessageBox.confirm( war , $t('提示'), {type: 'warning' }).then(() => {
                     self.loading = true
                     let Params = {}
                     
@@ -139,7 +139,7 @@ export default {
                         CardApi.setStatus(Params, true)
                             .then(data => {
                                 this.$ElMessage({
-                                    message: war + $t('成功'),
+                                    message:  $t('操作成功'),
                                     type: 'success'
                                 });
                                 self.loading = false

@@ -29,6 +29,13 @@
                     </el-table-column>
                 </el-table>
             </div>
+            <!--分页-->
+            <div class="pagination">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" background
+                    :current-page="curPage" :page-size="pageSize" layout="total, prev, pager, next, jumper"
+                    :total="totalDataNumber"></el-pagination>
+            </div>
+
             <!--添加-->
             <Add v-if="open_add" :open_add="open_add" :addform="categoryModel"
                 @closeDialog="closeDialogFunc($event, 'add')">
@@ -51,7 +58,15 @@ export default {
     },
     data() {
         return {
+            /*是否正在加载*/
             loading: false,
+            /*一页多少条*/
+            pageSize: 10,
+            /*一共多少条数据*/
+            totalDataNumber: 0,
+            /*当前是第几页*/
+            curPage: 1,
+            // 
             open_add: false,
             open_edit: false,
             categoryModel: {
@@ -66,6 +81,25 @@ export default {
         this.getData();
     },
     methods: {
+        /*选择第几页*/
+        handleCurrentChange(val) {
+            this.loading = true;
+            this.curPage = val;
+            this.getData();
+        },
+
+        /*每页多少条*/
+        handleSizeChange(val) {
+            this.pageSize = val;
+            this.getData();
+        },
+
+        /*切换菜单*/
+        handleClick() {
+            this.curPage = 1;
+            this.getData();
+        },
+
         /*打开添加*/
         addClick() {
             this.open_add = true;
@@ -76,6 +110,7 @@ export default {
             this.categoryModel.model = item;
             this.open_edit = true;
         },
+
         /*关闭弹窗*/
         closeDialogFunc(e, f) {
             if (f == 'add') {
@@ -91,18 +126,23 @@ export default {
                 }
             }
         },
+
+        // 
         getData() {
             let self = this;
             self.loading = true;
-            PorductApi.storeCatSP({}, true)
-                .then(data => {
-                    self.loading = false;
-                    self.tableData = data.data.list;
-                    self.categoryModel.catList = self.tableData;
-                })
-                .catch(error => {
-                    self.loading = false;
-                });
+            PorductApi.storeCatSP({
+                page: self.curPage,
+                list_rows: self.pageSize,
+            }, true).then(data => {
+                self.loading = false;
+                self.tableData = data.data.list.data || data.data.data || [];
+                self.categoryModel.catList = self.tableData;
+                self.totalDataNumber = data.data.list.total || 0;
+            })
+            .catch(error => {
+                self.loading = false;
+            });
         },
 
         /*删除分类*/

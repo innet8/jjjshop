@@ -2,8 +2,9 @@
 
 namespace app\shop\model\product;
 
-use app\common\model\product\Product as ProductModel;
 use app\common\library\helper;
+use app\common\model\product\Product as ProductModel;
+use \app\common\model\buffet\BuffetProduct as BuffetProductModel;
 
 /**
  * 商品模型
@@ -15,6 +16,10 @@ class Product extends ProductModel
      */
     public function add($data)
     {
+        if(hasEmptyValue($data['product_name'] ?? '')){
+            $this->error = '商品名称不能为空';
+            return false;
+        }
         if (!isset($data['image']) || empty($data['image'])) {
             $this->error = '请上传商品图片';
             return false;
@@ -118,15 +123,19 @@ class Product extends ProductModel
      */
     public function edit($data)
     {
+        if(hasEmptyValue($data['product_name'] ?? '')){
+            $this->error = '商品名称不能为空';
+            return false;
+        }
         if (!isset($data['image']) || empty($data['image'])) {
             $this->error = '请上传商品图片';
             return false;
         }
+
         $data['spec_type'] = isset($data['spec_type']) ? $data['spec_type'] : $this['spec_type'];
         $data['content'] = isset($data['content']) ? $data['content'] : '';
         $data['alone_grade_equity'] = isset($data['alone_grade_equity']) ? json_decode($data['alone_grade_equity'], true) : '';
         $productSkuIdList = helper::getArrayColumn(($this['sku']), 'product_sku_id');
-
         //
         if (isset($data['sku']) && is_array($data['sku'])) {
             foreach ($data['sku'] as &$info) {
@@ -158,6 +167,7 @@ class Product extends ProductModel
             (new Feed)->updateFeed($data['product_feed'], $this['shop_supplier_id']);
             // 更新单位
             (new Unit)->updateUnit($data['product_unit'], $this['shop_supplier_id']);
+            //
             return true;
         });
     }
@@ -228,7 +238,19 @@ class Product extends ProductModel
      */
     public function setDelete()
     {
-        return $this->save(['is_delete' => 1]);
+        // 开启事务
+        $this->startTrans();
+        try {
+            $this->save(['is_delete' => 1]);
+            // 删除自助餐关联产品
+            (new BuffetProductModel)->where('product_id', '=', $this['product_id'])->delete();
+            $this->commit();
+            return true;
+        } catch (\Exception $e) {
+            $this->error = $e->getMessage();
+            $this->rollback();
+            return false;
+        }
     }
 
 

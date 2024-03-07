@@ -16,7 +16,7 @@ class Category extends CategoryModel
     public function add($data)
     {
         $data['app_id'] = self::$app_id;
-        $this->deleteCache($data['type'], 0, $data['shop_supplier_id']);
+        $this->deleteCache($data['type'], $data['is_special'] ?? 0, $data['shop_supplier_id']);
         return $this->save($data);
     }
 
@@ -40,7 +40,7 @@ class Category extends CategoryModel
             $this->error = '该分类下存在' . $productCount . '个商品，不允许删除';
             return false;
         }
-        $this->deleteCache($this['type'], 0, $this['shop_supplier_id']);
+        $this->deleteCache($this['type'], $this['is_special'] ?? 0, $this['shop_supplier_id']);
         return $this->delete();
     }
 
@@ -56,11 +56,9 @@ class Category extends CategoryModel
     /**
      * 删除缓存
      */
-    private function deleteCache($type, $is_special, $shop_supplier_id)
+    public function deleteCache($type, $is_special, $shop_supplier_id)
     {
-        Cache::delete('category_' . $shop_supplier_id . '_' . static::$app_id . $type . $is_special);
-        Cache::delete('category_api_' . $shop_supplier_id . '_' . static::$app_id . $type . $is_special);
-        Cache::delete('category_cashier_' . $shop_supplier_id . '_' . static::$app_id . $type . $is_special);
+        Cache::tag('category'. $shop_supplier_id. $is_special . $type)->clear();
         return true;
     }
 

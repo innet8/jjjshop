@@ -2,6 +2,8 @@
 
 namespace app\tablet\controller\product;
 
+use app\common\enum\order\OrderStatusEnum;
+use app\common\model\order\Order;
 use app\tablet\model\product\Product as ProductModel;
 use app\tablet\controller\Controller;
 use hg\apidoc\annotation as Apidoc;
@@ -19,14 +21,30 @@ class Product extends Controller
      * @Apidoc\Param("category_id", type="int", require=true, desc="商品分类ID")
      * @Apidoc\Param("search", type="string", require=false, default="", desc="搜索关键字")
      * @Apidoc\Param("is_special", type="int", require=false, default="", desc="是否特色分类 0-否 1-是")
+     * @Apidoc\Param("table_id", type="int", require=false, desc="桌台ID")
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("list",type="array",ref="app\cashier\model\product\Product\list")
      */
     public function index()
     {
         // 获取全部商品列表
+        $param = $this->postData();
         $model = new ProductModel;
-        $list = $model->list(array_merge(['shop_supplier_id' => $this->table['shop_supplier_id']], $this->postData()));
+        $order = null;
+        if (isset($this->table['table_id'])) {
+            $order = Order::detail([
+                ['table_id', '=', $this->table['table_id']],
+                ['order_status', '=', OrderStatusEnum::NORMAL]
+            ]);
+            $param['order_id'] = $order['order_id'];
+        }
+        $list = $model->list(array_merge(['shop_supplier_id' => $this->table['shop_supplier_id']], $param));
+        // 如果选择自助餐
+        if ($order) {
+            $buffetProductArr = Order::getOrderBuffetProductArr($order['order_id']);
+            $list['data'] = Order::handleBuffetProductIndex($list['data'], $buffetProductArr, $order['meal_num']);
+        }
+
         return $this->renderSuccess('', compact('list'));
     }
 
@@ -41,6 +59,14 @@ class Product extends Controller
     {
         // 商品详情
         $detail = ProductModel::detail($product_id);
+        $order = Order::detail([
+            ['table_id', '=', $this->table['table_id']],
+            ['order_status', '=', OrderStatusEnum::NORMAL]
+        ]);
+        if ($order) {
+            $buffetProductArr = Order::getOrderBuffetProductArr($order['order_id']);
+            $detail = Order::handleBuffetProductDetail($detail, $buffetProductArr);
+        }
         return $this->renderSuccess('', $detail);
     }
 

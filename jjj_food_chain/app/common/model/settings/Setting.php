@@ -23,7 +23,7 @@ class Setting extends BaseModel
      */
     public function getValuesAttr($value)
     {
-        return json_decode($value, true);
+        return $value ? json_decode($value, true) : [];
     }
 
     /**
@@ -58,7 +58,7 @@ class Setting extends BaseModel
         $model = new static;
         $result = $model->withoutGlobalScope()->where('key', '=', SettingEnum::SYS_CONFIG)->value('values');
         if (!$result) {
-            $languageList = self::getSupplierItem(SettingEnum::STORE, User::getShopInfo('shop_supplier_id'))['language'] ?? [];
+            $languageList = self::getSupplierLanguage(User::getShopInfo('shop_supplier_id'))['language'] ?? [];
             $result = $model->defaultData(null,$languageList)[SettingEnum::SYS_CONFIG]['values'];
         } else {
             $result = json_decode($result, true);
@@ -67,11 +67,26 @@ class Setting extends BaseModel
     }
 
     /**
+     * 获取指定项语言设置
+     */
+    public static function getSupplierLanguage($shop_supplier_id, $app_id = null)
+    {
+        $data = self::getAll($app_id, $shop_supplier_id);
+        $data_key = $data[SettingEnum::STORE]['values'] ?? [];
+        if (isset($data_key['language'])) {
+            $data_key['language'] = $data_key['language'] ?: LanguageEnum::default();
+        } else {
+            $data_key['language'] = LanguageEnum::default();
+        }
+        return $data_key['language'];
+    }
+
+    /**
      * 获取指定项设置
      */
     public static function getSupplierItem($key, $shop_supplier_id, $app_id = null)
     {
-        $languageList = $key != SettingEnum::STORE ? (self::getSupplierItem(SettingEnum::STORE, User::getShopInfo('shop_supplier_id'))['language'] ?? []) : [];
+        $languageList = $key != SettingEnum::STORE ? self::getSupplierLanguage($shop_supplier_id,$app_id) : [];
         $data = self::getAll($app_id, $shop_supplier_id, $languageList);
         $data_key = $data[$key];
         if (isset($data_key)) {
@@ -79,13 +94,6 @@ class Setting extends BaseModel
             jsonRecursive($data_key);
         } else {
             $data_key = [];
-        }
-        if ($key == SettingEnum::STORE) {
-            if (isset($data_key['language'])) {
-                $data_key['language'] = $data_key['language'] ?: LanguageEnum::default();
-            } else {
-                $data_key['language'] = LanguageEnum::default();
-            }
         }
         return $data_key;
     }
@@ -110,6 +118,8 @@ class Setting extends BaseModel
     {
         $static = new static;
         is_null($app_id) && $app_id = $static::$app_id;
+        is_null($shop_supplier_id) && $shop_supplier_id = $static::$app_id;
+        $shop_supplier_id == 0 && $shop_supplier_id = $static::$app_id;
         if (!$data = Cache::get('setting_' . $app_id . '_' . $shop_supplier_id)) {
             $setting = $static->where(compact('app_id'))->where('shop_supplier_id', $shop_supplier_id)->select();
             $data = empty($setting) ? [] : array_column($static->collection($setting)->toArray(), null, 'key');
@@ -160,10 +170,10 @@ class Setting extends BaseModel
     public static function updateSetting(string $key, array $values, int $shop_supplier_id = 0): bool
     {
         $model = self::detail($key, $shop_supplier_id);
-
         // 删除系统设置缓存
         Cache::set('setting_' . self::$app_id. '_' . $shop_supplier_id, null);
-
+        Cache::tag('common'.$shop_supplier_id)->clear();
+        //
         $model = $model->save(
             [
                 'key' => $key,
@@ -173,7 +183,6 @@ class Setting extends BaseModel
                 'shop_supplier_id' => $shop_supplier_id
             ]
         );
-
         return $model !== null;
     }
 
@@ -193,7 +202,7 @@ class Setting extends BaseModel
                 'describe' => '商城设置',
                 'values' => [
                     // 商城名称
-                    'name' => $storeName ?: '点餐系统连锁店版本',
+                    'name' => $storeName ?: 'XXX shop',
                     // 快递100
                     'kuaidi100' => [
                         'customer' => '',
@@ -209,6 +218,8 @@ class Setting extends BaseModel
                     'avatarUrl' => base_url() . 'image/user/avatarUrl.png',
                     //商城logo
                     'logoUrl' => base_url() . 'image/diy/logo.png',
+                    // 系统语言
+                    'language' => [],
                 ],
             ],
             SettingEnum::TRADE => [
@@ -313,6 +324,7 @@ class Setting extends BaseModel
                     'order_status' => [], // 订单类型 10下单打印 20付款打印 30确认收货打印
                     'language_list' => $languageList, // 语言列表
                     'default_language' => 'en', // 默认语言
+                    'buffet_sign_open' => '1', // 自助餐标识设置（默认开启）
                 ],
             ],
             SettingEnum::FULL_FREE => [
@@ -402,7 +414,7 @@ class Setting extends BaseModel
                 'key' => 'sys_config',
                 'describe' => '系统设置',
                 'values' => [
-                    'shop_name' => '点餐管理系统', // 商城名称
+                    'shop_name' => 'XXX shop', // 商城名称
                     'shop_bg_img' => '', // 商城背景图
                     'shop_logo_img' => '', // 商城logo
                     'cashier_name' => '收银台', // 收银台名称
@@ -544,7 +556,7 @@ class Setting extends BaseModel
                     'is_auto_send' => '0', // 收银结账自动送厨房 0-关闭 1-开启
                     // 收银机服务器连接
                     'server' => [
-                        'ip' => Env::get('HARDWARE_SERVER_URL', getLanIp()),
+                        'ip' => str_replace('addr:', '', Env::get('HARDWARE_SERVER_URL', getLanIp())),
                         'port' => Env::get('HARDWARE_SERVER_PORT', '8080'),
                     ],
                     // 高级设置密码
@@ -554,10 +566,8 @@ class Setting extends BaseModel
                     'auto_lock_screen' => 300,
                     // 语言列表
                     'language_list' => $languageList,
-                    // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
-                    'language' => [
-                        'th', 'en', 'zh', 'zh-tw', 'ja'
-                    ],
+                    // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zhtw'
+                    'language' => [],
                     // 默认语言
                     'default_language' => 'en',
                 ],
@@ -573,17 +583,15 @@ class Setting extends BaseModel
                     'is_show_sold_out' => '0', // 是否显示售罄商品 0-关闭 1-开启
                     // 平板服务器连接
                     'server' => [
-                        'ip' => Env::get('HARDWARE_SERVER_URL', getLanIp()),
+                        'ip' => str_replace('addr:', '', Env::get('HARDWARE_SERVER_URL', getLanIp())),
                         'port' => Env::get('HARDWARE_SERVER_PORT', '8080'),
                     ],
                     // 高级设置密码
                     'advanced_password' => '666888',
                     // 语言列表
                     'language_list' => $languageList,
-                    // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
-                    'language' => [
-                        'th', 'en', 'zh', 'zh-tw', 'ja'
-                    ],
+                    // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zhtw'
+                    'language' => [],
                     'default_language' => 'en', // 默认语言
                 ],
             ],
@@ -593,7 +601,7 @@ class Setting extends BaseModel
                 'values' => [
                     // 厨显服务器连接
                     'server' => [
-                        'ip' => Env::get('HARDWARE_SERVER_URL', getLanIp()),
+                        'ip' => str_replace('addr:', '', Env::get('HARDWARE_SERVER_URL', getLanIp())),
                         'port' => Env::get('HARDWARE_SERVER_PORT', '8080'),
                     ],
                     // 高级设置密码
@@ -603,10 +611,8 @@ class Setting extends BaseModel
                     'wait_color' => [],
                     // 语言列表
                     'language_list' => $languageList,
-                    // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zh-tw'
-                    'language' => [
-                        'th', 'en', 'zh', 'zh-tw', 'ja'
-                    ],
+                    // 常用语言 泰语、英语、中文、繁体 'th', 'en', 'zh', 'zhtw'
+                    'language' => [],
                     'default_language' => 'en', // 默认语言
                 ],
             ],
@@ -619,14 +625,10 @@ class Setting extends BaseModel
                     // 平板结束时间提醒（分）
                     'tablet_end_time' => '5',
                     // 非自助餐商品到时是否能继续选购 0-关闭 1-开启
-                    'is_buy_continue' => '1',
+                    'is_buy_continue' => '0',
                     // 是否开启加钟 0-关闭 1-开启
                     'is_add_clock' => '0',
-                    // 加钟时间（分）- 价格
-                    // [
-                    //     'time' => '30',
-                    //     'value' => '10'
-                    // ]
+                    // 名称 - 加钟时间（分）- 价格
                     'add_clock' => [],
                 ],
             ],

@@ -57,6 +57,9 @@
                             <el-button @click="editClick(scope.row)" type="primary" link size="small"
                                 v-auth="'/supplier/table/table/edit'">{{ $t('编辑') }}
                             </el-button>
+                            <el-button v-if="scope.row.is_bind == 1" :disabled="scope.row.status == 30" @click="untieClick(scope.row)" type="primary" link size="small"
+                                v-auth="'/supplier/table/table/untie'">{{ $t('解绑') }}
+                            </el-button>
                             <el-button @click="deleteClick(scope.row)" type="primary" :disabled="scope.row.status == 30" link size="small"
                                 v-auth="'/supplier/table/table/delete'">
                                 {{ $t('删除') }}</el-button>
@@ -189,7 +192,24 @@ export default {
                 }
             }
         },
-        /*删除分类*/
+        /*解除绑定*/
+        untieClick(row) {
+            let self = this;
+            ElMessageBox.confirm($t('确定解除与平板设备的绑定关系吗？'), $t('提示'), {
+                type: 'warning'
+            }).then(() => {
+                StoreApi.unbindTable({
+                    table_id: row.table_id
+                }).then(data => {
+                    this.$ElMessage({
+                        message: $t('操作成功'),
+                        type: 'success'
+                    });
+                    self.getData();
+                });
+            });
+        },
+        /*删除*/
         deleteClick(row) {
             let self = this;
             ElMessageBox.confirm($t('删除后不可恢复，确认删除吗？'), $t('提示'), {

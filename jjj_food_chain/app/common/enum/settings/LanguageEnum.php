@@ -12,9 +12,9 @@ class LanguageEnum extends Enum
     /**
      * 获取订单类型值
      */
-    public static function data()
+    public static function data($type=1)
     {
-        return [
+        $data = [
             [
                 'name' => 'th',
                 'value' => 'ภาษาไทย',
@@ -33,13 +33,22 @@ class LanguageEnum extends Enum
             ],
             [
                 'name' => 'ja',
-                'value' => '日本語です',
+                'value' => '日本語',
             ],
             [
                 'name' => 'ko',
                 'value' => '한국어',
             ],
         ];
+
+        if ($type == 2) {
+            foreach ($data as $key => $val) {
+                $data[$key]['key'] = $val['name'];
+                unset($data[$key]['name']);
+            }
+        }
+
+        return $data;
     }
 
     /**
@@ -66,7 +75,7 @@ class LanguageEnum extends Enum
             [
                 'key' => 4,
                 'name' => 'ja',
-                'value' => '日本語です',
+                'value' => '日本語',
             ]
         ];
     }

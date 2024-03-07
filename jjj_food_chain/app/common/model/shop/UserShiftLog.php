@@ -298,8 +298,6 @@ class UserShiftLog extends BaseModel
             request()->language = $printerConfig['default_language'] ?? '';
             $res = (new OrderHandoverPrinterService)->cashierPrint($printerConfig, $this);
             request()->language = '';
-            // 语言缓存，用于打印
-            Cache::set('language_' . $this->shop_supplier_id . '_' . $this->app_id, checkDetect(), 86400);
             if ($res) {
                 $this->is_printed = 1;
                 $this->save();

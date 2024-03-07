@@ -37,9 +37,6 @@ class Terminal extends Controller
         if (empty($data['carousel'])) {
             return $this->renderError('轮播内容不能为空');
         }
-        if (empty($data['server']['ip']) || empty($data['server']['port'])) {
-            return $this->renderError('收银机服务器连接的 IP 和端口不能为空');
-        }
         if (empty($data['auto_lock_screen'])) {
             return $this->renderError('自动锁屏不能为空');
         }
@@ -53,7 +50,6 @@ class Terminal extends Controller
         $arr = [
             'carousel' => $data['carousel'] ?? [], // 轮播内容url
             'is_auto_send' => $data['is_auto_send'] ?? 0, // 收银结账自动送厨房
-            'server' => $data['server'] ??  ['ip' => '', 'port' => ''], // 收银机服务器连接
             'auto_lock_screen' => $data['auto_lock_screen'] ?? 300, // 自动锁屏 5分钟
             'language' => $data['language'] ?? [], // 常用语言
             'default_language' => $data['default_language'] ?? 'en', // 默认语言
@@ -145,9 +141,6 @@ class Terminal extends Controller
         if (empty($data['carousel'])) {
             return $this->renderError('轮播内容不能为空');
         }
-        if (empty($data['server']['ip']) || empty($data['server']['port'])) {
-            return $this->renderError('平板服务器连接的 IP 和端口不能为空');
-        }
         if (empty($data['language'])) {
             return $this->renderError('常用语言不能为空');
         }
@@ -160,7 +153,6 @@ class Terminal extends Controller
             'is_call_service' => $data['is_call_service'] ?? 0, // 是否开启呼叫服务员
             'is_customer_order' => $data['is_customer_order'] ?? 0, // 是否开启顾客可开桌
             'is_show_sold_out' => $data['is_show_sold_out'] ?? 0, // 是否显示售罄商品
-            'server' => $data['server'] ??  ['ip' => '', 'port' => ''], // 平板服务器连接
             'language' => $data['language'] ?? [], // 常用语言
             'default_language' => $data['default_language'] ?? 'en', // 默认语言
         ];
@@ -218,9 +210,6 @@ class Terminal extends Controller
         $model = new SettingModel;
         $data = $this->request->param();
         //
-        if (empty($data['server']['ip']) || empty($data['server']['port'])) {
-            return $this->renderError('厨显服务器连接的 IP 和端口不能为空');
-        }
         if (empty($data['language'])) {
             return $this->renderError('常用语言不能为空');
         }
@@ -229,7 +218,6 @@ class Terminal extends Controller
         }
 
         $arr = [
-            'server' => $data['server'] ??  ['ip' => '', 'port' => ''], // 厨显服务器连接
             'is_wait_color' => $data['is_wait_color'] ?? 0, // 是否开启等待颜色
             'wait_color' => $data['wait_color'] ??  [], // 等待颜色
             'language' => $data['language'] ?? [], // 常用语言

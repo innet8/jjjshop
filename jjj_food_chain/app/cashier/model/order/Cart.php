@@ -4,6 +4,7 @@ namespace app\cashier\model\order;
 
 use app\common\enum\order\OrderStatusEnum;
 use app\common\enum\settings\SettingEnum;
+use app\common\model\order\Order;
 use app\common\model\order\OrderProduct;
 use app\common\model\settings\Setting as SettingModel;
 use app\common\model\plus\cashier\Cart as CartModel;
@@ -713,17 +714,24 @@ class Cart extends CartModel
     // 获取购物车 + 订单统计数据
     public function getOrderCartDetail($cashier, $table_id, $order_id = 0)
     {
+        $meal_num = 0;
         if ($order_id > 0) {
-            $order = OrderModel::detail([
-                ['order_id', '=', $order_id],
-                ['order_status', '=', OrderStatusEnum::NORMAL]
-            ]);
             // 购物车商品列表
             $cartList = (new static())->with('product')
                 ->where('cashier_id', '=', $cashier['cashier_id'])
                 ->where('order_id', '=', $order_id)
                 ->where('is_stay', '=', 0)
                 ->select();
+            // 是否存在订单
+            $order = OrderModel::detail([
+                ['order_id', '=', $order_id],
+                ['order_status', '=', OrderStatusEnum::NORMAL]
+            ]);
+            if (!$order) {
+                $order = null;
+            } else {
+                $meal_num = $order['meal_num'];
+            }
         } else if($table_id > 0){
             // 购物车商品列表
             $cartList = (new static())->with('product')
@@ -736,6 +744,11 @@ class Cart extends CartModel
                 ['table_id', '=', $table_id],
                 ['order_status', '=', OrderStatusEnum::NORMAL]
             ]);
+            if (!$order) {
+                $order = null;
+            } else {
+                $meal_num = $order['meal_num'];
+            }
         } else {
             // 购物车商品列表
             $cartList = (new static())->with('product')
@@ -776,8 +789,13 @@ class Cart extends CartModel
                     $num += $item['total_num'];
                 }
             }
-            $order_total_num = $num;
-            $order_total_price = $order['total_price'];
+            // 自助餐数量
+            $buffetNum = Order::getBuffetNum($order['order_id']);
+            // 加钟数量
+            $delayNum = Order::getDelayNum($order['order_id']);
+
+            $order_total_num = $num + $buffetNum + $delayNum;
+            $order_total_price = $order['total_product_price'];
             $order_service_money = $order['service_money'];
             $order_setting_service_money = $order['setting_service_money'];
             $order_discount_money = $order['discount_money'];
@@ -785,6 +803,8 @@ class Cart extends CartModel
             $order_user_discount_money = $order['user_discount_money'];
             $order_pay_price = $order['pay_price'];
             $order_original_price = $order['original_price'];
+            // 自助餐剩余时间
+            $order['buffet_remaining_time'] = Order::getBuffetRemainingTime($order['buffet_expired_time']);
         } else {
             $order_total_num = 0;
             $order_total_price = 0;
@@ -797,8 +817,9 @@ class Cart extends CartModel
             $order_original_price = 0;
         }
         // 订单 + 购物车 统计
-        $total_num = helper::bcadd($order_total_num, $cart_total_num, 0);                                     // 商品总数量
-        $total_price = helper::bcadd($order_total_price, $cart_product_pay_price);                         // 小计
+        $total_num = helper::bcadd($order_total_num, $cart_total_num, 0);                            // 商品总数量
+        // 小计
+        $total_price = helper::bcadd($order_total_price, $cart_product_pay_price);
         $service_money = helper::bcadd($order_service_money, $order_setting_service_money);                // 服务费
         $special_discount = $order_discount_money;                                                         // 優惠折扣
         $total_consumption_tax_money = helper::bcadd($order_consumption_tax_money, $cart_consume_fee);     // 消费税
@@ -842,6 +863,7 @@ class Cart extends CartModel
 
         // 桌台
         $table_service_money = 0;
+        $meal_num = 0;
         if ($table_id > 0) {
             // 计算订单会员优惠后价格
             $order = (new OrderModel())->getOrderInfo($table_id);
@@ -871,6 +893,7 @@ class Cart extends CartModel
                 ->select();
             $cart_arr = self::prePriceByCart($cartList, $user);
         } else {
+            $order = null;
             $order_arr = [
                 'order_total_product_price' => 0,
                 'order_total_pay_price' => 0,
@@ -898,18 +921,30 @@ class Cart extends CartModel
             $service_fee = 0;
         }
         $total_service_money = $table_service_money + $service_fee; // 总服务费
+        $buffetPrice = 0;
+        $delayPrice = 0;
+        if ($order) {
+            // 自助餐费用
+            $buffetPrice = Order::getBuffetPrice($order['order_id']);
+            $buffetPrice = helper::bcmul($buffetPrice, $meal_num, 3);
+            $buffetPrice = round($buffetPrice, 2);
+            // 加钟费用
+            $delayPrice = Order::getDelayPrice($order['order_id']);
+            $delayPrice = helper::bcmul($delayPrice, $meal_num, 3);
+            $delayPrice = round($delayPrice, 2);
+        }
         // 消费税
         $consumeFee = SettingModel::getSupplierItem(SettingEnum::TAX_RATE, $shop_supplier_id);
         $consume_fee = 0;
         if ($consumeFee['is_open']) {
             $consume_rate = helper::bcdiv($consumeFee['tax_rate'], 100, 4);
-            $consume_fee = helper::bcmul($total_product_pay_price, $consume_rate, 3);
+            $consume_total_price = $total_product_pay_price + $buffetPrice + $delayPrice;
+            $consume_fee = helper::bcmul($consume_total_price, $consume_rate, 3);
             $consume_fee = round($consume_fee, 2);
         }
         $total_consumption_tax_money = $consume_fee;    // 总消费税
-
         // 应付
-        $pay_price = $total_consumption_tax_money + $total_product_pay_price + $total_service_money;
+        $pay_price = $total_consumption_tax_money + $total_product_pay_price + $total_service_money + $buffetPrice + $delayPrice;
         // 优惠折扣
         if (isset($order['discount_ratio']) && $order['discount_ratio'] > 0) {
             $pay_price = round($pay_price * $order['discount_ratio'] / 100, 2);

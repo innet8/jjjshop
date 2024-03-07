@@ -2,11 +2,11 @@
 
 namespace app\cashier\controller\order;
 
-use app\cashier\model\order\Cart as CartModel;
 use app\cashier\model\order\Order as OrderModel;
 use app\cashier\model\store\Table as TableModel;
 use app\common\enum\order\OrderStatusEnum;
 use app\common\enum\settings\DeliveryTypeEnum;
+use app\common\enum\settings\SettingEnum;
 use app\common\model\order\Order as CommonOrderModel;
 use app\cashier\service\order\settled\CashierOrderSettledService;
 use app\cashier\controller\Controller;
@@ -121,19 +121,29 @@ class Order extends Controller
         if ($params['meal_num'] > 999 || $params['meal_num'] < 1) {
             return $this->renderError('请输入1-999的人数');
         }
+        $table = TableModel::detail($params['table_id']);
+        if (!$table) {
+            return $this->renderError('桌台不存在');
+        }
+        if ($table['status'] == 30) {
+            return $this->renderError('桌台已开台');
+        }
         // 自助餐
-        if ($params['is_buffet'] == 1) {
+        if (($params['is_buffet'] ?? 0) == 1) {
+            // 自助餐设置
+            $buffetSetting = SettingModel::getSupplierItem(SettingEnum::BUFFET, $this->cashier['user']['shop_supplier_id'] ?? 0, $this->cashier['user']['app_id'] ?? 0);
+            if ($buffetSetting['is_open'] != 1) {
+                return $this->renderError('未开启自助餐');
+            }
             if (empty($params['buffet_ids'])) {
                 return $this->renderError('请选择自助餐');
             }
         }
 
-
         // 实例化订单service
         $orderService = new CashierOrderSettledService($user, [], $params);
-        // 获取订单信息
+        // 订单信息初始化
         $orderInfo = $orderService->settlement();
-        // 订单结算提交
         if ($orderService->hasError()) {
             return $this->renderError($orderService->getError());
         }
@@ -142,6 +152,7 @@ class Order extends Controller
         if (!$order_id) {
             return $this->renderError($orderService->getError() ?: '订单创建失败');
         }
+        (new OrderModel())->reloadPrice($order_id);
         // 修改桌台状态
         TableModel::open($params['table_id']);
         // 返回结算信息
@@ -211,7 +222,7 @@ class Order extends Controller
             TableModel::close($detail['table_id']);
             return $this->renderSuccess('结账成功');
         }
-        return $this->renderError($detail->getError() ?: '结账失败', $detail->getErrorData());
+        return $this->renderError($detail->getError() ?: '结账失败', $detail->getErrorData(), $detail->getErrorCode());
     }
 
     /**
@@ -291,11 +302,14 @@ class Order extends Controller
         if (!$order) {
             return $this->renderError('订单不存在');
         }
-        //发送打印
+        // 发送打印
         $printerConfig = SettingModel::getSupplierItem('printer', $order['shop_supplier_id'], $order['app_id']);
         request()->language = $printerConfig['default_language'] ?? '';
         $res = (new OrderPrinterService)->printTicket($order);
         request()->language = '';
+        // 锁定
+        $order->is_lock = 1;
+        $order->save();
         //
         return  $res ? $this->renderSuccess('打印成功') : $this->renderError('打印失败，未连接打印机');
     }
@@ -355,7 +369,7 @@ class Order extends Controller
      * @Apidoc\Url("/index.php/cashier/order.order/useMember")
      * @Apidoc\Param("user_id", type="int",require=true, default=0, desc="会员ID")
      * @Apidoc\Param("order_id", type="int",require=false, default=0, desc="订单ID")
-     * @Apidoc\Param("table_id", type="int",require=false, default=0, desc="订单ID")
+     * @Apidoc\Param("table_id", type="int",require=false, default=0, desc="桌台ID")
      */
     public function useMember($user_id, $order_id = 0, $table_id = 0)
     {
@@ -373,13 +387,34 @@ class Order extends Controller
         if (!$detail) {
             return $this->renderError('订单不存在');
         }
-        if ($detail?->useMember($user_id)) {
+        $is_change_price = $detail['is_change_price'];
+        if ($detail->useMember($user_id)) {
             $reset_notice = 0;
-            if ($detail->discount_money != 0 || $detail->discount_ratio != 0) {
+            if ($is_change_price != $detail['is_change_price'] && $detail['discount_ratio'] == 0) {
                 $reset_notice = 1;
             }
             return $this->renderSuccess('使用会员成功', ['reset_notice' => $reset_notice]);
         }
         return $this->renderError($detail->getError() ?: '使用会员失败');
+    }
+
+    /**
+     * @Apidoc\Title("取消锁定")
+     * @Apidoc\Tag("取消锁定")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/index.php/cashier/order.order/unlock")
+     * @Apidoc\Param("order_id", type="int",require=true, default=0, desc="订单id")
+     */
+    public function unlock($order_id)
+    {
+        $order = OrderModel::detail($order_id);
+        if (!$order) {
+            return $this->renderError('订单不存在');
+        }
+        // 锁定
+        $order->is_lock = 0;
+        $order->save();
+        //
+        return  $this->renderSuccess('取消成功');
     }
 }

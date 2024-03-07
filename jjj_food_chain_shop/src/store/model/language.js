@@ -3,7 +3,7 @@ import { computed } from 'vue';
 export const languageStore = defineStore({
     id: 'Language',
     state: () => ({
-        language: 'en',
+        language: '',
         languageList: [
             {
                 "key": 1,
@@ -28,7 +28,7 @@ export const languageStore = defineStore({
         ]
         ,
         languageData: {
-            "1": "111",
+            "1": "",
             "2": "",
             "3": "",
             "4": "",
@@ -39,7 +39,9 @@ export const languageStore = defineStore({
     },
     actions: {
         setLanguage(lang) {
-            this.language = lang;
+            if (lang) {
+                this.language = lang;
+            }
         },
         setLanguageList(data) {
             this.languageList = data;
@@ -52,7 +54,7 @@ export const languageStore = defineStore({
                 language: computed(() => {
                     let result = 'English'
                     this.languageList.map((item => {
-                        if (item.name == this.language) {
+                        if (item?.name == this.language) {
                             result = item.value
                         }
                     }));
