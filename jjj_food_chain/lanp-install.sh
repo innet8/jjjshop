@@ -24,16 +24,7 @@ judge() {
         exit 1
     fi
 }
-# #数据库信息
-# DB_TYPE=mysql
-# DB_HOST=127.0.0.1
-# DB_PREFIX=jjjfood_
-# DB_DATABASE=jjj
-# DB_USERNAME=jjj
-# DB_PASSWORD=12345678
-# DB_PORT=3306
-# DB_ROOT_PASSWORD=12345678
-# source $(pwd)/.env.example
+
 
 git-clone(){
     git --version >/dev/null 2>&1

@@ -6,7 +6,6 @@ error.log
 composer.lock
 /vendor
 /node_modules
-/runtime/*
 /docker/mysql/*
 /public/uploads/*
 /public/temp/*
