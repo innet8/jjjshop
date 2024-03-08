@@ -219,7 +219,7 @@ class Setting extends BaseModel
                     //商城logo
                     'logoUrl' => base_url() . 'image/diy/logo.png',
                     // 系统语言
-                    'language' => [],
+                    'language' => LanguageEnum::default(), // 语言列表
                 ],
             ],
             SettingEnum::TRADE => [
