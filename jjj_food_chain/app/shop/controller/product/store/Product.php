@@ -34,7 +34,7 @@ class Product extends Controller
         $list = $model->getList(array_merge([
             'status' => -1,
             'product_type' => 1,
-            'shop_supplier_id' => $this->store['user']['shop_supplier_id1']
+            'shop_supplier_id' => $this->store['user']['shop_supplier_id']
         ], $this->postData()));
         // 商品分类
         $category = CategoryModel::getCacheTree(1, 0, $this->store);
