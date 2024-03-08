@@ -51,7 +51,7 @@ return [
             // 是否需要断线重连
             'break_reconnect' => false,
             // 监听SQL
-            'trigger_sql' => false,
+            'trigger_sql' => Env::get('APP_DEBUG', true) ,
             // 开启字段缓存
             'fields_cache' => false,
             // 字段缓存路径
