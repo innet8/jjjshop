@@ -30,7 +30,9 @@ return [
             // 独立日志级别
             'apart_level'    => ['error','sql','job'],
             // 最大日志文件数量
-            'max_files'      => 10,
+            'max_files'      => 0,
+            // 最大日志文件大小
+            'file_size'      => 1024*1024*20,
             // 使用JSON格式记录
             'json'           => false,
             // 日志处理
@@ -54,7 +56,7 @@ return [
             'apart_level'    => ['error','sql'],
             // 最大日志文件数量
             'max_files'      => 1,
-            // 最大日志文件数量
+            // 最大日志文件大小
             'file_size'      => 1024*1024*10,
             // 使用JSON格式记录
             'json'           => false,
