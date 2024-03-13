@@ -243,7 +243,7 @@ export default {
                         PorductApi.editBuffet(params, true).then(data => {
                             self.loading = false;
                             this.$ElMessage({
-                                message: $t('添加成功'),
+                                message: $t('操作成功'),
                                 type: 'success'
                             });
                             self.dialogFormVisible(true);
