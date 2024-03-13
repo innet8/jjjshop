@@ -191,18 +191,24 @@ export default {
     created() {
         this.dialogVisible = this.open_dialog;
         if (this.editData) {
-            this.form = JSON.parse(JSON.stringify(this.editData));
-            this.form.name = JSON.parse(this.form.name);
-            this.form.time_limit > 0 ? this.form.is_time_limit = 1 : this.form.is_time_limit = 0;
-            this.select_list = this.form.buffetProducts;
-            this.form.price = Number(this.form.price)
+            let cpdyData = JSON.parse(JSON.stringify(this.editData));
+            this.form.id = cpdyData.id;
+            this.form.name = JSON.parse(cpdyData.name);
+            this.form.sort =  Number(cpdyData.sort);
+            cpdyData.time_limit > 0 ? this.form.is_time_limit = 1 : this.form.is_time_limit = 0;
+            this.form.time_limit =  Number(cpdyData.time_limit);
+            this.form.status =  cpdyData.status;
+            this.form.is_comb =  cpdyData.is_comb;
+            this.select_list = cpdyData.buffetProducts;
+            this.form.price = Number(cpdyData.price)
             this.form.product_ids = [];
             this.select_list.map((item, index) => {
                 this.select_list[index].product_name_text = item.product.product_name_text;
                 this.form.product_ids.push(item.product_id)
             })
+            this.form.buy_limit_status =  cpdyData.buy_limit_status;
             this.limit_ids = this.form.product_ids.join(',')
-            this.limit_list = this.form.buffetLimitProducts;
+            this.limit_list = cpdyData.buffetLimitProducts;
             this.form.buy_limit_products = []
             this.limit_list.map(item => {
                 this.form.buy_limit_products.push({
