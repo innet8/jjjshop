@@ -232,13 +232,13 @@ export default {
                         params.name = JSON.stringify(params.name);
                         params.buffet_id = params.id;
                         params.product_ids = params.product_ids.join(',');
-                        params.buy_limit_products = [];
-                        self.form.buy_limit_products.map((item => {
-                            params.buy_limit_products.push({
+                        params.buy_limit_products = (self.form?.buy_limit_products || []).map((item => {
+                            return {
                                 product_id: item.product_id,
                                 limit_num: item.limit_num,
-                            })
-                        }))
+                            }
+                        }));
+
                         self.loading = true;
                         PorductApi.editBuffet(params, true).then(data => {
                             self.loading = false;
@@ -255,13 +255,12 @@ export default {
                         let params = JSON.parse(JSON.stringify(self.form));
                         params.name = JSON.stringify(params.name)
                         params.product_ids = params.product_ids.join(',')
-                        params.buy_limit_products = [];
-                        self.form.buy_limit_products.map((item => {
-                            params.buy_limit_products.push({
+                        params.buy_limit_products = (self.form?.buy_limit_products || []).map((item => {
+                            return {
                                 product_id: item.product_id,
                                 limit_num: item.limit_num,
-                            })
-                        }))
+                            }
+                        }));
                         self.loading = true;
                         PorductApi.addBuffet(params, true).then(data => {
                             self.loading = false;
