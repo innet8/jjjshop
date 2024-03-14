@@ -22,7 +22,7 @@
             </el-radio-group>
         </el-form-item>
 
-        <el-form-item  :label="$t('商品是否显示在平板端：')"
+        <el-form-item  :label="$t('显示在平板端：')"
             :rules="[{ required: true, message: $t('选择是否显示') }]" prop="model.product_status">
             <el-radio-group v-model="form.model.is_show_tablet">
                 <el-radio :label="1">{{ $t('显示') }}</el-radio>
@@ -31,11 +31,11 @@
         </el-form-item>
 
 
-        <el-form-item  :label="$t('商品是否显示在厨显端：')"
-            :rules="[{ required: true, message: $t('选择是否显示') }]" prop="model.product_status">
+        <el-form-item  :label="$t('需要送厨：')"
+            :rules="[{ required: true, message: $t(' ') }]" prop="model.product_status">
             <el-radio-group v-model="form.model.is_show_kitchen">
-                <el-radio :label="1">{{ $t('显示') }}</el-radio>
-                <el-radio :label="2">{{ $t('不显示') }}</el-radio>
+                <el-radio :label="1">{{ $t('是') }}</el-radio>
+                <el-radio :label="2">{{ $t('否') }}</el-radio>
             </el-radio-group>
         </el-form-item>
 

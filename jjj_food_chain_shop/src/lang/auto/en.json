@@ -870,5 +870,9 @@
     "不显示": "Do not show",
     "商品是否显示在厨显端：": "Whether the product is displayed on the kitchen display:",
     "按区域打印": "Print by area",
-    "无区域": "no area"
+    "无区域": "no area",
+    "显示在平板端：": "Displayed on tablet:",
+    "需要送厨：": "Need to send kitchen:",
+    "是": "yes",
+    "否": "no"
 }
