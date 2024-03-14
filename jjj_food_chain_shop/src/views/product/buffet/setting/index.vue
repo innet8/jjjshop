@@ -59,7 +59,7 @@
                                 <el-form-item label="" :prop="`add_clock[${index}].price`" :rules="[{
                                     required: true,
                                     validator: () => {
-                                        return item.price ? true : false;
+                                        return (typeof item.price == 'object' ) ? false : true;
                                     },
                                     message: $t('请输入价格')
                                 }]">
