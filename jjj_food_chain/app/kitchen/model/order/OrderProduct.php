@@ -44,11 +44,14 @@ class OrderProduct extends OrderProductModel
 
         foreach ($list as &$item) {
             $item['serial_no'] = $item['callNo'] ? $item['callNo'] : $item['table_no']; // 流水号
-            $orderProducts = $this->where('order_id', '=', $item['order_id'])
-                ->field(['order_product_id', 'order_id', 'product_id', 'product_name', 'is_send_kitchen', 'send_kitchen_time', 'finish_num', 'finish_time', 'total_num', 'product_attr', 'remark'])
-                ->where('is_send_kitchen', '=', 1)
-                ->where('finish_num', '=', 0)
-                ->order('send_kitchen_time', 'asc')
+            $orderProducts = $this->alias('op')
+                ->join('product p' , 'op.product_id = p.product_id', 'left')
+                ->field(['op.order_product_id', 'op.order_id', 'op.product_id', 'op.product_name', 'op.is_send_kitchen', 'op.send_kitchen_time', 'op.finish_num', 'op.finish_time', 'op.total_num', 'op.product_attr', 'op.remark'])
+                ->where('op.order_id', '=', $item['order_id'])
+                ->where('op.is_send_kitchen', '=', 1)
+                ->where('op.finish_num', '=', 0)
+                ->where('p.is_show_kitchen' , '=', 1) // 是否显示在送厨端 1-显示 2-不显示
+                ->order('op.send_kitchen_time', 'asc')
                 ->select();
             $item['order_product'] = $orderProducts;
         }
@@ -116,11 +119,13 @@ class OrderProduct extends OrderProductModel
             // 分类名称翻译
             $item['category_name_text'] = extractLanguage($item['category_name_text']);
             $orderProducts = $this->alias('op')
-                ->field(['op.order_product_id', 'op.order_id', 'op.product_id', 'op.product_name', 'op.is_send_kitchen', 'op.send_kitchen_time', 'op.finish_num', 'op.finish_time', 'op.total_num', 'op.product_attr', 'op.remark'])
+                ->join('product p', 'op.product_id = p.product_id', 'left')
                 ->join('order o', 'op.order_id = o.order_id', 'left')
+                ->field(['op.order_product_id', 'op.order_id', 'op.product_id', 'op.product_name', 'op.is_send_kitchen', 'op.send_kitchen_time', 'op.finish_num', 'op.finish_time', 'op.total_num', 'op.product_attr', 'op.remark'])
                 ->whereIn('op.product_id', $productIds)
                 ->where('op.is_send_kitchen', '=', 1)
                 ->where('op.finish_num', '=', 0)
+                ->where('p.is_show_kitchen' , '=', 1) // 是否显示在送厨端 1-显示 2-不显示
                 ->where(function ($query) {
                     $query->where('o.order_status', '=', OrderStatusEnum::NORMAL) // 订单状态 进行中
                           ->whereOr('o.order_status', '=', OrderStatusEnum::COMPLETED); // 订单状态 已完成
@@ -166,12 +171,15 @@ class OrderProduct extends OrderProductModel
 
         foreach ($list as &$item) {
             $item['serial_no'] = $item['callNo'] ? $item['callNo'] : $item['table_no']; // 流水号
-            $orderProducts = $this->where('order_id', '=', $item['order_id'])
-                ->field(['order_product_id', 'order_id', 'product_id', 'product_name', 'is_send_kitchen', 'send_kitchen_time', 'finish_num', 'finish_time', 'total_num', 'product_attr', 'remark'])
-                ->where('is_send_kitchen', '=', 1)
-                ->where('finish_num', '>', 0)
-                ->where('finish_time', '>=', strtotime('-24 hours')) // 只显示24小时以内的上菜历史
-                ->order('send_kitchen_time', 'asc')
+            $orderProducts = $this->alias('op')
+                ->join('product p', 'op.product_id = p.product_id', 'left')
+                ->field(['op.order_product_id', 'op.order_id', 'op.product_id', 'op.product_name', 'op.is_send_kitchen', 'op.send_kitchen_time', 'op.finish_num', 'op.finish_time', 'op.total_num', 'op.product_attr', 'op.remark'])
+                ->where('op.order_id', '=', $item['order_id'])
+                ->where('op.is_send_kitchen', '=', 1)
+                ->where('op.finish_num', '>', 0)
+                ->where('op.finish_time', '>=', strtotime('-24 hours')) // 只显示24小时以内的上菜历史
+                ->where('p.is_show_kitchen' , '=', 1) // 是否显示在送厨端 1-显示 2-不显示
+                ->order('op.send_kitchen_time', 'asc')
                 ->select();
             // 处理时间
             foreach ($orderProducts as &$orderProduct) {
@@ -240,9 +248,11 @@ class OrderProduct extends OrderProductModel
     public function getFinishOrderProduct($shop_supplier_id, $num = 5)
     {
         $query = $this->alias('op')
+            ->join('product p', 'op.product_id = p.product_id', 'left')
             ->join('order o', 'op.order_id = o.order_id', 'left')
             ->where('op.is_send_kitchen', '=', 1)
             ->where('op.finish_num', '>', 0)
+            ->where('p.is_show_kitchen', '=', 1) // 是否显示在送厨端 1-显示 2-不显示
             ->order(['op.finish_time' => 'desc']); // 按照厨房完成时间倒序
 
         if ($shop_supplier_id > 0) {
