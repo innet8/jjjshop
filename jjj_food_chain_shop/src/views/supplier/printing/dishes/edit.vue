@@ -21,7 +21,7 @@
             </el-form-item>
 
             <el-form-item :label="$t('按区域打印')">
-                <el-select v-model="form.area_id" :placeholder="$t('请选择')">
+                <el-select v-model="form.area_id" multiple :placeholder="$t('全部区域')">
                     <el-option v-for="(item, index) in areaData" :key="index" :label="item.area_name" :value="item.area_id"></el-option>
                 </el-select>
             </el-form-item>
@@ -95,7 +95,7 @@ export default {
                 product_type: 0,
                 print_type: 10,
                 category_id: [],
-                area_id: ['0'],
+                area_id: '',
                 type: 10,
                 print_method: 10,
                 label_id: [],
@@ -147,7 +147,6 @@ export default {
             SupplierApi.getEditPrinting({ id: self.id }, true).then(data => {
                 Object.assign(self.form, data.data.model);
                 // 
-                self.form.area_id = self.form.area_id[0] || 0
                 this.storeList = data.data.storeList;
                 this.takeList = data.data.takeList;
                 this.type = data.data.printerList;
@@ -198,12 +197,12 @@ export default {
                     self.areaData = data.data.list.data.map(item=>{
                         return{
                             area_id: item.area_id.toString(),
-                             area_name: item.area_name
+                            area_name: item.area_name
                         }
                     });
                     self.areaData.unshift({
                         area_id: '0',
-                        area_name: this.$t('无区域')
+                        area_name: this.$t('无区域 (收银无桌台)')
                     })
                     this.getData();
                 })
@@ -220,7 +219,8 @@ export default {
             if (!form.print_method == 20) {
                 form.category_id = [];
             }
-            form.area_id = [`${form.area_id}`]
+            form.area_id = (form.area_id || []).filter(id=>id)
+            form.area_id = (form.area_id || []).length > 0 ? form.area_id : '';
             self.$refs.form.validate(valid => {
                 if (valid) {
                     self.loading = true;

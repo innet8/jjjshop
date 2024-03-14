@@ -15,6 +15,7 @@ use app\common\model\user\PointsLog as PointsLogModel;
 use app\common\library\printer\Driver as PrinterDriver;
 use app\common\library\printer\party\SunmiCloudPrinter;
 use app\common\model\supplier\Printing as PrintingModel;
+use app\common\model\store\Table as TableModel;
 
 /**
  * 订单打印服务类
@@ -536,8 +537,37 @@ class OrderPrinterService
         return $content;
     }
 
+    // 判断分类
+    public function verifyPrintProductTicket($product, $item)
+    {
+        $prodcutDetail = ProductModel::where('product_id', '=', $product['product_id'])->find();
+        if (empty($prodcutDetail)) {
+            return false;
+        }
+        // 过滤商品不需要送厨的商品
+        if ($prodcutDetail->is_show_kitchen != 1) {
+            return false;
+        }
+        // 
+        if ($item['print_method'] == 20) {
+            if (
+                $item['category_id']
+                && !in_array($prodcutDetail->special_id, $item['category_id'])
+                && !in_array($prodcutDetail->category_id, $item['category_id'])
+                && !in_array($prodcutDetail->category?->parent_id ?? 0, $item['category_id'])
+            ) {
+                return false;
+            }
+        } elseif ($item['print_method'] == 30) {
+            if ($item['label_id'] && !in_array($prodcutDetail['label_id'], $item['label_id'])) {
+                return false;
+            }
+        }
+        return $prodcutDetail;
+    }
+
     /**
-     * 菜品打印 （一菜一單）
+     * 菜品打印 
      */
     public function printProductTicket($order, $print_type)
     {
@@ -546,63 +576,60 @@ class OrderPrinterService
         request()->language = $printerConfig['default_language'] ?? '';
         //打印列表
         $list = (new PrintingModel)->getList($print_type, $order['shop_supplier_id'], $order['order_type']);
+        $areaId = $order->table_id > 0 ? TableModel::detail($order->table_id)?->area_id : 0;
+        // 
         if (count($list) > 0) {
             foreach ($list as $item) {
+                // 小票打印才走
+                if ($item['type'] != 10) {
+                    continue;
+                }
+                // 区域对的上才走
+                if ($item['area_id'] && !in_array($areaId, $item['area_id'])) {
+                    continue;
+                }
                 // 获取当前的打印机
                 $printer = PrinterModel::detail($item['printer_id']);
                 if (empty($printer) || $printer['is_delete']) {
-                    request()->language = '';
-                    return false;
+                    continue;
                 }
-                // 实例化打印机驱动
-                $PrinterDriver = new PrinterDriver($printer);
-                if ($item['type'] == 10) {
-                    if ($item['print_method'] == 40) {
-                        foreach ($order['product'] as $key => $product) {
+                $printerDriver = new PrinterDriver($printer);
+                // 10整单打印 20商品分类打印 30按标签打印 40一菜一單打印
+                if ($item['print_method'] == 40) {
+                    foreach ($order['product'] as $product) {
+                        // 获取订单打印内容
+                        $content = $this->getPrintProductContent($item, $order, $printer, $product);
+                        // 执行打印请求
+                        $content && $printerDriver->printTicket($content);
+                    }
+                } else {
+                    $isPrinter = false;
+                    foreach ($order['product'] as $product) {
+                        if (!$this->verifyPrintProductTicket($product,$item)) {
+                            continue;
+                        }
+                        if( ($item['is_open_one_food'] ?? 0) == 1) {
                             // 获取订单打印内容
                             $content = $this->getPrintProductContent($item, $order, $printer, $product);
                             // 执行打印请求
-                            $content && $PrinterDriver->printTicket($content);
-                        }
-                    } else {
-                        $isPrinter = false;
-                        foreach ($order['product'] as $key => $product) {
-                            $prodcutDetail = ProductModel::detail($product['product_id']);
-                            if ($item['print_method'] == 20) {
-                                if (
-                                    $item['category_id']
-                                    && !in_array($prodcutDetail->special_id, $item['category_id'])
-                                    && !in_array($prodcutDetail->category_id, $item['category_id'])
-                                    && !in_array($prodcutDetail->category?->parent_id ?? 0, $item['category_id'])
-                                ) {
-                                    continue;
-                                }
-                            } elseif ($item['print_method'] == 30) {
-                                if ($item['label_id'] && !in_array($prodcutDetail['label_id'], $item['label_id'])) {
-                                    continue;
-                                }
-                            }
+                            $content && $printerDriver->printTicket($content);
+                        } else {
                             $isPrinter = true;
                         }
-                        if ($isPrinter) {
-                            // 获取订单打印内容
-                            $content = $this->getPrintProductContent($item, $order, $printer);
-                            //执行打印请求
-                            $content && $PrinterDriver->printTicket($content);
-                        }
                     }
-                } else {
-                    // 获取订单打印内容
-                    $this->getPrintTagProductContent($item, $order, $printer);
+                    if ($isPrinter) {
+                        // 获取订单打印内容
+                        $content = $this->getPrintProductContent($item, $order, $printer);
+                        //执行打印请求
+                        $content && $printerDriver->printTicket($content);
+                    }
                 }
             }
             request()->language = '';
             return true;
         }
-
         request()->language = '';
         return false;
-
     }
 
     /**
@@ -666,26 +693,14 @@ class OrderPrinterService
                 [360 , SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
             );
-            foreach ($order['product'] as $key => $product) {
-                $prodcutDetail = ProductModel::detail($product['product_id']);
-                if ($data['print_method'] == 20) {
-                    if (
-                        $data['category_id']
-                        && !in_array($prodcutDetail->special_id, $data['category_id'])
-                        && !in_array($prodcutDetail->category_id, $data['category_id'])
-                        && !in_array($prodcutDetail->category?->parent_id ?? 0, $data['category_id'])
-                    ) {
-                        continue;
-                    }
-                } elseif ($data['print_method'] == 30) {
-                    if ($data['label_id'] && !in_array($prodcutDetail['label_id'], $data['label_id'])) {
-                        continue;
-                    }
+            foreach ($order['product'] as $product) {
+                if (!$prodcutDetail = $this->verifyPrintProductTicket($product, $data)) {
+                    continue;
                 }
                 if ($products && md5(json_encode($products)) != md5(json_encode($product))) {
                     continue;
                 }
-
+                // 
                 $buffetText = ($buffetSignOpen && $product['is_buffet_product'] == 1) ? (__('自助餐').'-') : '';
                 $productAttr = (new OrderProduct)->getProductAttrAttr($product['product_attr']);
                 $productName = $buffetText . $prodcutDetail['product_name_text'] . ($productAttr ?  ' (' . $productAttr . ')'  : '');
@@ -727,26 +742,13 @@ class OrderPrinterService
         //
         $content .= printText(__('商品'), '',  __('数量'));
         $content .= "--------------------------------<BR>";
-        foreach ($order['product'] as $key => $product) {
-            $prodcutDetail = ProductModel::detail($product['product_id']);
-            if ($data['print_method'] == 20) {
-                if (
-                    $data['category_id']
-                    && !in_array($prodcutDetail->special_id, $data['category_id'])
-                    && !in_array($prodcutDetail->category_id, $data['category_id'])
-                    && !in_array($prodcutDetail->category?->parent_id ?? 0, $data['category_id'])
-                ) {
-                    continue;
-                }
-            } elseif ($data['print_method'] == 30) {
-                if ($data['label_id'] && !in_array($prodcutDetail['label_id'], $data['label_id'])) {
-                    continue;
-                }
+        foreach ($order['product'] as $product) {
+            if (!$prodcutDetail = $this->verifyPrintProductTicket($product, $data)) {
+                continue;
             }
             if ($products && md5(json_encode($products)) != md5(json_encode($product))) {
                 continue;
             }
-
             $buffetText = ($buffetSignOpen && $product['is_buffet_product'] == 1) ? (__('自助餐').'-') : '';
             $productAttr = (new OrderProduct)->getProductAttrAttr($product['product_attr']);
             $productName = $buffetText . $prodcutDetail['product_name_text'] . ($productAttr ?  ' (' . $productAttr . ')'  : '');
