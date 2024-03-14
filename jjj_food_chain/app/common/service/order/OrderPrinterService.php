@@ -608,7 +608,7 @@ class OrderPrinterService
                         if (!$this->verifyPrintProductTicket($product,$item)) {
                             continue;
                         }
-                        if( ($item['is_open_one_food'] ?? 0) == 1) {
+                        if(($item['is_open_one_food'] ?? 0) == 1) {
                             // 获取订单打印内容
                             $content = $this->getPrintProductContent($item, $order, $printer, $product);
                             // 执行打印请求
@@ -693,6 +693,8 @@ class OrderPrinterService
                 [360 , SunmiCloudPrinter::ALIGN_LEFT, 0],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 0],
             );
+            // 
+            $isPrinter = false;
             foreach ($order['product'] as $product) {
                 if (!$prodcutDetail = $this->verifyPrintProductTicket($product, $data)) {
                     continue;
@@ -710,6 +712,11 @@ class OrderPrinterService
                     $printer->lineFeed();
                 }
                 $printer->lineFeed();
+                // 
+                $isPrinter = true;
+            }
+            if (!$isPrinter) {
+                return "";
             }
             $printer->lineFeed();
             $printer->lineFeed();
