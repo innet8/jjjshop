@@ -874,5 +874,7 @@
     "显示在平板端：": "Displayed on tablet:",
     "需要送厨：": "Need to send kitchen:",
     "是": "yes",
-    "否": "no"
+    "否": "no",
+    "全部区域": "All areas",
+    "无区域 (收银无桌台)": "No area (no desk for cash register)"
 }
