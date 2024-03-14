@@ -487,7 +487,17 @@ class OrderProduct extends BaseModel
             // 更新前打印数据
             $printOrder = $order;
             //
-            $this->where('order_id', '=', $order_id)->where('is_send_kitchen', '=', 0)->update(['is_send_kitchen' => 1, 'send_kitchen_time' => time()]);
+            $send_kitchen_time = time();
+            // 处理是否厨显商品
+            $is_not_show_kitchen_list = $this->with(['product'])->where('order_id', '=', $order_id)->where('is_send_kitchen', '=', 0)->select();
+            foreach ($is_not_show_kitchen_list as $item) {
+                if ($item->product->is_show_kitchen == 1) {
+                    $item->save(['is_send_kitchen' => 1, 'send_kitchen_time' => $send_kitchen_time]);
+                } else {
+                    $item->save(['is_send_kitchen' => 1, 'send_kitchen_time' => $send_kitchen_time, 'finish_time' => $send_kitchen_time, 'finish_num' => $item->total_num]);
+                }
+            }
+
             $this->commit();
             //
         } catch (\Exception $e) {
