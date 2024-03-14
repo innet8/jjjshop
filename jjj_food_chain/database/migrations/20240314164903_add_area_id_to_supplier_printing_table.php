@@ -30,7 +30,7 @@ class AddAreaIdToSupplierPrintingTable extends Migrator
     {
         $table = $this->table('supplier_printing');
         $table->addColumn(Column::longText('area_id')->setDefault('')->setComment('区域id')->setAfter('label_id'));
-        $table->addColumn(Column::tinyInteger('is_open_one_food')->setDefault(0)->setComment('是否开启一菜一单 0-关闭 1-开启')->setAfter('area_id'));
+        $table->addColumn(Column::integer('is_open_one_food')->setDefault(0)->setComment('是否开启一菜一单 0-关闭 1-开启')->setAfter('area_id'));
         $table->update();
     }
 }

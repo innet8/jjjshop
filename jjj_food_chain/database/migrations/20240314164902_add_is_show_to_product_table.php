@@ -29,8 +29,8 @@ class AddIsShowToProductTable extends Migrator
     public function change()
     {
         $table = $this->table('product');
-        $table->addColumn(Column::tinyInteger('is_show_tablet')->setDefault(1)->setComment('是否显示在平板端 1-显示 2-不显示')->setAfter('label_id'));
-        $table->addColumn(Column::tinyInteger('is_show_kitchen')->setDefault(1)->setComment('是否显示在送厨端 1-显示 2-不显示')->setAfter('is_show_tablet'));
+        $table->addColumn(Column::integer('is_show_tablet')->setDefault(1)->setComment('是否显示在平板端 1-显示 2-不显示')->setAfter('label_id'));
+        $table->addColumn(Column::integer('is_show_kitchen')->setDefault(1)->setComment('是否显示在送厨端 1-显示 2-不显示')->setAfter('is_show_tablet'));
         $table->update();
     }
 }
