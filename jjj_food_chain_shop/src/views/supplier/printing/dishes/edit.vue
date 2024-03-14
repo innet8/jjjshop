@@ -1,38 +1,31 @@
 <template>
-    <el-dialog class="product-add" @close="handleClose" v-model="dialogVisible" :close-on-click-modal="false"
-        :close-on-press-escape="false" :title="$t('编辑商品打印')">
+    <el-dialog class="product-add" @close="handleClose" v-model="dialogVisible" :close-on-click-modal="false" :close-on-press-escape="false" :title="$t('编辑商品打印')">
         <!--form表单-->
         <el-form size="small" ref="form" :model="form" label-position="top">
             <!--添加门店-->
-            <el-form-item :label="$t('名称')" prop="name" :rules="[{ required: true, message: $t('请输入名称') }]"><el-input
-                    v-model="form.name" :placeholder="$t('请输入名称')"></el-input></el-form-item>
-                    <el-form-item :label="$t('是否开启')" prop="is_open" :rules="[{ required: true, message: '' }]">
+            <el-form-item :label="$t('名称')" prop="name" :rules="[{ required: true, message: $t('请输入名称') }]"><el-input v-model="form.name"
+                    :placeholder="$t('请输入名称')"></el-input></el-form-item>
+            <el-form-item :label="$t('是否开启')" prop="is_open" :rules="[{ required: true, message: '' }]">
                 <div>
                     <el-radio v-model="form.is_open" :label="1">{{ $t('开启') }}</el-radio>
                     <el-radio v-model="form.is_open" :label="0">{{ $t('关闭') }}</el-radio>
                 </div>
             </el-form-item>
-            <!-- <el-form-item :label="$t('打印类型')">
-                <div>
-                    <el-radio @change="form.printer_id = ''" v-model="form.type" :label="10">{{ $t('小票打印') }}</el-radio>
-                    <el-radio @change="form.printer_id = ''" v-model="form.type" :label="20">{{ $t('标签打印') }}</el-radio>
-                </div>
-            </el-form-item>
-            <el-form-item :label="$t('用餐类型')">
-                <div>
-                    <el-radio @change="form.category_id = []" v-model="form.product_type"
-                        :label="0">{{ $t('配送打印') }}</el-radio>
-                    <el-radio @change="form.category_id = []" v-model="form.product_type"
-                        :label="1">{{ $t('店内打印') }}</el-radio>
-                </div>
-            </el-form-item> -->
+
             <el-form-item :label="$t('打印模式')" prop="print_type" :rules="[{ required: true, message: '' }]">
                 <div>
                     <el-radio v-model="form.print_type" :label="10">{{ $t('付款打印') }}</el-radio>
                     <el-radio v-model="form.print_type" :label="30">{{ $t('送厨打印') }}</el-radio>
-                    <!-- <el-radio v-model="form.print_type" :label="20">{{ $t('下单打印') }}</el-radio> -->
+
                 </div>
             </el-form-item>
+
+            <el-form-item :label="$t('按区域打印')">
+                <el-select v-model="form.area_id" :placeholder="$t('请选择')">
+                    <el-option v-for="(item, index) in areaData" :key="index" :label="item.area_name" :value="item.area_id"></el-option>
+                </el-select>
+            </el-form-item>
+
             <el-form-item :label="$t('打印方式')" prop="print_method" :rules="[{ required: true, message: '' }]">
                 <div>
                     <el-radio v-model="form.print_method" :label="10">{{ $t('整单打印') }}</el-radio>
@@ -41,53 +34,41 @@
                     <el-radio v-model="form.print_method" :label="40">{{ $t('按一菜一单打印') }}</el-radio>
                 </div>
             </el-form-item>
-            <el-form-item v-if="form.type == 10" :label="$t('打印机') " prop="printer_id" :rules="[{ required: true, message: $t('请选择打印机') }]">
+            <el-form-item v-if="form.type == 10" :label="$t('打印机')" prop="printer_id" :rules="[{ required: true, message: $t('请选择打印机') }]">
                 <el-select v-model="form.printer_id" :placeholder="$t('请选择')">
-                    <el-option v-for="(item, index) in type" :key="index" :label="item.printer_name"
-                        :value="item.printer_id"></el-option>
+                    <el-option v-for="(item, index) in type" :key="index" :label="item.printer_name" :value="item.printer_id"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item v-if="form.type == 20" :label="$t('打印机') " prop="printer_id" :rules="[{ required: true, message: $t('请选择打印机') }]">
+            <el-form-item v-if="form.type == 20" :label="$t('打印机')" prop="printer_id" :rules="[{ required: true, message: $t('请选择打印机') }]">
                 <el-select v-model="form.printer_id" :placeholder="$t('请选择')">
-                    <el-option v-for="(item, index) in typeTag" :key="index" :label="item.printer_name"
-                        :value="item.printer_id"></el-option>
+                    <el-option v-for="(item, index) in typeTag" :key="index" :label="item.printer_name" :value="item.printer_id"></el-option>
                 </el-select>
             </el-form-item>
-            <!-- <el-form-item v-if="form.product_type == 0 && form.print_method == 20" :label="$t('商品分类')" prop="category_id"
-                :rules="[{
-                    required: true,
-                    validator: () => {
-                        return form.category_id.length > 0 ? true : false;
-                    },
-                    message: $t('请选择商品分类')
-                }]"
-            >
-                <el-cascader :options="options" v-model="categoryIds" clearable :placeholder="$t('请选择')" :multiple="true" style="width: 100%;" :props="{ multiple: true }"></el-cascader>
-            </el-form-item> -->
-            <el-form-item v-if="form.product_type == 0 && form.print_method == 20" :label="$t('商品分类')" prop="category_id"
-                :rules="[{ required: true, message: '请选择商品分类' }]">
+
+            <el-form-item v-if="form.product_type == 0 && form.print_method == 20" :label="$t('商品分类')" prop="category_id" :rules="[{ required: true, message: '请选择商品分类' }]">
                 <el-select v-model="form.category_id" multiple :placeholder="$t('请选择')">
-                    <el-option v-for="item in storeList" :key="item.category_id" :label="item.name_text"
-                        :value="item.category_id + ''"></el-option>
+                    <el-option v-for="item in storeList" :key="item.category_id" :label="item.name_text" :value="item.category_id + ''"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item v-if="form.product_type == 1 && form.print_method == 20" :label="$t('商品分类')" prop="category_id"
-                :rules="[{ required: true, message: $t('请选择商品分类') }]">
+            <el-form-item v-if="form.product_type == 1 && form.print_method == 20" :label="$t('商品分类')" prop="category_id" :rules="[{ required: true, message: $t('请选择商品分类') }]">
                 <el-select v-model="form.category_id" multiple :placeholder="$t('请选择')">
-                    <el-option v-for="item in storeList" :key="item.category_id" :label="item.name_text"
-                        :value="item.category_id + ''"></el-option>
+                    <el-option v-for="item in storeList" :key="item.category_id" :label="item.name_text" :value="item.category_id + ''"></el-option>
                 </el-select>
             </el-form-item>
 
             <el-form-item v-if="form.print_method == 30" :label="$t('打印标签')" prop="label_id">
                 <el-select v-model="form.label_id" multiple :placeholder="$t('请选择')">
-                    <el-option v-for="item in labelList" :key="item.label_id" :label="item.label_name_text"
-                        :value="item.label_id + ''"></el-option>
+                    <el-option v-for="item in labelList" :key="item.label_id" :label="item.label_name_text" :value="item.label_id + ''"></el-option>
                 </el-select>
                 <div class="tips">{{ $t('不选择打印全部') }}</div>
             </el-form-item>
 
-
+            <el-form-item v-if="form.print_method == 20 || form.print_method == 30" :label="$t('按一菜一单打印')" prop="is_open_one_food" :rules="[{ required: true, message: '' }]">
+                <div>
+                    <el-radio v-model="form.is_open_one_food" :label="0">{{ $t('关闭') }}</el-radio>
+                    <el-radio v-model="form.is_open_one_food" :label="1">{{ $t('开启') }}</el-radio>
+                </div>
+            </el-form-item>
         </el-form>
         <template #footer>
             <span class="dialog-footer">
@@ -100,7 +81,7 @@
 
 <script>
 import SupplierApi from '@/api/supplier.js';
-
+import StoreApi from '@/api/store.js';
 export default {
     data() {
         return {
@@ -109,14 +90,16 @@ export default {
             /*form表单数据*/
             form: {
                 name: '',
-                is_open: 0,
+                is_open: 1,
                 printer_id: '',
                 product_type: 0,
                 print_type: 10,
                 category_id: [],
-                type: '',
+                area_id: ['0'],
+                type: 10,
                 print_method: 10,
                 label_id: [],
+                is_open_one_food: 0,
             },
             loading: false,
             type: [],
@@ -129,13 +112,14 @@ export default {
             dialogVisible: false,
             // 
             options: [],
-            categoryIds: []
+            categoryIds: [],
+            areaData: []
         };
     },
     props: ['editId', 'open_edit'],
     created() {
         this.dialogVisible = this.open_edit
-        this.getData();
+        this.getAreaData();
     },
     mounted() {
 
@@ -144,13 +128,13 @@ export default {
         'categoryIds': {
             handler(val) {
                 this.form.category_id = [];
-                this.categoryIds.map(h=>{
+                this.categoryIds.map(h => {
                     if (h[1]) {
                         this.form.category_id.push(h[1])
                     }
                 })
                 // 
-                this.$refs?.form?.validate(_=>{})
+                this.$refs?.form?.validate(_ => { })
             },
             deep: true,
             immediate: true,
@@ -160,20 +144,21 @@ export default {
         getData() {
             let self = this;
             this.id = this.editId;
-            SupplierApi.getEditPrinting({id: self.id},true).then(data => {
+            SupplierApi.getEditPrinting({ id: self.id }, true).then(data => {
                 Object.assign(self.form, data.data.model);
                 // 
+                self.form.area_id = self.form.area_id[0] || 0
                 this.storeList = data.data.storeList;
                 this.takeList = data.data.takeList;
                 this.type = data.data.printerList;
                 this.typeTag = data.data.printerTagList;
                 const arr = [];
-                this.type.map(item=>{
+                this.type.map(item => {
                     arr.push(item.printer_id)
                 })
-               if(arr.indexOf(this.form.printer_id) == -1){
-                this.form.printer_id = ''
-               }
+                if (arr.indexOf(this.form.printer_id) == -1) {
+                    this.form.printer_id = ''
+                }
                 this.labelList = data.data.labelList;
                 // 
                 this.options = [];
@@ -188,7 +173,7 @@ export default {
                                     children: [],
                                 })
                                 if (this.form.category_id.indexOf(val.category_id + '') != -1) {
-                                    this.categoryIds.push([val.parent_id,val.category_id])
+                                    this.categoryIds.push([val.parent_id, val.category_id])
                                 }
                             }
                         })
@@ -200,7 +185,31 @@ export default {
                     }
                 })
             })
-            .catch(error => { });
+                .catch(error => { });
+        },
+
+        /*获取列表*/
+        getAreaData() {
+            let self = this;
+            self.loading = true;
+            StoreApi.arealist({}, true)
+                .then(data => {
+                    self.loading = false;
+                    self.areaData = data.data.list.data.map(item=>{
+                        return{
+                            area_id: item.area_id.toString(),
+                             area_name: item.area_name
+                        }
+                    });
+                    self.areaData.unshift({
+                        area_id: '0',
+                        area_name: this.$t('无区域')
+                    })
+                    this.getData();
+                })
+                .catch(error => {
+                    self.loading = false;
+                });
         },
         //提交表单
         onSubmit() {
@@ -210,7 +219,8 @@ export default {
             // 
             if (!form.print_method == 20) {
                 form.category_id = [];
-            } 
+            }
+            form.area_id = [`${form.area_id}`]
             self.$refs.form.validate(valid => {
                 if (valid) {
                     self.loading = true;
@@ -233,5 +243,3 @@ export default {
     }
 };
 </script>
-
-

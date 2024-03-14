@@ -21,9 +21,24 @@
                 <el-radio :label="20">{{ $t('下架') }}</el-radio>
             </el-radio-group>
         </el-form-item>
-        <!-- <el-form-item :label="$t('初始销量：')">
-      <el-input-number :controls="false" :min="0" v-model="form.model.sales_initial" class="max-w460"></el-input-number>
-    </el-form-item> -->
+
+        <el-form-item  :label="$t('商品是否显示在平板端：')"
+            :rules="[{ required: true, message: $t('选择是否显示') }]" prop="model.product_status">
+            <el-radio-group v-model="form.model.is_show_tablet">
+                <el-radio :label="1">{{ $t('显示') }}</el-radio>
+                <el-radio :label="2">{{ $t('不显示') }}</el-radio>
+            </el-radio-group>
+        </el-form-item>
+
+
+        <el-form-item  :label="$t('商品是否显示在厨显端：')"
+            :rules="[{ required: true, message: $t('选择是否显示') }]" prop="model.product_status">
+            <el-radio-group v-model="form.model.is_show_kitchen">
+                <el-radio :label="1">{{ $t('显示') }}</el-radio>
+                <el-radio :label="2">{{ $t('不显示') }}</el-radio>
+            </el-radio-group>
+        </el-form-item>
+
         <el-form-item :label="$t('商品排序：')" :rules="[{ required: true, message: $t('接近0，排序等级越高') }]" prop="model.product_sort">
             <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('接近0，排序等级越高')"
                 v-model="form.model.product_sort" class="max-w460"></el-input-number>

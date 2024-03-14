@@ -102,6 +102,10 @@ export default {
                     content: '',
                     /*商品状态*/
                     product_status: 10,
+                    /*平板是否显示*/
+                    is_show_tablet: 1,
+                    /*厨显是否显示*/
+                    is_show_kitchen: 1,             
                     /*初始销量*/
                     sales_initial: 0,
                     /*商品排序，默认100*/
