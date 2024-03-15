@@ -46,7 +46,7 @@
                                     <el-form-item label="" style="margin-bottom: 4px !important;" :rules="[{ required: true, message: '' }]">
                                         <el-radio-group v-model="item.discount_type">
                                             <el-radio :label="1">{{ $t('按比例') }}</el-radio>
-                                            <el-radio :label="2">{{ $t('按折扣金额') }}</el-radio>
+                                            <el-radio :label="2">{{ $t('按优惠金额') }}</el-radio>
                                         </el-radio-group>
                                     </el-form-item>
 
