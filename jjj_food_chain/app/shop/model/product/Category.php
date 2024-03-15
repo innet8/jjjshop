@@ -17,7 +17,7 @@ class Category extends CategoryModel
     {
         $data['app_id'] = self::$app_id;
         $res = $this->save($data);
-        $this->deleteCache($data['type'], $data['is_special'] ?? 0, $data['shop_supplier_id']);
+        $this->deleteCache($data['type'] ?? 0, $data['is_special'] ?? 0, $data['shop_supplier_id'] ?? 0);
         return $res;
     }
 
@@ -43,7 +43,7 @@ class Category extends CategoryModel
             return false;
         }
         $res = $this->delete();
-        $this->deleteCache($this['type'], $this['is_special'] ?? 0, $this['shop_supplier_id']);
+        $this->deleteCache($this['type'], $this['is_special'], $this['shop_supplier_id']);
         return $res;
     }
 
