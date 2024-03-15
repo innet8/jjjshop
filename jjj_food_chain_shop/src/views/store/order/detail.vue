@@ -157,8 +157,9 @@
                                     </div>
                                     <div class="price">
                                         <span class="ml10">
-                                            {{ currency.unit }}{{ scope.row.product_price }}
-                                            <template v-if="currency.is_open == 1">{{ currency.vices?.vice_unit }}{{
+                                            <span v-if="scope.row.discount_type">-</span>{{ currency.unit }}{{ scope.row.product_price }}
+                                            <template v-if="currency.is_open == 1">
+                                                <span v-if="scope.row.discount_type">-</span>{{currency.vices?.vice_unit }}{{
                                                 (Number(scope.row.product_price) *
                                                     Number(currency.vices?.unit_rate)).toFixed(2) }}</template>
                                         </span>
@@ -174,7 +175,12 @@
                     </el-table-column>
                     <el-table-column prop="product_price" :label="$t('商品总价')">
                         <template #default="scope">
-                            <p>{{ currency.unit }}{{
+                            <p v-if="scope.row.discount_type"> <span v-if="scope.row.discount_type">-</span>{{ currency.unit }}
+                                {{Number(scope.row.total_price).toFixed(2) }}
+                                <span v-if="currency.is_open == 1"> <span v-if="scope.row.discount_type">-</span>{{ currency.vices?.vice_unit }}{{
+                                    (Number(scope.row.total_price)  *  Number(currency.vices?.unit_rate)).toFixed(2) }}</span>
+                            </p>
+                            <p v-else>{{ currency.unit }}{{
                                 (Number(scope.row.product_price) * Number(scope.row.total_num)).toFixed(2) }}
                                 <span v-if="currency.is_open == 1">{{ currency.vices?.vice_unit }}{{
                                     (Number(scope.row.product_price) * Number(scope.row.total_num) *
@@ -297,6 +303,19 @@ export default {
                         })
                     })
                     self.buffet = self.buffet.join('+')
+
+                    self.detail.buffetDiscount.map(item => {
+                        self.tableData.push({
+                            name_text: item.name_text,
+                            image: { file_path:'buffet' },
+                            product_attr: '',
+                            refund: '',
+                            product_price: item.price,
+                            total_num: item.num,
+                            discount_type:item.discount_type,
+                            total_price:item.total_price,
+                        })
+                    })
 
                     self.detail.delay.map(item => {
                         self.tableData.push({
