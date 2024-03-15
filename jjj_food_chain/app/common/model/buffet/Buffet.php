@@ -37,7 +37,7 @@ class Buffet extends BaseModel
     // 与BuffetDiscount模型的多对多关联
     public function buffetDiscount()
     {
-        return $this->belongsToMany(BuffetDiscount::class, 'buffet_discount_rel', 'buffet_id', 'buffet_discount_id');
+        return $this->belongsToMany(BuffetDiscount::class, 'buffet_discount_rel', 'buffet_discount_id', 'buffet_id');
     }
 
     /**
