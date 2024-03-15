@@ -84,7 +84,7 @@ class Order extends OrderModel
             if (($query['request_type'] ?? '') == 1) {
                 return true;
             }
-        } catch (\PDOException $th) {
+        } catch (\Throwable $th) {
             $this->error = '请选择具体时间段，最多可导出1000条以下的数据';
             return false;
         }
