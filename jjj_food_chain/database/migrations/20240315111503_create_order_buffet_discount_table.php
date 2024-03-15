@@ -31,8 +31,11 @@ class CreateOrderBuffetDiscountTable extends Migrator
     {
         $table = $this->table('order_buffet_discount', ['engine' => 'InnoDB', 'collation' => 'utf8mb4_unicode_ci', 'comment' => '订单自助餐优惠表']);
         $table->addColumn('order_id', 'integer', ['comment' => '关联订单id']);
-        $table->addColumn('buffet_discount_id', 'integer', ['comment' => '关联自助餐id']);
-        $table->addColumn('name', 'string', ['limit' => 2000, 'default' => '', 'comment' => '名称']);
+        $table->addColumn('buffet_id', 'integer', ['comment' => '关联自助餐id']);
+        $table->addColumn('buffet_name', 'string', ['limit' => 2000, 'default' => '', 'comment' => '自助餐名称']);
+        $table->addColumn('buffet_price', 'decimal', ['precision' => 12, 'scale' => 2, 'default' => 0, 'comment' => '自助餐价格']);
+        $table->addColumn('buffet_discount_id', 'integer', ['comment' => '关联自助餐优惠id']);
+        $table->addColumn('buffet_discount_name', 'string', ['limit' => 2000, 'default' => '', 'comment' => '自助餐优惠名称']);
         $table->addColumn('discount_type', 'integer', ['default' => 1, 'comment' => '折扣类型 1-比例 2-优惠金额']);
         $table->addColumn('discount_ratio', 'decimal', ['precision' => 12, 'scale' => 2, 'default' => 0, 'comment' => '折扣百分比']);
         $table->addColumn('discount_price', 'decimal', ['precision' => 12, 'scale' => 2, 'default' => 0, 'comment' => '优惠金额']);

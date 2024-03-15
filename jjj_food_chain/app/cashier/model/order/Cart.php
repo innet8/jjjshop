@@ -5,6 +5,7 @@ namespace app\cashier\model\order;
 use app\common\enum\order\OrderStatusEnum;
 use app\common\enum\settings\SettingEnum;
 use app\common\model\order\Order;
+use app\common\model\order\OrderBuffetDiscount;
 use app\common\model\order\OrderProduct;
 use app\common\model\settings\Setting as SettingModel;
 use app\common\model\plus\cashier\Cart as CartModel;
@@ -928,6 +929,9 @@ class Cart extends CartModel
             $buffetPrice = Order::getBuffetPrice($order['order_id']);
             $buffetPrice = helper::bcmul($buffetPrice, $meal_num, 3);
             $buffetPrice = round($buffetPrice, 2);
+            // 减去自助餐优惠费用
+            $buffetDiscountPrice = (new OrderBuffetDiscount)->where('order_id', '=', $order_id)->sum('total_price');
+            $buffetPrice = helper::bcsub($buffetPrice, $buffetDiscountPrice);
             // 加钟费用
             $delayPrice = Order::getDelayPrice($order['order_id']);
             $delayPrice = helper::bcmul($delayPrice, $meal_num, 3);
