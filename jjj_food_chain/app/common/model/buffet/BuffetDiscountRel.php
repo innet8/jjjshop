@@ -19,12 +19,4 @@ class BuffetDiscountRel extends BaseModel
 
     ];
 
-    /**
-     * 关联自助餐
-     */
-    public function buffet()
-    {
-        return $this->belongsTo('app\\common\\model\\buffet\\Buffet', 'id', 'buffet_id');
-    }
-
 }

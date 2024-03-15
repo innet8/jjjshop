@@ -13,7 +13,6 @@ use app\common\model\order\Order as OrderModel;
  */
 class BuffetDiscount extends BaseModel
 {
-    use SoftDelete;
     protected $name = 'buffet_discount';
 
     /**
@@ -25,11 +24,11 @@ class BuffetDiscount extends BaseModel
     ];
 
     /**
-     * 关联自助餐产品
+     * 定义与Buffet模型的多对多关联
      */
-    public function buffetDiscountRel()
+    public function buffets()
     {
-        return $this->hasMany('app\\common\\model\\buffet\\BuffetProduct', 'buffet_id', 'id')->with('product');
+        return $this->belongsToMany(Buffet::class, 'buffet_discount_rel', 'buffet_id', 'buffet_discount_id');
     }
 
 

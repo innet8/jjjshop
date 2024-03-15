@@ -484,7 +484,7 @@ class Order extends BaseModel
      */
     public static function getTableUnderwayOrder($table_id)
     {
-        return self::with('product')->where([
+        return self::with(['product', 'buffet'])->where([
             ['table_id', '=', $table_id],
             ['order_status', '=', OrderStatusEnum::NORMAL]
         ])->order('order_id', 'desc')->find();
@@ -1520,9 +1520,9 @@ class Order extends BaseModel
                 $product['is_buffet'] = 1;
                 $product['buffet_limit_num'] = $buffet_arr[$product['product_id']]['limit_num'] * $meal_num;
                 $product['product_price'] = 0;
-                foreach ($product['sku'] as &$item) {
-                    $item['product_price'] = 0;
-                }
+//                foreach ($product['sku'] as &$item) {
+//                    $item['product_price'] = 0;
+//                }
                 $product['current_add_num'] = $current_add_num;
                 if ($product['buffet_limit_num'] == 0) {
                     $product['limit_num_status'] = 0;
