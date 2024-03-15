@@ -18,5 +18,4 @@ class BuffetDiscountRel extends BaseModel
     protected $append = [
 
     ];
-
 }

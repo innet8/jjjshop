@@ -628,6 +628,8 @@ class Setting extends BaseModel
                     'is_buy_continue' => '0',
                     // 是否开启加钟 0-关闭 1-开启
                     'is_add_clock' => '0',
+                    // 是否开启自助餐优惠折扣 0-关闭 1-开启
+                    'is_buffet_discount' => '0',
                     // 名称 - 加钟时间（分）- 价格
                     'add_clock' => [],
                 ],

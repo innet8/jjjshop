@@ -3,10 +3,6 @@
 namespace app\common\model\buffet;
 
 use app\common\model\BaseModel;
-use think\model\concern\SoftDelete;
-use app\common\model\order\OrderBuffet as OrderBuffetModel;
-use app\common\enum\order\OrderPayStatusEnum;
-use app\common\model\order\Order as OrderModel;
 
 /**
  *
@@ -31,7 +27,6 @@ class BuffetDiscount extends BaseModel
         return $this->belongsToMany(Buffet::class, 'buffet_discount_rel', 'buffet_id', 'buffet_discount_id');
     }
 
-
     /**
      * 获取名称
      */
@@ -45,7 +40,7 @@ class BuffetDiscount extends BaseModel
      */
     public static function getList()
     {
-        return (new self())->where('status', '=', 1)
+        return (new self())->with('buffets')->where('status', '=', 1)
             ->order('sort asc,id desc')
             ->select();
     }
