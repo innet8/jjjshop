@@ -23,7 +23,7 @@
             </el-form-item>
 
             <el-form-item :label="$t('自助餐优惠折扣')" :rules="[{ required: true, message: '' }]">
-                <el-radio-group v-model="form.is_buffet_discount">
+                <el-radio-group v-model="form.is_buffet_discount" @change="handleChangeDiscount">
                     <el-radio label="1">{{ $t('开') }}</el-radio>
                     <el-radio label="0">{{ $t('关') }}</el-radio>
                 </el-radio-group>
@@ -166,6 +166,7 @@ import PorductApi from '@/api/product.js';
 import autoTips from '../list/autoTips.vue';
 import productList from './productList.vue';
 import { useUserStore } from '@/store';
+import { handleError } from 'vue';
 const { currency } = useUserStore();
 export default {
     components: { productList, autoTips },
@@ -307,6 +308,13 @@ export default {
                 this.add();
             }
         },
+
+        handleChangeDiscount() {
+            if (this.form.add_buffet_discount.length == 0) {
+                this.addFavorable();
+            }
+        },
+
         handleDelete(index) {
             let result = 0
             this.form.add_clock.map(item => {
