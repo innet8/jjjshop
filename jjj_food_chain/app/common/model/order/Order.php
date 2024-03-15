@@ -84,7 +84,7 @@ class Order extends BaseModel
     }
 
     /**
-     * 订单自助餐列表
+     * 订单自助餐加钟列表
      */
     public function delay()
     {

@@ -227,6 +227,10 @@ class OrderPrinterService
                     $printer->printInColumns($buffet['name_text'], strval($buffet['num']), $this->currencyUnit . strval($buffet['total_price']));
                     $printer->lineFeed();
                 }
+                foreach ($order['buffetDiscount'] ?? [] as $discount) {
+                    $printer->printInColumns($discount['buffet_discount_name'], strval($discount['num']), '-' . $this->currencyUnit . strval($discount['total_price']));
+                    $printer->lineFeed();
+                }
                 foreach ($order['delay'] ?? [] as $delay) {
                     $printer->printInColumns($delay['name_text'], strval($delay['num']), $this->currencyUnit . strval($delay['total_price']));
                     $printer->lineFeed();
@@ -349,6 +353,11 @@ class OrderPrinterService
                     $printer->lineFeed();
                     $printer->lineFeed();
                 }
+                foreach ($order['buffetDiscount'] ?? [] as $discount) {
+                    $printer->appendText(printText($discount['buffet_discount_name'], strval($discount['num']) , '-' . $this->currencyUnit . strval($discount['total_price']) , $width, $leftWidth + 2));
+                    $printer->lineFeed();
+                    $printer->lineFeed();
+                }
                 foreach ($order['delay'] ?? [] as $delay) {
                     $printer->appendText(printText($delay['name_text'], strval($delay['num']) , $this->currencyUnit . strval($delay['total_price']) , $width, $leftWidth + 2));
                     $printer->lineFeed();
@@ -454,6 +463,9 @@ class OrderPrinterService
         if ($order->is_buffet == 1) {
             foreach ($order['buffet'] ?? [] as $buffet) {
                 $content .= printText($buffet['name_text'], strval($buffet['num']), $this->currencyUnit . strval($buffet['total_price']) , $width, $leftWidth + 2);
+            }
+            foreach ($order['buffetDiscount'] ?? [] as $discount) {
+                $content .= printText($discount['buffet_discount_name'], strval($discount['num']), '-' . $this->currencyUnit . strval($discount['total_price']) , $width, $leftWidth + 2);
             }
             foreach ($order['delay'] ?? [] as $delay) {
                 $content .= printText($delay['name_text'], strval($delay['num']), $this->currencyUnit . strval($delay['total_price']) , $width, $leftWidth + 2);
