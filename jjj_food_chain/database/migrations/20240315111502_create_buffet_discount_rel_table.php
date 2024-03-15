@@ -31,6 +31,7 @@ class CreateBuffetDiscountRelTable extends Migrator
     {
         $table = $this->table('buffet_discount_rel', ['engine' => 'InnoDB', 'collation' => 'utf8mb4_unicode_ci', 'comment' => '自助餐优惠关联表']);
         $table->addColumn('buffet_id', 'integer', ['comment' => '关联id']);
+        $table->addColumn('buffet_discount_id', 'integer', ['comment' => '关联id']);
         $table->addColumn('app_id', 'integer', ['default' => 0, 'comment' => '应用id']);
         $table->addColumn('create_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'signed' => true, 'comment' => '创建时间']);
         $table->addColumn('update_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'signed' => true, 'comment' => '更新时间']);
