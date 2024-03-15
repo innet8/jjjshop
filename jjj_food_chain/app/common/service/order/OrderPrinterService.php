@@ -37,8 +37,9 @@ class OrderPrinterService
             return;
         }
         // 商米一体机打印
-        if (($printerConfig['cashier_printer_id'] ?? '0') == '0') {
-            $content = $this->getPrintContent($order, PrinterTypeEnum::SUNMI_LAN);
+        $cashierPrinterId = intval($printerConfig['cashier_printer_id'] ?? '0');
+        if ($cashierPrinterId <= 0) {
+            $content = $this->getPrintContent($order, $cashierPrinterId == -1 ? PrinterTypeEnum::XPRINTER_LAN : PrinterTypeEnum::SUNMI_LAN);
             Cache::set("printer_data_cache", array_unique(array_merge(Cache::get("printer_data_cache",[]),[$content])), 60 * 60 * 24);
             return true;
         } else {
@@ -300,7 +301,7 @@ class OrderPrinterService
         *芯烨打印机
         *
         */
-        if ($printers['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
+        if ($printers == PrinterTypeEnum::XPRINTER_LAN || $printers['printer_type']['value'] == PrinterTypeEnum::XPRINTER_LAN) {
             $width = 47;
             $leftWidth = 29;
             $printer = new SunmiCloudPrinter(567);
@@ -598,7 +599,7 @@ class OrderPrinterService
                 if ($item['print_method'] == 40) {
                     foreach ($order['product'] as $product) {
                         // 获取订单打印内容
-                        $content = $this->getPrintProductContent($item, $order, $printer, $product);
+                        $content = $this->getPrintProductOneContent($item, $order, $printer, $product);
                         // 执行打印请求
                         $content && $printerDriver->printTicket($content);
                     }
@@ -610,7 +611,7 @@ class OrderPrinterService
                         }
                         if(($item['is_open_one_food'] ?? 0) == 1) {
                             // 获取订单打印内容
-                            $content = $this->getPrintProductContent($item, $order, $printer, $product);
+                            $content = $this->getPrintProductOneContent($item, $order, $printer, $product);
                             // 执行打印请求
                             $content && $printerDriver->printTicket($content);
                         } else {
@@ -633,7 +634,7 @@ class OrderPrinterService
     }
 
     /**
-     * 构建订单打印的内容 （一菜一单）
+     * 构建订单菜品（整单）打印的内容
      */
     private function getPrintProductContent($data, $order, $printer = null, $products = null)
     {
@@ -710,6 +711,123 @@ class OrderPrinterService
                 if ($product['remark']  ?? '') {
                     $printer->printInColumns($product['remark']);
                     $printer->lineFeed();
+                }
+                $printer->lineFeed();
+                // 
+                $isPrinter = true;
+            }
+            if (!$isPrinter) {
+                return "";
+            }
+            $printer->lineFeed();
+            $printer->lineFeed();
+            if($printerType == PrinterTypeEnum::XPRINTER_LAN){
+                $printer->lineFeed();
+            }
+            // Print and exit page mode
+            $printer->printAndExitPageMode();
+            $printer->lineFeed(4);
+            $printer->cutPaper(false);
+            //
+            return $printer->orderData;
+        }
+
+        /* *
+        *
+        *飞蛾打印机
+        *
+        */
+        $width = 32;
+        $content = '';
+        if ($order['table_no']) {
+            $content = "<CB>".__('桌号')."：{$order['table_no']}</CB><BR>";
+        }
+        if ($order['callNo']) {
+            $content = "<CB>".__('取单号')."：{$order['callNo']}</CB><BR>";
+        }
+        $content .= printText(__('订单号'), '', $order->order_no) . "<BR>";
+        $content .= printText(__('时间'), '',  $order->update_time) . "<BR><BR>";
+        //
+        $content .= printText(__('商品'), '',  __('数量'));
+        $content .= "--------------------------------<BR>";
+        foreach ($order['product'] as $product) {
+            if (!$prodcutDetail = $this->verifyPrintProductTicket($product, $data)) {
+                continue;
+            }
+            if ($products && md5(json_encode($products)) != md5(json_encode($product))) {
+                continue;
+            }
+            $buffetText = ($buffetSignOpen && $product['is_buffet_product'] == 1) ? (__('自助餐').'-') : '';
+            $productAttr = (new OrderProduct)->getProductAttrAttr($product['product_attr']);
+            $productName = $buffetText . $prodcutDetail['product_name_text'] . ($productAttr ?  ' (' . $productAttr . ')'  : '');
+            $content .= printText($productName, '', ''.$product['total_num'], $width, 26);
+            if ($product['remark'] ?? '') {
+                $content .= '<TEXT x="10" y="180" font="10" w="-1" h="-1" r="0">' . $product['remark'] . '</TEXT>';
+            }
+            $content .= '<BR><BR>';
+        }
+        return $content. '<BR><BR>';
+    }
+
+
+    /**
+     * 构建订单菜品（一菜一单）打印的内容
+     */
+    private function getPrintProductOneContent($data, $order, $printer = null, $products = null)
+    {
+        $printerType = $printer['printer_type']['value'];
+        $isThai =  preg_match('/[\p{Thai}]/u', __("金额"));
+        $isEn =  preg_match('/^[A-Za-z]+$/u', __("数量"));
+
+        // 打印机设置
+        $printerConfig = SettingModel::getSupplierItem(SettingEnum::PRINTER, $order['shop_supplier_id'], $order['app_id']);
+        $buffetSignOpen = (int)($printerConfig['buffet_sign_open'] ?? 1);
+
+        /* *
+        *
+        *商米 和 芯烨 打印机
+        *
+        */
+        if ($printer && ( $printerType == PrinterTypeEnum::SUNMI_LAN || $printerType == PrinterTypeEnum::XPRINTER_LAN)) {
+            $width = 48 - ($isThai ? 2 : 0);
+            $printer = new SunmiCloudPrinter(567);
+            if($printerType != PrinterTypeEnum::XPRINTER_LAN){
+                $printer->lineFeed();
+            }
+            $printer->restoreDefaultLineSpacing();
+            $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
+            $printer->setupColumns(
+                [260, SunmiCloudPrinter::ALIGN_LEFT, 4],
+                [0, SunmiCloudPrinter::ALIGN_RIGHT, 6],
+            );
+            if ($order['table_no']) {
+                $printer->printInColumns($order->update_time, __("桌号").": {$order['table_no']}" . ($order['meal_num'] ? " ({$order['meal_num']})" : ''));
+            }
+            if ($order['callNo']) {
+                $printer->printInColumns($order->update_time, __("取单号").": {$order['callNo']}" . ($order['meal_num'] ? " ({$order['meal_num']})" : ''));
+            }
+            $printer->lineFeed();
+            // 
+            $printer->setPrintModes(true, true, false);
+            $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
+            $isPrinter = false;
+            foreach ($order['product'] as $product) {
+                if (!$prodcutDetail = $this->verifyPrintProductTicket($product, $data)) {
+                    continue;
+                }
+                if ($products && md5(json_encode($products)) != md5(json_encode($product))) {
+                    continue;
+                }
+                // 
+                $buffetText = ($buffetSignOpen && $product['is_buffet_product'] == 1) ? (__('自助餐').' - ') : '';
+                $productAttr = (new OrderProduct)->getProductAttrAttr($product['product_attr']);
+                $productName = $buffetText . $prodcutDetail['product_name_text'] . ($productAttr ?  ' (' . $productAttr . ')'  : '');
+                $printer->appendText($productName .'    X' .$product['total_num'] . '');
+                if ($product['remark']  ?? '') {
+                    $printer->lineFeed();
+                    $printer->lineFeed();
+                    $printer->setPrintModes(false, false, false);
+                    $printer->appendText($product['remark']);
                 }
                 $printer->lineFeed();
                 // 
