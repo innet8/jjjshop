@@ -1126,7 +1126,7 @@ class Order extends BaseModel
         $buffetPrice = Order::getBuffetPrice($order_id);
         $buffetPrice = helper::bcmul($buffetPrice, $meal_num, 3);
         $buffetPrice = round($buffetPrice, 2);
-        $original = $buffetPrice;
+        $originalBuffetPrice = $buffetPrice;
         // 减去自助餐优惠费用
         $buffetDiscountPrice = (new OrderBuffetDiscount)->where('order_id', '=', $order_id)->sum('total_price');
         $buffetPrice = helper::bcsub($buffetPrice, $buffetDiscountPrice);
@@ -1153,18 +1153,17 @@ class Order extends BaseModel
         // 合计
         $total_price = $total_price + $buffetPrice + $delayPrice;
         // 原价合计
-        $total_product_price = $order_price + $original + $delayPrice;
+        $total_product_price = $order_price + $originalBuffetPrice + $delayPrice;
         // 优惠折扣
         $discount_money = 0;
         if ($order['discount_ratio'] > 0) {
             $o_pay_price = $pay_price;
             $pay_price = round($o_pay_price * $order['discount_ratio'] / 100, 2);;
             $discount_money = round($o_pay_price * (100 - $order['discount_ratio']) / 100, 2);
-        } else if ($order['discount_ratio'] == -1){
+        } else if ($order['discount_ratio'] == -1) {
             $discount_money = $pay_price;
             $pay_price = 0;
         }
-        $discount_money += $buffetDiscountPrice;
 
         // 积分奖励按照应付计算
         if ($setting['is_shopping_gift']) {
