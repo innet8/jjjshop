@@ -3,6 +3,7 @@
 namespace app\common\model\order;
 
 use app\common\model\buffet\Buffet;
+use app\common\model\buffet\BuffetDiscount;
 use app\common\model\buffet\BuffetProduct;
 use app\common\model\delay\Delay;
 use app\common\library\helper;
@@ -72,6 +73,14 @@ class Order extends BaseModel
     public function buffet()
     {
         return $this->hasMany('app\\common\\model\\order\\OrderBuffet', 'order_id', 'order_id');
+    }
+
+    /**
+     * 订单自助餐优惠列表
+     */
+    public function buffetDiscount()
+    {
+        return $this->hasMany('app\\common\\model\\order\\OrderBuffetDiscount', 'order_id', 'order_id');
     }
 
     /**
@@ -446,7 +455,7 @@ class Order extends BaseModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public static function detail($where, $with = ['user', 'address', 'buffet', 'delay', 'product' => ['image'], 'extract', 'supplier', 'cashier'])
+    public static function detail($where, $with = ['user', 'address', 'buffet', 'buffetDiscount', 'delay', 'product' => ['image'], 'extract', 'supplier', 'cashier'])
     {
         is_array($where) ? $filter = $where : $filter['order_id'] = (int)$where;
         return self::with($with)->where($filter)->order('order_id', 'desc')->find();
@@ -1117,6 +1126,10 @@ class Order extends BaseModel
         $buffetPrice = Order::getBuffetPrice($order_id);
         $buffetPrice = helper::bcmul($buffetPrice, $meal_num, 3);
         $buffetPrice = round($buffetPrice, 2);
+        // 减去自助餐优惠费用
+        $buffetDiscountPrice = (new OrderBuffetDiscount)->where('order_id', '=', $order_id)->sum('total_price');
+        $buffetPrice = helper::bcsub($buffetPrice, $buffetDiscountPrice);
+
         // 加钟费用
         $delayPrice = Order::getDelayPrice($order_id);
         $delayPrice = helper::bcmul($delayPrice, $meal_num, 3);
@@ -1690,5 +1703,90 @@ class Order extends BaseModel
             ->where('product_id', '=', $product_id)
             ->where('is_send_kitchen', '=', 0)
             ->sum('total_num');
+    }
+
+    // 桌台添加自助餐优惠
+    public function addOrderBuffetDiscount($buffet_id, $buffet_discount_list)
+    {
+        if ($this->is_lock) {
+            $this->error = '订单已被锁定，请解锁后重新操作';
+            return false;
+        }
+        $buffet = (new Buffet)->where('status', '=', 1)->where('id', '=', $buffet_id)->find();
+        if (!$buffet) {
+            $this->error = '自助餐不存在';
+            return false;
+        }
+        $total_discount_num = 0;
+        foreach ($buffet_discount_list as $item) {
+            $total_discount_num += $item['num'];
+        }
+        if ($total_discount_num > $this->meal_num) {
+            $this->error = '自助餐优惠数量不能大于就餐人数';
+            return false;
+        }
+
+        foreach ($buffet_discount_list as $item) {
+            $buffetDiscount = (new BuffetDiscount)->where('id', '=', $item['id'])->find();
+            if (!$buffetDiscount) {
+                $this->error = '自助餐优惠不存在';
+                return false;
+            }
+            if ($buffetDiscount->discount_type == 1) {  // 比例
+                $price = helper::bcmul($buffet->price, (100 - $buffetDiscount->discount_ratio) / 100);
+            } else {
+                $price = $buffetDiscount->discount_price > $buffet->price ? $buffet->price : $buffetDiscount->discount_price;
+            }
+
+            $saveArr = [
+                'order_id' => $this->order_id,
+                'buffet_id' => $buffet->id,
+                'buffet_name' => $buffet->name,
+                'buffet_price' => $buffet->price,
+                'buffet_discount_id' => $buffetDiscount->id,
+                'buffet_discount_name' => $buffetDiscount->name,
+                'discount_type' => $buffetDiscount->discount_type,
+                'discount_ratio' => $buffetDiscount->discount_ratio,
+                'discount_price' => $buffetDiscount->discount_price,
+                'price' => $price,
+                'num' => $item['num'],
+                'total_price' => helper::bcmul($price, $item['num']),
+                'app_id' => self::$app_id,
+            ];
+            (new OrderBuffetDiscount)->save($saveArr);
+        }
+
+        return true;
+    }
+
+    //
+    public function updateOrderBuffetDiscountNum($order_buffet_discount_id, $num)
+    {
+        if ($this->is_lock) {
+            $this->error = '订单已被锁定，请解锁后重新操作';
+            return false;
+        }
+
+//        if ($num > $this->meal_num) {
+//            $this->error = '自助餐优惠数量不能大于就餐人数';
+//            return false;
+//        }
+        $orderBuffetDiscount = (new OrderBuffetDiscount)->where('id', '=', $order_buffet_discount_id)->find();
+        $updateArr = [
+            'num' => $num,
+            'total_price' => helper::bcmul($orderBuffetDiscount->price, $num),
+        ];
+        return $orderBuffetDiscount->save($updateArr);
+    }
+
+    //
+    public function delOrderBuffetDiscount($order_buffet_discount_id)
+    {
+        if ($this->is_lock) {
+            $this->error = '订单已被锁定，请解锁后重新操作';
+            return false;
+        }
+
+        return (new OrderBuffetDiscount)->where('id', '=', $order_buffet_discount_id)->delete();
     }
 }
