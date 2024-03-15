@@ -1126,7 +1126,6 @@ class Order extends BaseModel
         $buffetPrice = Order::getBuffetPrice($order_id);
         $buffetPrice = helper::bcmul($buffetPrice, $meal_num, 3);
         $buffetPrice = round($buffetPrice, 2);
-        $originalBuffetPrice = $buffetPrice;
         // 减去自助餐优惠费用
         $buffetDiscountPrice = (new OrderBuffetDiscount)->where('order_id', '=', $order_id)->sum('total_price');
         $buffetPrice = helper::bcsub($buffetPrice, $buffetDiscountPrice);
@@ -1153,7 +1152,7 @@ class Order extends BaseModel
         // 合计
         $total_price = $total_price + $buffetPrice + $delayPrice;
         // 原价合计
-        $total_product_price = $order_price + $originalBuffetPrice + $delayPrice;
+        $total_product_price = $order_price + $buffetPrice + $delayPrice;
         // 优惠折扣
         $discount_money = 0;
         if ($order['discount_ratio'] > 0) {
