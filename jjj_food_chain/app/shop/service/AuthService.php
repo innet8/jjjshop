@@ -40,6 +40,8 @@ class AuthService
         '/file/upload/image',
         // 数据选择
         '/data/*',
+        // 商品分类
+        '/product/store/category/parent',
         // 添加商品规格
         '/product/spec/*',
         // 用户信息
@@ -51,7 +53,12 @@ class AuthService
         '/statistics/sales/product',
         '/statistics/user/scale',
         '/statistics/user/new_user',
-        '/statistics/user/pay_user'
+        '/statistics/user/pay_user',
+        // 各端设置
+        '/setting/terminal/editCashierAdvancedPassword',
+        '/setting/terminal/editCashierPassword',
+        '/setting/terminal/editAdvancedPassword',
+        '/setting/terminal/editKitchenAdvancedPassword',
     ];
 
     /** @var array $accessUrls 商家用户权限url */
@@ -77,6 +84,9 @@ class AuthService
         $this->store = $store;
         // 当前用户信息
         $this->user = User::detail($this->store['user']['shop_user_id']);
+        // 把白名单uri转换成小写，兼容旧版本请求不区分大小写
+        $allowAllAction = array_map('strtolower', $this->allowAllAction);
+        $this->allowAllAction = $allowAllAction;
     }
 
     /**
