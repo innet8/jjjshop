@@ -876,5 +876,13 @@
     "是": "yes",
     "否": "no",
     "全部区域": "All areas",
-    "无区域 (收银无桌台)": "No area (no desk for cash register)"
+    "无区域 (收银无桌台)": "No area (no desk for cash register)",
+    "自助餐优惠折扣": "Buffet discounts",
+    "请输入优惠名称": "Please enter the offer name",
+    "按比例": "Proportionately",
+    "按折扣金额": "According to discount amount",
+    "请输入比例": "Please enter the ratio",
+    "请输入折扣金额": "Please enter the discount amount",
+    "请选择自助餐": "Please select buffet",
+    "选择自助餐": "Select buffet"
 }
