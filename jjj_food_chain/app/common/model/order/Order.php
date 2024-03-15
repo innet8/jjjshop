@@ -1772,17 +1772,28 @@ class Order extends BaseModel
             $this->error = '订单已被锁定，请解锁后重新操作';
             return false;
         }
+        $this->startTrans();
+        try {
+            $orderBuffetDiscount = (new OrderBuffetDiscount)->where('id', '=', $order_buffet_discount_id)->find();
+            $updateArr = [
+                'num' => $num,
+                'total_price' => helper::bcmul($orderBuffetDiscount->price, $num),
+            ];
+            $orderBuffetDiscount->save($updateArr);
+            $after_total_num = (new OrderBuffetDiscount)->where('order_id', '=', $this->order_id)->sum('num');
 
-//        if ($num > $this->meal_num) {
-//            $this->error = '自助餐优惠数量不能大于就餐人数';
-//            return false;
-//        }
-        $orderBuffetDiscount = (new OrderBuffetDiscount)->where('id', '=', $order_buffet_discount_id)->find();
-        $updateArr = [
-            'num' => $num,
-            'total_price' => helper::bcmul($orderBuffetDiscount->price, $num),
-        ];
-        return $orderBuffetDiscount->save($updateArr);
+            if ($after_total_num > $this->meal_num) {
+                $this->error = '自助餐优惠数量不能大于就餐人数';
+                return false;
+            }
+            $this->commit();
+
+        } catch (\Exception $e) {
+            $this->error = $e->getMessage();
+            $this->rollback();
+            return false;
+        }
+        return true;
     }
 
     //

@@ -27,7 +27,7 @@ class OrderBuffetDiscount extends BaseModel
      */
     public function getNameTextAttr($value, $data = [])
     {
-        return extractLanguage($value ?: $data['buffet_discount_name']);
+        return extractLanguage($value ?: $data['buffet_discount_name']) .'('. extractLanguage($value ?: $data['buffet_name']).')';
     }
 
 
