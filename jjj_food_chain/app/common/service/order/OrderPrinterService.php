@@ -310,6 +310,7 @@ class OrderPrinterService
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
             $printer->appendText("***{$shopName}***\n");
             $printer->lineFeed();
+            $printer->setCharacterSize(2,1);
             $printer->setPrintModes(true, true, false);
             if ($order['table_no']) {
                 $printer->appendText(__("桌号").": {$order['table_no']}\n");
@@ -319,6 +320,7 @@ class OrderPrinterService
                 $printer->appendText(__("取单号").": {$order['callNo']}\n");
                 $printer->lineFeed();
             }
+            $printer->setCharacterSize(1,1);
             $printer->setLineSpacing(50);
             //
             $printer->restoreDefaultLineSpacing();
@@ -658,6 +660,7 @@ class OrderPrinterService
                 $printer->lineFeed();
             }
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_CENTER);
+            $printer->setCharacterSize(2,1);
             $printer->setPrintModes(true, true, false);
             if ($order['table_no']) {
                 $printer->appendText(__("桌号")."：{$order['table_no']}\n");
@@ -669,6 +672,7 @@ class OrderPrinterService
             $printer->setLineSpacing(50);
             //
             $printer->restoreDefaultLineSpacing();
+            $printer->setCharacterSize(1,1);
             $printer->setPrintModes(false, false, false);
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->setupColumns(
@@ -800,6 +804,7 @@ class OrderPrinterService
                 [260, SunmiCloudPrinter::ALIGN_LEFT, 2],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 6],
             );
+            $printer->setCharacterSize(2,1);
             if ($order['table_no']) {
                 $printer->printInColumns($order->update_time, __("桌号").": {$order['table_no']}" . ($order['meal_num'] ? " ({$order['meal_num']})" : ''));
             }
