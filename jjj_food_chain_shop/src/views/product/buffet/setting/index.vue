@@ -43,7 +43,7 @@
                                         <el-input type="text" style="margin-top: 16px;width: 100%;" v-model="item.name" :placeholder="$t('请输入优惠名称')"></el-input>
                                     </el-form-item>
 
-                                    <el-form-item label="" style="margin-bottom: 4px !important;" :rules="[{ required: true, message: '' }]">
+                                    <el-form-item label="" style="margin-bottom: 4px !important;" :rules="[{ required: true, message: '' }]" @change="handleChangeDiscountType(item, index)">
                                         <el-radio-group v-model="item.discount_type">
                                             <el-radio :label="1">{{ $t('按比例') }}</el-radio>
                                             <el-radio :label="2">{{ $t('按优惠金额') }}</el-radio>
@@ -55,11 +55,11 @@
                                         validator: () => {
                                             return (item.discount_type == '1' ? item.discount_ratio : item.discount_price) ? true : false;
                                         },
-                                        message: $t('请输入比例')
+                                        message: item.discount_type == '1' ? $t('请输入比例') : $t('请输入优惠金额')
                                     }]">
-                                        <el-input-number v-if="item.discount_type == '1'" :controls="false" :min="0" :max="100" style="width: 100%;" :placeholder="$t('请输入')"
+                                        <el-input-number v-if="item.discount_type == '1'" :controls="false" :min="0" :max="100" style="width: 100%;" :placeholder="$t('请输入比例')"
                                             v-model.number="item.discount_ratio"></el-input-number>
-                                        <el-input-number v-else :controls="false" :min="0" :max="10000000" style="width: 100%;" :placeholder="$t('请输入折扣金额')"
+                                        <el-input-number v-else :controls="false" :min="0" :max="10000000" style="width: 100%;" :placeholder="$t('请输入优惠金额')"
                                             v-model.number="item.discount_price"></el-input-number>
                                         <p class="p-unit">{{ item.discount_type == '1' ? '%' : currency.unit }}</p>
                                     </el-form-item>
@@ -338,9 +338,15 @@ export default {
             this.open_product = true
         },
 
+        handleChangeDiscountType(item,index){
+            item.discount_type == '1' ?
+            this.$refs.form.validateField(`add_buffet_discount[${index}].discount_ratio`) : 
+            this.$refs.form.validateField(`add_buffet_discount[${index}].discount_price`)
+        },
+
         addFavorable() {
-            this.select_list.push([])
-            this.form.add_buffet_discount.push({
+            this.select_list.unshift([])
+            this.form.add_buffet_discount.unshift({
                 id: 0,
                 name: '',
                 discount_type: 1,
