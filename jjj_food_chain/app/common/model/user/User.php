@@ -284,6 +284,11 @@ class User extends BaseModel
             $this->error = '请输入正确的金额';
             return false;
         }
+        // 判断是否是正确的数字金额
+        if (!is_numeric($data['recharge_value'])) {
+            $this->error = '请输入正确的金额';
+            return false;
+        }
         if ($data['recharge_value'] > 100000000) {
             $this->error = '不能大于100000000';
             return false;
@@ -335,6 +340,11 @@ class User extends BaseModel
     {
         if (!isset($data['recharge_value']) || $data['recharge_value'] === '' || $data['recharge_value'] < 0) {
             $this->error = '请输入正确的积分数量';
+            return false;
+        }
+        // 判断是否是正确的数字金额
+        if (!is_numeric($data['recharge_value'])) {
+            $this->error = '请输入正确的金额';
             return false;
         }
         if ($data['recharge_value'] > 100000000) {
