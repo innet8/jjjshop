@@ -23,7 +23,7 @@
             <div class="table-wrap">
                 <el-table size="small" ref="multipleTable" :data="tableData" border style="width: 100%" v-loading="loading" @selection-change="handleSelectionChange"
                     :row-key="getRowKey">
-                    <el-table-column prop="name_text" :label="$t('自助餐名称')" width="200px">
+                    <el-table-column prop="name_text" :label="$t('自助餐名称')" minWidth="200">
                         <template #default="scope">
                             <div class="product-info">
                                 <div class="info">

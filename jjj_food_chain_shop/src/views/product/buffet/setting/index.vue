@@ -244,6 +244,7 @@ export default {
                     this.form.add_clock[index].price = Number(item.price)
                 })
                 this.form.tablet_end_time = Number(this.form.tablet_end_time);
+                this.select_list = [];
                 this.form.add_buffet_discount.map((item,index)=>{
                     this.select_list.push(item.buffets)
                     this.form.add_buffet_discount[index].buffet_ids = []
