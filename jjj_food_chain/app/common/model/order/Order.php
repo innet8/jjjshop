@@ -1761,11 +1761,11 @@ class Order extends BaseModel
                     'app_id' => self::$app_id,
                 ];
                 (new OrderBuffetDiscount)->save($saveArr);
-            }
-            $after_total_num = (new OrderBuffetDiscount)->where('order_id', '=', $this->order_id)->sum('num');
-            if ($after_total_num > $this->meal_num) {
-                $this->error = '自助餐优惠数量不能大于就餐人数';
-                return false;
+                $after_total_num = (new OrderBuffetDiscount)->where('order_id', '=', $this->order_id)->where('buffet_id', '=', $buffet_id)->sum('num');
+                if ($after_total_num > $this->meal_num) {
+                    $this->error = '自助餐优惠数量不能大于就餐人数';
+                    return false;
+                }
             }
             $this->commit();
         } catch (\Exception $e) {
@@ -1791,7 +1791,7 @@ class Order extends BaseModel
                 'total_price' => helper::bcmul($orderBuffetDiscount->price, $num),
             ];
             $orderBuffetDiscount->save($updateArr);
-            $after_total_num = (new OrderBuffetDiscount)->where('order_id', '=', $this->order_id)->sum('num');
+            $after_total_num = (new OrderBuffetDiscount)->where('order_id', '=', $this->order_id)->where('buffet_id', '=', $orderBuffetDiscount->buffet_id)->sum('num');
 
             if ($after_total_num > $this->meal_num) {
                 $this->error = '自助餐优惠数量不能大于就餐人数';
