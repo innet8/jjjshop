@@ -75,14 +75,18 @@ class Order extends OrderModel
     public function exportList($dataType, $query)
     {
         // 获取订单列表
-        $list = $this->getListAll($dataType, $query);
-        // 
-        if (count($list) > 1000) {
+        try {
+            $list = $this->getListAll($dataType, $query);
+            if (count($list) > 1000) {
+                $this->error = '请选择具体时间段，最多可导出1000条以下的数据';
+                return false;
+            }
+            if (($query['request_type'] ?? '') == 1) {
+                return true;
+            }
+        } catch (\Throwable $th) {
             $this->error = '请选择具体时间段，最多可导出1000条以下的数据';
             return false;
-        }
-        if (($query['request_type'] ?? '') == 1) {
-            return true;
         }
         // 导出excel文件
         return (new Exportservice)->orderList($list);
