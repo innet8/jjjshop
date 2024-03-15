@@ -474,7 +474,7 @@ class Order extends BaseModel
     {
         $filter = is_array($where) ? $where : ['order_id' => (int)$where];
         $query =  self::with([
-            'user', 'address', 'buffet', 'buffetDiscount', 'delay', 'extract', 'supplier', 'cashier',
+            'user', 'address', 'buffet', 'buffetDiscount', 'buffetDiscount', 'delay', 'extract', 'supplier', 'cashier',
             'product.image' => function($query){
                 $query->withTrashed();
             }
@@ -1711,7 +1711,6 @@ class Order extends BaseModel
             ->sum('total_num');
     }
 
-    // 桌台添加自助餐优惠
     public function addOrderBuffetDiscount($buffet_id, $buffet_discount_list)
     {
         if ($this->is_lock) {
@@ -1732,36 +1731,48 @@ class Order extends BaseModel
             return false;
         }
 
-        foreach ($buffet_discount_list as $item) {
-            $buffetDiscount = (new BuffetDiscount)->where('id', '=', $item['id'])->find();
-            if (!$buffetDiscount) {
-                $this->error = '自助餐优惠不存在';
+        $this->startTrans();
+        try {
+            foreach ($buffet_discount_list as $item) {
+                $buffetDiscount = (new BuffetDiscount)->where('id', '=', $item['id'])->find();
+                if (!$buffetDiscount) {
+                    $this->error = '自助餐优惠不存在';
+                    return false;
+                }
+                if ($buffetDiscount->discount_type == 1) {  // 比例
+                    $price = helper::bcmul($buffet->price, (100 - $buffetDiscount->discount_ratio) / 100);
+                } else {
+                    $price = $buffetDiscount->discount_price > $buffet->price ? $buffet->price : $buffetDiscount->discount_price;
+                }
+
+                $saveArr = [
+                    'order_id' => $this->order_id,
+                    'buffet_id' => $buffet->id,
+                    'buffet_name' => $buffet->name,
+                    'buffet_price' => $buffet->price,
+                    'buffet_discount_id' => $buffetDiscount->id,
+                    'buffet_discount_name' => $buffetDiscount->name,
+                    'discount_type' => $buffetDiscount->discount_type,
+                    'discount_ratio' => $buffetDiscount->discount_ratio,
+                    'discount_price' => $buffetDiscount->discount_price,
+                    'price' => $price,
+                    'num' => $item['num'],
+                    'total_price' => helper::bcmul($price, $item['num']),
+                    'app_id' => self::$app_id,
+                ];
+                (new OrderBuffetDiscount)->save($saveArr);
+            }
+            $after_total_num = (new OrderBuffetDiscount)->where('order_id', '=', $this->order_id)->sum('num');
+            if ($after_total_num > $this->meal_num) {
+                $this->error = '自助餐优惠数量不能大于就餐人数';
                 return false;
             }
-            if ($buffetDiscount->discount_type == 1) {  // 比例
-                $price = helper::bcmul($buffet->price, (100 - $buffetDiscount->discount_ratio) / 100);
-            } else {
-                $price = $buffetDiscount->discount_price > $buffet->price ? $buffet->price : $buffetDiscount->discount_price;
-            }
-
-            $saveArr = [
-                'order_id' => $this->order_id,
-                'buffet_id' => $buffet->id,
-                'buffet_name' => $buffet->name,
-                'buffet_price' => $buffet->price,
-                'buffet_discount_id' => $buffetDiscount->id,
-                'buffet_discount_name' => $buffetDiscount->name,
-                'discount_type' => $buffetDiscount->discount_type,
-                'discount_ratio' => $buffetDiscount->discount_ratio,
-                'discount_price' => $buffetDiscount->discount_price,
-                'price' => $price,
-                'num' => $item['num'],
-                'total_price' => helper::bcmul($price, $item['num']),
-                'app_id' => self::$app_id,
-            ];
-            (new OrderBuffetDiscount)->save($saveArr);
+            $this->commit();
+        } catch (\Exception $e) {
+            $this->error = $e->getMessage();
+            $this->rollback();
+            return false;
         }
-
         return true;
     }
 
