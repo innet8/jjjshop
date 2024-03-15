@@ -159,7 +159,7 @@ class AuthService
             // 获取当前角色所有权限链接
             $this->accessUrls = Access::getApiAccessUrls($accessIds, $this->user['user_type'], $this->store['supplier']);
         }
-        return $this->accessUrls;
+        return array_map('strtolower', $this->accessUrls);
     }
 
     /**
