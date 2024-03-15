@@ -797,7 +797,7 @@ class OrderPrinterService
             $printer->restoreDefaultLineSpacing();
             $printer->setAlignment(SunmiCloudPrinter::ALIGN_LEFT);
             $printer->setupColumns(
-                [260, SunmiCloudPrinter::ALIGN_LEFT, 4],
+                [260, SunmiCloudPrinter::ALIGN_LEFT, 2],
                 [0, SunmiCloudPrinter::ALIGN_RIGHT, 6],
             );
             if ($order['table_no']) {
