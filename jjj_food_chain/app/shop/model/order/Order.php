@@ -65,6 +65,7 @@ class Order extends OrderModel
             ->field('order.*')
             ->where($this->transferDataType($dataType))
             ->where('order.is_delete', '=', 0)
+            ->limit(2000)
             ->order(['order.create_time' => 'desc'])
             ->select();
     }
