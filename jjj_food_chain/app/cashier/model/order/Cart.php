@@ -794,8 +794,10 @@ class Cart extends CartModel
             $buffetNum = Order::getBuffetNum($order['order_id']);
             // 加钟数量
             $delayNum = Order::getDelayNum($order['order_id']);
+            // 加钟数量
+            $buffetDiscountNum = Order::getBuffetDiscountNum($order['order_id']);
 
-            $order_total_num = $num + $buffetNum + $delayNum;
+            $order_total_num = $num + $buffetNum + $delayNum + $buffetDiscountNum;
             $order_total_price = $order['total_product_price'];
             $order_service_money = $order['service_money'];
             $order_setting_service_money = $order['setting_service_money'];

@@ -375,6 +375,7 @@ class HallCart extends Controller
         }
 
         if ($detail->addOrderBuffetDiscount($buffet_id, $buffet_discount_list)) {
+            (new OrderModel())->reloadPrice($detail['order_id']);
             return $this->renderSuccess('添加成功');
         }
         return $this->renderError($detail->getError() ?: '添加失败');
@@ -397,6 +398,7 @@ class HallCart extends Controller
         }
 
         if ($detail->updateOrderBuffetDiscountNum($order_buffet_discount_id, $num)) {
+            (new OrderModel())->reloadPrice($detail['order_id']);
             return $this->renderSuccess('修改成功');
         }
         return $this->renderError($detail->getError() ?: '修改失败');
@@ -418,6 +420,7 @@ class HallCart extends Controller
         }
 
         if ($detail->delOrderBuffetDiscount($order_buffet_discount_id)) {
+            (new OrderModel())->reloadPrice($detail['order_id']);
             return $this->renderSuccess('删除成功');
         }
         return $this->renderError($detail->getError() ?: '删除失败');
