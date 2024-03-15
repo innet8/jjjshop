@@ -45,8 +45,7 @@
                     <el-button class="search-button" size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询') }}</el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-button v-auth="'/store/operate/export'" size="small" type="primary" @click="onExport">{{ $t('导出')
-                    }}</el-button>
+                    <el-button v-auth="'/store/operate/export'" size="small" type="primary" @click="onExport">{{ $t('导出')}}</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -393,9 +392,19 @@ export default {
             this.getData();
         },
         onExport: function () {
-            let baseUrl = window.location.protocol + '//' + window.location.host;
             this.searchForm.token = this.token;
-            window.location.href = baseUrl + '/index.php/shop/store.operate/export?' + qs.stringify(this.searchForm) + '&language=' + languageStore().language;
+            OrderApi.storeExport({
+                ...this.searchForm,
+                request_type: 1
+            },true).then(data => {
+                self.loading = false;
+                const baseUrl = window.location.protocol + '//' + window.location.host;
+                const url = baseUrl + '/index.php/shop/store.operate/export?' + qs.stringify(this.searchForm) + '&language=' + languageStore().language;
+                window.open(url, '_blank');
+            })
+            .catch(error => {
+                self.loading = false;
+            });
         },
         /*打开取消*/
         cancelClick(item) {

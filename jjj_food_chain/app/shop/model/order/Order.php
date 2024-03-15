@@ -76,6 +76,14 @@ class Order extends OrderModel
     {
         // 获取订单列表
         $list = $this->getListAll($dataType, $query);
+        // 
+        if (count($list) > 1000) {
+            $this->error = '请选择具体时间段，最多可导出1000条以下的数据';
+            return false;
+        }
+        if (($query['request_type'] ?? '') == 1) {
+            return true;
+        }
         // 导出excel文件
         return (new Exportservice)->orderList($list);
     }
@@ -162,35 +170,21 @@ class Order extends OrderModel
                 $filter[] = ['extra_times', '>', 0];
                 break;
             case 'payment';
-//                $filter['pay_status'] = OrderPayStatusEnum::PENDING;
-//                $filter['order_status'] = 10;
-//                $filter['extra_times'] = ['>', 0];
                 $filter[] = ['pay_status', '=', OrderPayStatusEnum::PENDING];
                 $filter[] = ['order_status', '=', 10];
                 $filter[] = ['extra_times', '>', 0];
                 break;
             case 'process';
-//                $filter['pay_status'] = OrderPayStatusEnum::SUCCESS;
-////                $filter['delivery_status'] = 10;
-//                $filter['order_status'] = 10;
-//                $filter['extra_times'] = ['>', 0];
                 $filter[] = ['pay_status', '=', OrderPayStatusEnum::SUCCESS];
                 $filter[] = ['order_status', '=', 10];
                 $filter[] = ['extra_times', '>', 0];
                 break;
             case 'complete';
-//                $filter['pay_status'] = OrderPayStatusEnum::SUCCESS;
-//                $filter['order_status'] = 30;
-//                $filter['extra_times'] = ['>', 0];
                 $filter[] = ['pay_status', '=', OrderPayStatusEnum::SUCCESS];
                 $filter[] = ['order_status', '=', 30];
                 $filter[] = ['extra_times', '>', 0];
                 break;
             case 'cancel';
-////                $filter['pay_status'] = OrderPayStatusEnum::SUCCESS;
-//                $filter['order_status'] = 20;
-//                $filter['extra_times'] = ['>', 0];
-//                $filter[] = ['pay_status', '=', OrderPayStatusEnum::SUCCESS];
                 $filter[] = ['order_status', '=', 20];
                 $filter[] = ['extra_times', '>', 0];
                 break;

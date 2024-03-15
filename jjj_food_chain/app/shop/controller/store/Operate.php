@@ -29,7 +29,13 @@ class Operate extends Controller
         $data = $this->postData();
         $data['shop_supplier_id'] = $this->store['user']['shop_supplier_id'];
         $data['order_type'] = 1;
-        return $model->exportList($dataType, $data);
+        if ($exportList = $model->exportList($dataType, $data)) {
+            if (($data['request_type'] ?? '') == 1) {
+                return $this->renderSuccess('操作成功');
+            }
+            return $exportList;
+        }
+        return $this->renderError($model->getError() ?: '操作失败');
     }
 
     /**

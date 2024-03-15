@@ -35,7 +35,6 @@ axios.interceptors.request.use((config) => {
 axios.interceptors.response.use((res) => {
     //未登陆
     if (res.data.code !== 1) {
-        console.log('未登录状态')
         if (res.data.code === 0) {
             ElMessage({
                 showClose: true,
