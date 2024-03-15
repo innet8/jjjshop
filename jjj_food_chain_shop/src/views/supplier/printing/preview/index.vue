@@ -64,6 +64,11 @@ export default {
                     printer_name: $t('营业数据'),
                     create_time: '2023-12-29 15:26:26',
                 },
+                {
+                    printer_id: 6,
+                    printer_name: $t('整单打印'),
+                    create_time: '2023-12-29 15:26:26',
+                },
             ],
             /*一页多少条*/
             pageSize: 20,
