@@ -1,9 +1,9 @@
 <template>
-    <el-dialog :title="$t('选择商品')" v-model="dialogVisible" @close="dialogFormVisible" append-to-body :close-on-click-modal="false" :close-on-press-escape="false">
+    <el-dialog :title="$t('选择自助餐')" v-model="dialogVisible" @close="dialogFormVisible" append-to-body :close-on-click-modal="false" :close-on-press-escape="false">
         <div class="common-seach-wrap">
             <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
 
-                <el-form-item :label="$t('商品状态')">
+                <el-form-item :label="$t('状态')">
                     <el-select size="small" v-model="searchForm.status" :placeholder="$t('全部状态')">
                         <el-option :label="$t('全部状态')" value=""></el-option>
                         <el-option :label="$t('开启')" value="1"></el-option>
