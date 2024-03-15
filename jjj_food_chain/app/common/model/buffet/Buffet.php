@@ -87,6 +87,8 @@ class Buffet extends BaseModel
     // 获取自助餐优惠列表
     public static function getBuffetDiscountList($buffet_id)
     {
-        return (new self)->with(['buffetDiscount'])->where('id', '=', $buffet_id)->find();
+        return (new self)->with(['buffetDiscount' => function($q) {
+            $q->where('status', '=', 1);
+        }])->where('id', '=', $buffet_id)->find();
     }
 }
