@@ -75,7 +75,7 @@ class Buffet extends Controller
                     $discount['discount_ratio'] = 0;
                     return $this->renderError('自助餐折扣金额错误');
                 }
-                if (empty($discount['buffet_ids'])) {
+                if (empty($discount['buffet_ids']) && $discount['action'] != 'delete') {
                     return $this->renderError('自助餐id不能为空');
                 }
                 // 如果是新增
@@ -140,7 +140,8 @@ class Buffet extends Controller
             'is_open' => $data['is_open'] ?? 0, // 是否开启自助餐
             'tablet_end_time' => $data['tablet_end_time'], // 平板结束时间提醒（分）
             'is_buy_continue' => $data['is_buy_continue'] ?? 0, // 非自助餐商品到时是否能继续选购
-            'is_add_clock' => $data['is_add_clock'] ?? 0, // 是否开启加钟
+            'is_buffet_discount' => $data['is_buffet_discount'] ?? 0, // 是否开启自助餐折扣 0-否 1-是
+            'is_add_clock' => $data['is_add_clock'] ?? 0, // 是否开启加钟 0-否 1-是
             'add_clock' => [], // 名称 - 加钟时间（分）- 价格（放表，不放设置里）
         ];
         $shop_supplier_id = $this->store['user']['shop_supplier_id'];

@@ -27,6 +27,9 @@ class BuffetDiscount extends BuffetDiscountModel
             $rel_model = new BuffetDiscountRelModel();
             $rel_data = [];
             foreach ($buffet_ids as $buffet_id) {
+                if (empty($buffet_id)) {
+                    continue;
+                }
                 $rel_data[] = [
                     'buffet_id' => $buffet_id,
                     'buffet_discount_id' => $discount_id,
@@ -65,6 +68,9 @@ class BuffetDiscount extends BuffetDiscountModel
             }
             $rel_data = [];
             foreach ($add_ids as $buffet_id) {
+                if (empty($buffet_id)) {
+                    continue;
+                }
                 $rel_data[] = [
                     'buffet_id' => $buffet_id,
                     'buffet_discount_id' => $discount_id,
