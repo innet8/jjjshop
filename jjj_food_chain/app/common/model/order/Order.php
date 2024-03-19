@@ -1205,8 +1205,8 @@ class Order extends BaseModel
         $productId = intval($data['product_id'] ?? 0);
         $productNum = intval($data['product_num'] ?? 0);
         $price = $data['price'] ?? 0;
+        $isBuffet = $data['is_buffet'] ?? 0;
         $mealNum = 1;
-        $isBuffet = 0;
         // 检查订单状态
         if ($orderId > 0 || $tableId > 0) {
             $detail = self::detail([
@@ -1234,7 +1234,6 @@ class Order extends BaseModel
             // 
             $orderId = $detail['order_id'];
             $mealNum = $detail['meal_num'];
-            $isBuffet = $detail['is_buffet'];
         }
         //判断商品是否下架
         if (!$this->productState($productId)) {
