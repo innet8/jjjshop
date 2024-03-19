@@ -286,6 +286,16 @@ RustDesk-install(){
         exit 1
     fi
 
+    if ! grep -q "custom-rendezvous-server" ~/.config/rustdesk/RustDesk2.toml || ! grep -q "key" ~/.config/rustdesk/RustDesk2.toml || ! grep -q "verification-method" ~/.config/rustdesk/RustDesk2.toml; then
+        #中继服务器IP和key
+        echo "custom-rendezvous-server = '$Rustdesk_custom_ip'" >> ~/.config/rustdesk/RustDesk2.toml
+        echo "key = '$Rustdesk_custom_key'" >> ~/.config/rustdesk/RustDesk2.toml
+        #开启固定密码
+        echo "verification-method = 'use-permanent-password'" >> ~/.config/rustdesk/RustDesk2.toml
+        #设置固定密码
+        sed -i  "s#password = ''#password = \'${Rustdesk_permanent_password}\'#g" ~/.config/rustdesk/RustDesk.toml
+    fi
+
     # 启动 RustDesk 服务
     sudo systemctl start rustdesk.service
 
