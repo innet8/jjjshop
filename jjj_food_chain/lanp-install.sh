@@ -26,30 +26,15 @@ judge() {
 }
 
 
-git-clone(){
-    git --version >/dev/null 2>&1
-    GIT_INSTALLED=$?
-    if [ $GIT_INSTALLED -eq 0 ]; then
-        echo "Git is already installed."
-    else
-        echo "Git is not installed. Installing Git..."
-        sudo apt update
-        sudo apt install git
-    fi
-    #echo -e "${Green}拉取项目代码${Font}"
-    #cd /
-    #git clone --depth=1 https://github.com/innet8/jjjshop.git
+set-permission(){
+    
     echo -e "${Green}设置目录权限${Font}"
     chown -R www-data:www-data $(pwd)/../../jjjshop/
     chmod -R 777  $(pwd)/runtime
     chmod +x $(pwd)/lanp-install.sh
     cd $(pwd)/../../jjjshop/jjj_food_chain
-    if [ $? -ne 0 ]; then
-        echo -e "${Error}拉取失败${Font}"
-    else
-        echo -e "${Green}拉取成功,开始设置环境变量${Font}"
-        check-env
-    fi
+    echo -e "${Green}开始设置环境变量${Font}"
+    check-env
 }
 
 update-job(){
@@ -68,9 +53,13 @@ check-env(){
         mysql_jjj_password=`head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16`
         sed -i 's#DB_ROOT_PASSWORD=#DB_ROOT_PASSWORD='${mysql_root_password}'#g' $(pwd)/.env
         sed -i 's#DB_PASSWORD=#DB_PASSWORD='${mysql_jjj_password}'#g' $(pwd)/.env
-
+        source $(pwd)/.env
     fi
 
+    if [ -z "$Rustdesk_custom_ip" ] || [ -z "$Rustdesk_custom_key" ] || [ -z "$Rustdesk_permanent_password" ]; then
+        echo -e "${Error} ${RedBG} Rustdesk中继相关配置的环境变量为空，请填写后再部署${Font}"
+        exit 1
+    fi
     
 }
 check-runtime(){
@@ -360,7 +349,7 @@ case "$1" in
     echo -e "${Green}更新系统软件源${Font}"
     sudo apt update
     #sudo apt upgrade -y
-    git-clone
+    set-permission
     install
     ;;
 "uninstall")
