@@ -155,6 +155,7 @@ class OrderProduct extends OrderProductModel
         $shop_supplier_id = $params['shop_supplier_id'];
 
         $query = $this->alias('op')
+            ->withTrashed()
             ->join('order o', 'op.order_id = o.order_id', 'left')
             ->where('op.is_send_kitchen', '=', 1)
             ->where('op.finish_num', '>', 0)
@@ -165,13 +166,14 @@ class OrderProduct extends OrderProductModel
             $query = $query->where('o.shop_supplier_id', '=', $shop_supplier_id);
         }
 
-        $list = $query->field('o.table_no, o.callNo, op.product_name, op.order_id, op.is_send_kitchen, op.send_kitchen_time')
+        $list = $query->field('o.table_no, o.callNo, op.product_name, op.order_id, op.is_send_kitchen, op.send_kitchen_time, op.delete_time')
             ->group('o.order_id')
             ->select();
 
         foreach ($list as &$item) {
             $item['serial_no'] = $item['callNo'] ? $item['callNo'] : $item['table_no']; // 流水号
             $orderProducts = $this->alias('op')
+                ->withTrashed()
                 ->join('product p', 'op.product_id = p.product_id', 'left')
                 ->field(['op.order_product_id', 'op.order_id', 'op.product_id', 'op.product_name', 'op.is_send_kitchen', 'op.send_kitchen_time', 'op.finish_num', 'op.finish_time', 'op.total_num', 'op.product_attr', 'op.remark'])
                 ->where('op.order_id', '=', $item['order_id'])
