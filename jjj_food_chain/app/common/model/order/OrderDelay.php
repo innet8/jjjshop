@@ -70,6 +70,7 @@ class OrderDelay extends BaseModel
                 $buffet_expired_time = $order['buffet_expired_time'] - $del_model_delay_time * 60;
                 $order->save(['buffet_expired_time' => $buffet_expired_time]);
             }
+            (new OrderModel())->reloadPrice($order['order_id']);
             $this->commit();
             return true;
         } catch (\Exception $e) {
