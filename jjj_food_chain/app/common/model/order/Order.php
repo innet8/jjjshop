@@ -1200,39 +1200,23 @@ class Order extends BaseModel
      */
     public function addToOrder($data, $user)
     {
-        $param = $data;
-        $orderId = 0;
-        $meal_num = 1;
-        //
-        if (isset($data['order_id']) && $data['order_id'] > 0) {
-            // 检查订单状态
+        $orderId = ($data['order_id'] ?? 0) ?: 0;
+        $tableId = ($data['table_id'] ?? 0) ?: 0;
+        $productId = intval($data['product_id'] ?? 0);
+        $productNum = intval($data['product_num'] ?? 0);
+        $price = $data['price'] ?? 0;
+        $mealNum = 1;
+        $isBuffet = 0;
+        // 检查订单状态
+        if ($orderId > 0 || $tableId > 0) {
             $detail = self::detail([
-                ['order_id', '=', $data['order_id']],
+                $orderId > 0 ? ['order_id', '=', $data['order_id']] : ['table_id', '=', $data['table_id']],
                 ['order_status', '=', OrderStatusEnum::NORMAL]
             ]);
             if (!$detail) {
                 $this->error = '订单不存在';
                 return false;
             }
-            $orderId = $detail['order_id'];
-            $meal_num = $detail['meal_num'];
-        }
-        //
-        if(isset($data['table_id']) && $data['table_id'] > 0) {
-            // 检查订单状态
-            $detail = self::detail([
-                ['table_id', '=', $data['table_id']],
-                ['order_status', '=', OrderStatusEnum::NORMAL]
-            ]);
-            if (!$detail) {
-                $this->error = '订单不存在';
-                return false;
-            }
-            $orderId = $detail['order_id'];
-            $meal_num = $detail['meal_num'];
-        }
-
-        if ($orderId > 0) {
             // 检查锁定
             if ($detail->is_lock) {
                 $this->error = '订单已被锁定，请解锁后重新操作';
@@ -1247,40 +1231,41 @@ class Order extends BaseModel
                     return false;
                 }
             }
+            // 
+            $orderId = $detail['order_id'];
+            $mealNum = $detail['meal_num'];
+            $isBuffet = $detail['is_buffet'];
         }
-
         //判断商品是否下架
-        $product = $this->productState($data['product_id']);
-        if (!$product) {
+        if (!$this->productState($productId)) {
             $this->error = '商品已下架';
             return false;
         }
         // 判断库存
-        $deductStockType = ProductModel::where('product_id', $data['product_id'])->value('deduct_stock_type');
+        $deductStockType = ProductModel::where('product_id', $productId)->value('deduct_stock_type');
         if ($deductStockType == DeductStockTypeEnum::CREATE) {
-            $stockStatus = $this->productStockState($data['product_id'], $data['product_sku_id'] ?? 0, $orderId);
+            $stockStatus = $this->productStockState($productId, $data['product_sku_id'] ?? 0, $orderId);
             if (!$stockStatus) {
                 $this->error = '商品库存不足，请重新选择';
                 return false;
             }
         }
-
         // 判断限购
-        if (isset($data['is_buffet']) && $data['is_buffet'] == 1) {
-            $limitNum = Order::getBuffetProductLimitNum($orderId, $data['product_id']) * $meal_num;
+        if ($isBuffet == 1 && $orderId > 0) {
+            $limitNum = Order::getBuffetProductLimitNum($orderId, $productId) * $mealNum;
         } else {
-            $limitNum = ProductModel::getProductLimitNum($data['product_id']);
+            $limitNum = ProductModel::getProductLimitNum($productId);
         }
-        if ($limitNum && $data['product_num'] > $limitNum) {
+        if ($limitNum && $productNum > $limitNum) {
             $this->error = '超过限购数量';
             return false;
         }
         if ($orderId > 0) {
             $curNum = (new OrderProduct())->where([
                 'order_id' => $orderId,
-                'product_id' => $data['product_id'],
+                'product_id' => $productId,
             ])->sum('total_num');
-            if ($limitNum && (($param['product_num'] + $curNum) > $limitNum)) {
+            if ($limitNum && (($productNum + $curNum) > $limitNum)) {
                 $this->error = '超过限购数量';
                 return false;
             }
@@ -1288,119 +1273,48 @@ class Order extends BaseModel
         //
         $this->startTrans();
         try {
-
-            // 已存在order_id，直接添加到订单
-            if (isset($data['order_id']) && $data['order_id'] > 0) {
-                $orderProduct = new OrderProductModel;
-                $order_product_id = 0;
-                // 存在修改数量、否则新增
-                if ($order_product_id) {
-                    $orderProduct->where('order_product_id', '=', $order_product_id)->inc('total_num', $data['product_num'])->update();
-                } else {
-                    $productDetail = ProductModel::where('product_id', '=', $data['product_id'])->find();
-                    $inArr = [
-                        'order_id' => $data['order_id'],
-                        'app_id' => self::$app_id,
-                        'product_id' => $data['product_id'],
-                        'product_name' => $productDetail['product_name'],
-                        'image_id' => $productDetail['logo']['image_id'],
-                        'deduct_stock_type' => $productDetail['deduct_stock_type'],
-                        'spec_type' => $productDetail['spec_type'],
-                        'product_sku_id' => $data['product_sku_id'] ?? 0,
-                        'product_attr' => $data['describe'],
-                        'content' => $productDetail['content'],
-                        'product_price' => $data['price'],
-                        'line_price' => $data['product_price'],
-                        'total_num' => $data['product_num'],
-                        'total_price' => $data['product_num'] * $data['price'],
-                        'total_pay_price' => $data['product_num'] * $data['price'],
-                        'is_buffet_product' => $data['is_buffet'] ?? 0,
-                    ];
-
-                    $orderProduct->save($inArr);
-                }
-                $return_order = $data['order_id'];
-
-            } else if(isset($data['table_id']) && $data['table_id'] > 0) {
-
-                $data['order_id'] = $orderId;
-
-                $orderProduct = new OrderProductModel;
-                $order_product_id = 0;
-                // 存在修改数量、否则新增
-                if ($order_product_id) {
-                    $orderProduct->where('order_product_id', '=', $order_product_id)->inc('total_num', $data['product_num'])->update();
-                } else {
-                    $productDetail = ProductModel::where('product_id', '=', $data['product_id'])->find();
-                    $inArr = [
-                        'order_id' => $data['order_id'],
-                        'app_id' => self::$app_id,
-                        'product_id' => $data['product_id'],
-                        'product_name' => $productDetail['product_name'],
-                        'image_id' => $productDetail['logo']['image_id'],
-                        'deduct_stock_type' => $productDetail['deduct_stock_type'],
-                        'spec_type' => $productDetail['spec_type'],
-                        'product_sku_id' => $data['product_sku_id'] ?? 0,
-                        'product_attr' => $data['describe'],
-                        'content' => $productDetail['content'],
-                        'product_price' => $data['price'],
-                        'line_price' => $data['product_price'],
-                        'total_num' => $data['product_num'],
-                        'total_price' => $data['product_num'] * $data['price'],
-                        'total_pay_price' => $data['product_num'] * $data['price'],
-                        'is_buffet_product' => $data['is_buffet'],
-                    ];
-
-                    $orderProduct->save($inArr);
-                }
-                $return_order = $data['order_id'];
-
-            } else {
-                // order_id不存在创建新订单再加入商品
-
+            // $orderId不存在则创建新订单再加入商品
+            if ($orderId <= 0) {
                 // 实例化订单service
-                $param['eat_type'] = 10;
-                $orderService = new CashierOrderSettledService($user, [], $param);
+                $orderService = new CashierOrderSettledService($user, [], ['eat_type'=>10]);
                 // 初始化订单信息
                 $orderInfo = $orderService->settlementCashier();
                 if ($orderService->hasError()) {
                     return $this->renderError($orderService->getError());
                 }
                 // 创建订单
-                $order_id = $orderService->createOrder($orderInfo);
-                if (!$order_id) {
+                $orderId = $orderService->createOrder($orderInfo);
+                if (!$orderId) {
                     return $this->renderError($orderService->getError() ?: '订单创建失败');
                 }
-
-                $productDetail = ProductModel::where('product_id', '=', $data['product_id'])->find();
-                $inArr = [
-                    'order_id' => $order_id,
-                    'app_id' => self::$app_id,
-                    'product_id' => $data['product_id'],
-                    'product_name' => $productDetail['product_name'],
-                    'image_id' => $productDetail['logo']['image_id'],
-                    'deduct_stock_type' => $productDetail['deduct_stock_type'],
-                    'spec_type' => $productDetail['spec_type'],
-                    'product_sku_id' => $data['product_sku_id'] ?? 0,
-                    'product_attr' => $data['describe'],
-                    'content' => $productDetail['content'],
-                    'product_price' => $data['price'],
-                    'line_price' => $data['product_price'],
-                    'total_num' => $data['product_num'],
-                    'total_price' => $data['product_num'] * $data['price'],
-                    'total_pay_price' => $data['product_num'] * $data['price'],
-                    'is_buffet_product' => $data['is_buffet'],
-                ];
-
-                (new OrderProductModel)->save($inArr);
-
-                $return_order = $order_id;
             }
-
-            (new self)->reloadPrice($return_order);
+            // 保存商品
+            $productDetail = ProductModel::where('product_id', '=', $productId)->find();
+            $inArr = [
+                'order_id' => $orderId,
+                'app_id' => self::$app_id,
+                'product_id' => $productDetail['product_id'],
+                'product_name' => $productDetail['product_name'],
+                'image_id' => $productDetail['logo']['image_id'],
+                'deduct_stock_type' => $productDetail['deduct_stock_type'],
+                'spec_type' => $productDetail['spec_type'],
+                'content' => $productDetail['content'],
+                'product_sku_id' => $data['product_sku_id'] ?? 0,
+                'product_attr' => $data['describe'] ?? '',
+                'product_price' => $price,
+                'line_price' => $productDetail['product_price'],
+                'total_num' => $productNum,
+                'total_price' => $totalPrice = $productNum * $price,
+                'total_pay_price' => $totalPrice,
+                'is_buffet_product' => $isBuffet,
+            ];
+            (new OrderProductModel)->save($inArr);
+            // 
+            (new self)->reloadPrice($orderId);
+            // 
             $this->commit();
-            return $return_order;
-
+            // 
+            return $orderId;
         } catch (\Exception $e) {
             $this->error = $e->getMessage();
             $this->rollback();
