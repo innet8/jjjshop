@@ -3,11 +3,13 @@
 namespace app\common\service\order;
 
 use think\facade\Cache;
+use app\common\library\helper;
 use app\common\model\order\OrderProduct;
 use app\common\enum\settings\SettingEnum;
 use app\common\enum\order\OrderPayStatusEnum;
 use app\common\enum\settings\PrinterTypeEnum;
 use app\common\enum\settings\DeliveryTypeEnum;
+use app\common\model\store\Table as TableModel;
 use app\common\model\product\Product as ProductModel;
 use app\common\model\settings\Printer as PrinterModel;
 use app\common\model\settings\Setting as SettingModel;
@@ -15,7 +17,6 @@ use app\common\model\user\PointsLog as PointsLogModel;
 use app\common\library\printer\Driver as PrinterDriver;
 use app\common\library\printer\party\SunmiCloudPrinter;
 use app\common\model\supplier\Printing as PrintingModel;
-use app\common\model\store\Table as TableModel;
 
 /**
  * 订单打印服务类
@@ -166,8 +167,8 @@ class OrderPrinterService
             $key = $product['product_id'] . $product['product_sku_id'] . $product['product_attr'];
             $products[$key] = [
                 'product_name' => $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : ''),
-                "total_num" => bcadd($product['total_num'], $products[$key]['total_num'] ?? 0),
-                "total_product_price" => bcadd($product['total_product_price'], $products[$key]['total_product_price'] ?? 0)
+                "total_num" => helper::bcadd($product['total_num'], $products[$key]['total_num'] ?? 0),
+                "total_product_price" => helper::bcadd($product['total_product_price'], $products[$key]['total_product_price'] ?? 0)
             ];
         }
 

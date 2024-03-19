@@ -7,7 +7,6 @@ use think\facade\Cache;
 use think\facade\Config;
 use think\facade\Request;
 use app\common\model\shop\User;
-use app\common\enum\settings\SettingEnum;
 use app\common\model\settings\Setting as SettingModel;
 
 // 应用公共文件
