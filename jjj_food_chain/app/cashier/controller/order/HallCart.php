@@ -349,7 +349,6 @@ class HallCart extends Controller
         }
         $list = [];
         foreach ($detail->buffet as $buffet) {
-            trace($buffet->buffet_id);
             $discount = Buffet::getBuffetDiscountList($buffet->buffet_id);
             if ($discount) {
                 $list[] =  $discount;
