@@ -298,7 +298,7 @@ class Order extends Controller
      */
     public function print($order_id)
     {
-        $order = OrderModel::detail($order_id);
+        $order = OrderModel::detailWithTrashed($order_id);
         if (!$order) {
             return $this->renderError('订单不存在');
         }
