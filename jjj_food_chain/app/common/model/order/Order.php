@@ -1205,8 +1205,8 @@ class Order extends BaseModel
         $productId = intval($data['product_id'] ?? 0);
         $productNum = intval($data['product_num'] ?? 0);
         $price = $data['price'] ?? 0;
-        $isBuffet = $data['is_buffet'] ?? 0;
         $mealNum = 1;
+
         // 检查订单状态
         if ($orderId > 0 || $tableId > 0) {
             $detail = self::detail([
@@ -1235,11 +1235,13 @@ class Order extends BaseModel
             $orderId = $detail['order_id'];
             $mealNum = $detail['meal_num'];
         }
+        
         //判断商品是否下架
         if (!$this->productState($productId)) {
             $this->error = '商品已下架';
             return false;
         }
+
         // 判断库存
         $deductStockType = ProductModel::where('product_id', $productId)->value('deduct_stock_type');
         if ($deductStockType == DeductStockTypeEnum::CREATE) {
@@ -1249,6 +1251,10 @@ class Order extends BaseModel
                 return false;
             }
         }
+
+        // 获取是否自助餐商品
+        $isBuffet = array_key_exists($productId, Order::getOrderBuffetProductArr($orderId)) ? 1 : 0;
+
         // 判断限购
         if ($isBuffet == 1 && $orderId > 0) {
             $limitNum = Order::getBuffetProductLimitNum($orderId, $productId) * $mealNum;
@@ -1269,6 +1275,7 @@ class Order extends BaseModel
                 return false;
             }
         }
+
         //
         $this->startTrans();
         try {
