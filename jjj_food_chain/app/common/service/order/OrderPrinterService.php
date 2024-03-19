@@ -167,7 +167,7 @@ class OrderPrinterService
             $key = $product['product_id'] . $product['product_sku_id'] . $product['product_attr'];
             $products[$key] = [
                 'product_name' => $product['product_name_text'] . ($product['product_attr'] ?  ' (' . $product['product_attr'] . ')'  : ''),
-                "total_num" => helper::bcadd($product['total_num'], $products[$key]['total_num'] ?? 0),
+                "total_num" => helper::bcadd($product['total_num'], $products[$key]['total_num'] ?? 0, 0),
                 "total_product_price" => helper::bcadd($product['total_product_price'], $products[$key]['total_product_price'] ?? 0)
             ];
         }
