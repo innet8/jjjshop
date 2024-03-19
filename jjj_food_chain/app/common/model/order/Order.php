@@ -1242,18 +1242,18 @@ class Order extends BaseModel
             return false;
         }
 
+        // 取得原始数据
+        $productDetail = ProductModel::where('product_id', '=', $productId)->find();
+        $isBuffet = array_key_exists($productId, Order::getOrderBuffetProductArr($orderId)) ? 1 : 0;
+
         // 判断库存
-        $deductStockType = ProductModel::where('product_id', $productId)->value('deduct_stock_type');
-        if ($deductStockType == DeductStockTypeEnum::CREATE) {
+        if ($productDetail->deduct_stock_type == DeductStockTypeEnum::CREATE) {
             $stockStatus = $this->productStockState($productId, $data['product_sku_id'] ?? 0, $orderId);
             if (!$stockStatus) {
                 $this->error = '商品库存不足，请重新选择';
                 return false;
             }
         }
-
-        // 获取是否自助餐商品
-        $isBuffet = array_key_exists($productId, Order::getOrderBuffetProductArr($orderId)) ? 1 : 0;
 
         // 判断限购
         if ($isBuffet == 1 && $orderId > 0) {
@@ -1295,7 +1295,6 @@ class Order extends BaseModel
                 }
             }
             // 保存商品
-            $productDetail = ProductModel::where('product_id', '=', $productId)->find();
             $inArr = [
                 'order_id' => $orderId,
                 'app_id' => self::$app_id,
