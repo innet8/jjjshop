@@ -36,13 +36,13 @@ class Product extends Controller
             $order = Order::detail([
                 ['table_id', '=', $param['table_id']],
                 ['order_status', '=', OrderStatusEnum::NORMAL]
-            ]);
+            ],[]);
             $param['order_id'] = $order['order_id'];
         } else if (isset($param['order_id'])) {
             $order = Order::detail([
                 ['order_id', '=', $param['order_id']],
                 ['order_status', '=', OrderStatusEnum::NORMAL]
-            ]);
+            ],[]);
         }
         $list = $model->list(array_merge(['shop_supplier_id' => $this->cashier['user']['shop_supplier_id']], $param));
         if ($order) {
