@@ -61,6 +61,10 @@ return [
         'UserShiftLogPrint' => [
             \app\job\event\UserShiftLogPrint::class
         ],
+        /*收集请求日志*/
+        'RecordShopLog' => [
+            \app\job\event\RecordShopLog::class
+        ],
     ],
 
     'subscribe' => [

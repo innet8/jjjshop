@@ -50,7 +50,7 @@ class OrderProduct extends BaseModel
      */
     public function getProductNameTextAttr($value, $data)
     {
-        return extractLanguage($data['product_name']);
+        return extractLanguage($data['product_name'] ?? '');
     }
 
     /**
@@ -201,8 +201,15 @@ class OrderProduct extends BaseModel
     public function sub($param)
     {
         // 判断是否被锁定
-        $order = $this->orderM()->find();
-        if ($this->orderM()->value('is_lock') == 1) {
+        $order = $this->orderM()->field([
+                'is_lock',
+                'is_buffet',
+                'buffet_expired_time',
+                'shop_supplier_id',
+                'app_id',
+                'meal_num',
+            ])->find();
+        if ($order->is_lock == 1) {
             $this->error = '订单已被锁定，请解锁后重新操作';
             return false;
         }
@@ -220,9 +227,12 @@ class OrderProduct extends BaseModel
             }
 
         }
-
-        //判断商品是否下架
-        $product = $this->productState($this['product_id']);
+        // 判断商品是否下架
+        $product = ProductModel::where('product_id', $this->product_id)
+            ->where('product_status', '=', 10)
+            ->where('is_delete', '=', 0)
+            ->field('product_id, deduct_stock_type')
+            ->find()?->append([]);
         if (!$product && $param['type'] != 'down') {
             $this->error = '商品已下架';
             return false;
@@ -230,8 +240,7 @@ class OrderProduct extends BaseModel
         //
         if ($param['type'] != 'down') {
             //
-            $deductStockType = ProductModel::where('product_id', $this->product_id)->value('deduct_stock_type');
-            if ($deductStockType == DeductStockTypeEnum::CREATE) {
+            if ($product->deduct_stock_type == DeductStockTypeEnum::CREATE) {
                 $stockStatus = $this->getStockState($param['product_num']);
                 if (!$stockStatus) {
                     $this->error = '商品库存不足，请重新选择';
