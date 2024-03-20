@@ -11,7 +11,6 @@ use app\common\exception\BaseException;
 use app\common\enum\settings\SettingEnum;
 use app\cashier\model\cashier\User as UserModel;
 use app\common\model\shop\Access as AccessModel;
-use app\common\model\shop\OptLog as OptLogModel;
 use app\common\model\settings\Setting as SettingModel;
 
 /**
@@ -182,6 +181,54 @@ class Controller extends JjjController
             '/order/hallcart/tableProductList',
             '/index/index',
             '/index/lang',
+            '/auth/optlog/index',
+            '/order/cart/sub',
+            // 以下：秋香提的不用记录
+            '/auth/role/index',
+            '/auth/user/index',
+            '/auth/loginlog/index',
+            '/product/store/product/index',
+            '/index/index',
+            '/product/store/category/index',
+            '/product/store/category/list',
+            '/product/expand/attr/index',
+            '/product/expand/spec/index',
+            '/product/expand/feed/index',
+            '/product/expand/label/index',
+            '/product/expand/unit/index',
+            '/setting/buffet/index',
+            '/product/buffet/buffet/list',
+            '/store/order/index',
+            '/user/user/index',
+            '/user/points/setting',
+            '/user/grade/index',
+            '/user/points/log',
+            '/card/card/index',
+            '/user/balance/log',
+            '/card/card/record',
+            '/card/card/deleterecord',
+            '/setting/printer/index',
+            '/supplier/printing/index',
+            '/setting/printing/index',
+            '/setting/supplier/currencyUnit',
+            '/store/table/table/index',
+            '/store/table/table/index',
+            '/setting/supplier/currencyUnit',
+            '/store/table/type/index',
+            '/store/table/area/index',
+            '/setting/supplier/taxRate',
+            '/setting/supplier/serviceCharge',
+            '/setting/paytype/index',
+            '/user/usershiftlog/index',
+            '/store/survey/index',
+            '/setting/terminal/cashier',
+            '/setting/terminal/tablet',
+            '/setting/terminal/kitchen',
+            '/setting/store/index',
+            '/setting/clear/index',
+            '/order/cart/list',
+            '/store/table/table',
+            '/order/order/index'
         ];
         if (in_array($this->routeUri, $allowLoopUrl)) {
             return;
@@ -193,6 +240,7 @@ class Controller extends JjjController
             return;
         }
         $shop_user_id = $this->cashier['user']['shop_user_id'];
+        $app_id = $this->cashier['user']['app_id'];
         if (!$shop_user_id) {
             return;
         }
@@ -201,17 +249,20 @@ class Controller extends JjjController
         if (!$config || !$config['is_get_log']) {
             return;
         }
-        $model = new OptLogModel();
-        $model->save([
-            'shop_user_id' => $shop_user_id,
-            'ip' => \request()->ip(),
-            'request_type' => $this->request->isGet() ? 'Get' : 'Post',
-            'url' => $this->routeUri,
-            'content' => json_encode($this->request->param(), JSON_UNESCAPED_UNICODE),
-            'browser' => get_client_browser(),
-            'agent' => $_SERVER['HTTP_USER_AGENT'],
-            'title' => (new AuthService($this->cashier))::getAccessNameByApiPath($this->routeUri, $this->cashier['app']['app_id']),
-            'app_id' => $this->cashier['app']['app_id']
-        ]);
+        // 
+        $title = (new AuthService($this->cashier))::getAccessNameByApiPath($this->routeUri, $app_id);
+        if ($title) {
+            Cache::tag('optlog')->set('shop_opt_log', array_merge([[
+                'shop_user_id' => $shop_user_id,
+                'ip' => \request()->ip(),
+                'request_type' => $this->request->isGet() ? 'Get' : 'Post',
+                'url' => $this->routeUri,
+                'content' => json_encode($this->request->param(), JSON_UNESCAPED_UNICODE),
+                'browser' => get_client_browser(),
+                'agent' => $_SERVER['HTTP_USER_AGENT'],
+                'title' => $title,
+                'app_id' => $app_id
+            ]], Cache::get('shop_opt_log', [])));
+        }
     }
 }

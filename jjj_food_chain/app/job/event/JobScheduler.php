@@ -39,6 +39,8 @@ class JobScheduler
         // event('GroupOrder');
         // 交班打印
         event('UserShiftLogPrint');
+        // 记录日志 
+        event('RecordShopLog');
         //
         return true;
     }

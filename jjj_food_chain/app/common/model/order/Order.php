@@ -1004,7 +1004,15 @@ class Order extends BaseModel
      */
     public function reloadPrice($order_id, $re_order_no = false)
     {
-        $order = self::detail($order_id);
+        $order = self::detail($order_id, [
+            'product' => function($q) { 
+                $q->withoutField('product_name')->with(['product' => function($q) {
+                    $q->field('product_id ,is_enable_grade, is_alone_grade, alone_grade_equity, alone_grade_type, is_points_gift, sales_initial, sales_actual');
+                }]);
+            }, 
+            'supplier', 
+            'user'
+        ]);
         $setting = SettingModel::getSupplierItem(SettingEnum::POINTS, $order['shop_supplier_id'], $order['app_id']);
         $pay_money = 0;
         $order_price = 0;
@@ -1096,14 +1104,14 @@ class Order extends BaseModel
             $total_product_price = $product['product_price'] * $product['total_num'];
             $updateArr = [
                 'user_id' => $order['user_id'],
-                'total_price' => $product['total_price'],   // 商品总价(数量×单价)
+                'total_price' => $product['total_price'],                   // 商品总价(数量×单价)
                 'total_pay_price' => $product['total_price'],
-                'total_product_price' => $total_product_price,   //  商品总价(数量×单价)原价
-                'points_bonus' => $product_points_bonus,    // 奖励积分
-                'is_user_grade' => (int)$is_user_grade, //  是否存在会员等级折扣
-                'grade_ratio' => $grade_ratio,  // 会员折扣比例(0-10)
-                'grade_product_price' => $user ? $grade_product_price : 0,  //  会员折扣后的商品单价
-                'grade_total_money' => $grade_total_money,  // 会员折扣的总额差 （商品总价 - 商品折扣后总价）
+                'total_product_price' => $total_product_price,              // 商品总价(数量×单价)原价
+                'points_bonus' => $product_points_bonus,                    // 奖励积分
+                'is_user_grade' => (int)$is_user_grade,                     // 是否存在会员等级折扣
+                'grade_ratio' => $grade_ratio,                              // 会员折扣比例(0-10)
+                'grade_product_price' => $user ? $grade_product_price : 0,  // 会员折扣后的商品单价
+                'grade_total_money' => $grade_total_money,                  // 会员折扣的总额差 （商品总价 - 商品折扣后总价）
             ];
             $product->save($updateArr);
 
@@ -1173,7 +1181,7 @@ class Order extends BaseModel
         }
         $points_bonus = helper::bcmul($pay_price, $ratio, 3);
         $points_bonus = round($points_bonus, 2);
-
+        
         // 会员优惠金额
         $updateOrderArr = [
             'order_no' => $re_order_no ? $this->newOrderNo($order['order_source']) : $order['order_no'],
@@ -1192,6 +1200,8 @@ class Order extends BaseModel
             'user_discount_money' => $user_discount_money
         ];
         $order->save($updateOrderArr);
+
+        // 
         return $order;
     }
 
