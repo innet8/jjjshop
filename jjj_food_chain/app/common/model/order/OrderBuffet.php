@@ -50,9 +50,9 @@ class OrderBuffet extends BaseModel
     /**
      * 关联自助餐优惠订单数据
      */
-    public function orderBuffetDiscount()
+    public function delOrderBuffetDiscount()
     {
-        return $this->hasMany('app\\common\\model\\order\\OrderBuffetDiscount', 'order_id', 'order_id');
+        return $this->hasMany('app\\common\\model\\order\\OrderBuffetDiscount', 'order_id', 'order_id')->where('buffet_id', '=', $this['buffet_id']);
     }
 
     /**
@@ -89,7 +89,7 @@ class OrderBuffet extends BaseModel
                 return false;
             }
             $model->force()->delete();
-            $model->orderBuffetDiscount()->delete();
+            $model->delOrderBuffetDiscount()->delete();
             // 就餐剩余时间变化
             $time_limit = (new OrderBuffet())->where('order_id', '=', $order['order_id'])->min('time_limit');
             //
