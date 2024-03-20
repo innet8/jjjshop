@@ -48,6 +48,14 @@ class OrderBuffet extends BaseModel
     }
 
     /**
+     * 关联自助餐优惠订单数据
+     */
+    public function orderBuffetDiscount()
+    {
+        return $this->hasMany('app\\common\\model\\order\\OrderBuffetDiscount', 'order_id', 'order_id');
+    }
+
+    /**
      * 订单商品列表
      */
     public function buffetProduct()
@@ -81,6 +89,7 @@ class OrderBuffet extends BaseModel
                 return false;
             }
             $model->force()->delete();
+            $model->orderBuffetDiscount()->delete();
             // 就餐剩余时间变化
             $time_limit = (new OrderBuffet())->where('order_id', '=', $order['order_id'])->min('time_limit');
             //
