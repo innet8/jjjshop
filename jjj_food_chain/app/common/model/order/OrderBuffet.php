@@ -52,7 +52,7 @@ class OrderBuffet extends BaseModel
      */
     public function orderBuffetDiscount()
     {
-        return $this->hasMany('app\\common\\model\\order\\OrderBuffetDiscount', 'order_id', 'order_id');
+        return $this->hasMany('app\\common\\model\\order\\OrderBuffetDiscount', 'buffet_id', 'buffet_id');
     }
 
     /**
