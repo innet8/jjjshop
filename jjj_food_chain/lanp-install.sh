@@ -42,6 +42,7 @@ update-job(){
     git fetch --all && git reset --hard origin/$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
     git pull
     sudo php think migrate:run
+    systemctl restart jjjshop.service
     chmod +x /jjjshop/jjj_food_chain/lanp-install.sh
 }
 
