@@ -1453,11 +1453,8 @@ class Order extends BaseModel
     {
         foreach ($product_list as &$product) {
             // 已购买商品数量
-            $current_add_num = 0;
-            foreach ($product['orderProducts'] as $order_products) {
-                $current_add_num += $order_products['total_num'];
-            }
-
+            $current_add_num = $product['order_products_sum'] ?? 0;
+            // 
             if (array_key_exists($product['product_id'], $buffet_arr)) {
                 $product['is_buffet'] = 1;
                 $product['buffet_limit_num'] = $buffet_arr[$product['product_id']]['limit_num'] * $meal_num;

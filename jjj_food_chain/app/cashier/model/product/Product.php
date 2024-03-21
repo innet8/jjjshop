@@ -17,7 +17,7 @@ class Product extends ProductModel
         // 筛选条件
         $model = $this;
         if (isset($params['is_special']) && $params['is_special'] > 0) {
-            $model = $model->where('product.special_id', '=', $params['category_id']);
+            $model = $model->where('special_id', '=', $params['category_id']);
         } else if (isset($params['category_id']) && $params['category_id'] > 0) {
             $categoryIds = Category::where(function ($query) use ($params) {
                     $query->where('category_id', '=', $params['category_id'])
@@ -25,7 +25,7 @@ class Product extends ProductModel
                 })
                 ->where('status', '=', 1)
                 ->column('category_id');
-            $model = $model->whereIn('product.category_id', $categoryIds);
+            $model = $model->whereIn('category_id', $categoryIds);
         } else {
             // 全部
             $firstLevelCategoryIds = Category::alias('c')
@@ -39,7 +39,7 @@ class Product extends ProductModel
                 ->column('c.category_id');
             // 合并一级分类和二级分类
             $categoryIds = array_merge($firstLevelCategoryIds, $secondLevelCategoryIds);
-            $model = $model->whereIn('product.category_id', $categoryIds);
+            $model = $model->whereIn('category_id', $categoryIds);
         }
 
         if (isset($params['search']) && $params['search'] != '') {
@@ -47,23 +47,22 @@ class Product extends ProductModel
         }
         if (isset($params['order_id'])) {
             $order_id = $params['order_id'];
-            $model = $model->alias('product')
-                ->field(['product.*'])
-                ->with(['category', 'image.file', 'sku', 'orderProducts' => function ($query) use ($order_id) {
-                    $query->where('order_id', $order_id)->field('order_id,product_id,product_name,total_num');
-                }])
-                ->where('product.is_delete', '=', 0)
-                ->where('product.product_type', '=', 1)
-                ->where('product.shop_supplier_id', '=', $params['shop_supplier_id'])
+            $model = $model->field(['*'])
+                ->with(['category', 'image.file', 'sku'])
+                ->withSum(['orderProducts' => function($q) use ($order_id) {
+                    $q->where('order_id',$order_id);
+                }], 'total_num')
+                ->where('is_delete', '=', 0)
+                ->where('product_type', '=', 1)
+                ->where('shop_supplier_id', '=', $params['shop_supplier_id'])
                 ->where('product_status', '=', 10)
                 ->order(['product_sort', 'product_id' => 'desc']);
         } else {
-            $model = $model->alias('product')
-                ->field(['product.*'])
+            $model = $model->field(['*'])
                 ->with(['category', 'image.file', 'sku'])
-                ->where('product.is_delete', '=', 0)
-                ->where('product.product_type', '=', 1)
-                ->where('product.shop_supplier_id', '=', $params['shop_supplier_id'])
+                ->where('is_delete', '=', 0)
+                ->where('product_type', '=', 1)
+                ->where('shop_supplier_id', '=', $params['shop_supplier_id'])
                 ->where('product_status', '=', 10)
                 ->order(['product_sort', 'product_id' => 'desc']);
         }
