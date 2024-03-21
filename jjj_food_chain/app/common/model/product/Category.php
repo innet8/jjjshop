@@ -179,8 +179,9 @@ class Category extends BaseModel
         $cacheKey = 'category_cashier_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. '_' . checkDetect();
         if (!Cache::get($cacheKey)) {
             $data = $model->with(['images', 'child'=> function ($query) {
-                    $query->where('status', '=', 1);
+                    $query->field('category_id, is_special, name, parent_id')->where('status', '=', 1);
                 }])
+                ->field('category_id, is_special, name, parent_id')
                 ->where('parent_id', '=', 0)
                 ->where('type', '=', $type)
                 ->where('status', '=', 1)

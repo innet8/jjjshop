@@ -1460,6 +1460,9 @@ class Order extends BaseModel
                 $product['buffet_limit_num'] = $buffet_arr[$product['product_id']]['limit_num'] * $meal_num;
                 $product['product_price'] = 0;
                 $product['current_add_num'] = $current_add_num;
+                foreach ($product['sku'] as &$item) {
+                    $item['product_price'] = 0;
+                }
                 if ($product['buffet_limit_num'] == 0) {
                     $product['limit_num_status'] = 0;
                 } else {
