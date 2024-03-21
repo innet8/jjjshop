@@ -33,11 +33,15 @@ class RecordShopLog
      */
     private function record()
     {
+        // 删除一个月之前的记录
+        $this->model->where('create_time', '<', strtotime('-1 month'))->delete();
+
+        // 记录缓存
         $list = Cache::pull('shop_opt_log', []);
-        if ( !empty($list) ) {
+        if (!empty($list)) {
             $chunks = array_chunk($list, 100);
             foreach ($chunks as $chunk) {
-                $this->model->insertAll($chunk);
+                $this->model->saveAll($chunk);
             }
         }
     }
