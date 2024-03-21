@@ -59,31 +59,21 @@ class Product extends ProductModel
                 'product_unit',
                 'product_feed',
                 'product_attr',
+            ])
+            ->with([
+                'image.file',
+                'category' => function($q) {
+                    $q->field('category_id,is_special,name,parent_id,type');
+                },
+                'sku' => function($q) {
+                    $q->field('product_id,product_price,product_sales,product_sku_id,product_weight,spec_name,spec_sku_id,stock_num');
+                },
             ]);
         $order_id = $params['order_id'] ?? 0;
         if ($order_id) {
-            $model = $model->with([
-                        'image.file',
-                        'category' => function($q) {
-                            $q->field('category_id,is_special,name,parent_id,type');
-                        },
-                        'sku' => function($q) {
-                            $q->field('product_id,product_price,product_sales,product_sku_id,product_weight,spec_name,spec_sku_id,stock_num');
-                        },
-                    ])
-                    ->withSum(['orderProducts' => function($q) use ($order_id) {
+            $model = $model->withSum(['orderProducts' => function($q) use ($order_id) {
                         $q->where('order_id', $order_id);
                     }], 'total_num');
-        } else {
-            $model = $model->with([
-                        'image.file',
-                        'category' => function($q) {
-                            $q->field('category_id,is_special,name,parent_id,type');
-                        },
-                        'sku' => function($q) {
-                            $q->field('product_id,product_price,product_sales,product_sku_id,product_weight,spec_name,spec_sku_id,stock_num');
-                        },
-                    ]);
         }
 
         return $model->where('is_delete', '=', 0)
