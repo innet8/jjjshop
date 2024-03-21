@@ -9,3 +9,5 @@ composer.lock
 /docker/mysql/*
 /public/uploads/*
 /public/temp/*
+/app/admin
+/public/admin
