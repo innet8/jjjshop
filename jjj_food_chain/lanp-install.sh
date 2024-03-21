@@ -84,7 +84,7 @@ do
   if [ -f "\$FILE" ] || [ -d "\$FILE" ]; then
     # 新创建的是文件或目录
     chown -R www-data:www-data "\$FILE"
-    chmod 766 "\$FILE"  # 设置文件或目录的权限，根据需要修改
+    chmod 777 "\$FILE"  # 设置文件或目录的权限，根据需要修改
   fi
 done
 EOF
