@@ -65,6 +65,8 @@ export default {
             /*form表单数据*/
             form: {
                 model: {
+                    /*商品类型*/
+                    type:1,
                     /*商品名称*/
                     product_name: JSON.parse(languageData),
                     /*商品分类*/
@@ -105,7 +107,7 @@ export default {
                     /*平板是否显示*/
                     is_show_tablet: 1,
                     /*厨显是否显示*/
-                    is_show_kitchen: 1,             
+                    is_show_kitchen: 1,
                     /*初始销量*/
                     sales_initial: 0,
                     /*商品排序，默认100*/

@@ -7,6 +7,12 @@
     <div class="basic-setting-content">
         <!--基本信息-->
         <div class="common-form">{{ $t('基本信息') }}</div>
+        <el-form-item :label="$t('类型：')">
+            <el-radio-group v-model="form.model.type">
+                <el-radio :label="1">{{ $t('成品') }}</el-radio>
+                <el-radio :label="0">{{ $t('材料') }}</el-radio>
+            </el-radio-group>
+        </el-form-item>
         <template v-for="(item, index) in languageList" :key="index">
             <el-form-item :label="$t('商品名称：') + `(${item.value})`" :prop="`model.product_name.${item.key}`"
                 :rules="[{ required: true, message: $t('请填写商品名称') }]">

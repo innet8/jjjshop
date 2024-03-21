@@ -101,6 +101,8 @@ export default {
             },
             /*模型数据*/
             model: {
+                /*商品类型*/
+                type: 1,
                 /*商品名称*/
                 product_name: '',
                 /*商品分类*/
