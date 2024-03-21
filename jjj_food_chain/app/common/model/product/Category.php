@@ -185,7 +185,6 @@ class Category extends BaseModel
                 ->where('parent_id', '=', 0)
                 ->where('type', '=', $type)
                 ->where('status', '=', 1)
-                ->where('is_special', '=', $is_special)
                 ->order(['is_special' => 'desc', 'sort' => 'asc', 'create_time' => 'asc'])
                 ->where('shop_supplier_id', '=', $shop_supplier_id)
                 ->select();
