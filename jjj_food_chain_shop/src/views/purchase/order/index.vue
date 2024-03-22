@@ -74,10 +74,10 @@
                     <el-table-column prop="create_time" :label="$t('申请时间')"></el-table-column>
                     <el-table-column fixed="right" :label="$t('操作')" width="220">
                         <template #default="scope">
-                            <el-button @click="editClick(scope.row)" type="primary" link size="small">{{ $t('查看') }}</el-button>
+                            <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/purchase/order/details'">{{ $t('查看') }}</el-button>
                             <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/purchase/order/edit'">{{ $t('编辑') }}</el-button>
                             <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/purchase/order/examine'">{{ $t('通过') }}</el-button>
-                            <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/purchase/order/examine'">{{ $t('驳回') }}</el-button>
+                            <el-button @click="turnDownClick(scope.row)" type="primary" link size="small" v-auth="'/purchase/order/examine'">{{ $t('驳回') }}</el-button>
                             <el-button @click="deleteClick(scope.row)" type="primary" link size="small" v-auth="'/purchase/order/delete'">{{ $t('删除') }}</el-button>
                         </template>
                     </el-table-column>
@@ -89,6 +89,21 @@
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" background :current-page="curPage" :page-size="pageSize"
                 layout="total, prev, pager, next, jumper" :total="totalDataNumber"></el-pagination>
         </div>
+
+        <el-dialog v-model="dialogVisible" :title="$t('提示')" width="420" :before-close="handleClose" align-center>
+            <el-form size="small" :inline="true" ref="form" :model="form" label-position="top">
+                <el-form-item style="width: 100%;margin-right: 0;" :label="$t('确定审核驳回吗？')" :rules="[{ required: true, message: $t('请输入驳回原因') }]" prop="time">
+                    <el-input size="small" v-model="form.turnDown" :placeholder="$t('请输入驳回原因')"></el-input>
+                </el-form-item>
+            </el-form>
+
+            <template #footer>
+                <div class="dialog-footer">
+                    <el-button @click="dialogVisible = false">{{ $t('取消') }}</el-button>
+                    <el-button type="primary" @click="dialogVisible = false"> {{ $t('确定') }}</el-button>
+                </div>
+            </template>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -113,6 +128,10 @@ export default {
                 name: '',
                 create_time: ''
             },
+            form: {
+                turnDown:'',
+            },
+            dialogVisible: false,
         }
     },
     methods: {
@@ -137,8 +156,44 @@ export default {
 
         /*打开添加*/
         addClick() {
-            this.$router.push('/purchase/order/addEdit');
+            this.$router.push('/purchase/order/add');
         },
+
+
+        /*删除*/
+        deleteClick(row) {
+            let self = this;
+            ElMessageBox.confirm($t('删除后不可恢复，确认删除吗?'), $t('提示'), {
+                confirmButtonText: $t('确定'),
+                cancelButtonText: $t('取消'),
+                type: 'warning'
+            })
+                .then(() => {
+                    // self.loading = true;
+                    // AuthApi.userDelete({
+                    //     shop_user_id: row.shop_user_id
+                    // },
+                    //     true
+                    // )
+                    //     .then(data => {
+                    //         self.loading = false;
+                    //         if (data.code == 1) {
+                    //             this.$ElMessage({
+                    //                 message: $t('删除成功'),
+                    //                 type: 'success'
+                    //             });
+                    //             //刷新页面
+                    //             self.getTableList();
+                    //         } else {
+                    //             self.loading = false;
+                    //         }
+                    //     })
+                    //     .catch(error => {
+                    //         self.loading = false;
+                    //     });
+                })
+                .catch(() => { });
+        }
     },
 }
 </script>

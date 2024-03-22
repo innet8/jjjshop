@@ -44,7 +44,9 @@ export default {
         },
 
         onSubmit(){
+            this.$refs.form.validate(valid => {
 
+            })
         },
 
         cancelFunc(){
