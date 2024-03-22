@@ -88,6 +88,7 @@ class OrderBuffet extends BaseModel
                 $this->error = '订单已被锁定，请解锁后重新操作';
                 return false;
             }
+            $orderId = $order['order_id'];
             $model->force()->delete();
             $model->delOrderBuffetDiscount()->delete();
             // 就餐剩余时间变化
@@ -102,7 +103,7 @@ class OrderBuffet extends BaseModel
             }
             (new OrderModel())->reloadPrice($order['order_id']);
             $this->commit();
-            return true;
+            return $orderId;
         } catch (\Exception $e) {
             $this->error = $e->getMessage();
             $this->rollback();

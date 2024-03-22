@@ -3,8 +3,8 @@
 namespace app\cashier\model\order;
 
 use app\common\library\helper;
+use app\common\model\order\OrderProduct;
 use app\shop\model\product\Category;
-use app\api\model\order\OrderProduct;
 use app\common\model\supplier\Supplier;
 use app\common\enum\order\OrderTypeEnum;
 use app\common\enum\settings\SettingEnum;

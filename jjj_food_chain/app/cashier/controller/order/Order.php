@@ -4,6 +4,7 @@ namespace app\cashier\controller\order;
 
 use app\cashier\model\order\Order as OrderModel;
 use app\cashier\model\store\Table as TableModel;
+use app\cashier\model\order\Cart as CartModel;
 use app\common\enum\order\OrderStatusEnum;
 use app\common\enum\settings\DeliveryTypeEnum;
 use app\common\enum\settings\SettingEnum;
@@ -177,7 +178,7 @@ class Order extends Controller
             return $this->renderError('当前状态不可操作');
         }
         if ($detail->updateMealNum($meal_num)) {
-            return $this->renderSuccess('修改就餐人数成功');
+            return $this->renderSuccess('修改就餐人数成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], $table_id)]);
         }
         return $this->renderError($detail->getError() ?: '修改就餐人数失败');
     }
@@ -198,7 +199,7 @@ class Order extends Controller
             return $this->renderError('桌台已关闭');
         }
         if ($detail->exchangeTable($old_table_id, $new_table_id)) {
-            return $this->renderSuccess('转台成功');
+            return $this->renderSuccess('转台成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], $new_table_id, $detail['order_id'])]);
         }
         return $this->renderError($detail->getError() ?: '转台失败');
     }

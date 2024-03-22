@@ -51,8 +51,9 @@ class HallCart extends Controller
     public function changeMoney()
     {
         $model = new OrderModel();
-        if ($model->changeMoney($this->cashier['user'], $this->postData())) {
-            return $this->renderSuccess('改价成功');
+        $param = $this->postData();
+        if ($model->changeMoney($this->cashier['user'], $param)) {
+            return $this->renderSuccess('改价成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], $param['table_id'] ?? 0)]);
         };
         return $this->renderError($model->getError() ?: '改价失败');
     }
@@ -81,7 +82,8 @@ class HallCart extends Controller
         $model = new OrderModel();
         $order_id = $model->addToOrder($data, $this->cashier['user']);
         if ($order_id > 0) {
-            return $this->renderSuccess('添加商品成功', ['order_id' => $order_id]);
+            $tableId = ($data['table_id'] ?? 0) ?: 0;
+            return $this->renderSuccess('添加商品成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], $tableId), 'order_id' => $order_id]);
         }
         return $this->renderError($model->getError() ?: '添加商品失败');
     }
@@ -98,8 +100,8 @@ class HallCart extends Controller
     {
         $model = OrderProduct::detail($order_product_id);
         if ($model->sub($this->postData())) {
-            (new OrderModel())->reloadPrice($model['order_id']);
-            return $this->renderSuccess('操作成功');
+            $order = (new OrderModel())->reloadPrice($model['order_id']);
+            return $this->renderSuccess('操作成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], $order['table_id'])]);
         }
         return $this->renderError($model->getError() ?: '操作失败');
     }
@@ -174,11 +176,11 @@ class HallCart extends Controller
      * @Apidoc\Param("order_product_id", type="int|array", require=true, desc="订单商品ID, 多个传数组: [1,2]")
      * @Apidoc\Returned()
      */
-    public function delProduct($order_product_id)
+    public function delProduct($order_product_id, $table_id)
     {
         $model = new OrderProduct();
         if ($model->delProduct($order_product_id)) {
-            return $this->renderSuccess('删除成功');
+            return $this->renderSuccess('删除成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], $table_id)]);
         };
         return $this->renderError($model->getError() ?: '删除失败');
     }
@@ -199,7 +201,7 @@ class HallCart extends Controller
         $order_id = $detail['order_id'];
         $model = new OrderProduct();
         if ($model->sendKitchen($order_id)) {
-            return $this->renderSuccess('送厨成功');
+            return $this->renderSuccess('送厨成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], $detail['table_id'])]);
         }
         return $this->renderError($model->getError() ?: '送厨失败', $model->getErrorData(), $model->getErrorCode());
     }
@@ -221,7 +223,7 @@ class HallCart extends Controller
             return $this->renderError('当前状态不可操作');
         }
         if ($detail?->moveProduct($order_product_id, $num, $return_reason)) {
-            return $this->renderSuccess('退菜成功');
+            return $this->renderSuccess('退菜成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], $detail['table_id'])]);
         }
         return $this->renderError($detail?->getError() ?: '退菜失败');
     }
@@ -280,7 +282,7 @@ class HallCart extends Controller
         }
         if (OrderModel::addDelay($detail['order_id'], $delay_ids)) {
             (new OrderModel())->reloadPrice($detail['order_id']);
-            return $this->renderSuccess('加钟成功');
+            return $this->renderSuccess('加钟成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], $detail['table_id'])]);
         }
         return $this->renderError('加钟失败');
     }
@@ -295,8 +297,9 @@ class HallCart extends Controller
     public function delOrderBuffet($order_buffet_id)
     {
         $model = new OrderBuffet();
-        if ($model->del($order_buffet_id)) {
-            return $this->renderSuccess('删除成功');
+        $orderId = $model->del($order_buffet_id);
+        if ($orderId > 0) {
+            return $this->renderSuccess('删除成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], 0, $orderId)]);
         }
         return $this->renderError($model->getError() ?: '删除失败');
     }
@@ -311,8 +314,9 @@ class HallCart extends Controller
     public function delOrderDelay($order_delay_id)
     {
         $model = new OrderDelay();
-        if ($model->del($order_delay_id)) {
-            return $this->renderSuccess('删除成功');
+        $orderId = $model->del($order_delay_id);
+        if ($orderId > 0) {
+            return $this->renderSuccess('删除成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], 0, $orderId)]);
         }
         return $this->renderError($model->getError() ?: '删除失败');
     }
@@ -375,7 +379,7 @@ class HallCart extends Controller
 
         if ($detail->addOrderBuffetDiscount($buffet_id, $buffet_discount_list)) {
             (new OrderModel())->reloadPrice($detail['order_id']);
-            return $this->renderSuccess('添加成功');
+            return $this->renderSuccess('添加成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], 0, $detail['order_id'])]);
         }
         return $this->renderError($detail->getError() ?: '添加失败');
     }
@@ -398,7 +402,7 @@ class HallCart extends Controller
 
         if ($detail->updateOrderBuffetDiscountNum($order_buffet_discount_id, $num)) {
             (new OrderModel())->reloadPrice($detail['order_id']);
-            return $this->renderSuccess('修改成功');
+            return $this->renderSuccess('修改成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], $table_id)]);
         }
         return $this->renderError($detail->getError() ?: '修改失败');
     }
@@ -420,7 +424,7 @@ class HallCart extends Controller
 
         if ($detail->delOrderBuffetDiscount($order_buffet_discount_id)) {
             (new OrderModel())->reloadPrice($detail['order_id']);
-            return $this->renderSuccess('删除成功');
+            return $this->renderSuccess('删除成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], $table_id)]);
         }
         return $this->renderError($detail->getError() ?: '删除失败');
     }

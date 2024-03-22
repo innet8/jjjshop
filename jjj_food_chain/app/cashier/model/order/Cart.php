@@ -713,6 +713,12 @@ class Cart extends CartModel
     }
 
     // 获取购物车 + 订单统计数据
+    public static function getHallCartOrderDetail($cashier, $table_id, $order_id = 0)
+    {
+        return (new self())->getOrderCartDetail($cashier, $table_id, $order_id);
+    }
+
+    // 获取购物车 + 订单统计数据
     public function getOrderCartDetail($cashier, $table_id, $order_id = 0)
     {
         $meal_num = 0;

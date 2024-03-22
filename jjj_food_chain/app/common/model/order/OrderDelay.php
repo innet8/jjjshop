@@ -63,6 +63,7 @@ class OrderDelay extends BaseModel
                 $this->error = '订单已被锁定，请解锁后重新操作';
                 return false;
             }
+            $orderId = $order['order_id'];
             $del_model_delay_time = $model['delay_time'];
             $model->force()->delete();
             // 订单剩余时间扣除
@@ -72,7 +73,7 @@ class OrderDelay extends BaseModel
             }
             (new OrderModel())->reloadPrice($order['order_id']);
             $this->commit();
-            return true;
+            return $orderId;
         } catch (\Exception $e) {
             $this->error = $e->getMessage();
             $this->rollback();

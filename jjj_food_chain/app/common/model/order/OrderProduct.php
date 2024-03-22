@@ -341,11 +341,12 @@ class OrderProduct extends BaseModel
             $this->error = '订单已被锁定，请解锁后重新操作';
             return false;
         }
+        $orderId = $orderProduct->order_id;
         //
         $orderProduct->remark = $remark;
         $orderProduct->save();
         //
-        return true;
+        return $orderId;
     }
 
     // 收银端列表商品改价
@@ -375,13 +376,14 @@ class OrderProduct extends BaseModel
                 $this->error = '订单已被锁定，请解锁后重新操作';
                 return false;
             }
+            $orderId = $detail['order_id'];
             $p->product_price = $money;
             $p->total_price = helper::bcmul($money, $p->total_num);
             if ($p->save()) {
                 // 更新
                 (new OrderModel)->reloadPrice($p['order_id']);
                 $this->commit();
-                return true;
+                return $orderId;
             } else {
                 $this->error = "商品不存在";
                 return false;

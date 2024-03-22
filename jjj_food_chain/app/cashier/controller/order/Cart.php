@@ -40,7 +40,7 @@ class Cart extends Controller
         $model = new OrderModel();
         $order_id = $model->addToOrder($data, $this->cashier['user']);
         if ($order_id > 0) {
-            return $this->renderSuccess('添加商品成功', ['order_id' => $order_id]);
+            return $this->renderSuccess('添加商品成功', ['order_id' => $order_id, 'res' => CartModel::getHallCartOrderDetail($this->cashier['user'], 0, $order_id)]);
         }
         return $this->renderError($model->getError() ?: '添加商品失败');
 
@@ -79,8 +79,9 @@ class Cart extends Controller
     {
 
         $model = new OrderProduct();
-        if ($model->changePrice($order_product_id, $price)) {
-            return $this->renderSuccess('改价成功');
+        $orderId = $model->changePrice($order_product_id, $price);
+        if ($orderId > 0) {
+            return $this->renderSuccess('改价成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], 0, $orderId)]);
         };
         return $this->renderError($model->getError() ?: '改价失败');
     }
@@ -92,11 +93,11 @@ class Cart extends Controller
      * @Apidoc\Param("order_product_id", type="int|array", require=true, desc="订单商品ID, 多个传数组: [1,2]")
      * @Apidoc\Returned()
      */
-    public function delProduct($order_product_id)
+    public function delProduct($order_product_id, $order_id)
     {
         $model = new OrderProduct();
         if ($model->delProduct($order_product_id)) {
-            return $this->renderSuccess('删除成功');
+            return $this->renderSuccess('删除成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], 0, $order_id)]);
         };
         return $this->renderError($model->getError() ?: '删除失败');
     }
@@ -144,7 +145,7 @@ class Cart extends Controller
         $model = new OrderModel();
         if ($model->stayOrder($order_id)) {
             return $this->renderSuccess('挂单成功');
-        };
+        }
         return $this->renderError($model->getError() ?: '挂单失败');
     }
 
@@ -159,7 +160,7 @@ class Cart extends Controller
     {
         $model = new OrderModel();
         if ($model->pickOrder($order_id)) {
-            return $this->renderSuccess('取单成功');
+            return $this->renderSuccess('取单成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], 0, $order_id)]);
         };
         return $this->renderError($model->getError() ?: '取单失败');
     }
@@ -178,8 +179,9 @@ class Cart extends Controller
     public function changeMoney()
     {
         $model = new OrderModel();
-        if ($model->changeMoney($this->cashier['user'], $this->postData())) {
-            return $this->renderSuccess('改价成功');
+        $param = $this->postData();
+        if ($model->changeMoney($this->cashier['user'], $param)) {
+            return $this->renderSuccess('改价成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], $param['table_id'] ?? 0, $param['order_id'] ?? 0)]);
         };
         return $this->renderError($model->getError() ?: '改价失败');
     }
@@ -197,7 +199,15 @@ class Cart extends Controller
         $model = OrderProduct::detail($order_product_id);
         if ($model->sub($this->postData())) {
             (new OrderModel())->reloadPrice($model['order_id']);
-            return $this->renderSuccess('操作成功');
+            $delivery = 40;
+            $order_id = $model['order_id'];
+            $model = new CartModel();
+            // 挂单数量
+            $stayNum = (new OrderModel)->stayOrderNum();
+            // 购物车 + 送厨商品列表 + 购物车计算
+            $allProductInfo = $model->getOrderCartDetail($this->cashier['user'], 0, $order_id);
+            $res = compact('allProductInfo', 'delivery', 'stayNum', 'order_id');
+            return $this->renderSuccess('操作成功', ['res' => $res]);
         }
         return $this->renderError($model->getError() ?: '操作失败');
 
@@ -226,8 +236,9 @@ class Cart extends Controller
     public function remark($order_product_id, $remark)
     {
         $model = new OrderProduct();
-        if ($model->updateKitchenRemark($order_product_id, $remark)) {
-            return $this->renderSuccess('备注成功');
+        $orderId = $model->updateKitchenRemark($order_product_id, $remark);
+        if ($orderId > 0) {
+            return $this->renderSuccess('备注成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], 0, $orderId)]);
         }
         return $this->renderError($model->getError() ?: '备注失败');
     }
@@ -244,7 +255,7 @@ class Cart extends Controller
     {
         $model = new OrderProduct();
         if ($model->sendKitchen($order_id)) {
-            return $this->renderSuccess('送厨成功');
+            return $this->renderSuccess('送厨成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], 0, $order_id)]);
         }
         return $this->renderError($model->getError() ?: '送厨失败', $model->getErrorData());
     }
@@ -273,7 +284,7 @@ class Cart extends Controller
             return $this->renderError('订单已被锁定，请解锁后重新操作');
         }
         if ($detail?->moveProduct($order_product_id, $num, $return_reason)) {
-            return $this->renderSuccess('退菜成功');
+            return $this->renderSuccess('退菜成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], 0, $detail['order_id'])]);
         }
         return $this->renderError($detail?->getError() ?: '退菜失败');
     }
