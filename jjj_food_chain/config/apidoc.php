@@ -45,6 +45,8 @@ return [
                 ['title'=>'用户管理','name'=>'shop_user'],
                 ['title'=>'各端设置','name'=>'terminal_setting'],
                 ['title'=>'系统设置','name'=>'system_setting'],
+                ['title'=>'采购管理','name'=>'purchase'],
+                ['title'=>'库存管理','name'=>'inventory'],
             ],
         ],
         // [
