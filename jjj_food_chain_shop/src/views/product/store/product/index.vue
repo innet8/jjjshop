@@ -212,6 +212,7 @@ export default {
                 }
             });
         },
+        
         /* 强制下架上架*/
         undercarriage(row, state) {
             let self = this;
