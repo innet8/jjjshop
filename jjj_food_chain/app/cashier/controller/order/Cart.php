@@ -199,15 +199,8 @@ class Cart extends Controller
         $model = OrderProduct::detail($order_product_id);
         if ($model->sub($this->postData())) {
             (new OrderModel())->reloadPrice($model['order_id']);
-            $delivery = 40;
             $order_id = $model['order_id'];
-            $model = new CartModel();
-            // 挂单数量
-            $stayNum = (new OrderModel)->stayOrderNum();
-            // 购物车 + 送厨商品列表 + 购物车计算
-            $allProductInfo = $model->getOrderCartDetail($this->cashier['user'], 0, $order_id);
-            $res = compact('allProductInfo', 'delivery', 'stayNum', 'order_id');
-            return $this->renderSuccess('操作成功', ['res' => $res]);
+            return $this->renderSuccess('操作成功', ['order_id' => $order_id, 'res' => CartModel::getHallCartOrderDetail($this->cashier['user'], 0, $order_id)]);
         }
         return $this->renderError($model->getError() ?: '操作失败');
 

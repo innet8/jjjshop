@@ -11,7 +11,7 @@ use app\common\model\user\PointsLog as PointsLogModel;
 use app\common\model\supplier\Supplier as SupplierModel;
 use app\common\model\plus\agent\Order as AgentOrderModel;
 use app\common\model\plus\driver\User as DriverUserModel;
-use app\api\model\order\OrderFinance as OrderFinanceModel;
+use app\common\model\order\OrderFinance as OrderFinanceModel;
 use app\common\enum\settings\SettingEnum;
 use app\common\model\order\OrderSettled as OrderSettledModel;
 use app\common\model\supplier\Capital as SupplierCapitalModel;

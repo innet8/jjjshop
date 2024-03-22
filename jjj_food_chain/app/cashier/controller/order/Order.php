@@ -97,7 +97,7 @@ class Order extends Controller
             return $this->renderError('订单不存在');
         }
         if ($detail->orderPay($this->postData())) {
-            return $this->renderSuccess('结账成功');
+            return $this->renderSuccess('结账成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], 0, $order_id)]);
         }
         return $this->renderError($detail->getError() ?: '结账失败', $detail->getErrorData());
     }
@@ -221,7 +221,7 @@ class Order extends Controller
         }
         if ($detail->orderPay($this->postData(), $this->cashier['user'])) {
             TableModel::close($detail['table_id']);
-            return $this->renderSuccess('结账成功');
+            return $this->renderSuccess('结账成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], $table_id)]);
         }
         return $this->renderError($detail->getError() ?: '结账失败', $detail->getErrorData(), $detail->getErrorCode());
     }
@@ -394,7 +394,7 @@ class Order extends Controller
             if ($is_change_price != $detail['is_change_price'] && $detail['discount_ratio'] == 0) {
                 $reset_notice = 1;
             }
-            return $this->renderSuccess('使用会员成功', ['reset_notice' => $reset_notice]);
+            return $this->renderSuccess('使用会员成功', ['reset_notice' => $reset_notice, 'res' => CartModel::getHallCartOrderDetail($this->cashier['user'], 0, $detail['order_id'])]);
         }
         return $this->renderError($detail->getError() ?: '使用会员失败');
     }
@@ -416,6 +416,6 @@ class Order extends Controller
         $order->is_lock = 0;
         $order->save();
         //
-        return  $this->renderSuccess('取消成功');
+        return  $this->renderSuccess('取消成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], 0, $order_id)]);
     }
 }
