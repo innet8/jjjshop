@@ -12,57 +12,46 @@
                     <el-table-column :label="$t('规格名称')" width="400">
                         <template #default="scope">
                             <div label="" class="spec-name" style="margin-bottom: 0;">
-                                <el-form-item v-for="(item, index) in languageList" :key="index"
-                                    :prop="`scope.row.spec_name[${item.key}]`" :rules="[{
-                                        validator: () => {
-                                            return scope.row.spec_name[item.key] ? true : false;
-                                        },
-                                        message: $t('请输入规格名称')
-                                    }]">
-                                    <el-autocomplete size="small" @select="(e) => selectChange(e, scope.$index)"
-                                        :fetch-suggestions="(e, h) => querySearch(e, h, item.key)"
-                                        v-model="scope.row.spec_name[item.key]"
-                                        :placeholder="$t('请输入') + `(${item.value})`"></el-autocomplete>
+                                <el-form-item v-for="(item, index) in languageList" :key="index" :prop="`scope.row.spec_name[${item.key}]`" :rules="[{
+            validator: () => {
+                return scope.row.spec_name[item.key] ? true : false;
+            },
+            message: $t('请输入规格名称')
+        }]">
+                                    <el-autocomplete size="small" @select="(e) => selectChange(e, scope.$index)" :fetch-suggestions="(e, h) => querySearch(e, h, item.key)"
+                                        v-model="scope.row.spec_name[item.key]" :placeholder="$t('请输入') + `(${item.value})`"></el-autocomplete>
                                 </el-form-item>
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="$t('价格')">
+                    <el-table-column :label="$t('商品价格')">
                         <template #default="scope">
-                            <el-form-item label="" style="margin-bottom: 0;" :prop="`scope.row.product_price`" :rules="[{
-                                validator: () => {
-                                    return typeof scope.row.product_price == 'number' && scope.row.product_price >= 0 ? true : false;
-                                },
-                                message: $t('请输入价格')
-                            }]">
-                                <el-input-number type="number" :placeholder="$t('请输入价格')" size="small" :min="0"
-                                    :max="1000000" :controls="false" v-model="scope.row.product_price"></el-input-number>
+                            <el-form-item label="" style="margin-bottom: 0;" :prop="`scope.row.product_price`"
+                                :rules="[{ validator: () => { return typeof scope.row.product_price == 'number' && scope.row.product_price >= 0 ? true : false; }, message: $t('请输入商品价格') }]">
+                                <el-input-number type="number" :placeholder="$t('请输入商品价格')" size="small" :min="0" :max="1000000" :controls="false"
+                                    v-model="scope.row.product_price"></el-input-number>
                             </el-form-item>
                         </template>
                     </el-table-column>
-                    <!-- <el-table-column :label="$t('包装费')">
+                    <el-table-column :label="$t('采购单价')">
                         <template #default="scope">
-                            <el-form-item label="" style="margin-bottom: 0;" :prop="`scope.row.bag_price`" :rules="[{
-                                validator: () => {
-                                    return scope.row.bag_price ? true : false;
-                                },
-                                message: $t('请输入规格名称')
-                            }]">
-                                <el-input type="number" size="small"
-                                    v-model="scope.row.bag_price"></el-input>
+                            <el-form-item label="" style="margin-bottom: 0;" :prop="`scope.row.bag_price`"
+                                :rules="[{ validator: () => { return scope.row.bag_price ? true : false; }, message: $t('请输入采购单价') }]">
+                                <el-input-number type="number" :placeholder="$t('请输入采购单价')" size="small" :min="0" :max="1000000" :controls="false"
+                                    v-model="scope.row.bag_price"></el-input-number>
                             </el-form-item>
                         </template>
-                    </el-table-column> -->
+                    </el-table-column>
                     <el-table-column :label="$t('库存')">
                         <template #default="scope">
                             <el-form-item label="" style="margin-bottom: 0;" :prop="`scope.row.stock_num`" :rules="[{
-                                validator: () => {
-                                    return typeof scope.row.stock_num == 'number' && scope.row.stock_num >= 0 ? true : false;
-                                },
-                                message: $t('请输入库存')
-                            }]">
-                                <el-input-number type="number" :placeholder="$t('请输入库存')" size="small" :min="0" :max="999"
-                                    :controls="false" v-model="scope.row.stock_num"></el-input-number>
+            validator: () => {
+                return typeof scope.row.stock_num == 'number' && scope.row.stock_num >= 0 ? true : false;
+            },
+            message: $t('请输入库存')
+        }]">
+                                <el-input-number type="number" :placeholder="$t('请输入库存')" size="small" :min="0" :max="999" :controls="false"
+                                    v-model="scope.row.stock_num"></el-input-number>
                             </el-form-item>
                         </template>
                     </el-table-column>

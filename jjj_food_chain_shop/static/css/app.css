@@ -287,6 +287,13 @@ body,
     height: 16px;
     color: #fff;
 }
+.header-time{
+    margin-right: 48px;
+    color: #fff;
+}
+.header-time span{
+    color: #FF0000;
+}
 .header-lang{
     margin-right: 16px;
     cursor: pointer;

@@ -24,16 +24,17 @@
             </el-form-item>
             <el-form-item :label="$t('机器码')" prop="key">
                 <el-input v-model="form.shop.device_code" disabled placeholder="" class="max-w460"></el-input>
+                <span class="time">{{ $t('剩余时间') }}:30天</span>
+                <el-button @click="oneMoreTime" type="primary">{{ $t('重新授权') }}</el-button>
             </el-form-item>
             <template v-for="(item, index) in 4" :key="index">
-                <el-form-item :label="$t('语言') + (index + 1) + (index == 0 ? '(' + $t('默认') + ')' : '')" :prop="`lang[${index}]`"
-                    :rules="[{
-                        required: true,
-                        validator: () => {
-                            return form.lang[index] ? true : false;
-                        },
-                        message: $t('请选择语言')
-                    }]">
+                <el-form-item :label="$t('语言') + (index + 1) + (index == 0 ? '(' + $t('默认') + ')' : '')" :prop="`lang[${index}]`" :rules="[{
+            required: true,
+            validator: () => {
+                return form.lang[index] ? true : false;
+            },
+            message: $t('请选择语言')
+        }]">
                     <el-select v-model="form.lang[index]" clearable class="max-w460" :placeholder="$t('请选择语言')" size="default">
                         <template v-for="cat in langList" :key="cat.name">
                             <el-option :value="cat.name" :label="cat.value" :disabled="selectOne(cat.name)"></el-option>
@@ -51,6 +52,49 @@
         <Upload v-if="isupload" :isupload="isupload" :type="type" :config="{ total: 1 }" @returnImgs="returnImgsFunc">
         </Upload>
 
+        <el-dialog v-model="dialogVisible" :title="$t('授权码')" width="420" :before-close="handleClose" align-center>
+            <el-input size="small" type="textarea" v-model="code" :placeholder="$t('请输入授权码')"></el-input>
+            <template #footer>
+                <div class="dialog-footer">
+                    <el-button @click="dialogVisible = false">{{ $t('取消') }}</el-button>
+                    <el-button type="primary" @click="dialogVisible = false"> {{ $t('确定') }}</el-button>
+                </div>
+            </template>
+        </el-dialog>
+
+        <el-dialog v-model="accreditShow" :title="$t('设备授权')" width="720" :before-close="handleClose" align-center>
+            <div class="accredit-main">
+                <p>{{ $t('请根据以下支持的设备数量上限调整绑定的设备') }}</p>
+                <div class="accredit-num">
+                    <p>{{ $t('收银机支持') }}<span>1</span></p>
+                    <p>{{ $t('厨显支持') }}<span>1</span></p>
+                    <p>{{ $t('平板支持') }}<span>1</span></p>
+                </div>
+                <p class="accredit-title">{{ $t('以下为收银机当前绑定设备') }}</p>
+                <div class="accredit-one">
+                    <el-input v-model="form.shop.device_code" disabled class="max-w460"></el-input>
+                    <el-button @click="">{{ $t('解绑') }}</el-button>
+                </div>
+
+                <p class="accredit-title">{{ $t('以下为厨显当前绑定设备') }}</p>
+                <div class="accredit-one">
+                    <el-input v-model="form.shop.device_code" disabled class="max-w460"></el-input>
+                    <el-button @click="">{{ $t('解绑') }}</el-button>
+                </div>
+
+                <p class="accredit-title">{{ $t('以下为平板当前绑定设备') }}</p>
+                <div class="accredit-one">
+                    <el-input v-model="form.shop.device_code" disabled class="max-w460"></el-input>
+                    <el-button @click="">{{ $t('解绑') }}</el-button>
+                </div>
+            </div> 
+            <template #footer>
+                <div class="dialog-footer">
+                    <el-button @click="accreditShow = false">{{ $t('取消') }}</el-button>
+                    <el-button type="primary" @click="accreditShow = false"> {{ $t('确定') }}</el-button>
+                </div>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
@@ -79,11 +123,14 @@ export default {
                 },
                 lang: [],
             },
+            code:'',
             all_type: [],
             type: [],
             /*是否打开图片选择*/
             isupload: false,
             langList: [],
+            dialogVisible: false,
+            accreditShow: false,
         };
     },
     created() {
@@ -139,7 +186,7 @@ export default {
                 })
             })
             this.form.language = language;
-            let { lang, ...params } =  this.form;
+            let { lang, ...params } = this.form;
             self.$refs.form.validate((valid) => {
                 if (valid) {
                     self.loading = true;
@@ -180,12 +227,15 @@ export default {
                     this.form.logoUrl = e[0].file_path;
                 }
             }
-        }
+        },
+        oneMoreTime() {
+            this.dialogVisible = true;
+        },
     }
 
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
 .tips {
     color: #ccc;
 }
@@ -197,5 +247,32 @@ input::-webkit-inner-spin-button {
 
 input[type="number"] {
     -moz-appearance: textfield;
+}
+
+.time {
+    margin: 0 16px;
+}
+
+.accredit-main{
+
+}
+.accredit-num{
+    display: flex;
+    margin-top: 8px;
+    gap: 16px;
+    span{
+        color: #FF0000;
+        margin-left: 4px;
+        font-weight: bold;
+    }
+}
+.accredit-title{
+    margin-top: 16px;
+}
+.accredit-one{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
 }
 </style>

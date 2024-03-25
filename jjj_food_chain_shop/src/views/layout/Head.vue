@@ -8,6 +8,9 @@
             </div>
 
             <div class="header-navbar">
+                <div class="header-time">
+                    {{ $t('剩余时间')}}: <span>30天</span>
+                </div>
                 <div class="header-lang">
                     <el-dropdown trigger="click" @command="setLanguage">
                         <span class="el-dropdown-link">

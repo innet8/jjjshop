@@ -68,6 +68,13 @@
                 :maxlength="50" class="max-w460"></el-input>
         </el-form-item>
 
+        <el-form-item :label="$t('供应商：')">
+            <el-select v-model="form.model.special_id" clearable class="max-w460" size="default" :placeholder="$t('请选择供应商')">
+                <template v-for="item in form.special" :key="item.category_id">
+                    <el-option :value="item.category_id" :label="item.name_text"></el-option>
+                </template>
+            </el-select>
+        </el-form-item>
         <!--商品图片组件-->
         <Upload v-if="isProductUpload" :config="{ total: 1 }" :isupload="isProductUpload" :aspectRatio="1.333"
             @returnImgs="returnProductImgsFunc">{{ $t('上传图片') }}</Upload>

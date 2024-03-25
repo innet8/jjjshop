@@ -14,10 +14,10 @@
                 <Spec></Spec>
 
                 <!-- 属性设置-->
-                <Attr ref="AttrRef"></Attr>
+                <Attr ref="AttrRef" v-if="form.model.type == 1"></Attr>
 
                 <!-- 加料设置-->
-                <Ingredients ref="IngredientsRef"></Ingredients>
+                <Ingredients ref="IngredientsRef" v-if="form.model.type == 1"></Ingredients>
                 <!--商品详情-->
                 <!-- <Content></Content> -->
                 <!--高级设置-->
@@ -177,6 +177,15 @@ export default {
         this.product_id = this.$route.query.product_id;
         this.scene = this.$route.query.scene;
         this.getData();
+    },
+    watch:{
+        'form.model.type':{
+            handler(val){
+                this.form.model.spec_type = 10;
+            }
+            ,deep:true
+            ,immediate:true
+        }
     },
     methods: {
         /**

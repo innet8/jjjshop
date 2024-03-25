@@ -1,4 +1,4 @@
-<template >
+<template>
     <div class="kitchen">
         <el-form size="small" ref="form" :model="form" label-position="top">
 
@@ -17,14 +17,14 @@
             <el-form-item v-if="form.is_wait_color == 1" label="" :rules="[{ required: true, message: '' }]">
                 <div class="max-w460 color-box">
                     <el-input v-model="input1" disabled></el-input>
-                    <el-select v-model="form.wait_color[0]"  size="default">
+                    <el-select v-model="form.wait_color[0]" size="default">
                         <el-option value="red" :label="$t('红色')">{{ $t('红色') }}</el-option>
                         <el-option value="yellow" :label="$t('黄色')">{{ $t('黄色') }}</el-option>
                     </el-select>
                 </div>
                 <div class="max-w460 color-box">
                     <el-input v-model="input2" disabled></el-input>
-                    <el-select v-model="form.wait_color[1]"  size="default">
+                    <el-select v-model="form.wait_color[1]" size="default">
                         <el-option value="red" :label="$t('红色')">{{ $t('红色') }}</el-option>
                         <el-option value="yellow" :label="$t('黄色')">{{ $t('黄色') }}</el-option>
                     </el-select>
@@ -40,8 +40,7 @@
 
             <el-form-item :label="$t('常用语言')" prop="language" :rules="[{ required: true, message: $t('请选择常用语言') }]">
                 <el-checkbox-group v-model="form.language">
-                    <el-checkbox v-for="item in languageList" :key="item.key" :label="item.key"
-                        :disabled="form.language.length == 1 && form.language.includes(item.key)">
+                    <el-checkbox v-for="item in languageList" :key="item.key" :label="item.key" :disabled="form.language.length == 1 && form.language.includes(item.key)">
                         {{ item.value }}
                     </el-checkbox>
                 </el-checkbox-group>
@@ -54,12 +53,17 @@
                     </template>
                 </el-select>
             </el-form-item>
+
+            <el-form-item :label="$t('当前已绑定设备')">
+                <el-input class="max-w460" type="password" v-model="equipment" disabled></el-input>
+                <el-button @click="" type="primary" link size="small">{{ $t('解绑') }}</el-button>
+            </el-form-item>
         </el-form>
         <div class="common-button-wrapper">
-            <el-button size="small"  @click="getData">{{ $t('重置') }}</el-button>
+            <el-button size="small" @click="getData">{{ $t('重置') }}</el-button>
             <el-button size="small" type="primary" @click="onSubmit" :loading="loading">{{ $t('保存') }}</el-button>
         </div>
-        <setPassword :advancedPassword="form.advanced_password" v-if="open" :open="open"  @close="(e) => { open = false; if (e == 1) { this.getData(); } }">
+        <setPassword :advancedPassword="form.advanced_password" v-if="open" :open="open" @close="(e) => { open = false; if (e == 1) { this.getData(); } }">
         </setPassword>
     </div>
 </template>
@@ -67,7 +71,7 @@
 import Terminal from '@/api/terminal.js';
 import setPassword from './setPassword.vue';
 export default {
-    components:{setPassword},
+    components: { setPassword },
     data() {
         return {
             form: {
@@ -84,9 +88,9 @@ export default {
             input1: $t('10分钟'),
             input2: $t('20分钟及以上'),
             languageList: [],
-            open:false,
-            loading:false,
-            password:'',
+            open: false,
+            loading: false,
+            password: '',
         }
     },
     created() {
@@ -121,7 +125,7 @@ export default {
                     self.password = 666666
                 }
                 self.form.language = self.form.language.filter(lang => {
-                    return self.languageList.map(h=>h.key).indexOf(lang) != -1;
+                    return self.languageList.map(h => h.key).indexOf(lang) != -1;
                 })
             }).catch(error => {
                 self.loading = false;
