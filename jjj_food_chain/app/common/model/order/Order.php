@@ -56,7 +56,8 @@ class Order extends BaseModel
         'order_type_text',
         'deliver_text',
         'elapsed_time',
-        'pay_time_text'
+        'pay_time_text',
+        'buffet_remaining_time'
     ];
 
     /**
@@ -162,6 +163,12 @@ class Order extends BaseModel
             return $currentTime - $generateTime;
         }
         return 0;
+    }
+
+    public function getBuffetRemainingTimeAttr($value, $data)
+    {
+        $remaining_time = $data['buffet_expired_time'] - time();
+        return max($remaining_time, 0);
     }
 
     // 支付时间格式化
