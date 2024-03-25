@@ -231,6 +231,7 @@
 }
 .el-button--primary.is-link{
     border: none;
+    color: var(--el-color-primary);
 }
 .el-button--primary.is-link:hover{
     color: var(--el-color-black);

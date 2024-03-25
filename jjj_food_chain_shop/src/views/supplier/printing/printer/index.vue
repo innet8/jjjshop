@@ -16,15 +16,13 @@
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
                     <el-table-column prop="printer_id" label="ID"></el-table-column>
                     <el-table-column prop="printer_name" :label="$t('打印机名称')"></el-table-column>
-                    <el-table-column prop="printer_type.text" :label="$t('打印机类型')	"></el-table-column>
+                    <el-table-column prop="printer_type.text" :label="$t('打印机类型')"></el-table-column>
                     <el-table-column prop="sort" :label="$t('排序')"></el-table-column>
                     <el-table-column prop="create_time" :label="$t('添加时间')"></el-table-column>
                     <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">
-                            <el-button @click="editClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/supplier/printing/printer/edit'">{{ $t('编辑') }}</el-button>
-                            <el-button @click="deleteClick(scope.row)" type="primary" link size="small"
-                                v-auth="'/supplier/printing/printer/delete'">{{ $t('删除') }}</el-button>
+                            <el-button @click="editClick(scope.row)" type="primary" link size="small" v-auth="'/supplier/printing/printer/edit'">{{ $t('编辑') }}</el-button>
+                            <el-button @click="deleteClick(scope.row)" type="primary" link size="small" v-auth="'/supplier/printing/printer/delete'">{{ $t('删除') }}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -32,15 +30,14 @@
 
             <!--分页-->
             <div class="pagination">
-                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" background
-                    :current-page="curPage" :page-size="pageSize" layout="total, prev, pager, next, jumper"
-                    :total="totalDataNumber">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" background :current-page="curPage" :page-size="pageSize"
+                    layout="total, prev, pager, next, jumper" :total="totalDataNumber">
                 </el-pagination>
             </div>
         </div>
 
-        <Add v-if="open_add" :open_add="open_add" @close="(e) => { open_add = false; if(e==1){ this.getData();} }"></Add>
-        <Edit v-if="open_edit" :open_edit="open_edit" :printer_id="printerId" @close="(e) => { open_edit = false; if(e==1){ this.getData();} }"></Edit>
+        <Add v-if="open_add" :open_add="open_add" @close="(e) => { open_add = false; if (e == 1) { this.getData(); } }"></Add>
+        <Edit v-if="open_edit" :open_edit="open_edit" :printer_id="printerId" @close="(e) => { open_edit = false; if (e == 1) { this.getData(); } }"></Edit>
     </div>
 </template>
 
@@ -49,7 +46,7 @@ import SettingApi from '@/api/setting.js';
 import Add from './add.vue';
 import Edit from './edit.vue'
 export default {
-    components: { Add , Edit},
+    components: { Add, Edit },
     data() {
         return {
             /*是否加载完成*/
@@ -159,5 +156,3 @@ export default {
     }
 };
 </script>
-
-

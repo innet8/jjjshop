@@ -72,9 +72,9 @@
                     <el-table-column prop="product_sort" :label="$t('排序')"></el-table-column>
                     <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">
-                            <el-button @click="editClick(scope.row)" type="primary" link size="small"
+                            <el-button @click="editClick(scope.row)" link type="primary" size="small"
                                 v-auth="'/product/store/product/edit'">{{ $t('编辑') }}</el-button>
-                            <el-button @click="deleteClick(scope.row)" type="primary" link size="small"
+                            <el-button @click="deleteClick(scope.row)" link type="primary" size="small"
                                 v-auth="'/product/store/product/delete'">{{ $t('删除') }}</el-button>
                         </template>
                     </el-table-column>
