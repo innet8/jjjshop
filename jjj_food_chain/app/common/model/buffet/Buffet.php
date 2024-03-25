@@ -7,7 +7,7 @@ use think\model\concern\SoftDelete;
 use app\common\model\order\OrderBuffet as OrderBuffetModel;
 use app\common\enum\order\OrderPayStatusEnum;
 use app\common\model\order\Order as OrderModel;
-
+use app\common\model\order\OrderBuffetDiscount;
 /**
  *
  */
@@ -31,7 +31,7 @@ class Buffet extends BaseModel
      */
     public function buffetProducts()
     {
-        return $this->hasMany('app\\common\\model\\buffet\\BuffetProduct', 'buffet_id', 'id')->with('product');
+        return $this->hasMany(BuffetProduct::class, 'buffet_id', 'id')->with('product');
     }
 
     // 与BuffetDiscount模型的多对多关联
@@ -89,6 +89,6 @@ class Buffet extends BaseModel
     {
         return (new self)->with(['buffetDiscount' => function($q) {
             $q->where('status', '=', 1);
-        }])->where('id', '=', $buffet_id)->find();
+        }])->where('id', '=', $buffet_id)->find()->toArray();
     }
 }

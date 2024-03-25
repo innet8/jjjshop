@@ -125,7 +125,7 @@ class HallCart extends Controller
         if ($model->delStay($order_id)) {
             // 修改桌台状态
             TableModel::close($table_id);
-            return $this->renderSuccess('取消成功');
+            return $this->renderSuccess('取消成功', ['res' => CartModel::getHallCartOrderDetail($this->cashier['user'], 0, $order_id)]);
         };
         return $this->renderError($model->getError() ?: '取消失败');
     }
@@ -353,9 +353,11 @@ class HallCart extends Controller
         }
         $list = [];
         foreach ($detail->buffet as $buffet) {
-            $discount = Buffet::getBuffetDiscountList($buffet->buffet_id);
-            if ($discount) {
-                $list[] =  $discount;
+            $buffetDiscount = Buffet::getBuffetDiscountList($buffet->buffet_id);
+            if ($buffetDiscount) {
+                $buffetDiscount['cur_num'] = OrderModel::getOrderBuffetDiscoun($detail['order_id'], $buffetDiscount['id']);
+                $buffetDiscount['limit_num'] = $detail['meal_num'];
+                $list[] =  $buffetDiscount;
             }
         }
         return $this->renderSuccess('桌台自助餐优惠信息', $list);

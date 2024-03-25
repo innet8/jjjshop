@@ -1585,6 +1585,14 @@ class Order extends BaseModel
         return (new OrderBuffetDiscount())->where('order_id', '=', $order_id)->sum('num');
     }
 
+    // 订单自助餐其中一种优惠数量
+    public static function getOrderBuffetDiscoun($order_id, $buffet_id)
+    {
+        return (new OrderBuffetDiscount())->where('order_id', '=', $order_id)
+            ->where('buffet_id', '=', $buffet_id)
+            ->sum('num');
+    }
+
     // 订单自助餐数量
     public static function getDelayNum($order_id)
     {

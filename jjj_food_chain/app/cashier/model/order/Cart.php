@@ -800,7 +800,7 @@ class Cart extends CartModel
             $buffetNum = Order::getBuffetNum($order['order_id']);
             // 加钟数量
             $delayNum = Order::getDelayNum($order['order_id']);
-            // 加钟数量
+            // 自助餐优惠数量
             $buffetDiscountNum = Order::getBuffetDiscountNum($order['order_id']);
 
             $order_total_num = $num + $buffetNum + $delayNum + $buffetDiscountNum;
