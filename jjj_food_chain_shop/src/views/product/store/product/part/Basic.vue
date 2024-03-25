@@ -22,7 +22,7 @@
         </template>
 
         <el-form-item :label="$t('所属分类：')" :rules="[{ required: true, message: $t('请选择所属分类') }]" prop="model.category_id">
-            <el-cascader :options="options" v-model="form.model.category_id" clearable
+            <el-cascader class="max-w460" :options="options" v-model="form.model.category_id" clearable style="width: 100%;"
                 :placeholder="$t('请选择分类')"></el-cascader>
         </el-form-item>
 

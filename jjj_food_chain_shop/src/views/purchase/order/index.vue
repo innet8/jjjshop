@@ -90,7 +90,7 @@
                 layout="total, prev, pager, next, jumper" :total="totalDataNumber"></el-pagination>
         </div>
 
-        <el-dialog v-model="dialogVisible" :title="$t('提示')" width="420" :before-close="handleClose" align-center>
+        <el-dialog v-model="dialogVisible" :title="$t('提示')" width="420" align-center>
             <el-form size="small" :inline="true" ref="form" :model="form" label-position="top">
                 <el-form-item style="width: 100%;margin-right: 0;" :label="$t('确定审核驳回吗？')" :rules="[{ required: true, message: $t('请输入驳回原因') }]" prop="time">
                     <el-input size="small" v-model="form.turnDown" :placeholder="$t('请输入驳回原因')"></el-input>
@@ -99,7 +99,7 @@
 
             <template #footer>
                 <div class="dialog-footer">
-                    <el-button @click="dialogVisible = false">{{ $t('取消') }}</el-button>
+                    <el-button @click="handleClose">{{ $t('取消') }}</el-button>
                     <el-button type="primary" @click="dialogVisible = false"> {{ $t('确定') }}</el-button>
                 </div>
             </template>
@@ -157,6 +157,12 @@ export default {
         /*打开添加*/
         addClick() {
             this.$router.push('/purchase/order/add');
+        },
+
+        /*打开添加*/
+        handleClose() {
+            this.dialogVisible = false;
+            this.form.turnDown = '';
         },
 
 

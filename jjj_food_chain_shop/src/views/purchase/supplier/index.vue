@@ -17,9 +17,21 @@
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
                     <el-table-column prop="name" :label="$t('供应商名称')" width="200"> </el-table-column>
                     <el-table-column prop="address" :label="$t('供应商地址')"></el-table-column>
-                    <el-table-column prop="contact_person" :label="$t('联系人')"></el-table-column>
-                    <el-table-column prop="contact_phone" :label="$t('联系电话')"></el-table-column>
-                    <el-table-column prop="position" :label="$t('职位')"></el-table-column>
+                    <el-table-column prop="contact_person" :label="$t('联系人')">
+                        <template #default="scope">
+                            {{   scope.row.contact_person || '-' }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="contact_phone" :label="$t('联系电话')">
+                        <template #default="scope">
+                            {{   scope.row.contact_phone || '-' }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="position" :label="$t('职位')">
+                        <template #default="scope">
+                            {{   scope.row.position || '-' }}
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="purchaser.real_name" :label="$t('采购负责人')"></el-table-column>
                     <el-table-column prop="create_time" :label="$t('时间')" width="220">
                         <template #default="scope">

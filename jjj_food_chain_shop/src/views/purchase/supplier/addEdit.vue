@@ -19,7 +19,7 @@
             <el-form-item :label="$t('采购负责人')" prop="purchaser_id" :rules="[{ required: true, message: $t('请选择采购负责人') }]">
                 <el-select size="small" v-model="form.purchaser_id" filterable :placeholder="$t('商品状态')">
                     <template v-for="item in userList">
-                        <el-option :label="item.user_name" :value="item.shop_user_id"></el-option>
+                        <el-option :label="item.real_name" :value="item.shop_user_id"></el-option>
                     </template>
 
                 </el-select>
