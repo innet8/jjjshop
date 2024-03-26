@@ -67,14 +67,26 @@ class ErpInventoryRecord extends BaseModel
      * @param [type] $params
      * @return object
      */
-    public function getList($params)
+    public function getList($params, $type = self::INVENTORY_TYPE_IN)
     {
         $model = new self;
         if (isset($params['name']) && $params['name']) {
             $model = $model->like('name', $params['name']);
         }
-        $list = $model->with(['product', 'purchaser'])->order('create_time desc')->paginate($params);
+        $list = $model->with(['product', 'operator'])->where('inventory_type', $type)->order('create_time desc')->paginate($params);
         return $list;
+    }
+
+    /**
+     * 详情
+     */
+    public function detail($id)
+    {
+        $model = new self;
+        $info = $model->with(['product', 'operator'])
+            ->where('id', $id)
+            ->find();
+        return $info;
     }
 
     /**

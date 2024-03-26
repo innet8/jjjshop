@@ -7,30 +7,30 @@ use hg\apidoc\annotation as Apidoc;
 use app\shop\model\erp\ErpInventoryRecord as ErpInventoryRecordModel;
 
 /**
- * 库存记录
+ * 出库记录
  * @Apidoc\Group("inventory")
- * @Apidoc\Sort(10)
+ * @Apidoc\Sort(20)
  */
-class ErpInventoryRecord extends Controller
+class ErpInventoryRecordOut extends Controller
 {
     /**
-     * @Apidoc\Title("库存列表")
+     * @Apidoc\Title("列表")
      * @Apidoc\Method ("POST")
-     * @Apidoc\Url ("/index.php/shop/purchase.ErpInventoryRecord/list")
-     * @Apidoc\Param("name", type="string", require=false, desc="库存名称")
+     * @Apidoc\Url ("/index.php/shop/inventory.ErpInventoryRecordOut/list")
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("list", type="array", ref="app\shop\model\erp\ErpInventoryRecord\getList")
      */
     public function list()
     {
-        $list = (new ErpInventoryRecordModel)->getList($this->postData());
+        $model = new ErpInventoryRecordModel;
+        $list = $model->getList($this->postData(), $model::INVENTORY_TYPE_OUT);
         return $this->renderSuccess('', compact('list'));
     }
 
     /**
      * @Apidoc\Title("撤销")
      * @Apidoc\Method ("POST")
-     * @Apidoc\Url ("/index.php/shop/purchase.ErpInventoryRecord/cancel")
+     * @Apidoc\Url ("/index.php/shop/inventory.ErpInventoryRecordOut/cancel")
      * @Apidoc\Param("erp_inventory_id", type="int", require=true, desc="库存id")
      * @Apidoc\Returned()
      */
@@ -49,7 +49,7 @@ class ErpInventoryRecord extends Controller
     /**
      * @Apidoc\Title("删除库存")
      * @Apidoc\Method ("POST")
-     * @Apidoc\Url ("/index.php/shop/purchase.ErpInventoryRecord/delete")
+     * @Apidoc\Url ("/index.php/shop/inventory.ErpInventoryRecordOut/delete")
      * @Apidoc\Param("erp_inventory_id", type="int", require=true, desc="库存id")
      * @Apidoc\Returned()
      */
