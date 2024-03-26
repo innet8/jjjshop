@@ -32,6 +32,9 @@ class CreateErpPurchaseDetailTable extends Migrator
         $table = $this->table('erp_purchase_detail', ['engine' => 'InnoDB', 'collation' => 'utf8mb4_unicode_ci', 'comment' => 'erp采购单明细表']);
         $table->addColumn('purchase_order_id', 'integer', ['default' => 0, 'comment' => '采购单id']);
         $table->addColumn('product_id', 'integer', ['default' => 0, 'comment' => '产品表id']);
+        $table->addColumn('estimate_purchase_price', 'decimal', ['precision' => 12, 'scale' => 2, 'default' => '0.00', 'comment' => '预计采购单价']);
+        $table->addColumn('estimate_purchase_num', 'integer', ['default' => 0, 'comment' => '预计采购数量']);
+        $table->addColumn('estimate_total_amount', 'decimal', ['precision' => 12, 'scale' => 2, 'default' => '0.00', 'comment' => '预计采购总额']);
         $table->addColumn('actual_purchase_price', 'decimal', ['precision' => 12, 'scale' => 2, 'default' => '0.00', 'comment' => '实际采购单价']);
         $table->addColumn('actual_purchase_num', 'integer', ['default' => 0, 'comment' => '实际采购数量']);
         $table->addColumn('actual_total_amount', 'decimal', ['precision' => 12, 'scale' => 2, 'default' => '0.00', 'comment' => '实际采购总额']);

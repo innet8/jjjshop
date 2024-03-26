@@ -23,6 +23,6 @@ class ErpPurchaseDetail extends BaseModel
      */
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product_id', 'product_id');
+        return $this->belongsTo(Product::class, 'product_id', 'product_id')->field('product_id, product_name, type')->with(['image']);
     }
 }

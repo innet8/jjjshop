@@ -97,7 +97,7 @@ class BaseModel extends Model
      */
     public function scopeApp_id($query)
     {
-        if (self::$app_id > 0) {
+        if ($query->getTableFields() && in_array('app_id', $query->getTableFields()) && self::$app_id > 0) {
             $query->where($query->getTable() . '.app_id', self::$app_id);
         }
     }
