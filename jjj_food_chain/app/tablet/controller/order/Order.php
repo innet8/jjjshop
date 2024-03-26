@@ -119,18 +119,20 @@ class Order extends Controller
     {
         $model = new OrderModel();
         $order = $model->getSendKitchen($table_id);
-        $buffet = $order['buffet'];
-        $delay = $order['delay'];
         $list = [];
         $total_price = 0;
 
         if ($order) {
+            $buffet = $order['buffet'];
+            $delay = $order['delay'];
+            $buffetDiscount = $order['buffetDiscount'];
             $buffetTotalPrice = helper::getArrayColumnSum($order['buffet'], 'total_price');
             $delayTotalPrice = helper::getArrayColumnSum($order['delay'], 'total_price');
+            $buffetDiscountTotalPrice = helper::getArrayColumnSum($order['buffetDiscount'], 'total_price');
             $sendKitchenProductTotalPrice = helper::getArrayColumnSum($order['sendKitchenProduct'], 'total_product_price');
-            $total_price = helper::bcadd(helper::bcadd($buffetTotalPrice, $delayTotalPrice), $sendKitchenProductTotalPrice);
+            $total_price = helper::bcsub(helper::bcadd(helper::bcadd($buffetTotalPrice, $delayTotalPrice), $sendKitchenProductTotalPrice), $buffetDiscountTotalPrice);
 
-            $list = OrderProduct::getGroupByTime($order['order_id'], $buffet, $delay);
+            $list = OrderProduct::getGroupByTime($order['order_id'], $buffet, $delay, $buffetDiscount);
             array_multisort(array_column($list,'timestamp'), SORT_DESC, $list); //SORT_DESC降序，SORT_ASC升序
         }
         return $this->renderSuccess('请求成功', compact('list', 'total_price'));

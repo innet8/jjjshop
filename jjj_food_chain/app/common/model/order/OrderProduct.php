@@ -523,7 +523,7 @@ class OrderProduct extends BaseModel
     }
 
     // 订单送厨商品按送厨时间分组
-    public static function getGroupByTime($order_id, $buffet_list = [], $delay_list = [])
+    public static function getGroupByTime($order_id, $buffet_list = [], $delay_list = [], $buffet_discount_list = [])
     {
         $orderProductList = OrderProduct::where('order_id', '=', $order_id)->where('is_send_kitchen', '=', 1)->select();
         $result = [];
@@ -546,6 +546,16 @@ class OrderProduct extends BaseModel
             $result[$addTime]['plist'][] = $delay;
             $result[$addTime]['timestamp'] = $addTime;
             $result[$addTime]['date'] = $delay->create_time;
+        }
+        // 自助餐优惠
+        foreach ($buffet_discount_list as $discount) {
+            $addTime = strtotime($discount->create_time);
+            if (!isset($result[$addTime])) {
+                $result[$addTime] = [];
+            }
+            $result[$addTime]['plist'][] = $discount;
+            $result[$addTime]['timestamp'] = $addTime;
+            $result[$addTime]['date'] = $discount->create_time;
         }
         // 商品
         foreach ($orderProductList as $orderProduct) {
