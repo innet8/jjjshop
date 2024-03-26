@@ -33,13 +33,12 @@ class AddFieldV102ToProductTable extends Migrator
         $table = $this->table('product');
         $table->addColumn(Column::integer('type')->setDefault(10)->setComment('类型 10-成品 20-材料')->setAfter('product_name'));
         $table->addColumn(Column::integer('erp_supplier_id')->setDefault(0)->setComment('供应商id')->setAfter('type'));
-        $table->addColumn(Column::string('barcode', 255)->setDefault('')->setComment('商品条码')->setAfter('erp_supplier_id'));
-        $table->addColumn(Column::integer('material_num')->setDefault(0)->setComment('每次消耗的材料数量')->setAfter('barcode'));
         $table->update();
 
         // 产品SKU表
         $table = $this->table('product_sku');
         $table->addColumn(Column::decimal('purchase_price', 12, 2)->setDefault(0.00)->setComment('采购单价')->setAfter('product_price'));
+        $table->addColumn(Column::string('barcode', 255)->setDefault('')->setComment('商品条码')->setAfter('purchase_price'));
         $table->update();
     }
 }

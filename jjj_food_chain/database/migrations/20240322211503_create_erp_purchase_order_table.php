@@ -33,9 +33,7 @@ class CreateErpPurchaseOrderTable extends Migrator
         $table->addColumn('number', 'string', ['limit' => 255, 'default' => '', 'comment' => '采购编号']);
         $table->addColumn('name', 'string', ['limit' => 255, 'default' => '', 'comment' => '采购名称']);
         $table->addColumn('type', 'integer', ['default' => 10, 'comment' => '采购方式 10-总部采购 20-自行采购']);
-        $table->addColumn('purchaser_id', 'integer', ['default' => 0, 'comment' => '采购员id']);
         $table->addColumn('applicant_id', 'integer', ['default' => 0, 'comment' => '申请人id']);
-        $table->addColumn('purchase_detail_id', 'integer', ['default' => 0, 'comment' => '采购单明细表id']);
         $table->addColumn('total_num', 'integer', ['default' => 0, 'comment' => '商品总数']);
         $table->addColumn('total_amount', 'decimal', ['precision' => 12, 'scale' => 2, 'default' => '0.00', 'comment' => '采购总额']);
         $table->addColumn('arrival_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'comment' => '到货时间']);
