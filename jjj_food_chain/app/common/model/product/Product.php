@@ -16,6 +16,12 @@ class Product extends BaseModel
     protected $append = ['product_sales', 'product_name_text', 'product_unit_text'];
 
     /**
+     * 类型 10-成品 20-材料
+     */
+    const TYPE_PRODUCT = 10;
+    const TYPE_MATERIAL = 20;
+
+    /**
      * 获取商品数据
      */
     public function getProductNameTextAttr($value, $data)
@@ -176,6 +182,9 @@ class Product extends BaseModel
         // 筛选条件
         $filter = [];
         $model = $this;
+        if (isset($params['product_material_type'])) {
+            $model = $model->where('product.type', '=', $params['product_material_type']);
+        }
         if (isset($params['product_type'])) {
             $model = $model->where('product.product_type', '=', $params['product_type']);
         }

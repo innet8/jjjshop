@@ -193,15 +193,14 @@ class AuthService
      */
     public static function getAccessNameByApiPath($path, $app_id)
     {
-        $arr = Cache::get('api_path_access_' . $app_id);
-        $arr = [];
+        $arr = Cache::get('shop_api_path_access_' . $app_id);
         if (!$arr) {
             // 查找访问资源
             $list = (new Access())->withoutGlobalScope()->field(['name', 'api_path'])->select();
             foreach ($list as $access) {
                 $arr[$access['api_path']] = $access['name'];
             }
-            Cache::tag('cache')->set('api_path_access_' . $app_id, $arr, 3600);
+            Cache::tag('cache')->set('shop_api_path_access_' . $app_id, $arr, 3600);
         }
         $url = isset($arr[$path]) ? $arr[$path] : '';
         return $url;

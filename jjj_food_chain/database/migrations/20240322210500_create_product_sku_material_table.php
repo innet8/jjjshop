@@ -30,7 +30,8 @@ class CreateProductSkuMaterialTable extends Migrator
     public function change()
     {
         $table = $this->table('product_sku_material', ['engine' => 'InnoDB', 'collation' => 'utf8mb4_unicode_ci', 'comment' => '产品规格材料关联表']);
-        $table->addColumn('product_sku_id', 'integer', ['default' => 0, 'comment' => '规格id']);
+        $table->addColumn('spec_id', 'integer', ['default' => 0, 'comment' => '规格id']);
+        $table->addColumn('product_sku_id', 'integer', ['default' => 0, 'comment' => '产品规格id']);
         $table->addColumn('material_id', 'integer', ['default' => 0, 'comment' => '材料id']);
         $table->addColumn('material_num', 'integer', ['default' => 0, 'comment' => '使用库存数量']);
         $table->addColumn('create_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'signed' => true, 'comment' => '创建时间']);

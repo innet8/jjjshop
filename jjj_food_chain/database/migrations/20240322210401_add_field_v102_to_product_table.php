@@ -40,5 +40,10 @@ class AddFieldV102ToProductTable extends Migrator
         $table->addColumn(Column::decimal('purchase_price', 12, 2)->setDefault(0.00)->setComment('采购单价')->setAfter('product_price'));
         $table->addColumn(Column::string('barcode', 255)->setDefault('')->setComment('商品条码')->setAfter('purchase_price'));
         $table->update();
+
+        // 产品Feed表
+        $table = $this->table('product_feed');
+        $table->addColumn(Column::integer('stock_num')->setDefault(0)->setComment('库存数量')->setAfter('price'));
+        $table->update();
     }
 }

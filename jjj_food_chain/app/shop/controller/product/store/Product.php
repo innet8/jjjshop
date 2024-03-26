@@ -24,6 +24,7 @@ class Product extends Controller
      * @Apidoc\Param("type", type="string", require=false, desc="是否上架 sell-上架 lower-下架")
      * @Apidoc\Param("stock", type="int", default=0, require=false, desc="库存 0-全部 10-低于10 20-低于20 ....")
      * @Apidoc\Param("product_ids", type="string", require=false, desc="商品ids，逗号分隔")
+     * @Apidoc\Param("product_material_type", type="int", default=10, require=false, desc="v1.0.2 类型 10-成品 20-材料")
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Product\getList")
      */
@@ -70,10 +71,29 @@ class Product extends Controller
      * @Apidoc\Title("添加商品")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/shop/product.store.product/add")
-     * @Apidoc\Param("product_name", type="string", require=false, desc="商品名称")
-     * @Apidoc\Param("category_id", type="int", default=0, require=false, desc="分类id")
-     * @Apidoc\Param("type", type="string", require=false, desc="是否上架 sell-上架 lower-下架")
-     * @Apidoc\Param("stock", type="int", default=0, require=false, desc="库存 0-全部 10-低于10 20-低于20 ....")
+     * @Apidoc\Param("params", type="array", require=true, desc="商品参数", children= {
+     *  @Apidoc\Param("product_name", type="string", require=false, desc="商品名称"),
+     *  @Apidoc\Param("category_id", type="int", default=0, require=false, desc="分类id"),
+     *  @Apidoc\Param("type", type="string", require=false, desc="是否上架 sell-上架 lower-下架"),
+     *  @Apidoc\Param("stock", type="int", default=0, require=false, desc="库存 0-全部 10-低于10 20-低于20 ...."),
+     *  @Apidoc\Param("type ", type="int", default=10, require=false, desc="v1.0.2 类型 10-成品 20-材料"),
+     *  @Apidoc\Param("erp_supplier_id", type="int", default=0, require=false, desc="v1.0.2 erp供应商id"),
+     *  @Apidoc\Param("sku", type="array", require=false, desc="v1.0.2 商品sku", children={
+     *       @Apidoc\Param("purchase_price", type="decimal", require=true, desc="采购单价"),
+     *       @Apidoc\Param("barcode", type="string", require=true, desc="商品条码"),
+     *       @Apidoc\Param("material", type="array", require=true, desc="商品材料", children={
+     *           @Apidoc\Param("product_id", type="int", require=true, desc="商品id"),
+     *           @Apidoc\Param("material_num", type="string", require=true, desc="每次消耗的材料数量"),
+     *       }),
+     *  }),
+     *  @Apidoc\Param("product_feed", type="array", require=false, desc="v1.0.2 商品加料", children={
+     *       @Apidoc\Param("stock_num", type="int", require=true, desc="库存数量"),
+     *       @Apidoc\Param("material", type="array", require=true, desc="商品材料", children={
+     *           @Apidoc\Param("product_id", type="int", require=true, desc="商品id"),
+     *           @Apidoc\Param("material_num", type="string", require=true, desc="每次消耗的材料数量"),
+     *       }),
+     *  }),
+     * })
      * @Apidoc\Returned()
      */
     public function add($scene = 'add')
@@ -105,11 +125,29 @@ class Product extends Controller
      * @Apidoc\Title("编辑商品")
      * @Apidoc\Method ("POST")
      * @Apidoc\Url ("/index.php/shop/product.store.product/edit")
-     * @Apidoc\Param("product_id", type="int", require=true, desc="商品id")
-     * @Apidoc\Param("product_name", type="string", require=false, desc="商品名称")
-     * @Apidoc\Param("category_id", type="int", default=0, require=false, desc="分类id")
-     * @Apidoc\Param("type", type="string", require=false, desc="是否上架 sell-上架 lower-下架")
-     * @Apidoc\Param("stock", type="int", default=0, require=false, desc="库存 0-全部 10-低于10 20-低于20 ....")
+     * @Apidoc\Param("params", type="array", require=true, desc="商品参数", children= {
+     *  @Apidoc\Param("product_id", type="int", require=true, desc="商品id"),
+     *  @Apidoc\Param("product_name", type="string", require=false, desc="商品名称"),
+     *  @Apidoc\Param("category_id", type="int", default=0, require=false, desc="分类id"),
+     *  @Apidoc\Param("type", type="string", require=false, desc="是否上架 sell-上架 lower-下架"),
+     *  @Apidoc\Param("stock", type="int", default=0, require=false, desc="库存 0-全部 10-低于10 20-低于20 ...."),
+     *  @Apidoc\Param("type ", type="int", default=10, require=false, desc="v1.0.2 类型 10-成品 20-材料"),
+     *  @Apidoc\Param("erp_supplier_id", type="int", default=0, require=false, desc="v1.0.2 erp供应商id"),
+     *  @Apidoc\Param("sku", type="array", require=false, desc="v1.0.2 商品sku", children={
+     *       @Apidoc\Param("purchase_price", type="string", require=true, desc="采购单价"),
+     *       @Apidoc\Param("barcode", type="int", require=true, desc="商品条码"),
+     *       @Apidoc\Param("material", type="array", require=true, desc="商品材料", children={
+     *           @Apidoc\Param("product_id", type="int", require=true, desc="商品id"),
+     *           @Apidoc\Param("material_num", type="string", require=true, desc="每次消耗的材料数量"),
+     *       }),
+     *  }),
+     *  @Apidoc\Param("product_feed", type="array", require=false, desc="v1.0.2 商品加料", children={
+     *       @Apidoc\Param("material", type="array", require=true, desc="商品材料", children={
+     *           @Apidoc\Param("product_id", type="int", require=true, desc="商品id"),
+     *           @Apidoc\Param("material_num", type="string", require=true, desc="每次消耗的材料数量"),
+     *       }),
+     *  }),
+     * })
      * @Apidoc\Returned()
      */
     public function edit($product_id, $scene = 'edit')

@@ -18,7 +18,7 @@ class Spec extends SpecModel
         if (isset($data['spec_name']) && $data['spec_name'] != '') {
             $model = $model->like('spec_name', $data['spec_name']);
         }
-        return $model->where('shop_supplier_id', '=', $shop_supplier_id)
+        return $model->with('material')->where('shop_supplier_id', '=', $shop_supplier_id)
             ->order(['sort' => 'asc', 'create_time' => 'desc'])
             ->paginate($data);
     }

@@ -18,7 +18,7 @@ class Feed extends FeedModel
         if (isset($data['feed_name']) && $data['feed_name'] != '') {
             $model = $model->like('feed_name', trim($data['feed_name']));
         }
-        return $model->where('shop_supplier_id', '=', $shop_supplier_id)
+        return $model->with(['material'])->where('shop_supplier_id', '=', $shop_supplier_id)
             ->order(['sort' => 'asc', 'create_time' => 'desc'])
             ->paginate($data);
     }

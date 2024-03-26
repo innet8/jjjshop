@@ -21,7 +21,15 @@ class Spec extends BaseModel
     {
         return extractLanguage($data['spec_name']);
     }
-    
+
+    /**
+     * 关联材料
+     */
+    public function material()
+    {
+        return $this->hasMany(ProductSkuMaterial::class, 'spec_id');
+    }
+
     //更新规格
     public function updateSpec($data)
     {
@@ -48,7 +56,7 @@ class Spec extends BaseModel
      */
     public function getAllList($shop_supplier_id)
     {
-        return $this->where('shop_supplier_id', '=', $shop_supplier_id)->order(['sort' => 'asc', 'create_time' => 'desc'])->select();
+        return $this->with(['material'])->where('shop_supplier_id', '=', $shop_supplier_id)->order(['sort' => 'asc', 'create_time' => 'desc'])->select();
     }
 
     /**

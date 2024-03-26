@@ -3,6 +3,7 @@
 namespace app\shop\model\product;
 
 use app\common\library\helper;
+use app\common\model\product\ProductSkuMaterial;
 use app\common\model\product\Product as ProductModel;
 use \app\common\model\buffet\BuffetProduct as BuffetProductModel;
 
@@ -16,6 +17,10 @@ class Product extends ProductModel
      */
     public function add($data)
     {
+        // if (!isset($data['type']) || !in_array($data['type'], [ProductModel::TYPE_PRODUCT, ProductModel::TYPE_MATERIAL])) {
+        //     $this->error = '商品类型不能为空';
+        //     return false;
+        // }
         if(hasEmptyValue($data['product_name'] ?? '')){
             $this->error = '商品名称不能为空';
             return false;
@@ -93,7 +98,23 @@ class Product extends ProductModel
      * 处理数据为负数时，自动转换为0
      */
     private function sanitizeProductData($data) {
-        $keys = ['price', 'product_price', 'sales_initial', 'product_sort', 'line_price', 'supplier_price', 'bag_price', 'cost_price', 'min_buy', 'limit_num', 'first_money', 'second_money', 'third_money'];
+        $keys = [
+            'price',
+            'product_price',
+            'sales_initial',
+            'product_sort',
+            'line_price',
+            'supplier_price',
+            'bag_price',
+            'cost_price',
+            'min_buy',
+            'limit_num',
+            'first_money',
+            'second_money',
+            'third_money',
+            'purchase_price',
+            'material_num',
+        ];
 
         foreach ($keys as $key) {
             if (array_key_exists($key, $data)) {
@@ -123,6 +144,10 @@ class Product extends ProductModel
      */
     public function edit($data)
     {
+        // if (!isset($data['type']) || !in_array($data['type'], [ProductModel::TYPE_PRODUCT, ProductModel::TYPE_MATERIAL])) {
+        //     $this->error = '商品类型不能为空';
+        //     return false;
+        // }
         if(hasEmptyValue($data['product_name'] ?? '')){
             $this->error = '商品名称不能为空';
             return false;
@@ -192,15 +217,33 @@ class Product extends ProductModel
             $sku['line_price'] = $sku['product_price'];
             $this->sku()->delete(); // 先删除所有规格
             $this->sku()->save($sku);
+            // 如果有材料，则添加材料规格
+            if (isset($data['sku']['material']) && !empty($data['sku']['material'])) {
+                $material = [
+                    'product_sku_id' => $this->sku()->getLastInsID(),
+                ];
+                $material = array_merge($material, $data['sku']['material'] ?? []);
+                (new ProductSkuMaterial)->add($material);
+            }
             $stock = $sku['stock_num'];
             $product_price = $sku['product_price'];
             $cost_price = $sku['cost_price'];
             $bag_price = $sku['bag_price'] ?? 0;
         } else if ($data['spec_type'] == '20') {
-            //更新规格
+            // 更新规格
             (new Spec)->updateSpec($data['sku']);
             // 添加商品sku
             $model->addSkuList($this['product_id'], $data['sku'], $productSkuIdList);
+            // 关联规格材料
+            foreach ($this->sku() as $item) {
+                if (isset($data['sku']['material']) && !empty($data['sku']['material'])) {
+                    $material = [
+                        'product_sku_id' => $item->product_sku_id,
+                    ];
+                    $material = array_merge($material, $data['sku']['material'] ?? []);
+                    (new ProductSkuMaterial)->add($material);
+                }
+            }
             $product_price = $data['sku'][0]['product_price'] ?? 0;
             $cost_price = $data['sku'][0]['cost_price'] ?? 0;
             $bag_price = $data['sku'][0]['bag_price'] ?? 0;
