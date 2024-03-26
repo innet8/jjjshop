@@ -16,59 +16,77 @@
                     <el-button type="primary" @click="addIngredients">{{ $t('添加加料') }}+</el-button>
                 </el-form-item>
                 <!--多规格表格-->
-                <el-form-item class="product-box mb18" v-for="(item, index) in form.model.product_feed" :key="index"
-                    v-if="form.model.product_feed.length > 0">
+                <el-form-item class="product-box mb18" v-for="(item, index) in form.model.product_feed" :key="index" v-if="form.model.product_feed.length > 0">
                     <template #label>
                         <el-icon class="delete-icon" @click="handleDelete(index)">
                             <Delete />
                         </el-icon>
                     </template>
                     <el-form :ref="`form-${index}`" :model="item" class="product-attr">
-                        <el-form-item v-for="(items, indexs) in languageList" :key="indexs"
-                            :prop="`item.feed_name[items.key]`" :rules="[{
-                                validator: () => {
-                                    return item.feed_name[items.key] ? true : false;
-                                },
-                                message: $t('请输入加料名称')
-                            }]">
+                        <el-form-item v-for="(items, indexs) in languageList" :key="indexs" :prop="`item.feed_name[items.key]`"
+                            :rules="[{ validator: () => { return item.feed_name[items.key] ? true : false; }, message: $t('请输入加料名称') }]">
                             <template #label>
-                                <span style="color: var(--el-color-danger);margin: 0  4px 0 0 !important;">*</span>{{
-                                    $t('加料名称：') }}<span class="product-tips">({{ items.value }})</span>
+                                <span style="color: var(--el-color-danger);margin: 0  4px 0 0 !important;">*</span>{{ $t('加料名称：') }}<span class="product-tips">
+                                    ({{ items.value }})
+                                </span>
                             </template>
-                            <el-autocomplete :fetch-suggestions="(e, h) => querySearch(e, h, items.key)"
-                                @select="(e) => selectChange(e, index)" class="inline-input"
-                                v-model="item.feed_name[items.key]" maxlength="128"
-                                :placeholder="$t('如：番茄酱')"></el-autocomplete>
+                            <el-autocomplete :fetch-suggestions="(e, h) => querySearch(e, h, items.key)" @select="(e) => selectChange(e, index)" class="inline-input"
+                                v-model="item.feed_name[items.key]" maxlength="128" :placeholder="$t('如：番茄酱')"></el-autocomplete>
                         </el-form-item>
-                        <el-form-item :label="$t('价格：')" :prop="`item.price`" :rules="[{
-                            validator: () => {
-                                return item.price != '' ? true : false;
-                            },
-                            message: $t('请输入价格')
-                        }]">
+                        <el-form-item :label="$t('价格：')" :prop="`item.price`" :rules="[{ validator: () => { return item.price != '' ? true : false; }, message: $t('请输入价格') }]">
                             <template #label>
-                                <span style="color: var(--el-color-danger);margin: 0  4px 0 0 !important;">*</span>{{
-                                    $t('价格：') }}
+                                <span style="color: var(--el-color-danger);margin: 0  4px 0 0 !important;">*</span>{{ $t('价格：') }}
                             </template>
-                            <el-input-number :controls="false" :min="0" :max="1000000" :placeholder="$t('请输入价格')"
-                                v-model.number="item.price"></el-input-number>
+                            <el-input-number :controls="false" :min="0" :max="1000000" :placeholder="$t('请输入价格')" v-model.number="item.price"></el-input-number>
                         </el-form-item>
+
+                        <el-form-item :label="$t('库存数量：')" :prop="`item.stock_num`"
+                            :rules="[{ validator: () => { return item.stock_num != '' ? true : false; }, message: $t('请填写库存数量') }]">
+                            <template #label>
+                                <span style="color: var(--el-color-danger);margin: 0  4px 0 0 !important;">*</span>{{ $t('库存数量：') }}
+                            </template>
+                            <el-input-number :controls="false" :min="0" :max="1000000" :placeholder="$t('请填写库存数量')" v-model.number="item.stock_num"></el-input-number>
+                        </el-form-item>
+
+                        <el-form-item :label="$t('材料')" width="300">
+                            <el-button type="primary" :style="form.ing_select_list[index].length > 0 ? 'margin-top: 16px;' : ''" @click='addMaterials(index)'>{{
+            $t('添加材料') }}</el-button>
+                        </el-form-item>
+                        <div class="materials-one" label="" v-for="items, index in form.ing_select_list[index]">
+                            <el-form-item label="" class="max-w230">
+                                <el-input v-model="items.product_name_text" disabled></el-input>
+                            </el-form-item>
+                            <el-form-item label="" class="max-w230">
+                                <el-input v-model="form.model.sku[scope.$index].material[index].material_num" :placeholder="$t('请输入数量')">
+                                    <template #append>{{ items.product_unit_text }}</template>
+                                </el-input>
+
+                            </el-form-item>
+                            <el-icon class="delete-icon" @click="handleDelete(scope.$index, index)">
+                                <Delete />
+                            </el-icon>
+                        </div>
                     </el-form>
 
                 </el-form-item>
                 <!-- </el-form-item> -->
             </div>
         </div>
-
+        <productList v-if="open_product" :open_product="open_product" :index="index" :multiple_selection="multiple_selection" @closeDialogFunc="closeDialogFunc($event)">
+        </productList>
     </div>
 </template>
 
 <script>
+import productList from './spec/productList.vue';
 import { languageStore } from '@/store/model/language.js';
 const languageData = JSON.stringify(languageStore().languageData)
 const languageList = languageStore().languageList;
 
 export default {
+    components: {
+        productList
+    },
     data() {
         let languageObj = {}
         languageList.forEach(item => {
@@ -81,6 +99,10 @@ export default {
             formData: {
                 feed: []
             },
+            //材料
+            open_product: false,
+            multiple_selection: [],
+            index: 0,
         }
     },
     inject: {
@@ -119,13 +141,15 @@ export default {
                 {
                     feed_name: JSON.parse(languageData),
                     price: null,
+                    stock_num: null,
+                    material: [],
                 }
             )
         },
         handleDelete(index) {
             this.form.model.product_feed.splice(index, 1);
         },
-        
+
         querySearch(queryString, cb, key) {
             let restaurants = [];
             restaurants = this.restaurantsObj[key]
@@ -160,6 +184,41 @@ export default {
                 })
             })
         },
+
+        addMaterials(index) {
+            this.multiple_selection = this.form.ing_select_list[index];
+            this.index = index
+            this.open_product = true;
+        },
+
+        closeDialogFunc(e) {
+            this.open_product = e.openDialog;
+            if (e.type == 'submit') {
+                let map = new Map();
+  
+                [this.form.ing_select_list, e.data].flat().forEach(obj => map.set(obj.product_id, obj));
+                this.form.ing_select_list = Array.from(map.values());
+
+
+                let arr = []
+                if (this.form.model.product_feed[e.index].material.length > 0) {
+                    this.form.model.product_feed[e.index].material.map(item => {
+                        arr.push(item.product_id)
+                    })
+                }
+
+
+                this.form.ing_select_list[e.index].map(item => {
+                    if (!arr.includes(item.product_id)) {
+                        this.form.model.product_feed[e.index].material.push({
+                            product_id: item.product_id,
+                            material_num: null,
+                        })
+                    }
+                })
+
+            }
+        },
     }
 };
 </script>
@@ -189,4 +248,5 @@ export default {
 
 .product-box {
     display: flex;
-}</style>
+}
+</style>

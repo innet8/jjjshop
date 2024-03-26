@@ -14,10 +14,10 @@
                 <Spec></Spec>
 
                 <!-- 属性设置-->
-                <Attr ref="AttrRef" v-if="form.model.type == 1"></Attr>
+                <Attr ref="AttrRef" v-if="form.model.type == 10"></Attr>
 
                 <!-- 加料设置-->
-                <Ingredients ref="IngredientsRef" v-if="form.model.type == 1"></Ingredients>
+                <Ingredients ref="IngredientsRef" v-if="form.model.type == 10"></Ingredients>
                 <!--商品详情-->
                 <!-- <Content></Content> -->
                 <!--高级设置-->
@@ -97,12 +97,18 @@ export default {
                 /*分销佣金设置*/
                 agentSetting: {},
                 /*打印标签*/
-                label_id: ''
+                label_id: '',
+                /*单规格的材料组*/
+                single_select_list: [],
+                /*多规格的材料组*/
+                many_select_list: [[]],
+                /*加料的材料组*/
+                ing_select_list: [[]],
             },
             /*模型数据*/
             model: {
                 /*商品类型*/
-                type: 1,
+                type: 10,
                 /*商品名称*/
                 product_name: '',
                 /*商品分类*/
@@ -122,7 +128,8 @@ export default {
                     product_price: '',
                     stock_num: '',
                     product_weight: '',
-                    cost_price: ''
+                    cost_price: '',
+                    material: [],
                 }],
                 product_attr: [],
                 product_feed: [],
@@ -164,7 +171,7 @@ export default {
                 alone_grade_type: 10,
                 /*打印标签*/
                 label_id: ''
-            }
+            },
         };
     },
     provide: function () {
@@ -178,13 +185,13 @@ export default {
         this.scene = this.$route.query.scene;
         this.getData();
     },
-    watch:{
-        'form.model.type':{
-            handler(val){
+    watch: {
+        'form.model.type': {
+            handler(val) {
                 this.form.model.spec_type = 10;
             }
-            ,deep:true
-            ,immediate:true
+            , deep: true
+            , immediate: true
         }
     },
     methods: {

@@ -8,12 +8,11 @@
     <!--规格属性-->
 
     <!--添加规格-->
-    <el-button v-if="!form.isSpecLocked" size="small" type="primary" class="el-icon-circle-plus"
-        @click="onToggleAddGroupForm">{{ $t('添加规格') }}+</el-button>
+    <el-button v-if="!form.isSpecLocked" size="small" type="primary" class="el-icon-circle-plus" @click="onToggleAddGroupForm">{{ $t('添加规格') }}+</el-button>
 </template>
 
 <script>
-import PorductApi from '@/api/product.js';
+
 import { languageStore } from '@/store/model/language.js';
 const languageData = JSON.stringify(languageStore().languageData)
 export default {
@@ -46,14 +45,14 @@ export default {
             }
             self.form.model.sku.push(
                 {
-                    spec_name:  JSON.parse(languageData),
-                    product_price: '',
-                    bag_price: '',
-                    stock_num: '',
-                    cost_price: 0,
-                    is_full: 0
+                    spec_name: JSON.parse(languageData),
+                    product_price: null,
+                    stock_num: null,
+                    barcode: '',//条形码
+                    purchase_price: null,//单价
+                    material: [],//材料
                 })
-
+            self.form.many_select_list.push([])        
         },
 
         /*删除规格组事件*/

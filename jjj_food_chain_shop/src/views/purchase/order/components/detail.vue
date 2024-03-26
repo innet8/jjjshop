@@ -31,15 +31,15 @@
 
                         <el-table-column prop="product_status.text" :label="$t('预计采购单价')" width="180">
                             <template #default="scope">
-                                <el-form-item class="mt-16" label="" prop="scope.row.unit_price"
-                                    :rules="[{ required: true, validator: () => { return scope.row.unit_price ? true : false; }, message: $t('预计采购单价') }]">
-                                    <el-input-number :controls="false" :min="0" :max="10000000" :placeholder="$t('预计采购单价')" v-model.number="scope.row.unit_price"></el-input-number>
+                                <el-form-item class="mt-16" label="" prop="scope.row.purchase_price"
+                                    :rules="[{ required: true, validator: () => { return scope.row.purchase_price ? true : false; }, message: $t('预计采购单价') }]">
+                                    <el-input-number :controls="false" :min="0" :max="10000000" :placeholder="$t('预计采购单价')" v-model.number="scope.row.purchase_price"></el-input-number>
                                 </el-form-item>
                             </template>
                         </el-table-column>
                         <el-table-column prop="product_status.text" :label="$t('预计采购数量')" width="180">
                             <template #default="scope">
-                                <el-form-item class="mt-16" label="" prop="scope.row.unit_price"
+                                <el-form-item class="mt-16" label="" prop="scope.row.purchase_price"
                                     :rules="[{ required: true, validator: () => { return scope.row.num ? true : false; }, message: $t('预计采购数量') }]">
                                     <el-input-number :controls="false" :min="0" :max="10000000" :placeholder="$t('预计采购数量')" v-model.number="scope.row.num"></el-input-number>
                                 </el-form-item>
@@ -47,7 +47,7 @@
                         </el-table-column>
                         <el-table-column prop="create_time" :label="$t('总价')" width="120">
                             <template #default="scope">
-                                {{ (Number(scope.row.unit_price) * Number(scope.row.num)).toFixed(2) || 0 }}
+                                {{ (Number(scope.row.purchase_price) * Number(scope.row.num)).toFixed(2) || 0 }}
                             </template>
                         </el-table-column>
                         <el-table-column prop="create_time" :label="$t('操作')" width="80">
@@ -64,7 +64,7 @@
             <el-input size="small"  class="max-w460" v-model="form.remark" :maxlength="100" :placeholder="$t('请输入备注')"></el-input>
         </el-form-item>
         <el-form-item :label="$t('采购价格总额')" prop="remark"
-            :rules="[{ required: true, validator: () => { return form.remark ? true : false; }, message: $t('') }]">
+            :rules="[{ required: true, validator: () => { return form.remark ? true : false; }, message: '' }]">
             <h3 class="total-price">{{ totalPrice }}</h3>
         </el-form-item>
         <productList v-if="open_product" :open_product="open_product" :multiple_selection="multiple_selection" @closeDialogFunc="closeDialogFunc($event)">
@@ -89,7 +89,7 @@ export default {
         totalPrice(){
             let total = 0;
             this.form.select_list.map(item=>{
-                total = total + (Number(item.unit_price) * Number(item.num))
+                total = total + (Number(item.purchase_price) * Number(item.num))
             }) 
             return Number(total).toFixed(2);
         },
@@ -108,7 +108,7 @@ export default {
                 [this.form.select_list, e.data].flat().forEach(obj => map.set(obj.product_id, obj));
                 this.form.select_list = Array.from(map.values());
                 this.form.select_list.map((item, index) => {
-                    this.form.select_list[index].unit_price = null
+                    this.form.select_list[index].purchase_price = null
                     this.form.select_list[index].num = null
                 })
                 this.$emit('check')

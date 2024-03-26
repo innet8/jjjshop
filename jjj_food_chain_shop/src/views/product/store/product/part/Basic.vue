@@ -8,22 +8,19 @@
         <!--基本信息-->
         <div class="common-form">{{ $t('基本信息') }}</div>
         <el-form-item :label="$t('类型：')">
-            <el-radio-group v-model="form.model.type">
-                <el-radio :label="1">{{ $t('成品') }}</el-radio>
-                <el-radio :label="0">{{ $t('材料') }}</el-radio>
+            <el-radio-group v-model="form.model.type" @change="changeType">
+                <el-radio :label="10">{{ $t('成品') }}</el-radio>
+                <el-radio :label="20">{{ $t('材料') }}</el-radio>
             </el-radio-group>
         </el-form-item>
         <template v-for="(item, index) in languageList" :key="index">
-            <el-form-item :label="$t('商品名称：') + `(${item.value})`" :prop="`model.product_name.${item.key}`"
-                :rules="[{ required: true, message: $t('请填写商品名称') }]">
-                <el-input v-model="form.model.product_name[item.key]" :placeholder="$t('请输入商品名称')"
-                    class="max-w460"></el-input>
+            <el-form-item :label="$t('商品名称：') + `(${item.value})`" :prop="`model.product_name.${item.key}`" :rules="[{ required: true, message: $t('请填写商品名称') }]">
+                <el-input v-model="form.model.product_name[item.key]" :placeholder="$t('请输入商品名称')" class="max-w460"></el-input>
             </el-form-item>
         </template>
 
         <el-form-item :label="$t('所属分类：')" :rules="[{ required: true, message: $t('请选择所属分类') }]" prop="model.category_id">
-            <el-cascader class="max-w460" :options="options" v-model="form.model.category_id" clearable style="width: 100%;"
-                :placeholder="$t('请选择分类')"></el-cascader>
+            <el-cascader class="max-w460" :options="options" v-model="form.model.category_id" clearable style="width: 100%;" :placeholder="$t('请选择分类')"></el-cascader>
         </el-form-item>
 
         <el-form-item :label="$t('特色分类：')">
@@ -37,7 +34,8 @@
             </el-select>
         </el-form-item>
 
-        <el-form-item :label="$t('商品图片：')" :rules="[ {required: true,
+        <el-form-item :label="$t('商品图片：')" :rules="[{
+            required: true,
             validator: () => {
                 return form.model.image.length > 0 ? true : false;
             },
@@ -64,8 +62,7 @@
             <div class="gray9">{{ $t('支持JPG、JPEG、PNG格式，小于15MB，尺寸：160*120px') }}</div>
         </el-form-item>
         <el-form-item :label="$t('商品卖点：')">
-            <el-input type="textarea" :placeholder="$t('请输入商品卖点')" v-model="form.model.selling_point" show-word-limit
-                :maxlength="50" class="max-w460"></el-input>
+            <el-input type="textarea" :placeholder="$t('请输入商品卖点')" v-model="form.model.selling_point" show-word-limit :maxlength="50" class="max-w460"></el-input>
         </el-form-item>
 
         <el-form-item :label="$t('供应商：')">
@@ -76,8 +73,7 @@
             </el-select>
         </el-form-item>
         <!--商品图片组件-->
-        <Upload v-if="isProductUpload" :config="{ total: 1 }" :isupload="isProductUpload" :aspectRatio="1.333"
-            @returnImgs="returnProductImgsFunc">{{ $t('上传图片') }}</Upload>
+        <Upload v-if="isProductUpload" :config="{ total: 1 }" :isupload="isProductUpload" :aspectRatio="1.333" @returnImgs="returnProductImgsFunc">{{ $t('上传图片') }}</Upload>
     </div>
 </template>
 
@@ -127,7 +123,12 @@ export default {
         // this['formData'] = this.form;
     },
     methods: {
-
+        changeType() {
+            this.form.model.sku[0].material = [];
+            this.form.model.sku = this.form.model.sku.slice(0,1)
+            this.form.single_select_list = [];
+            this.form.many_select_list = [];
+        },
         /*打开上传图片*/
         openProductUpload: function () {
             this.isProductUpload = true;
@@ -140,7 +141,7 @@ export default {
                 this.form.model['image'] = imgs;
             }
             this.isProductUpload = false;
-            this.$emit('validateField','model.image')
+            this.$emit('validateField', 'model.image')
 
         },
 
@@ -151,6 +152,3 @@ export default {
     }
 };
 </script>
-
-
-

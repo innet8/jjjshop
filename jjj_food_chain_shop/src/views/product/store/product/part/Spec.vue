@@ -17,21 +17,19 @@
         </el-form-item>
 
         <template v-for="(item, index) in languageList" :key="index">
-            <el-form-item :label="index == 0 ? $t('商品单位：') : ''" :rules="[{ required: true, message: $t('请填写商品单位') }]"
-                :prop="`model.product_unit.${item.key}`">
-                <el-autocomplete :fetch-suggestions="(e, h) => querySearch(e, h, item.key)" @select="(e) => selectChange(e)"
-                    class="inline-input" v-model="form.model.product_unit[item.key]"
-                    :placeholder="$t('请输入') + `(${item.value})`">
+            <el-form-item :label="index == 0 ? $t('商品单位：') : ''" :rules="[{ required: true, message: $t('请填写商品单位') }]" :prop="`model.product_unit.${item.key}`">
+                <el-autocomplete :fetch-suggestions="(e, h) => querySearch(e, h, item.key)" @select="(e) => selectChange(e)" class="inline-input"
+                    v-model="form.model.product_unit[item.key]" :placeholder="$t('请输入') + `(${item.value})`">
                 </el-autocomplete>
             </el-form-item>
         </template>
 
-        <el-form-item :label="$t('商品规格：')" v-if="form.model.type == 1">
+        <el-form-item :label="$t('商品规格：')" v-if="form.model.type == 10">
             <el-radio-group v-model="form.model.spec_type" @change="changeSpec">
                 <el-radio :label="10" v-if="!form.isSpecLocked || (form.isSpecLocked && form.model.spec_type == 10)">{{
-                    $t('单规格') }}</el-radio>
+            $t('单规格') }}</el-radio>
                 <el-radio :label="20" v-if="!form.isSpecLocked || (form.isSpecLocked && form.model.spec_type == 20)">{{
-                    $t('多规格') }}</el-radio>
+            $t('多规格') }}</el-radio>
             </el-radio-group>
             <div v-if="form.isSpecLocked" class="red">{{ $t('此商品正在参加活动，不能修改规格') }}</div>
         </el-form-item>
@@ -46,11 +44,6 @@
             <Many></Many>
         </template>
 
-        <el-form-item :label="$t('商品条码：')" :rules="[{ required: true, message: $t('请输入商品条码') }]" prop="model.selling_point">
-            <el-input :placeholder="$t('请输入商品条码')" v-model="form.model.selling_point" 
-                 class="max-w460"></el-input>
-        </el-form-item>
-        
     </div>
 </template>
 
@@ -58,6 +51,7 @@
 import Single from './spec/Single.vue';
 import Many from './spec/Many.vue';
 import { languageStore } from '@/store/model/language.js';
+
 const languageList = languageStore().languageList;
 export default {
     components: {
@@ -102,7 +96,7 @@ export default {
             },
             deep: true,
             immediate: true,
-        }
+        },
     },
 
     methods: {
@@ -139,13 +133,17 @@ export default {
                 this.form.model.product_unit[item.key] = this.restaurantsObj[item.key][e.index].value
             });
         },
+
+
     }
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 :deep(.inline-input) {
     max-width: 460px;
     width: 100%;
 }
+
+
 </style>

@@ -10,10 +10,10 @@
                 <Spec></Spec>
 
                 <!-- 属性设置-->
-                <Attr ref="AttrRef" v-if="form.model.type == 1"></Attr>
+                <Attr ref="AttrRef" v-if="form.model.type == 10"></Attr>
 
                 <!-- 加料设置-->
-                <Ingredients ref="IngredientsRef" v-if="form.model.type == 1"></Ingredients>
+                <Ingredients ref="IngredientsRef" v-if="form.model.type == 10"></Ingredients>
 
                 <!--商品详情-->
                 <!-- <Content></Content> -->
@@ -66,11 +66,13 @@ export default {
             form: {
                 model: {
                     /*商品类型*/
-                    type:1,
+                    type: 10,
                     /*商品名称*/
                     product_name: JSON.parse(languageData),
                     /*商品分类*/
                     category_id: null,
+                     /*供应商id*/
+                    erp_supplier_id:null,
                     /*商品图片*/
                     image: [],
                     /*商品卖点*/
@@ -82,16 +84,12 @@ export default {
                     /*检查用户等级*/
                     is_alone_grade: 0,
                     sku: [{
-                        spec_name: {
-                            th: "",
-                            zh: "",
-                            zhtw: "",
-                            en: "",
-                        },
+                        spec_name: {},
                         product_price: null,
                         stock_num: null,
                         product_weight: '',
                         cost_price: 0,
+                        material:[],
                     }],
                     product_attr: [],
                     product_feed: [],
@@ -104,6 +102,8 @@ export default {
                     content: '',
                     /*商品状态*/
                     product_status: 10,
+                    /*商品材料*/
+                    material: [],
                     /*平板是否显示*/
                     is_show_tablet: 1,
                     /*厨显是否显示*/
@@ -153,6 +153,12 @@ export default {
                 basicSetting: {},
                 /*分销佣金设置*/
                 agentSetting: {},
+                /*单规格的材料组*/
+                single_select_list: [],
+                /*多规格的材料组*/
+                many_select_list: [[]],
+                /*加料的材料组*/
+                ing_select_list: [[]],
             },
 
         };
@@ -168,13 +174,13 @@ export default {
         this.getBaseData();
 
     },
-    watch:{
-        'form.model.type':{
-            handler(val){
+    watch: {
+        'form.model.type': {
+            handler(val) {
                 this.form.model.spec_type = 10;
             }
-            ,deep:true
-            ,immediate:true
+            , deep: true
+            , immediate: true
         }
     },
     methods: {

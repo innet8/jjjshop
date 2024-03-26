@@ -21,7 +21,7 @@
             </el-radio-group>
         </el-form-item>
 
-        <el-form-item :label="$t('显示在平板端：')" v-if="form.model.type == 1" :rules="[{ required: true, message: $t('选择是否显示') }]" prop="model.product_status">
+        <el-form-item :label="$t('显示在平板端：')" v-if="form.model.type == 10" :rules="[{ required: true, message: $t('选择是否显示') }]" prop="model.product_status">
             <el-radio-group v-model="form.model.is_show_tablet">
                 <el-radio :label="1">{{ $t('显示') }}</el-radio>
                 <el-radio :label="2">{{ $t('不显示') }}</el-radio>
@@ -29,7 +29,7 @@
         </el-form-item>
 
 
-        <el-form-item :label="$t('需要送厨：')" v-if="form.model.type == 1" :rules="[{ required: true, message: $t(' ') }]" prop="model.product_status">
+        <el-form-item :label="$t('需要送厨：')" v-if="form.model.type == 10" :rules="[{ required: true, message: '' }]" prop="model.product_status">
             <el-radio-group v-model="form.model.is_show_kitchen">
                 <el-radio :label="1">{{ $t('是') }}</el-radio>
                 <el-radio :label="2">{{ $t('否') }}</el-radio>
@@ -40,11 +40,11 @@
             <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('接近0，排序等级越高')" v-model="form.model.product_sort" class="max-w460"></el-input-number>
         </el-form-item>
 
-        <el-form-item :label="$t('限购数量：')" :rules="[{ required: true, message: $t('请输入限购数量') }]" prop="model.limit_num" v-if="form.model.type == 1">
+        <el-form-item :label="$t('限购数量：')" :rules="[{ required: true, message: $t('请输入限购数量') }]" prop="model.limit_num" v-if="form.model.type == 10">
             <el-input-number :controls="false" :min="0" :max="999" v-model="form.model.limit_num" class="max-w460"></el-input-number>
             <div class="gray9">{{ $t('每单/每桌购买的最大数量，0为不限购') }}</div>
         </el-form-item>
-        <el-form-item :label="$t('打印标签：')" prop="model.label_id" v-if="form.model.type == 1">
+        <el-form-item :label="$t('打印标签：')" prop="model.label_id" v-if="form.model.type == 10">
             <el-select v-model="form.model.label_id" clearable class="max-w460" size="default">
                 <el-option :value="0" :label="$t('无')"></el-option>
                 <template v-for="cat in form.labelList" :key="cat.label_id">
@@ -53,7 +53,7 @@
             </el-select>
         </el-form-item>
         <!--会员折扣设置-->
-        <template v-if="form.model.type == 1">
+        <template v-if="form.model.type == 10">
             <div class="common-form mt50">{{ $t('会员折扣设置') }}</div>
             <el-form-item :label="$t('是否开启会员折扣：')">
                 <el-radio-group v-model="form.model.is_enable_grade">

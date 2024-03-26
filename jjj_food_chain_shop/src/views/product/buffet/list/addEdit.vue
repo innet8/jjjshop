@@ -20,7 +20,7 @@
                 </el-radio-group>
             </el-form-item>
 
-            <el-form-item v-if="form.is_time_limit == 1" :label="$t('')" class="display-none" prop="time_limit" :rules="[{ required: true, message: $t('请输入用餐时间') }]">
+            <el-form-item v-if="form.is_time_limit == 1" label="" class="display-none" prop="time_limit" :rules="[{ required: true, message: $t('请输入用餐时间') }]">
                 <el-input-number :controls="false" :min="0" :max="999" :placeholder="$t('请输入用餐时间')" v-model.number="form.time_limit"></el-input-number>
                 {{ $t('分') }}
             </el-form-item>

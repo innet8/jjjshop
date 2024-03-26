@@ -979,5 +979,10 @@
     "平板支持": "Tablet support",
     "以下为收银机当前绑定设备": "The following are the devices currently bound to the cash register:",
     "以下为厨显当前绑定设备": "The following are the currently bound devices for the kitchen display:",
-    "以下为平板当前绑定设备": "The following are the devices currently bound to the tablet:"
+    "以下为平板当前绑定设备": "The following are the devices currently bound to the tablet:",
+    "商品材料：": "Product materials:",
+    "添加材料": "Add materials",
+    "请输入数量": "Please enter quantity",
+    "条形码": "barcode",
+    "请输入条形码": "Please enter barcode"
 }
