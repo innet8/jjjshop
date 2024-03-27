@@ -16,6 +16,12 @@ export default defineConfig(({ mode }) => {
         base: process.env.NODE_ENV === 'production' ? './' : '/',
         // base: './',
         server: {
+
+            host: '0.0.0.0',
+            port: 8991,
+            // 是否开启 https
+            https: false,
+
             proxy: {
                 '/api': {
                     target: config.VITE_BASIC_URL,
