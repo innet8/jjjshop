@@ -31,30 +31,35 @@
         <div class="product-content">
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-                    <el-table-column prop="category.path_name_text" :label="$t('编号')"></el-table-column>
-                    <el-table-column prop="category.path_name_text" :label="$t('类型')"></el-table-column>
-                    <el-table-column prop="product_name" :label="$t('采购名称')" width="300">
+                    <el-table-column prop="number" :label="$t('编号')"></el-table-column>
+                    <el-table-column prop="category.path_name_text" :label="$t('类型')">
                         <template #default="scope">
-                            <div class="product-info">
-                                <div class="pic"><img v-img-url="scope.row.image[0].file_path" alt="" /></div>
-                                <div class="info">
-                                    <div class="name">{{ scope.row.product_name_text }}</div>
-                                    <div class="price">{{ $t('销售价：') }}{{ scope.row.product_price }}</div>
-                                </div>
-                            </div>
+                            {{ typeS(scope.row.type) }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="category.path_name_text" :label="$t('商品数量')"></el-table-column>
-                    <el-table-column prop="product_stock" :label="$t('备注')"></el-table-column>
-                    <el-table-column prop="product_status.text" :label="$t('状态')" width="100">
+                    <el-table-column prop="product_name" :label="$t('采购名称')" width="240">
                         <template #default="scope">
-                            <el-switch :disabled="!this.$filter.isAuth('/product/store/product/state')" :model-value="scope.row.product_status.value == 10 ? true : false"
-                                @click="undercarriage(scope.row, scope.row.product_status.value == 10 ? 20 : 10)"></el-switch>
+                            {{  scope.row.product ? scope.row.product.product_name_text :  scope.row.purchaseOrder.name }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="product_stock" :label="$t('操作人')"></el-table-column>
-                    <el-table-column prop="create_time" :label="$t('时间')"></el-table-column>
-                    <el-table-column fixed="right" :label="$t('操作')" width="220">
+                    <el-table-column prop="num" :label="$t('商品数量')"></el-table-column>
+                    <el-table-column prop="remark" :label="$t('备注')">
+                        <template #default="scope">
+                            {{  scope.row.remark || '-' }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="status" :label="$t('状态')" width="100">
+                        <template #default="scope">
+                           {{ statusJudgment(scope.row.status) }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="operator.real_name" :label="$t('操作人')"></el-table-column>
+                    <el-table-column prop="create_time" :label="$t('时间')"  width="120">
+                        <template #default="scope">
+                            <div style="line-height: 20px;">{{ scope.row.create_time.split(" ")[0] || '-' }}<br />{{ scope.row.create_time.split(" ")[1] || '-' }}</div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column fixed="right" :label="$t('操作')" width="140">
                         <template #default="scope">
                             <el-button @click="cancelClick(scope.row)" type="primary" link size="small" v-auth="'/purchase/log/cancel'">{{ $t('撤销') }}</el-button>
                             <el-button @click="deleteClick(scope.row)" type="primary" link size="small" v-auth="'/purchase/log/delete'">{{ $t('删除') }}</el-button>
@@ -71,6 +76,7 @@
     </div>
 </template>
 <script>
+import PurchaseApi from '@/api/purchase.js';
 export default {
     data() {
         return {
@@ -91,6 +97,9 @@ export default {
             tableData: [],
         }
     },
+    mounted(){
+        this.getData();
+    },
     methods: {
         /*选择第几页*/
         handleCurrentChange(val) {
@@ -110,6 +119,23 @@ export default {
             this.curPage = 1;
             this.getData();
         },
+
+        // 获取
+        getData() {
+            let self = this;
+            let Params = {};
+            Params.page = self.curPage;
+            Params.list_rows = self.pageSize;
+            Params.name = self.searchForm.name;
+            PurchaseApi.getErpInventoryRecordIn(Params, true)
+                .then(data => {
+                    self.loading = false;
+                    self.tableData = data.data.list.data;
+                    self.totalDataNumber = data.data.list.total;
+
+                })
+                .catch(error => { });
+        },
         /*撤销*/
         cancelClick(row) {
             let self = this;
@@ -119,28 +145,28 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    // self.loading = true;
-                    // AuthApi.userDelete({
-                    //     shop_user_id: row.shop_user_id
-                    // },
-                    //     true
-                    // )
-                    //     .then(data => {
-                    //         self.loading = false;
-                    //         if (data.code == 1) {
-                    //             this.$ElMessage({
-                    //                 message: $t('删除成功'),
-                    //                 type: 'success'
-                    //             });
-                    //             //刷新页面
-                    //             self.getTableList();
-                    //         } else {
-                    //             self.loading = false;
-                    //         }
-                    //     })
-                    //     .catch(error => {
-                    //         self.loading = false;
-                    //     });
+                    self.loading = true;
+                    PurchaseApi.cancelErpInventoryRecordIn({
+                        erp_inventory_id: row.id
+                    },
+                        true
+                    )
+                        .then(data => {
+                            self.loading = false;
+                            if (data.code == 1) {
+                                this.$ElMessage({
+                                    message: $t('操作成功'),
+                                    type: 'success'
+                                });
+                                //刷新页面
+                                self.getData();
+                            } else {
+                                self.loading = false;
+                            }
+                        })
+                        .catch(error => {
+                            self.loading = false;
+                        });
                 })
                 .catch(() => { });
         },
@@ -154,31 +180,46 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    // self.loading = true;
-                    // AuthApi.userDelete({
-                    //     shop_user_id: row.shop_user_id
-                    // },
-                    //     true
-                    // )
-                    //     .then(data => {
-                    //         self.loading = false;
-                    //         if (data.code == 1) {
-                    //             this.$ElMessage({
-                    //                 message: $t('删除成功'),
-                    //                 type: 'success'
-                    //             });
-                    //             //刷新页面
-                    //             self.getTableList();
-                    //         } else {
-                    //             self.loading = false;
-                    //         }
-                    //     })
-                    //     .catch(error => {
-                    //         self.loading = false;
-                    //     });
+                    self.loading = true;
+                    PurchaseApi.deleteErpInventoryRecordIn({
+                        erp_inventory_id: row.id
+                    },
+                        true
+                    )
+                        .then(data => {
+                            self.loading = false;
+                            if (data.code == 1) {
+                                this.$ElMessage({
+                                    message: $t('删除成功'),
+                                    type: 'success'
+                                });
+                                //刷新页面
+                                self.getData();
+                            } else {
+                                self.loading = false;
+                            }
+                        })
+                        .catch(error => {
+                            self.loading = false;
+                        });
                 })
                 .catch(() => { });
-        }
+        },
+
+        typeS(e){
+            let result = '';
+            if(e == '10') return result = $t('采购入库');
+            if(e == '20') return result = $t('调整入库');
+            if(e == '30') return result = $t('销售出库');
+            if(e == '40') return result = $t('调整出库');
+        },
+
+        statusJudgment(e){
+            let result = '';
+            if(e == '10') return result = $t('已入库');
+            if(e == '20') return result = $t('已出库');
+            if(e == '30') return result = $t('已撤销');
+        },
     },
 }
 </script>

@@ -161,7 +161,7 @@ export default {
                         num = Math.floor(num);
                         arr.push(num);
                     })
-                    this.form.model.sku[index].stock_num = arr.sort((a, b) => a - b)[0];
+                    this.form.model.sku[index].stock_num = arr.sort((a, b) => a - b)[0]==Infinity ? null : arr.sort((a, b) => a - b)[0];
                 });
             },
             deep: true,

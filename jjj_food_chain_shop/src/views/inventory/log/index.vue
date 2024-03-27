@@ -55,6 +55,7 @@
     </div>
 </template>
 <script>
+import InventoryApi from '@/api/inventory.js';
 export default {
     data() {
         return {
@@ -73,6 +74,9 @@ export default {
                 create_time: '',
             },
         }
+    },
+    mounted(){
+        this.getData();
     },
     methods: {
         /*选择第几页*/
@@ -93,7 +97,21 @@ export default {
             this.curPage = 1;
             this.getData();
         },
+        // 获取
+        getData() {
+            let self = this;
+            let Params = {};
+            Params.page = self.curPage;
+            Params.list_rows = self.pageSize;
+            InventoryApi.getErpInventoryRecordOut(Params, true)
+                .then(data => {
+                    self.loading = false;
+                    self.tableData = data.data.list.data;
+                    self.totalDataNumber = data.data.list.total;
 
+                })
+                .catch(error => { });
+        },
         /*撤销*/
         cancelClick(row) {
             let self = this;

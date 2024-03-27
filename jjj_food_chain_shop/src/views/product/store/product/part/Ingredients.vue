@@ -33,36 +33,39 @@
                             <el-autocomplete :fetch-suggestions="(e, h) => querySearch(e, h, items.key)" @select="(e) => selectChange(e, index)" class="inline-input"
                                 v-model="item.feed_name[items.key]" maxlength="128" :placeholder="$t('如：番茄酱')"></el-autocomplete>
                         </el-form-item>
-                        <el-form-item :label="$t('价格：')" :prop="`item.price`" :rules="[{ validator: () => { return item.price != '' ? true : false; }, message: $t('请输入价格') }]">
+                        <el-form-item :label="$t('价格：')" :prop="`item.price`" :rules="[{ validator: () => { return item.price  ? true : false; }, message: $t('请输入价格') }]">
                             <template #label>
                                 <span style="color: var(--el-color-danger);margin: 0  4px 0 0 !important;">*</span>{{ $t('价格：') }}
                             </template>
                             <el-input-number :controls="false" :min="0" :max="1000000" :placeholder="$t('请输入价格')" v-model.number="item.price"></el-input-number>
                         </el-form-item>
 
-                        <el-form-item :label="$t('库存数量：')" :prop="`item.stock_num`"
-                            :rules="[{ validator: () => { return item.stock_num != '' ? true : false; }, message: $t('请填写库存数量') }]">
+                        <el-form-item :label="$t('库存数量：')" :prop="`product_feed[${index}].stock_num`"
+                            :rules="[{ validator: () => { return item.stock_num  ? true : false; }, message: $t('请填写库存数量') }]">
                             <template #label>
                                 <span style="color: var(--el-color-danger);margin: 0  4px 0 0 !important;">*</span>{{ $t('库存数量：') }}
                             </template>
-                            <el-input-number :controls="false" :min="0" :max="1000000" :placeholder="$t('请填写库存数量')" v-model.number="item.stock_num"></el-input-number>
+                            <el-input-number :controls="false" :min="0" :max="1000000" :disabled="form.ing_select_list[index].length > 0" :placeholder="$t('请填写库存数量')" v-model.number="item.stock_num"></el-input-number>
                         </el-form-item>
 
-                        <el-form-item :label="$t('材料')" width="300">
-                            <el-button type="primary" :style="form.ing_select_list[index].length > 0 ? 'margin-top: 16px;' : ''" @click='addMaterials(index)'>{{
-            $t('添加材料') }}</el-button>
+                        <el-form-item :label="$t('材料：')" :prop="`item.stock_num`">
+                            <template #label>
+                                <span style="color: var(--el-color-danger);margin: 0  4px 0 0 !important;">*</span>{{ $t('材料：') }}
+                            </template>
+                            <el-button type="primary" @click='addMaterials(index)'>{{ $t('添加材料') }}</el-button>
                         </el-form-item>
-                        <div class="materials-one" label="" v-for="items, index in form.ing_select_list[index]">
+                        <div class="materials-one" label="" v-for="items, indexs in form.ing_select_list[index]">
                             <el-form-item label="" class="max-w230">
                                 <el-input v-model="items.product_name_text" disabled></el-input>
                             </el-form-item>
-                            <el-form-item label="" class="max-w230">
-                                <el-input v-model="form.model.sku[scope.$index].material[index].material_num" :placeholder="$t('请输入数量')">
+                            <el-form-item label="" class="max-w230" :prop="`form.model.product_feed[${index}].material[${indexs}].material_num`"
+                            :rules="[{ validator: () => { return form.model.product_feed[index].material[indexs].material_num ? true : false; }, message: $t('请输入加料名称') }]">
+                                <el-input v-model="form.model.product_feed[index].material[indexs].material_num" :placeholder="$t('请输入数量')">
                                     <template #append>{{ items.product_unit_text }}</template>
                                 </el-input>
 
                             </el-form-item>
-                            <el-icon class="delete-icon" @click="handleDelete(scope.$index, index)">
+                            <el-icon class="delete-icon" @click="handleDeleteOne(index, indexs)">
                                 <Delete />
                             </el-icon>
                         </div>
@@ -129,7 +132,19 @@ export default {
                             })
                         }
                     });
-                })
+                });
+
+
+                (val.model.product_feed || []).map((item, index) => {
+                    let arr = [];
+                    (item.material || []).map((items, indexs) => {
+                        let num = 0;
+                        num = Number(this.form.ing_select_list[index][indexs].sku[0].stock_num) / Number(items.material_num);
+                        num = Math.floor(num);
+                        arr.push(num);
+                    })
+                    this.form.model.product_feed[index].stock_num = arr.sort((a, b) => a - b)[0]==Infinity ? null : arr.sort((a, b) => a - b)[0];
+                });
             },
             deep: true,
             immediate: true,
@@ -145,9 +160,11 @@ export default {
                     material: [],
                 }
             )
+            this.form.ing_select_list.push([])
         },
         handleDelete(index) {
             this.form.model.product_feed.splice(index, 1);
+            this.form.ing_select_list.splice(index,1);
         },
 
         querySearch(queryString, cb, key) {
@@ -191,16 +208,21 @@ export default {
             this.open_product = true;
         },
 
+        handleDeleteOne(index,indexs){
+            this.form.ing_select_list[index].splice(index,1);
+            this.form.model.product_feed[e.index].material.splice(index,1);
+        },
+
         closeDialogFunc(e) {
             this.open_product = e.openDialog;
             if (e.type == 'submit') {
                 let map = new Map();
-  
-                [this.form.ing_select_list, e.data].flat().forEach(obj => map.set(obj.product_id, obj));
-                this.form.ing_select_list = Array.from(map.values());
 
+                [this.form.ing_select_list[e.index], e.data].flat().forEach(obj => map.set(obj.product_id, obj));
+                this.form.ing_select_list[e.index] = Array.from(map.values());
+                console.log(this.form.ing_select_list);
 
-                let arr = []
+                let arr = [];
                 if (this.form.model.product_feed[e.index].material.length > 0) {
                     this.form.model.product_feed[e.index].material.map(item => {
                         arr.push(item.product_id)
@@ -248,5 +270,24 @@ export default {
 
 .product-box {
     display: flex;
+}
+
+.materials-one {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .delete-icon {
+        cursor: pointer;
+        font-size: 24px;
+        margin-top: -16px;
+        margin-right: 0;
+    }
+}
+
+.max-w230 {
+    
+    width: 100%;
 }
 </style>

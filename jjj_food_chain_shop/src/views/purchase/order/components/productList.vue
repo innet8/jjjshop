@@ -31,6 +31,11 @@
             <div class="table-wrap">
                 <el-table size="small" ref="multipleTable" :data="tableData" border style="width: 100%" v-loading="loading" @selection-change="handleSelectionChange"
                     :row-key="getRowKey">
+                    <el-table-column prop="category.path_name_text" width="100" :label="$t('类型')">
+                        <template #default="scope">
+                            {{ scope.row.type == 10 ? $t('成品'):$t('材料') }}
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="product_name" :label="$t('商品名称')" width="300px">
                         <template #default="scope">
                             <div class="product-info">
@@ -42,7 +47,10 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="category.path_name_text" width="200" :label="$t('分类名称')"></el-table-column>
+                    <el-table-column prop="category.path_name_text" width="120" :label="$t('规格')">
+                        
+                    </el-table-column>
+                    <el-table-column prop="category.path_name_text" width="160" :label="$t('分类名称')"></el-table-column>
                     <el-table-column prop="sales_actual" :label="$t('实际销量')"></el-table-column>
                     <el-table-column prop="product_stock" :label="$t('库存')"></el-table-column>
 

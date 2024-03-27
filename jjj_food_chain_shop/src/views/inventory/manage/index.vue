@@ -32,17 +32,29 @@
         <div class="product-content">
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-                    <el-table-column prop="category.path_name_text" :label="$t('类型')"></el-table-column>
-                    <el-table-column prop="product_name" :label="$t('商品名称')" width="300"></el-table-column>
+                    <el-table-column prop="category.path_name_text" :label="$t('类型')">
+                        <template #default="scope">
+                            {{ scope.row.type == 10 ? $t('成品') : $t('材料') }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="product_name_text" :label="$t('商品名称')" width="300"></el-table-column>
                     <el-table-column prop="category.path_name_text" :label="$t('商品条码')"></el-table-column>
                     <el-table-column prop="sales_actual" :label="$t('规格')"></el-table-column>
-                    <el-table-column prop="product_stock" :label="$t('供应商')"></el-table-column>
-                    <el-table-column prop="product_stock" :label="$t('售价')"></el-table-column>
+                    <el-table-column prop="supplier.name" :label="$t('供应商')"></el-table-column>
+                    <el-table-column prop="supplier_price" :label="$t('售价')"></el-table-column>
                     <el-table-column prop="product_stock" :label="$t('当前库存')"></el-table-column>
-                    <el-table-column prop="product_stock" :label="$t('库存金额')"></el-table-column>
+                    <el-table-column :label="$t('库存金额')">
+                        <template #default="scope">
+                            {{ Number(scope.row.supplier_price) * Number(scope.row.product_stock) }}
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="product_stock" :label="$t('历史进货数')"></el-table-column>
                     <el-table-column prop="product_stock" :label="$t('历史销售数')"></el-table-column>
-                    <el-table-column prop="create_time" :label="$t('最后变动时间')" width="160"></el-table-column>
+                    <el-table-column prop="update_time" :label="$t('最后变动时间')" width="160">
+                        <template #default="scope">
+                            <div style="line-height: 20px;">{{ scope.row.update_time.split(" ")[0] || '-' }}<br/>{{ scope.row.update_time.split(" ")[1] || '-' }}</div>
+                        </template>
+                    </el-table-column>
                 </el-table>
             </div>
         </div>
@@ -54,6 +66,7 @@
     </div>
 </template>
 <script>
+import InventoryApi from '@/api/inventory.js';
 export default {
     data() {
         return {
@@ -73,6 +86,9 @@ export default {
             },
         }
     },
+    mounted() {
+        this.getData();
+    },
     methods: {
         /*选择第几页*/
         handleCurrentChange(val) {
@@ -91,6 +107,22 @@ export default {
         onSubmit() {
             this.curPage = 1;
             this.getData();
+        },
+
+        // 获取
+        getData() {
+            let self = this;
+            let Params = {};
+            Params.page = self.curPage;
+            Params.list_rows = self.pageSize;
+            InventoryApi.getErpInventory(Params, true)
+                .then(data => {
+                    self.loading = false;
+                    self.tableData = data.data.list.data;
+                    self.totalDataNumber = data.data.list.total;
+
+                })
+                .catch(error => { });
         },
     },
 }

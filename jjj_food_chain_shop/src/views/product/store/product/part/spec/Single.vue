@@ -20,7 +20,7 @@
         <el-form-item :label="$t('商品条码：')" :rules="[{ required: true, message: $t('请输入商品条码') }]" prop="model.barcode">
             <el-input :placeholder="$t('请输入商品条码')" v-model="form.model.barcode" class="max-w460"></el-input>
         </el-form-item>
-        <el-form-item class="materials" :label="$t('商品材料：')" v-if="form.model.type == 10">
+        <el-form-item class="materials" :label="$t('商品材料：')" v-if="form.model.type == 10" >
             <el-button style="margin-bottom: 16px;" type="primary" @click="addMaterials">{{ $t('添加材料') }}+</el-button>
 
             <div class="materials-one" label="" v-for="item, index in form.single_select_list">
@@ -68,7 +68,7 @@ export default {
                     num = Math.floor(num)
                     arr.push(num)
                 })
-                this.form.model.sku[0].stock_num = arr.sort((a, b) => a - b)[0];
+                this.form.model.sku[0].stock_num = arr.sort((a, b) => a - b)[0]==Infinity ? null : arr.sort((a, b) => a - b)[0];
 
             },
             deep: true,

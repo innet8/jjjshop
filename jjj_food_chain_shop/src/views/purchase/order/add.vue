@@ -16,21 +16,25 @@
     </div>
 </template>
 <script>
+import PurchaseApi from '@/api/purchase.js';
 import basics from './components/basics.vue';
-import detail from './components/detail.vue'
+import detail from './components/detail.vue';
 export default {
-    components:{
+    components: {
         basics,
         detail
     },
-    data(){
-        return{
-            form:{
-                applicant:"",
-                time:"",
-                way:1,
-                select_list:[],
+    data() {
+        return {
+            form: {
+                name: "",
+                applicant_id: "",
+                arrival_time: "",
+                type: 10,
+                purchase_detail: [],
+                remark:'',
             },
+
         }
     },
     provide: function () {
@@ -38,18 +42,44 @@ export default {
             form: this.form
         }
     },
-    methods:{
-        check(){
+    mounted() {
+
+    },
+    methods: {
+        check() {
             this.$refs.form.validateField('select_list');
         },
 
-        onSubmit(){
+
+        onSubmit() {
             this.$refs.form.validate(valid => {
+                if (valid) {
+                    let Params = JSON.parse(JSON.stringify(this.form));
+                    Params.purchase_detail = [];
+                    this.form.purchase_detail.map(item => {
+                        Params.purchase_detail.push({
+                            product_id: item.product_id,
+                            estimate_purchase_price: item.estimate_purchase_price,
+                            estimate_purchase_num: item.estimate_purchase_num,
+                        })
+                    })
+                    console.log(Params);
+                    PurchaseApi.addErpPurchaseOrder(Params, true)
+                        .then(data => {
+                            this.loading = false;
+                            this.$ElMessage({
+                                message: $t('添加成功'),
+                                type: 'success'
+                            });
+                            this.$router.push('/purchase/order/index');
+                        })
+                        .catch(error => { });
+                }
 
             })
         },
 
-        cancelFunc(){
+        cancelFunc() {
             this.$router.push('/purchase/order/index');
         },
     },
