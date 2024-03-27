@@ -24,41 +24,17 @@ judge() {
         exit 1
     fi
 }
-# #数据库信息
-# DB_TYPE=mysql
-# DB_HOST=127.0.0.1
-# DB_PREFIX=jjjfood_
-# DB_DATABASE=jjj
-# DB_USERNAME=jjj
-# DB_PASSWORD=12345678
-# DB_PORT=3306
-# DB_ROOT_PASSWORD=12345678
-# source $(pwd)/.env.example
 
-git-clone(){
-    git --version >/dev/null 2>&1
-    GIT_INSTALLED=$?
-    if [ $GIT_INSTALLED -eq 0 ]; then
-        echo "Git is already installed."
-    else
-        echo "Git is not installed. Installing Git..."
-        sudo apt update
-        sudo apt install git
-    fi
-    #echo -e "${Green}拉取项目代码${Font}"
-    #cd /
-    #git clone --depth=1 https://github.com/innet8/jjjshop.git
+
+set-permission(){
+    
     echo -e "${Green}设置目录权限${Font}"
     chown -R www-data:www-data $(pwd)/../../jjjshop/
     chmod -R 777  $(pwd)/runtime
     chmod +x $(pwd)/lanp-install.sh
     cd $(pwd)/../../jjjshop/jjj_food_chain
-    if [ $? -ne 0 ]; then
-        echo -e "${Error}拉取失败${Font}"
-    else
-        echo -e "${Green}拉取成功,开始设置环境变量${Font}"
-        check-env
-    fi
+    echo -e "${Green}开始设置环境变量${Font}"
+    check-env
 }
 
 update-job(){
@@ -77,9 +53,13 @@ check-env(){
         mysql_jjj_password=`head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16`
         sed -i 's#DB_ROOT_PASSWORD=#DB_ROOT_PASSWORD='${mysql_root_password}'#g' $(pwd)/.env
         sed -i 's#DB_PASSWORD=#DB_PASSWORD='${mysql_jjj_password}'#g' $(pwd)/.env
-
+        source $(pwd)/.env
     fi
 
+    if [ -z "$Rustdesk_custom_ip" ] || [ -z "$Rustdesk_custom_key" ] || [ -z "$Rustdesk_permanent_password" ]; then
+        echo -e "${Error} ${RedBG} Rustdesk中继相关配置的环境变量为空，请填写后再部署${Font}"
+        exit 1
+    fi
     
 }
 check-runtime(){
@@ -241,6 +221,8 @@ php-install(){
     # 解除禁用的函数
     sudo sed -i 's#disable_functions =.*#disable_functions =#g' /etc/php/8.2/fpm/php.ini
     sudo sed -i 's#upload_max_filesize = 2M#upload_max_filesize = 100M#g' /etc/php/8.2/fpm/php.ini
+    sudo sed -i 's#;max_input_vars = 1000#max_input_vars\ =\ 5000#g' /etc/php/8.2/fpm/php.ini
+    sudo sed -i 's#memory_limit = 128M#memory_limit\ =\ 256M#g' /etc/php/8.2/fpm/php.ini
     #sudo sed -i 's#;open\_basedir\ \=#open\_basedir\ \='$(pwd)'/jjj_food_chain#g'  /etc/php/8.2/fpm/php.ini 
     systemctl  start  php8.2-fpm.service
     systemctl  enable php8.2-fpm.service
@@ -291,6 +273,16 @@ RustDesk-install(){
     if [ $? -ne 0 ]; then
         echo -e "${Error}RustDesk软件包安装失败${Font}"
         exit 1
+    fi
+
+    if ! grep -q "custom-rendezvous-server" ~/.config/rustdesk/RustDesk2.toml || ! grep -q "key" ~/.config/rustdesk/RustDesk2.toml || ! grep -q "verification-method" ~/.config/rustdesk/RustDesk2.toml; then
+        #中继服务器IP和key
+        echo "custom-rendezvous-server = '$Rustdesk_custom_ip'" >> ~/.config/rustdesk/RustDesk2.toml
+        echo "key = '$Rustdesk_custom_key'" >> ~/.config/rustdesk/RustDesk2.toml
+        #开启固定密码
+        echo "verification-method = 'use-permanent-password'" >> ~/.config/rustdesk/RustDesk2.toml
+        #设置固定密码
+        sed -i  "s#password = ''#password = \'${Rustdesk_permanent_password}\'#g" ~/.config/rustdesk/RustDesk.toml
     fi
 
     # 启动 RustDesk 服务
@@ -357,7 +349,7 @@ case "$1" in
     echo -e "${Green}更新系统软件源${Font}"
     sudo apt update
     #sudo apt upgrade -y
-    git-clone
+    set-permission
     install
     ;;
 "uninstall")

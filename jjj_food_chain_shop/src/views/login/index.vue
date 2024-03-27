@@ -273,6 +273,7 @@ export default {
                     // 处理成功响应数据
                     // console.log(response.data);
                     localStorage.setItem('SHOP_BASIC_URL', url);
+                    this.haveUrl = true;
                     location.reload();
                 })
                 .catch(error => {
@@ -297,6 +298,7 @@ export default {
             )
                 .then(() => {
                     localStorage.removeItem("SHOP_BASIC_URL");
+                    this.haveUrl = false;
                     location.reload();
                 })
                 .catch(() => {

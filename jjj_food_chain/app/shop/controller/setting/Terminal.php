@@ -74,7 +74,7 @@ class Terminal extends Controller
         $model = new SettingModel;
         $data = $this->request->param();
         //
-        $setting = SettingModel::getItem(SettingEnum::KITCHEN);
+        $setting = SettingModel::getItem(SettingEnum::CASHIER);
         if (empty($data['new_advanced_password']) || empty($data['confirm_advanced_password'])) {
             return $this->renderError('请输入新密码');
         }
@@ -83,7 +83,7 @@ class Terminal extends Controller
         }
         $setting['advanced_password'] = $data['new_advanced_password'];
         $shop_supplier_id = $this->store['user']['shop_supplier_id'];
-        if ($model->edit(SettingEnum::KITCHEN, $setting, $shop_supplier_id)) {
+        if ($model->edit(SettingEnum::CASHIER, $setting, $shop_supplier_id)) {
             return $this->renderSuccess('操作成功');
         }
         return $this->renderError($model->getError() ?: '操作失败');

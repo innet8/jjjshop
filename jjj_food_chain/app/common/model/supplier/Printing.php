@@ -45,6 +45,22 @@ class Printing extends BaseModel
     }
 
     /**
+     * 获取区域
+     */
+    public function getAreaIdAttr($value, $data)
+    {
+        return $value ? json_decode($value, true) : [];
+    }
+
+    /**
+     * 设置区域
+     */
+    public function setAreaIdAttr($value, $data)
+    {
+        return $value ? json_encode($value) : '';
+    }
+
+    /**
      * 关联供应商表
      */
     public function supplier()

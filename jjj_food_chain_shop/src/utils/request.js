@@ -10,7 +10,6 @@ axios.defaults.baseURL = baseURL;
 axios.defaults.withCredentials = withCredentials;
 axios.defaults.responseType = responseType;
 
-
 //POST传参序列化(添加请求拦截器)
 axios.interceptors.request.use((config) => {
     //在发送请求之前做某件事
@@ -35,9 +34,8 @@ axios.interceptors.request.use((config) => {
 //返回状态判断(添加响应拦截器)
 axios.interceptors.response.use((res) => {
     //未登陆
-    if (res.data.code !== 1 && !(/^https?:\/\//i.test(res.config.url))) {
-        console.log('未登录状态')
-        if (res.data.code === 0 ) {
+    if (res.data.code !== 1) {
+        if (res.data.code === 0) {
             ElMessage({
                 showClose: true,
                 message: res.data.msg,

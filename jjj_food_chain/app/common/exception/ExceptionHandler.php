@@ -33,20 +33,26 @@ class ExceptionHandler extends Handle
         } else if ($e instanceof BaseException) {
             $this->code = $e->code;
             $this->message = $e->message;
+        } else if ($e instanceof \hg\apidoc\exception\HttpException) {
+            $this->code = $e->getCode();
+            $this->message = $e->getMessage();
         } else {
             if (Env::get('APP_DEBUG')) {
                 return parent::render($request, $e);
             }
             $this->code = 0;
             $this->message = $e->getMessage() ?: '很抱歉，服务器内部错误';
-            $this->recordErrorLog($e);
         }
+        // 
+        $this->recordErrorLog($e);
+        // 
         return json([
             'msg' => $this->message, 
             'code' => $this->code,
             'line' => $e->getline() ?: '',
             'file' => $e->getFile() ?: ''
         ]);
+
     }
 
     /**
@@ -54,7 +60,11 @@ class ExceptionHandler extends Handle
      */
     private function recordErrorLog(Throwable $e)
     {
-        Log::write($e->getMessage(), 'error');
-        Log::write($e->getTraceAsString(), 'error');
+        try {
+            Log::write($e->getMessage() ?: '服务器内部错误', 'error');
+            Log::write($e->getTraceAsString() , 'error');
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 }

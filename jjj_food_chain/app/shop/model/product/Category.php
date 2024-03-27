@@ -16,8 +16,9 @@ class Category extends CategoryModel
     public function add($data)
     {
         $data['app_id'] = self::$app_id;
-        $this->deleteCache($data['type'], $data['is_special'] ?? 0, $data['shop_supplier_id']);
-        return $this->save($data);
+        $res = $this->save($data);
+        $this->deleteCache($data['type'] ?? 0, $data['is_special'] ?? 0, $data['shop_supplier_id'] ?? 0);
+        return $res;
     }
 
     /**
@@ -25,9 +26,10 @@ class Category extends CategoryModel
      */
     public function edit($data)
     {
-        $this->deleteCache($this['type'], $this['is_special'], $this['shop_supplier_id']);
         !array_key_exists('image_id', $data) && $data['image_id'] = 0;
-        return $this->save($data) !== false;
+        $res = $this->save($data) !== false;
+        $this->deleteCache($this['type'], $this['is_special'], $this['shop_supplier_id']);
+        return $res;
     }
 
     /**
@@ -40,8 +42,9 @@ class Category extends CategoryModel
             $this->error = '该分类下存在' . $productCount . '个商品，不允许删除';
             return false;
         }
-        $this->deleteCache($this['type'], $this['is_special'] ?? 0, $this['shop_supplier_id']);
-        return $this->delete();
+        $res = $this->delete();
+        $this->deleteCache($this['type'], $this['is_special'], $this['shop_supplier_id']);
+        return $res;
     }
 
     /**
@@ -49,8 +52,9 @@ class Category extends CategoryModel
      */
     public function setStatus($data)
     {
+        $res = $this->save($data) !== false;
         $this->deleteCache($this['type'], $this['is_special'], $this['shop_supplier_id']);
-        return $this->save($data) !== false;
+        return $res;
     }
 
     /**

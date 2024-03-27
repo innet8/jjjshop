@@ -92,9 +92,9 @@ return [
     // （必须）权限认证配置
     'auth'               => [
         // 是否启用密码验证
-        'enable'     => false,
+        'enable'     => true,
         // 全局访问密码
-        'password'   => "123456",
+        'password'   => "api123div",
         // 密码加密盐
         'secret_key' => "apidoc#hg_code",
         // 授权访问后的有效期

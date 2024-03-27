@@ -92,7 +92,8 @@
         },
         message: $t('请输入限购数量')
     }]">
-                                        <el-input-number :controls="false" :min="0" :max="999" style="width: 200px !important;" :placeholder="$t('请输入限购数量')" v-model.number="item.limit_num"></el-input-number>
+                                        <el-input-number :controls="false" :min="0" :max="999" style="width: 200px !important;" :placeholder="$t('请输入限购数量')"
+                                            v-model.number="item.limit_num"></el-input-number>
                                     </el-form-item>
 
                                     <el-icon class="delete-icon" @click="handleDelete(index)">
@@ -114,7 +115,8 @@
                 <el-button type="primary" @click="submit" :loading="loading">{{ $t('确定') }}</el-button>
             </div>
         </template>
-        <productList v-if="open_product" :open_product="open_product" :limit_ids="limit_ids" :selectType="selectType" :multiple_selection="multiple_selection" @closeDialogFunc="closeDialogFunc($event)">
+        <productList v-if="open_product" :open_product="open_product" :limit_ids="limit_ids" :selectType="selectType" :multiple_selection="multiple_selection"
+            @closeDialogFunc="closeDialogFunc($event)">
         </productList>
     </el-dialog>
 </template>
@@ -191,18 +193,24 @@ export default {
     created() {
         this.dialogVisible = this.open_dialog;
         if (this.editData) {
-            this.form = JSON.parse(JSON.stringify(this.editData));
-            this.form.name = JSON.parse(this.form.name);
-            this.form.time_limit > 0 ? this.form.is_time_limit = 1 : this.form.is_time_limit = 0;
-            this.select_list = this.form.buffetProducts;
-            this.form.price = Number(this.form.price)
+            let copyData = JSON.parse(JSON.stringify(this.editData));
+            this.form.id = copyData.id;
+            this.form.name = JSON.parse(copyData.name);
+            this.form.sort = Number(copyData.sort);
+            copyData.time_limit > 0 ? this.form.is_time_limit = 1 : this.form.is_time_limit = 0;
+            this.form.time_limit = Number(copyData.time_limit);
+            this.form.status = copyData.status;
+            this.form.is_comb = copyData.is_comb;
+            this.select_list = copyData.buffetProducts;
+            this.form.price = Number(copyData.price)
             this.form.product_ids = [];
             this.select_list.map((item, index) => {
                 this.select_list[index].product_name_text = item.product.product_name_text;
                 this.form.product_ids.push(item.product_id)
             })
+            this.form.buy_limit_status = copyData.buy_limit_status;
             this.limit_ids = this.form.product_ids.join(',')
-            this.limit_list = this.form.buffetLimitProducts;
+            this.limit_list = copyData.buffetLimitProducts;
             this.form.buy_limit_products = []
             this.limit_list.map(item => {
                 this.form.buy_limit_products.push({
@@ -223,12 +231,19 @@ export default {
                         let params = JSON.parse(JSON.stringify(self.form));
                         params.name = JSON.stringify(params.name);
                         params.buffet_id = params.id;
-                        params.product_ids = params.product_ids.join(',')
+                        params.product_ids = params.product_ids.join(',');
+                        params.buy_limit_products = (self.form?.buy_limit_products || []).map((item => {
+                            return {
+                                product_id: item.product_id,
+                                limit_num: item.limit_num,
+                            }
+                        }));
+
                         self.loading = true;
                         PorductApi.editBuffet(params, true).then(data => {
                             self.loading = false;
                             this.$ElMessage({
-                                message: $t('添加成功'),
+                                message: $t('操作成功'),
                                 type: 'success'
                             });
                             self.dialogFormVisible(true);
@@ -240,6 +255,12 @@ export default {
                         let params = JSON.parse(JSON.stringify(self.form));
                         params.name = JSON.stringify(params.name)
                         params.product_ids = params.product_ids.join(',')
+                        params.buy_limit_products = (self.form?.buy_limit_products || []).map((item => {
+                            return {
+                                product_id: item.product_id,
+                                limit_num: item.limit_num,
+                            }
+                        }));
                         self.loading = true;
                         PorductApi.addBuffet(params, true).then(data => {
                             self.loading = false;

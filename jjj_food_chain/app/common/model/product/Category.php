@@ -123,7 +123,7 @@ class Category extends BaseModel
             $shop_supplier_id = $detail['shop_supplier_id'];
         }
         $model = new static;
-        $cacheKey = 'category_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. '_' . checkDetect();
+        $cacheKey = 'category_parent_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special. '_' . checkDetect();
         if (!Cache::get($cacheKey)) {
             $data = $model->with(['images'])
                 ->where('parent_id', '=', 0)
@@ -217,7 +217,7 @@ class Category extends BaseModel
     public static function getSubCategoryId($parent_id, $all = [])
     {
         $arrIds = [$parent_id];
-        empty($all) && $all = self::getCacheAll();
+        empty($all) && $all = self::getCacheAll(1, 0);
         foreach ($all as $key => $item) {
             if ($item['parent_id'] == $parent_id) {
                 unset($all[$key]);
@@ -233,7 +233,7 @@ class Category extends BaseModel
      */
     protected static function hasSubCategory($parentId)
     {
-        $all = self::getCacheAll();
+        $all = self::getCacheAll(1, 0);
         foreach ($all as $item) {
             if ($item['parent_id'] == $parentId) {
                 return true;

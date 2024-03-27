@@ -351,6 +351,36 @@ export default {
                     },
                 ],
             ],
+            six: [
+                [
+                    {
+                        name: $t('订单号'),
+                        label: 202401253695842521,
+                    },
+                    {
+                        name: $t('时间'),
+                        label: "2023/12/15 14:00:21",
+                    },
+                ],
+                [
+                    {
+                        name: $t('商品'),
+                        label: $t('数量'),
+                        bold: true,
+                    },
+                ],
+                [
+                    {
+                        name: $t('商品名称商品名称商品名称商品名称商品名称商品名称'),
+                        label: 6,
+                    },
+                    {
+                        name: $t('商品'),
+                        label: 3,
+                    },
+                ],
+
+            ],
         }
     },
     props: ['open', 'title'],
@@ -376,6 +406,11 @@ export default {
         if (this.title == $t('营业数据')) {
             this.details = this.five;
             this.titleName = this.title;
+        }
+        if (this.title == $t('整单打印')) {
+            this.details = this.six;
+            this.storeShow = false;
+            this.titleName = $t('桌位: ') + 'A01';
         }
     },
     methods: {

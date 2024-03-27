@@ -29,14 +29,14 @@ class Product extends ProductModel
         } else {
             // 全部
             $firstLevelCategoryIds = Category::alias('c')
-            ->where('c.status', '=', 1)
-            ->where('c.parent_id', '=', 0)
-            ->column('c.category_id');
+                ->where('c.status', '=', 1)
+                ->where('c.parent_id', '=', 0)
+                ->column('c.category_id');
             $secondLevelCategoryIds = Category::alias('c')
-            ->join('category cc', 'c.parent_id = cc.category_id')
-            ->where('c.status', '=', 1)
-            ->whereIn('cc.category_id', $firstLevelCategoryIds)
-            ->column('c.category_id');
+                ->join('category cc', 'c.parent_id = cc.category_id')
+                ->where('c.status', '=', 1)
+                ->whereIn('cc.category_id', $firstLevelCategoryIds)
+                ->column('c.category_id');
             // 合并一级分类和二级分类
             $categoryIds = array_merge($firstLevelCategoryIds, $secondLevelCategoryIds);
             $model = $model->whereIn('product.category_id', $categoryIds);
@@ -50,7 +50,7 @@ class Product extends ProductModel
             $model = $model->alias('product')
                 ->field(['product.*'])
                 ->with(['category', 'image.file', 'sku', 'orderProducts' => function ($query) use ($order_id) {
-                    $query->where('order_id', $order_id);
+                    $query->where('order_id', $order_id)->field('order_id,product_id,product_name,total_num');
                 }])
                 ->where('product.is_delete', '=', 0)
                 ->where('product.product_type', '=', 1)

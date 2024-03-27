@@ -25,13 +25,13 @@ export default defineConfig(({ mode }) => {
             }
         },
         plugins: [
-            viteCompression({
-                verbose: true,
-                disable: false,
-                threshold: 10240,
-                algorithm: 'gzip',
-                ext: '.gz',
-            }),
+            // viteCompression({
+            //     verbose: true,
+            //     disable: false,
+            //     threshold: 10240,
+            //     algorithm: 'gzip',
+            //     ext: '.gz',
+            // }),
             vue(),
             legacy({
                 targets: ['ie>=11'],

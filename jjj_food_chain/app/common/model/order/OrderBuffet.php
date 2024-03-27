@@ -91,6 +91,7 @@ class OrderBuffet extends BaseModel
                 $buffet_expired_time = helper::bcadd(strtotime($order['create_time']), helper::bcmul($time_limit, 60));
                 $order->save(['buffet_expired_time' => $buffet_expired_time]);
             }
+            (new OrderModel())->reloadPrice($order['order_id']);
             $this->commit();
             return true;
         } catch (\Exception $e) {

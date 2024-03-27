@@ -6,8 +6,7 @@
     -->
     <div class="product-add" v-loading="loading">
         <!--form表单-->
-        <el-form size="small" ref="form" :model="form" class="product-form" label-position="top" label-width="180px"
-            v-if="!loading">
+        <el-form size="small" ref="form" :model="form" class="product-form" label-position="top" label-width="180px" v-if="!loading">
             <!--基础信息-->
             <div class="product-form-flex">
                 <Basic @validateField="validateField"></Basic>
@@ -133,6 +132,10 @@ export default {
                 content: '',
                 /*商品状态*/
                 product_status: 10,
+                /*平板是否显示*/
+                is_show_tablet: 1,
+                /*厨显是否显示*/
+                is_show_kitchen: 1,
                 /*初始销量*/
                 sales_initial: 0,
                 /*商品排序，默认100*/
@@ -199,7 +202,7 @@ export default {
                     self.form.model.product_status = res.data.model.product_status.value;
                     self.form.model.product_name = JSON.parse(self.form.model.product_name)
                     self.form.model.product_unit = JSON.parse(self.form.model.product_unit)
-                    if(self.form.model.special_id == 0){
+                    if (self.form.model.special_id == 0) {
                         self.form.model.special_id = '';
                     }
                     self.form.model.sku.map((item, index) => {

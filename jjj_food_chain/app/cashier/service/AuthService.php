@@ -62,6 +62,10 @@ class AuthService
         '/order/hallcart/getSendKitchen',
         '/order/hallcart/tableProductList',
         '/order/hallcart/getTableInfo', // 获取桌台信息
+        '/order/hallcart/getTableBuffetDiscountList', // 获取桌台折扣信息
+        '/order/hallcart/addBuffetDiscount', // 自助餐添加折扣
+        '/order/hallcart/updateBuffetDiscountNum', // 自助餐修改折扣数量
+        '/order/hallcart/deleteBuffetDiscount', // 自助餐删除折扣
 
         '/product/product/index',
         '/product/product/detail',

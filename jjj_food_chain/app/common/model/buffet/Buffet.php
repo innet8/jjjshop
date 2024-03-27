@@ -34,6 +34,12 @@ class Buffet extends BaseModel
         return $this->hasMany('app\\common\\model\\buffet\\BuffetProduct', 'buffet_id', 'id')->with('product');
     }
 
+    // 与BuffetDiscount模型的多对多关联
+    public function buffetDiscount()
+    {
+        return $this->belongsToMany(BuffetDiscount::class, 'buffet_discount_rel', 'buffet_discount_id', 'buffet_id');
+    }
+
     /**
      * 关联自助餐限购产品
      */
@@ -76,5 +82,13 @@ class Buffet extends BaseModel
         return (new self())->where('status', '=', 1)
             ->order('sort asc,id desc')
             ->select();
+    }
+
+    // 获取自助餐优惠列表
+    public static function getBuffetDiscountList($buffet_id)
+    {
+        return (new self)->with(['buffetDiscount' => function($q) {
+            $q->where('status', '=', 1);
+        }])->where('id', '=', $buffet_id)->find();
     }
 }

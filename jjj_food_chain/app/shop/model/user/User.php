@@ -230,6 +230,11 @@ class User extends UserModel
             $this->error = '请输入正确的金额';
             return false;
         }
+        // 判断是否是正确的数字金额
+        if (!is_numeric($data['money'])) {
+            $this->error = '请输入正确的金额';
+            return false;
+        }
         if ($data['money'] > 100000000) {
             $this->error = '不能大于100000000';
             return false;
@@ -281,6 +286,11 @@ class User extends UserModel
     {
         if (!isset($data['value']) || $data['value'] === '' || $data['value'] < 0) {
             $this->error = '请输入正确的积分数量';
+            return false;
+        }
+        // 判断是否是正确的数字金额
+        if (!is_numeric($data['value'])) {
+            $this->error = '请输入正确的金额';
             return false;
         }
         if ($data['value'] > 100000000) {

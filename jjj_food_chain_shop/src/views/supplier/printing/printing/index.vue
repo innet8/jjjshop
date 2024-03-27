@@ -52,8 +52,12 @@
             </el-form-item>
             <el-form-item :label="$t('选择打印机')" v-if="form.cashier_open == 1" class="cashier-item">
                 <el-select class="max-w460" v-model="form.cashier_printer_id" :placeholder="$t('请选择')">
-                    <el-option :label="$t('收银打印机 自带')" :value="'0'">
-                        <span style="float: left">{{ $t('收银打印机') }}</span>
+                    <el-option :label="'SUNMI 商米 ' + $t('收银打印机') + ' 80mm ' + $t('自带')" :value="'0'">
+                        <span style="float: left">SUNMI 商米 {{ $t('收银打印机') }} 80mm</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ $t('自带') }}</span>
+                    </el-option>
+                    <el-option :label="'UroVo 优博讯 ' + $t('收银打印机') + ' 80mm ' + $t('自带')" :value="'-1'">
+                        <span style="float: left">UroVo 优博讯 {{ $t('收银打印机') }} 80mm</span>
                         <span style="float: right; color: #8492a6; font-size: 13px">{{ $t('自带') }}</span>
                     </el-option>
                     <el-option v-for="(item, index) in printerList" :key="index" :label="item.printer_name"

@@ -190,6 +190,7 @@ class Product extends ProductModel
             // 单规格
             $sku['app_id'] = self::$app_id;
             $sku['line_price'] = $sku['product_price'];
+            $this->sku()->delete(); // 先删除所有规格
             $this->sku()->save($sku);
             $stock = $sku['stock_num'];
             $product_price = $sku['product_price'];

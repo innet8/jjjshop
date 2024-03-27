@@ -28,11 +28,12 @@ class PrinterTypeEnum extends Enum
     public static function getTypeName()
     {
         return [
-            self::FEI_E_YUN => __('飞鹅打印机'),
-            self::FEI_E_YUN_TAG => __('飞鹅标签打印机'),
-            self::PRINT_CENTER => __('365云打印'),
-            self::SUNMI_LAN => __('商米打印机（局域网）'),
-            self::XPRINTER_LAN => __('芯烨打印机（局域网）'),
+            self::FEI_E_YUN => __('飞鹅打印机') . ' 58mm',
+            // todo 暂时用不到的先注释
+            // self::FEI_E_YUN_TAG => __('飞鹅标签打印机') . ' (58mm)',
+            // self::PRINT_CENTER => __('365云打印') . ' (58mm)',
+            self::SUNMI_LAN => __('商米打印机（局域网）') . '80mm',
+            self::XPRINTER_LAN => __('芯烨打印机（局域网）') . '80mm',
         ];
     }
 

@@ -52,6 +52,9 @@ let OrderApi = {
     deliveryData(data, errorback) {
         return request._get('/shop/takeout.delivery/index', data, errorback);
     },
+    storeExport(data, errorback) {
+        return request._get('/shop/store.operate/export', data, errorback);
+    },
 }
 
 export default OrderApi;

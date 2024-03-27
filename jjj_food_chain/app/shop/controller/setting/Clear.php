@@ -34,9 +34,6 @@ class Clear extends Controller
         // 
         $this->rmCache( $this->postData()['keys'] );
         // 
-        $cachePath = root_path('runtime') . 'cache';
-        SystemHelp::cmd("chmod -R 777 $cachePath");
-        // 
         return $this->renderSuccess('操作成功');
     }
 

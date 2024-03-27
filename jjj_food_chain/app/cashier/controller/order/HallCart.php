@@ -333,4 +333,95 @@ class HallCart extends Controller
         }
         return $this->renderSuccess('桌台信息', $detail);
     }
+
+    /**
+     * @Apidoc\Title("查询桌台自助餐优惠信息")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/getTableBuffetDiscountList")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+     * @Apidoc\Returned()
+     */
+    public function getTableBuffetDiscountList($table_id)
+    {
+        $detail = OrderModel::getTableUnderwayOrder($table_id);
+        if (!$detail) {
+            return $this->renderError('当前状态不可操作');
+        }
+        $list = [];
+        foreach ($detail->buffet as $buffet) {
+            $discount = Buffet::getBuffetDiscountList($buffet->buffet_id);
+            if ($discount) {
+                $list[] =  $discount;
+            }
+        }
+        return $this->renderSuccess('桌台自助餐优惠信息', $list);
+    }
+
+    /**
+     * @Apidoc\Title("桌台添加自助餐优惠")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/addBuffetDiscount")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+     * @Apidoc\Param("buffet_id", type="int", require=true, desc="自助餐ID")
+     * @Apidoc\Param("buffet_discount_list", type="array", require=true, desc="自助餐优惠列表")
+     * @Apidoc\Returned()
+     */
+    public function addBuffetDiscount($table_id, $buffet_id, $buffet_discount_list)
+    {
+        $detail = OrderModel::getTableUnderwayOrder($table_id);
+        if (!$detail) {
+            return $this->renderError('当前状态不可操作');
+        }
+
+        if ($detail->addOrderBuffetDiscount($buffet_id, $buffet_discount_list)) {
+            (new OrderModel())->reloadPrice($detail['order_id']);
+            return $this->renderSuccess('添加成功');
+        }
+        return $this->renderError($detail->getError() ?: '添加失败');
+    }
+
+    /**
+     * @Apidoc\Title("修改自助餐优惠人数")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/updateBuffetDiscountNum")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+     * @Apidoc\Param("order_buffet_discount_id", type="int", require=true, desc="订单自助餐优惠ID")
+     * @Apidoc\Param("num", type="int", require=true, desc="数量")
+     * @Apidoc\Returned()
+     */
+    public function updateBuffetDiscountNum($table_id, $order_buffet_discount_id, $num)
+    {
+        $detail = OrderModel::getTableUnderwayOrder($table_id);
+        if (!$detail) {
+            return $this->renderError('当前状态不可操作');
+        }
+
+        if ($detail->updateOrderBuffetDiscountNum($order_buffet_discount_id, $num)) {
+            (new OrderModel())->reloadPrice($detail['order_id']);
+            return $this->renderSuccess('修改成功');
+        }
+        return $this->renderError($detail->getError() ?: '修改失败');
+    }
+
+    /**
+     * @Apidoc\Title("删除自助餐优惠")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url ("/index.php/cashier/order.HallCart/deleteBuffetDiscount")
+     * @Apidoc\Param("table_id", type="int", require=true, desc="桌台ID")
+     * @Apidoc\Param("order_buffet_discount_id", type="int", require=true, desc="订单自助餐优惠ID")
+     * @Apidoc\Returned()
+     */
+    public function deleteBuffetDiscount($table_id, $order_buffet_discount_id)
+    {
+        $detail = OrderModel::getTableUnderwayOrder($table_id);
+        if (!$detail) {
+            return $this->renderError('当前状态不可操作');
+        }
+
+        if ($detail->delOrderBuffetDiscount($order_buffet_discount_id)) {
+            (new OrderModel())->reloadPrice($detail['order_id']);
+            return $this->renderSuccess('删除成功');
+        }
+        return $this->renderError($detail->getError() ?: '删除失败');
+    }
 }

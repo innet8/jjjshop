@@ -3,6 +3,7 @@
 namespace app\common\model\order;
 
 use app\common\model\buffet\Buffet;
+use app\common\model\buffet\BuffetDiscount;
 use app\common\model\buffet\BuffetProduct;
 use app\common\model\delay\Delay;
 use app\common\library\helper;
@@ -75,7 +76,15 @@ class Order extends BaseModel
     }
 
     /**
-     * 订单自助餐列表
+     * 订单自助餐优惠列表
+     */
+    public function buffetDiscount()
+    {
+        return $this->hasMany('app\\common\\model\\order\\OrderBuffetDiscount', 'order_id', 'order_id');
+    }
+
+    /**
+     * 订单自助餐加钟列表
      */
     public function delay()
     {
@@ -446,7 +455,7 @@ class Order extends BaseModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public static function detail($where, $with = ['user', 'address', 'buffet', 'delay', 'product' => ['image'], 'extract', 'supplier', 'cashier'])
+    public static function detail($where, $with = ['user', 'address', 'buffet', 'buffetDiscount', 'delay', 'product' => ['image'], 'extract', 'supplier', 'cashier'])
     {
         is_array($where) ? $filter = $where : $filter['order_id'] = (int)$where;
         return self::with($with)->where($filter)->order('order_id', 'desc')->find();
@@ -465,7 +474,7 @@ class Order extends BaseModel
     {
         $filter = is_array($where) ? $where : ['order_id' => (int)$where];
         $query =  self::with([
-            'user', 'address', 'buffet', 'delay', 'extract', 'supplier', 'cashier',
+            'user', 'address', 'buffet', 'buffetDiscount', 'buffetDiscount', 'delay', 'extract', 'supplier', 'cashier',
             'product.image' => function($query){
                 $query->withTrashed();
             }
@@ -484,7 +493,7 @@ class Order extends BaseModel
      */
     public static function getTableUnderwayOrder($table_id)
     {
-        return self::with('product')->where([
+        return self::with(['product', 'buffet'])->where([
             ['table_id', '=', $table_id],
             ['order_status', '=', OrderStatusEnum::NORMAL]
         ])->order('order_id', 'desc')->find();
@@ -1117,6 +1126,10 @@ class Order extends BaseModel
         $buffetPrice = Order::getBuffetPrice($order_id);
         $buffetPrice = helper::bcmul($buffetPrice, $meal_num, 3);
         $buffetPrice = round($buffetPrice, 2);
+        // 减去自助餐优惠费用
+        $buffetDiscountPrice = (new OrderBuffetDiscount)->where('order_id', '=', $order_id)->sum('total_price');
+        $buffetPrice = helper::bcsub($buffetPrice, $buffetDiscountPrice);
+        $buffetPrice = round($buffetPrice, 2);
         // 加钟费用
         $delayPrice = Order::getDelayPrice($order_id);
         $delayPrice = helper::bcmul($delayPrice, $meal_num, 3);
@@ -1146,7 +1159,7 @@ class Order extends BaseModel
             $o_pay_price = $pay_price;
             $pay_price = round($o_pay_price * $order['discount_ratio'] / 100, 2);;
             $discount_money = round($o_pay_price * (100 - $order['discount_ratio']) / 100, 2);
-        } else if ($order['discount_ratio'] == -1){
+        } else if ($order['discount_ratio'] == -1) {
             $discount_money = $pay_price;
             $pay_price = 0;
         }
@@ -1187,39 +1200,23 @@ class Order extends BaseModel
      */
     public function addToOrder($data, $user)
     {
-        $param = $data;
-        $orderId = 0;
-        $meal_num = 1;
-        //
-        if (isset($data['order_id']) && $data['order_id'] > 0) {
-            // 检查订单状态
-            $detail = self::detail([
-                ['order_id', '=', $data['order_id']],
-                ['order_status', '=', OrderStatusEnum::NORMAL]
-            ]);
-            if (!$detail) {
-                $this->error = '订单不存在';
-                return false;
-            }
-            $orderId = $detail['order_id'];
-            $meal_num = $detail['meal_num'];
-        }
-        //
-        if(isset($data['table_id']) && $data['table_id'] > 0) {
-            // 检查订单状态
-            $detail = self::detail([
-                ['table_id', '=', $data['table_id']],
-                ['order_status', '=', OrderStatusEnum::NORMAL]
-            ]);
-            if (!$detail) {
-                $this->error = '订单不存在';
-                return false;
-            }
-            $orderId = $detail['order_id'];
-            $meal_num = $detail['meal_num'];
-        }
+        $orderId = ($data['order_id'] ?? 0) ?: 0;
+        $tableId = ($data['table_id'] ?? 0) ?: 0;
+        $productId = intval($data['product_id'] ?? 0);
+        $productNum = intval($data['product_num'] ?? 0);
+        $price = $data['price'] ?? 0;
+        $mealNum = 1;
 
-        if ($orderId > 0) {
+        // 检查订单状态
+        if ($orderId > 0 || $tableId > 0) {
+            $detail = self::detail([
+                $orderId > 0 ? ['order_id', '=', $data['order_id']] : ['table_id', '=', $data['table_id']],
+                ['order_status', '=', OrderStatusEnum::NORMAL]
+            ]);
+            if (!$detail) {
+                $this->error = '订单不存在';
+                return false;
+            }
             // 检查锁定
             if ($detail->is_lock) {
                 $this->error = '订单已被锁定，请解锁后重新操作';
@@ -1234,18 +1231,24 @@ class Order extends BaseModel
                     return false;
                 }
             }
+            // 
+            $orderId = $detail['order_id'];
+            $mealNum = $detail['meal_num'];
         }
-
+        
         //判断商品是否下架
-        $product = $this->productState($data['product_id']);
-        if (!$product) {
+        if (!$this->productState($productId)) {
             $this->error = '商品已下架';
             return false;
         }
+
+        // 取得原始数据
+        $productDetail = ProductModel::where('product_id', '=', $productId)->find();
+        $isBuffet = array_key_exists($productId, Order::getOrderBuffetProductArr($orderId)) ? 1 : 0;
+
         // 判断库存
-        $deductStockType = ProductModel::where('product_id', $data['product_id'])->value('deduct_stock_type');
-        if ($deductStockType == DeductStockTypeEnum::CREATE) {
-            $stockStatus = $this->productStockState($data['product_id'], $data['product_sku_id'] ?? 0, $orderId);
+        if ($productDetail->deduct_stock_type == DeductStockTypeEnum::CREATE) {
+            $stockStatus = $this->productStockState($productId, $data['product_sku_id'] ?? 0, $orderId);
             if (!$stockStatus) {
                 $this->error = '商品库存不足，请重新选择';
                 return false;
@@ -1253,141 +1256,70 @@ class Order extends BaseModel
         }
 
         // 判断限购
-        if (isset($data['is_buffet']) && $data['is_buffet'] == 1) {
-            $limitNum = Order::getBuffetProductLimitNum($orderId, $data['product_id']) * $meal_num;
+        if ($isBuffet == 1 && $orderId > 0) {
+            $limitNum = Order::getBuffetProductLimitNum($orderId, $productId) * $mealNum;
         } else {
-            $limitNum = ProductModel::getProductLimitNum($data['product_id']);
+            $limitNum = ProductModel::getProductLimitNum($productId);
         }
-        if ($limitNum && $data['product_num'] > $limitNum) {
+        if ($limitNum && $productNum > $limitNum) {
             $this->error = '超过限购数量';
             return false;
         }
         if ($orderId > 0) {
             $curNum = (new OrderProduct())->where([
                 'order_id' => $orderId,
-                'product_id' => $data['product_id'],
+                'product_id' => $productId,
             ])->sum('total_num');
-            if ($limitNum && (($param['product_num'] + $curNum) > $limitNum)) {
+            if ($limitNum && (($productNum + $curNum) > $limitNum)) {
                 $this->error = '超过限购数量';
                 return false;
             }
         }
+
         //
         $this->startTrans();
         try {
-
-            // 已存在order_id，直接添加到订单
-            if (isset($data['order_id']) && $data['order_id'] > 0) {
-                $orderProduct = new OrderProductModel;
-                $order_product_id = 0;
-                // 存在修改数量、否则新增
-                if ($order_product_id) {
-                    $orderProduct->where('order_product_id', '=', $order_product_id)->inc('total_num', $data['product_num'])->update();
-                } else {
-                    $productDetail = ProductModel::where('product_id', '=', $data['product_id'])->find();
-                    $inArr = [
-                        'order_id' => $data['order_id'],
-                        'app_id' => self::$app_id,
-                        'product_id' => $data['product_id'],
-                        'product_name' => $productDetail['product_name'],
-                        'image_id' => $productDetail['logo']['image_id'],
-                        'deduct_stock_type' => $productDetail['deduct_stock_type'],
-                        'spec_type' => $productDetail['spec_type'],
-                        'product_sku_id' => $data['product_sku_id'] ?? 0,
-                        'product_attr' => $data['describe'],
-                        'content' => $productDetail['content'],
-                        'product_price' => $data['price'],
-                        'line_price' => $data['product_price'],
-                        'total_num' => $data['product_num'],
-                        'total_price' => $data['product_num'] * $data['price'],
-                        'total_pay_price' => $data['product_num'] * $data['price'],
-                        'is_buffet_product' => $data['is_buffet'] ?? 0,
-                    ];
-
-                    $orderProduct->save($inArr);
-                }
-                $return_order = $data['order_id'];
-
-            } else if(isset($data['table_id']) && $data['table_id'] > 0) {
-
-                $data['order_id'] = $orderId;
-
-                $orderProduct = new OrderProductModel;
-                $order_product_id = 0;
-                // 存在修改数量、否则新增
-                if ($order_product_id) {
-                    $orderProduct->where('order_product_id', '=', $order_product_id)->inc('total_num', $data['product_num'])->update();
-                } else {
-                    $productDetail = ProductModel::where('product_id', '=', $data['product_id'])->find();
-                    $inArr = [
-                        'order_id' => $data['order_id'],
-                        'app_id' => self::$app_id,
-                        'product_id' => $data['product_id'],
-                        'product_name' => $productDetail['product_name'],
-                        'image_id' => $productDetail['logo']['image_id'],
-                        'deduct_stock_type' => $productDetail['deduct_stock_type'],
-                        'spec_type' => $productDetail['spec_type'],
-                        'product_sku_id' => $data['product_sku_id'] ?? 0,
-                        'product_attr' => $data['describe'],
-                        'content' => $productDetail['content'],
-                        'product_price' => $data['price'],
-                        'line_price' => $data['product_price'],
-                        'total_num' => $data['product_num'],
-                        'total_price' => $data['product_num'] * $data['price'],
-                        'total_pay_price' => $data['product_num'] * $data['price'],
-                        'is_buffet_product' => $data['is_buffet'],
-                    ];
-
-                    $orderProduct->save($inArr);
-                }
-                $return_order = $data['order_id'];
-
-            } else {
-                // order_id不存在创建新订单再加入商品
-
+            // $orderId不存在则创建新订单再加入商品
+            if ($orderId <= 0) {
                 // 实例化订单service
-                $param['eat_type'] = 10;
-                $orderService = new CashierOrderSettledService($user, [], $param);
+                $orderService = new CashierOrderSettledService($user, [], ['eat_type'=>10]);
                 // 初始化订单信息
                 $orderInfo = $orderService->settlementCashier();
                 if ($orderService->hasError()) {
                     return $this->renderError($orderService->getError());
                 }
                 // 创建订单
-                $order_id = $orderService->createOrder($orderInfo);
-                if (!$order_id) {
+                $orderId = $orderService->createOrder($orderInfo);
+                if (!$orderId) {
                     return $this->renderError($orderService->getError() ?: '订单创建失败');
                 }
-
-                $productDetail = ProductModel::where('product_id', '=', $data['product_id'])->find();
-                $inArr = [
-                    'order_id' => $order_id,
-                    'app_id' => self::$app_id,
-                    'product_id' => $data['product_id'],
-                    'product_name' => $productDetail['product_name'],
-                    'image_id' => $productDetail['logo']['image_id'],
-                    'deduct_stock_type' => $productDetail['deduct_stock_type'],
-                    'spec_type' => $productDetail['spec_type'],
-                    'product_sku_id' => $data['product_sku_id'] ?? 0,
-                    'product_attr' => $data['describe'],
-                    'content' => $productDetail['content'],
-                    'product_price' => $data['price'],
-                    'line_price' => $data['product_price'],
-                    'total_num' => $data['product_num'],
-                    'total_price' => $data['product_num'] * $data['price'],
-                    'total_pay_price' => $data['product_num'] * $data['price'],
-                    'is_buffet_product' => $data['is_buffet'],
-                ];
-
-                (new OrderProductModel)->save($inArr);
-
-                $return_order = $order_id;
             }
-
-            (new self)->reloadPrice($return_order);
+            // 保存商品
+            $inArr = [
+                'order_id' => $orderId,
+                'app_id' => self::$app_id,
+                'product_id' => $productDetail['product_id'],
+                'product_name' => $productDetail['product_name'],
+                'image_id' => $productDetail['logo']['image_id'],
+                'deduct_stock_type' => $productDetail['deduct_stock_type'],
+                'spec_type' => $productDetail['spec_type'],
+                'content' => $productDetail['content'],
+                'product_sku_id' => $data['product_sku_id'] ?? 0,
+                'product_attr' => $data['describe'] ?? '',
+                'product_price' => $price,
+                'line_price' => $productDetail['product_price'],
+                'total_num' => $productNum,
+                'total_price' => $totalPrice = $productNum * $price,
+                'total_pay_price' => $totalPrice,
+                'is_buffet_product' => $isBuffet,
+            ];
+            (new OrderProductModel)->save($inArr);
+            // 
+            (new self)->reloadPrice($orderId);
+            // 
             $this->commit();
-            return $return_order;
-
+            // 
+            return $orderId;
         } catch (\Exception $e) {
             $this->error = $e->getMessage();
             $this->rollback();
@@ -1520,9 +1452,6 @@ class Order extends BaseModel
                 $product['is_buffet'] = 1;
                 $product['buffet_limit_num'] = $buffet_arr[$product['product_id']]['limit_num'] * $meal_num;
                 $product['product_price'] = 0;
-                foreach ($product['sku'] as &$item) {
-                    $item['product_price'] = 0;
-                }
                 $product['current_add_num'] = $current_add_num;
                 if ($product['buffet_limit_num'] == 0) {
                     $product['limit_num_status'] = 0;
@@ -1640,6 +1569,12 @@ class Order extends BaseModel
         return (new OrderDelay())->where('order_id', '=', $order_id)->sum('price');
     }
 
+    // 订单自助餐优惠数量
+    public static function getBuffetDiscountNum($order_id)
+    {
+        return (new OrderBuffetDiscount())->where('order_id', '=', $order_id)->sum('num');
+    }
+
     // 订单自助餐数量
     public static function getDelayNum($order_id)
     {
@@ -1690,5 +1625,112 @@ class Order extends BaseModel
             ->where('product_id', '=', $product_id)
             ->where('is_send_kitchen', '=', 0)
             ->sum('total_num');
+    }
+
+    public function addOrderBuffetDiscount($buffet_id, $buffet_discount_list)
+    {
+        if ($this->is_lock) {
+            $this->error = '订单已被锁定，请解锁后重新操作';
+            return false;
+        }
+        $buffet = (new Buffet)->where('status', '=', 1)->where('id', '=', $buffet_id)->find();
+        if (!$buffet) {
+            $this->error = '自助餐不存在';
+            return false;
+        }
+        $total_discount_num = 0;
+        foreach ($buffet_discount_list as $item) {
+            $total_discount_num += $item['num'];
+        }
+        if ($total_discount_num > $this->meal_num) {
+            $this->error = '自助餐优惠数量不能大于就餐人数';
+            return false;
+        }
+
+        $this->startTrans();
+        try {
+            foreach ($buffet_discount_list as $item) {
+                $buffetDiscount = (new BuffetDiscount)->where('id', '=', $item['id'])->find();
+                if (!$buffetDiscount) {
+                    $this->error = '自助餐优惠不存在';
+                    return false;
+                }
+                if ($buffetDiscount->discount_type == 1) {  // 比例
+                    $price = helper::bcmul($buffet->price, (100 - $buffetDiscount->discount_ratio) / 100);
+                } else {
+                    $price = $buffetDiscount->discount_price > $buffet->price ? $buffet->price : $buffetDiscount->discount_price;
+                }
+
+                $saveArr = [
+                    'order_id' => $this->order_id,
+                    'buffet_id' => $buffet->id,
+                    'buffet_name' => $buffet->name,
+                    'buffet_price' => $buffet->price,
+                    'buffet_discount_id' => $buffetDiscount->id,
+                    'buffet_discount_name' => $buffetDiscount->name,
+                    'discount_type' => $buffetDiscount->discount_type,
+                    'discount_ratio' => $buffetDiscount->discount_ratio,
+                    'discount_price' => $buffetDiscount->discount_price,
+                    'price' => $price,
+                    'num' => $item['num'],
+                    'total_price' => helper::bcmul($price, $item['num']),
+                    'app_id' => self::$app_id,
+                ];
+                (new OrderBuffetDiscount)->save($saveArr);
+                $after_total_num = (new OrderBuffetDiscount)->where('order_id', '=', $this->order_id)->where('buffet_id', '=', $buffet_id)->sum('num');
+                if ($after_total_num > $this->meal_num) {
+                    $this->error = '自助餐优惠数量不能大于就餐人数';
+                    return false;
+                }
+            }
+            $this->commit();
+        } catch (\Exception $e) {
+            $this->error = $e->getMessage();
+            $this->rollback();
+            return false;
+        }
+        return true;
+    }
+
+    //
+    public function updateOrderBuffetDiscountNum($order_buffet_discount_id, $num)
+    {
+        if ($this->is_lock) {
+            $this->error = '订单已被锁定，请解锁后重新操作';
+            return false;
+        }
+        $this->startTrans();
+        try {
+            $orderBuffetDiscount = (new OrderBuffetDiscount)->where('id', '=', $order_buffet_discount_id)->find();
+            $updateArr = [
+                'num' => $num,
+                'total_price' => helper::bcmul($orderBuffetDiscount->price, $num),
+            ];
+            $orderBuffetDiscount->save($updateArr);
+            $after_total_num = (new OrderBuffetDiscount)->where('order_id', '=', $this->order_id)->where('buffet_id', '=', $orderBuffetDiscount->buffet_id)->sum('num');
+
+            if ($after_total_num > $this->meal_num) {
+                $this->error = '自助餐优惠数量不能大于就餐人数';
+                return false;
+            }
+            $this->commit();
+
+        } catch (\Exception $e) {
+            $this->error = $e->getMessage();
+            $this->rollback();
+            return false;
+        }
+        return true;
+    }
+
+    //
+    public function delOrderBuffetDiscount($order_buffet_discount_id)
+    {
+        if ($this->is_lock) {
+            $this->error = '订单已被锁定，请解锁后重新操作';
+            return false;
+        }
+
+        return (new OrderBuffetDiscount)->where('id', '=', $order_buffet_discount_id)->delete();
     }
 }
