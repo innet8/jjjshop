@@ -42,6 +42,7 @@ update-job(){
     git fetch --all && git reset --hard origin/$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
     git pull
     sudo php think migrate:run
+    systemctl restart jjjshop.service
     chmod +x /jjjshop/jjj_food_chain/lanp-install.sh
 }
 
@@ -83,7 +84,7 @@ do
   if [ -f "\$FILE" ] || [ -d "\$FILE" ]; then
     # 新创建的是文件或目录
     chown -R www-data:www-data "\$FILE"
-    chmod 766 "\$FILE"  # 设置文件或目录的权限，根据需要修改
+    chmod 777 "\$FILE"  # 设置文件或目录的权限，根据需要修改
   fi
 done
 EOF
