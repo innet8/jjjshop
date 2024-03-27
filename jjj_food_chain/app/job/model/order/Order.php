@@ -5,7 +5,7 @@ namespace app\job\model\order;
 use app\common\enum\order\OrderSourceEnum;
 use app\common\model\order\Order as OrderModel;
 use app\common\model\order\OrderDeliver as OrderDeliverModel;
-use app\api\model\supplier\Supplier as SupplierModel;
+use app\common\model\supplier\Supplier as SupplierModel;
 use app\common\model\settings\Setting as SettingModel;
 use app\common\service\message\MessageService;
 use app\common\service\deliveryapi\MeTuanApi;
