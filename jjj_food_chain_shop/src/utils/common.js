@@ -1,4 +1,4 @@
-import { uploadFile } from '@/api/file';
+import  FileApi  from '@/api/file';
 /**
  * @description 字符串转int数组
  * @param "6,5"
@@ -103,7 +103,7 @@ export async function upImg(param, fileType='image'){
 	formData.append('groupId', 0);
 	formData.append('fileType', fileType);
 	formData.append('attachType', 0);
-	const { msg,data } = await uploadFile(formData);
+	const { msg,data } = await FileApi.uploadFile(formData);
 	ElMessage({
 		message: msg,
 		type: 'success'
@@ -134,4 +134,39 @@ export function joinStr(data,props){
 		name = name.join(props.symbol)
 	}
 	return name
+}
+
+/**
+ * @description 刷新eeui
+ */
+export function EEUIRELOAD() {
+	var userAgent = navigator.userAgent;
+	if (userAgent.includes("android_kuaifan_eeui")) {
+		let url = window.location.href;
+		let key = '_='
+		let reg = new RegExp(key + '\\d+');
+		let timestamp = Math.round(new Date().getTime()/1000);
+		if (url.indexOf(key) > -1) {
+			url = url.replace(reg, key + timestamp);
+		} else {
+			if (url.indexOf('\?') > -1) {
+				let urlArr = url.split('\?');
+				if (urlArr[1]) {
+					url = urlArr[0] + '?' + key + timestamp + '&' + urlArr[1];
+				} else {
+					url = urlArr[0] + '?' + key + timestamp;
+				}
+			} else {
+				if (url.indexOf('#') > -1) {
+					url = url.split('#')[0] + '?' + key + timestamp + location.hash;
+				} else {
+					url = url + '?' + key + timestamp;
+				}
+			}
+		}
+		requireModuleJs("webview").setUrl(url);
+		// requireModuleJs("webview").setUrl(url)
+	} else {
+		window.location.reload()
+	}
 }
