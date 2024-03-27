@@ -24,7 +24,7 @@ class Product extends Controller
      * @Apidoc\Param("type", type="string", require=false, desc="是否上架 sell-上架 lower-下架")
      * @Apidoc\Param("stock", type="int", default=0, require=false, desc="库存 0-全部 10-低于10 20-低于20 ....")
      * @Apidoc\Param("product_ids", type="string", require=false, desc="商品ids，逗号分隔")
-     * @Apidoc\Param("product_material_type", type="int", default=10, require=false, desc="v1.0.2 类型 10-成品 20-材料")
+     * @Apidoc\Param("material_type", type="int", default=10, require=false, desc="v1.0.2 类型 10-成品 20-材料")
      * @Apidoc\Param(ref="pageParam")
      * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Product\getList")
      */
@@ -159,7 +159,8 @@ class Product extends Controller
         // 商品详情
         $model = ProductModel::detail($product_id);
         // 更新记录
-        if ($model->edit(json_decode($this->postData()['params'], true))) {
+        $data = array_merge(json_decode($this->postData()['params']), ['shop_user_id' => $this->store['user']['shop_user_id']]);
+        if ($model->edit($data, true)) {
             return $this->renderSuccess('更新成功');
         }
         return $this->renderError($model->getError() ?: '更新失败');

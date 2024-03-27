@@ -52,6 +52,7 @@ class ErpPurchaseOrder extends Controller
      * @Apidoc\Param("arrival_time", type="string", require=true, desc="到货时间")
      * @Apidoc\Param("type", type="int", require=true, desc="采购方式 10-总部采购 20-自行采购")
      * @Apidoc\Param("purchase_detail", type="array", require=true, desc="采购单明细", children={
+     *      @Apidoc\Returned("product_sku_id", type="int", desc="商品规格id"),
      *      @Apidoc\Returned("product_id", type="int", desc="商品id"),
      *      @Apidoc\Returned("estimate_purchase_price", type="decimal", desc="预计采购价格"),
      *      @Apidoc\Returned("estimate_purchase_num", type="int", desc="预计采购数量"),
@@ -80,6 +81,7 @@ class ErpPurchaseOrder extends Controller
      * @Apidoc\Param("arrival_time", type="string", require=true, desc="到货时间")
      * @Apidoc\Param("type", type="int", require=true, desc="采购方式 10-总部采购 20-自行采购")
      * @Apidoc\Param("purchase_detail", type="array", require=true, desc="采购单明细", children={
+     *      @Apidoc\Returned("product_sku_id", type="int", desc="商品规格id"),
      *      @Apidoc\Returned("product_id", type="int", desc="商品id"),
      *      @Apidoc\Returned("estimate_purchase_price", type="decimal", desc="预计采购价格"),
      *      @Apidoc\Returned("estimate_purchase_num", type="int", desc="预计采购数量"),
@@ -129,6 +131,7 @@ class ErpPurchaseOrder extends Controller
      * @Apidoc\Url ("/index.php/shop/purchase.ErpPurchaseOrder/operate")
      * @Apidoc\Param("purchase_order_id", type="int", require=true, desc="采购单id")
      * @Apidoc\Param("status", type="int", require=true, desc="操作状态 10-待审核 20-已驳回 30-采购中 40-已采购 50-已入库")
+     * @Apidoc\Param("remark", type="string", require=false, desc="备注/驳回理由")
      * @Apidoc\Returned()
      */
     public function operate($purchase_order_id)

@@ -46,7 +46,15 @@ class ErpInventoryRecord extends BaseModel
     const STATUS_REVOKED = 30;
 
     /**
-     * 产品信息
+     * 关联采购单
+     */
+    public function purchaseOrder()
+    {
+        return $this->belongsTo(ErpPurchaseOrder::class, 'purchase_order_id', 'id');
+    }
+
+    /**
+     * 关联产品
      */
     public function product()
     {
@@ -73,7 +81,7 @@ class ErpInventoryRecord extends BaseModel
         if (isset($params['name']) && $params['name']) {
             $model = $model->like('name', $params['name']);
         }
-        $list = $model->with(['product', 'operator'])->where('inventory_type', $type)->order('create_time desc')->paginate($params);
+        $list = $model->with(['purchaseOrder', 'product', 'operator'])->where('inventory_type', $type)->order('create_time desc')->paginate($params);
         return $list;
     }
 
@@ -83,7 +91,7 @@ class ErpInventoryRecord extends BaseModel
     public function detail($id)
     {
         $model = new self;
-        $info = $model->with(['product', 'operator'])
+        $info = $model->with(['purchaseOrder', 'product', 'operator'])
             ->where('id', $id)
             ->find();
         return $info;
@@ -92,7 +100,7 @@ class ErpInventoryRecord extends BaseModel
     /**
      * 新增（出/入库）
      */
-    public function add($inventory_type, $product_id, $data)
+    public function add($inventory_type, $params)
     {
         $model = new self;
         if ($inventory_type == self::INVENTORY_TYPE_IN) {
@@ -105,13 +113,13 @@ class ErpInventoryRecord extends BaseModel
         //
         $data['number'] = $inventory_type;
         $data['inventory_type'] = $inventory_type;
-        $data['product_id'] = $product_id;
-        $data['type'] = $data['type']?? 0;
-        $data['num'] = $data['num']?? 0;
-        $data['remark'] = $data['remark']?? '';
-        $data['operator_id'] = $data['shop_user_id'];
-        $data['num'] = $data['num']?? 0;
-        $data['shop_supplier_id'] = $data['supplier_id']?? 0;
+        $data['purchase_order_id'] = $params['purchase_order_id'] ?? 0;
+        $data['product_id'] = $params['product_id'] ?? 0;
+        $data['type'] = $params['type'] ?? 0;
+        $data['num'] = $params['num'] ?? 0;
+        $data['remark'] = $params['remark'] ?? '';
+        $data['operator_id'] = $params['operator_id'];
+        $data['shop_supplier_id'] = $params['shop_supplier_id'] ?? 0;
         $data['app_id'] = self::$app_id;
         $model->save($data);
         return $model->id;
@@ -120,12 +128,12 @@ class ErpInventoryRecord extends BaseModel
     /**
      * 撤销
      */
-    public function cancel($data)
+    public function cancel($params)
     {
         $model = new self;
-        $data['status'] = self::STATUS_REVOKED;
-        $data['revoke_time'] = time();
-        $model->save($data);
+        $params['status'] = self::STATUS_REVOKED;
+        $params['revoke_time'] = time();
+        $model->save($params);
         return $model->id;
     }
 

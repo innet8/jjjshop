@@ -58,7 +58,7 @@ class ErpPurchaseOrder extends BaseModel
      */
     public function details()
     {
-        return $this->hasMany(ErpPurchaseDetail::class, 'purchase_order_id', 'id')->with('product');
+        return $this->hasMany(ErpPurchaseDetail::class, 'purchase_order_id', 'id')->with(['product']);
     }
 
     /**
@@ -124,7 +124,7 @@ class ErpPurchaseOrder extends BaseModel
                 'applicant_id' => $params['applicant_id'],
                 'total_num' => $total_num,
                 'total_amount' => $total_amount,
-                'arrival_time' => $params['arrival_time'],
+                'arrival_time' => strtotime($params['arrival_time']),
                 'remark' => $params['remark'],
                 'shop_supplier_id' => $params['shop_supplier_id'],
                 'app_id' => self::$app_id,
@@ -135,8 +135,8 @@ class ErpPurchaseOrder extends BaseModel
                 $value['purchase_order_id'] = $model->id;
                 $value['estimate_total_amount'] = $value['estimate_purchase_price'] * $value['estimate_purchase_num'];
             }
-            $purchase_detail_model = new ErpPurchaseDetail;
-            $purchase_detail_model->saveAll($params['purchase_detail']);
+            $purchaseDetailModel = new ErpPurchaseDetail;
+            $purchaseDetailModel->saveAll($params['purchase_detail']);
             $this->commit();
             return $model->id;
         } catch (\Exception $e) {
@@ -162,7 +162,7 @@ class ErpPurchaseOrder extends BaseModel
             $total_amount = 0;
             foreach ($params['purchase_detail'] as &$value) {
                 $total_num += $value['estimate_purchase_num'];
-                $total_amount += $value['estimate_total_amount'];
+                $total_amount += $value['estimate_purchase_price'] * $value['estimate_purchase_num'];
                 //
                 $value['purchase_order_id'] = $this->id;
                 $value['estimate_total_amount'] = $value['estimate_purchase_price'] * $value['estimate_purchase_num'];
@@ -174,15 +174,15 @@ class ErpPurchaseOrder extends BaseModel
                 'applicant_id' => $params['applicant_id'],
                 'total_num' => $total_num,
                 'total_amount' => $total_amount,
-                'arrival_time' => $params['arrival_time'],
+                'arrival_time' => strtotime($params['arrival_time']),
                 'remark' => $params['remark'],
                 'app_id' => self::$app_id,
             ];
             $this->save($data);
 
-            $purchase_detail_model = new ErpPurchaseDetail;
-            $purchase_detail_model->where('purchase_order_id', $this->id)->delete(); // 先删后加
-            $purchase_detail_model->saveAll($params['purchase_detail']);
+            $purchaseDetailModel = new ErpPurchaseDetail;
+            $purchaseDetailModel->where('purchase_order_id', $this->id)->delete(); // 先删后加
+            $purchaseDetailModel->saveAll($params['purchase_detail']);
             $this->commit();
             return true;
         } catch (\Exception $e) {
@@ -201,12 +201,22 @@ class ErpPurchaseOrder extends BaseModel
             $this->error = '请选择采购明细';
             return false;
         }
-        $purchase_detail_model = new ErpPurchaseDetail;
+        $purchaseDetailModel = new ErpPurchaseDetail;
+        $total_num = 0;
+        $total_amount = 0;
         foreach ($params['purchase_detail'] as &$value) {
+            $total_num += $value['actual_purchase_num'];
+            $total_amount += $value['actual_purchase_price'] * $value['actual_purchase_num'];
+            //
             $value['id'] = $value['purchase_detail_id'];
             $value['actual_total_amount'] = $value['actual_purchase_price'] * $value['actual_purchase_num'];
         }
-        return $purchase_detail_model->saveAll($params['purchase_detail']);
+        $data = [
+            'total_num' => $total_num,
+            'total_amount' => $total_amount,
+        ];
+        $this->save($data);
+        return $purchaseDetailModel->saveAll($params['purchase_detail']);
     }
 
     /**
@@ -215,7 +225,7 @@ class ErpPurchaseOrder extends BaseModel
     public function operate($params)
     {
         // 通过和驳回操作，需要状态为待审核
-        if (in_array($params['status'], [self::STATUS_PURCHASED, self::STATUS_REJECTED], true)) {
+        if (in_array($params['status'], [self::STATUS_PURCHASING, self::STATUS_REJECTED], true)) {
            if ($this['status'] !== self::STATUS_WAIT) {
                $this->error = '订单状态不能操作';
                return false;
@@ -240,23 +250,34 @@ class ErpPurchaseOrder extends BaseModel
             $this->status = $params['status'];
             $this->save();
             // 采购单明细实际采购数量和实际价格
-            $purchase_detail_model = new ErpPurchaseDetail;
-            $detailList = $purchase_detail_model->where('purchase_order_id', $this->id)->select();
+            $purchaseDetailModel = new ErpPurchaseDetail;
+            $detailList = $purchaseDetailModel->where('purchase_order_id', $this->id)->select();
             foreach ($detailList as $detail) {
                 $detail->actual_purchase_num = $detail['actual_purchase_num'] ?: $detail['estimate_purchase_num'];
                 $detail->actual_purchase_price = $detail['actual_purchase_price'] ?: $detail['estimate_purchase_price'];
                 $detail->actual_total_amount = $detail->actual_purchase_price * $detail->actual_purchase_num;
                 $detail->save();
             }
-            //
+            // 操作日志
             $data = [
                 'purchase_order_id' => $this->id,
                 'operator_id' => $params['shop_user_id'],
                 'status' => $this->status,
                 'remark' => $params['remark'] ?? '',
             ];
-            $model = new ErpPurchaseOperationLog;
-            $model->save($data);
+            (new ErpPurchaseOperationLog)->save($data);
+            // 入库记录
+            if ($params['status'] === self::STATUS_STORED) {
+                $inventoryRecordData = [
+                    'purchase_order_id' => $this->id,
+                    'type' => ErpInventoryRecord::TYPE_PURCHASE_IN,
+                    'num' => $this->total_num,
+                    'operator_id' => $params['shop_user_id'],
+                    'remark' => '',
+                    'shop_supplier_id' => $this->shop_supplier_id,
+                ];
+                (new ErpInventoryRecord)->add(ErpInventoryRecord::INVENTORY_TYPE_IN, $inventoryRecordData);
+            }
             $this->commit();
             return true;
         } catch (\Exception $e) {
@@ -271,8 +292,8 @@ class ErpPurchaseOrder extends BaseModel
      */
     public function del()
     {
-        // 驳回的订单才能删除
-        if ($this['status'] != self::STATUS_REJECTED) {
+        // 待审核和驳回的订单才能删除
+        if (!in_array($this['status'], [self::STATUS_WAIT, self::STATUS_REJECTED], true)) {
             $this->error = '订单状态不能删除';
             return false;
         }
@@ -282,7 +303,6 @@ class ErpPurchaseOrder extends BaseModel
     /**
      * 采购编号：18位纯数字（前2位PU，2-10位是年月日，中间位是0000，后4位随机生成）
      */
-
     public function getPurchaseNumber()
     {
         $prefix = 'PU';

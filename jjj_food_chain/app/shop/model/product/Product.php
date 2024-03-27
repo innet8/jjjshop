@@ -3,6 +3,7 @@
 namespace app\shop\model\product;
 
 use app\common\library\helper;
+use app\common\model\erp\ErpInventoryRecord;
 use app\common\model\product\ProductSkuMaterial;
 use app\common\model\product\Product as ProductModel;
 use \app\common\model\buffet\BuffetProduct as BuffetProductModel;
@@ -259,6 +260,30 @@ class Product extends ProductModel
                     $bag_price = $item['bag_price'] ?? 0;
                 }
             }
+        }
+        // 库存是减少还是增加
+        if ($this->product_stock > $stock) {
+            // 减少库存 出库记录
+            $inventoryRecordData = [
+                'product_id' => $this->product_id,
+                'type' => ErpInventoryRecord::TYPE_ADJUST_OUT,
+                'num' => $this->total_num,
+                'operator_id' => $data['shop_user_id'],
+                'remark' => '',
+                'shop_supplier_id' => $this->shop_supplier_id,
+            ];
+            (new ErpInventoryRecord)->add(ErpInventoryRecord::INVENTORY_TYPE_OUT, $inventoryRecordData);
+        } else {
+            // 增加库存 入库记录
+            $inventoryRecordData = [
+                'product_id' => $this->product_id,
+                'type' => ErpInventoryRecord::TYPE_ADJUST_IN,
+                'num' => $this->total_num,
+                'operator_id' => $data['shop_user_id'],
+                'remark' => '',
+                'shop_supplier_id' => $this->shop_supplier_id,
+            ];
+            (new ErpInventoryRecord)->add(ErpInventoryRecord::INVENTORY_TYPE_IN, $inventoryRecordData);
         }
         $this->save([
             'product_stock' => $stock,

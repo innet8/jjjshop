@@ -4,7 +4,7 @@ namespace app\shop\controller\inventory;
 
 use app\shop\controller\Controller;
 use hg\apidoc\annotation as Apidoc;
-use app\shop\model\product\Product as ProductModel;
+use app\shop\model\product\ProductSku as ProductSkuModel;
 
 /**
  * 库存管理
@@ -19,11 +19,11 @@ class ErpInventory extends Controller
      * @Apidoc\Url ("/index.php/shop/inventory.ErpInventory/list")
      * @Apidoc\Param("name", type="string", require=false, desc="库存名称")
      * @Apidoc\Param(ref="pageParam")
-     * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\Product\getInventoryList", desc="库存列表")
+     * @Apidoc\Returned("list", type="array", ref="app\shop\model\product\ProductSku\getSkuProductList", desc="库存列表")
      */
     public function list()
     {
-        $list = (new ProductModel)->getInventoryList($this->postData());
+        $list = (new ProductSkuModel)->getSkuProductList($this->postData());
         return $this->renderSuccess('', compact('list'));
     }
 }

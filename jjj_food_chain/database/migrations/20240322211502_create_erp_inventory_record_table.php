@@ -33,6 +33,8 @@ class CreateErpInventoryRecordTable extends Migrator
         $table->addColumn('number', 'string', ['limit' => 255, 'default' => '', 'comment' => '记录编号']);
         $table->addColumn('inventory_type', 'integer', ['default' => 1, 'comment' => '类型 1-入库 2-出库']);
         $table->addColumn('type', 'integer', ['default' => 10, 'comment' => '操作类型 10-采购入库 20-调整入库 30-销售出库 40-调整出库']);
+        $table->addColumn('purchase_order_id', 'integer', ['default' => 0, 'comment' => '采购订单id']);
+        $table->addColumn('product_sku_id', 'integer', ['default' => 0, 'comment' => '商品规格id']);
         $table->addColumn('product_id', 'integer', ['default' => 0, 'comment' => '商品id']);
         $table->addColumn('num', 'integer', ['default' => 0, 'comment' => '商品数量']);
         $table->addColumn('remark', 'string', ['limit' => 2000, 'default' => '', 'comment' => '备注']);

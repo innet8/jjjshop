@@ -3,6 +3,7 @@
 namespace app\common\model\product;
 
 use app\common\model\BaseModel;
+use app\common\model\erp\ErpSupplier;
 use app\common\model\order\OrderProduct;
 use app\shop\model\product\Category as CategoryModel;
 
@@ -71,7 +72,9 @@ class Product extends BaseModel
      */
     public function getProductSalesAttr($value, $data)
     {
-        return $data['sales_initial'] + $data['sales_actual'];
+        $salesInitial = isset($data['sales_initial']) && is_numeric($data['sales_initial']) ? $data['sales_initial'] : 0;
+        $salesActual = isset($data['sales_actual']) && is_numeric($data['sales_actual']) ? $data['sales_actual'] : 0;
+        return $salesInitial + $salesActual;
     }
 
     /**
@@ -156,6 +159,15 @@ class Product extends BaseModel
     }
 
     /**
+     * 关联erp供应商
+     */
+
+    public function erpSupplier()
+    {
+        return $this->hasMany(ErpSupplier::class, 'id', 'erp_supplier_id');
+    }
+
+    /**
      * 商品状态
      */
     public function getProductStatusAttr($value, $data)
@@ -182,8 +194,8 @@ class Product extends BaseModel
         // 筛选条件
         $filter = [];
         $model = $this;
-        if (isset($params['product_material_type'])) {
-            $model = $model->where('product.type', '=', $params['product_material_type']);
+        if (isset($params['material_type']) && in_array($params['material_type'], [self::TYPE_MATERIAL, self::TYPE_PRODUCT])) {
+            $model = $model->where('product.type', '=', $params['material_type']);
         }
         if (isset($params['product_type'])) {
             $model = $model->where('product.product_type', '=', $params['product_type']);
