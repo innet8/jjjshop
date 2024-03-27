@@ -44,7 +44,6 @@ class CreateErpPurchaseOrderTable extends Migrator
         $table->addColumn('create_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'signed' => true, 'comment' => '创建时间']);
         $table->addColumn('update_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'signed' => true, 'comment' => '更新时间']);
         $table->addColumn('delete_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'signed' => true, 'comment' => '删除时间']);
-        $table->addIndex(['purchaser_id'], ['name' => 'purchaser_id']);
         $table->addIndex(['applicant_id'], ['name' => 'applicant_id']);
         $table->create();
     }
