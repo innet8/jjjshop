@@ -78,14 +78,15 @@ class Order extends Controller
     }
 
     /**
-     * @Apidoc\Title("收银收款")
-     * @Apidoc\Tag("收银收款")
+     * @Apidoc\Title("收银结账")
+     * @Apidoc\Tag("收银结账")
      * @Apidoc\Method("POST")
      * @Apidoc\Url("/index.php/cashier/order.order/buy")
      * @Apidoc\Param("order_id", type="int", require=true, desc="订单ID")
      * @Apidoc\Param("delivery", type="int",require=true, default=0, desc="配送方式(10外卖配送 20上门取 30打包带走 40店内就餐)")
      * @Apidoc\Param("pay_type", type="int",require=true, default=0, desc="付款类型  10-余额收款 40-现金收款 50-微信收款 60-支付宝收款 70-POS机收款")
      * @Apidoc\Param("user_id", type="int",require=false, default=0, desc="用户id （pay_type为余额收款必填）")
+     * @Apidoc\Param("actual_price", type="int",require=false, default=0, desc="收到现金金额 （pay_type-40 为现金收款必填）")
      */
     public function buy($order_id)
     {
@@ -211,7 +212,8 @@ class Order extends Controller
      * @Apidoc\Url("/index.php/cashier/order.order/pay")
      * @Apidoc\Param("table_id", type="int",require=true, default=0, desc="桌台id")
      * @Apidoc\Param("pay_type", type="int",require=true, default=0, desc="付款类型  10-余额收款 40-现金收款 50-微信收款 60-支付宝收款 70-POS机收款")
-     * @Apidoc\Param("user_id", type="int",require=false, default=0, desc="用户id （pay_type为余额收款必填）")
+     * @Apidoc\Param("user_id", type="int",require=false, default=0, desc="用户id （pay_type-10 为余额收款必填）")
+     * @Apidoc\Param("actual_price", type="int",require=false, default=0, desc="收到现金金额 （pay_type-40 为现金收款必填）")
      */
     public function pay($table_id)
     {

@@ -523,6 +523,18 @@ class Order extends OrderModel
             $this->error = "订单已支付";
             return false;
         }
+        if ($data['pay_type'] == 40) {
+            if (!isset($data['actual_price']) || !is_numeric($data['actual_price'])) {
+                $this->error = "请正确输入实收金额";
+                return false;
+            }
+            if ($data['actual_price'] < $this['pay_price']) {
+                $this->error = "实收金额不能小于应收金额";
+                return false;
+            }
+            $change_due = helper::bcsub($data['actual_price'], $this['pay_price']);
+            $this->save(['actual_price' => $data['actual_price'], 'change_due' => $change_due]);
+        }
         if (isset($data['user_id']) && $data['user_id'] > 0) {
             $this->save(['user_id' => $data['user_id']]);
         }
