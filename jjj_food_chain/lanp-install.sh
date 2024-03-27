@@ -30,6 +30,7 @@ set-permission(){
     
     echo -e "${Green}设置目录权限${Font}"
     chown -R www-data:www-data $(pwd)/../../jjjshop/
+    chmod -R 777  $(pwd)/public/uploads
     chmod -R 777  $(pwd)/runtime
     chmod +x $(pwd)/lanp-install.sh
     cd $(pwd)/../../jjjshop/jjj_food_chain
