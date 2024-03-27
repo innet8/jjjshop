@@ -19,6 +19,7 @@ import { useRoute, useRouter } from 'vue-router';
 // import { useLockscreenStore } from "../src/store/model/lockscreen"
 import { languageStore } from './store/model/language';
 import { useUserStore } from '@/store';
+import { EEUIRELOAD } from '@/utils/common.js'
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import zhTw from "element-plus/es/locale/lang/zh-tw";
 import en from "element-plus/es/locale/lang/en";
@@ -93,7 +94,7 @@ onMounted(() => {
                 //刷新
                 let language = JSON.parse(localStorage.getItem("Language"));
                 if (!language) {
-                    location.reload();
+                    EEUIRELOAD();
                 }
                 //判断默认语言
                 if (language && language.language == '' && language.languageList[0]?.name) {
@@ -138,7 +139,9 @@ onMounted(() => {
                 //刷新
                 let language = JSON.parse(localStorage.getItem("Language"));
                 if (!language) {
-                    location.reload();
+                    EEUIRELOAD()
+
+                    // location.reload();
                 }
                 //判断默认语言
                 if (language && language.language == '' && language.languageList[0]?.name) {

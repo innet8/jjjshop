@@ -52,6 +52,7 @@ import { useUserStore } from "@/store";
 import { useRouter } from "vue-router";
 import UpdatePassword from "./part/UpdatePassword.vue";
 import { languageStore } from '@/store/model/language.js';
+import { EEUIRELOAD } from '@/utils/common.js'
 import SvgIcon from "@/components/svg-icon/SvgIcon.vue";
 export default defineComponent({
     components: {
@@ -147,7 +148,8 @@ export default defineComponent({
             )
                 .then(() => {
                     this.language.setLanguage(e)
-                    location.reload();
+                    EEUIRELOAD()
+                    // location.reload();
                 })
                 .catch(() => {
                     this.$ElMessage({

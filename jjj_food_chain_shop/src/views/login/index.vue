@@ -248,7 +248,8 @@ export default {
                             _this.$router.push({
                                 path: '/home'
                             })
-                            location.reload();
+                            this.EEUIRELOAD();
+                            // location.reload();
                             // useLockscreen.setLock(false);
                         })
                         .catch(error => {
@@ -265,7 +266,6 @@ export default {
 
         checkUrl(url) {
             url = `${/^https?:\/\//i.test(url) ? '' : 'http://'}${url}`;
-
             axios.get(url+"/index.php/shop/index/base", {
                 baseURL: '', // 设置baseURL为空字符串
             })
@@ -274,7 +274,8 @@ export default {
                     // console.log(response.data);
                     localStorage.setItem('SHOP_BASIC_URL', url);
                     this.haveUrl = true;
-                    location.reload();
+                    this.EEUIRELOAD();
+                    // location.reload();
                 })
                 .catch(error => {
                     // 处理请求错误
@@ -299,7 +300,8 @@ export default {
                 .then(() => {
                     localStorage.removeItem("SHOP_BASIC_URL");
                     this.haveUrl = false;
-                    location.reload();
+                    this.EEUIRELOAD();
+                    // location.reload();
                 })
                 .catch(() => {
 
@@ -319,15 +321,51 @@ export default {
             )
                 .then(() => {
                     this.language.setLanguage(e)
-                    location.reload();
+                    this.EEUIRELOAD();
+                    // location.reload();
                 })
                 .catch(() => {
+
                     this.$ElMessage({
                         type: 'info',
                         message: $t('已取消'),
                     });
                 });
 
+        },
+
+        EEUIRELOAD() {
+            var userAgent = navigator.userAgent;
+            if (userAgent.includes("android_kuaifan_eeui")) {
+                let url = window.location.href;
+                let key = '_='
+                let reg = new RegExp(key + '\\d+');
+                let timestamp = Math.round(new Date().getTime()/1000);
+                if (url.indexOf(key) > -1) {
+                    url = url.replace(reg, key + timestamp);
+                } else {
+                    if (url.indexOf('\?') > -1) {
+                        let urlArr = url.split('\?');
+                        if (urlArr[1]) {
+                            url = urlArr[0] + '?' + key + timestamp + '&' + urlArr[1];
+                        } else {
+                            url = urlArr[0] + '?' + key + timestamp;
+                        }
+                    } else {
+                        if (url.indexOf('#') > -1) {
+                            url = url.split('#')[0] + '?' + key + timestamp + location.hash;
+                        } else {
+                            url = url + '?' + key + timestamp;
+                        }
+                    }
+                }
+                let webview = requireModuleJs("webview");
+                webview.setUrl(url)
+                // requireModuleJs("webview").setUrl(url);
+                // requireModuleJs("webview").setUrl(url)
+            } else {
+                window.location.reload()
+            }
         },
     }
 };
@@ -448,7 +486,7 @@ export default {
     margin: auto;
     left: 0;
     right: 0;
-    bottom: 32px;
+    bottom: 64px;
     display: flex;
     align-items: center;
     justify-content: center;
