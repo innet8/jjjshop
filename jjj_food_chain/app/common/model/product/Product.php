@@ -509,7 +509,9 @@ class Product extends BaseModel
 
         //如果是单规格
         if ($product['spec_type'] == 10) {
-            $result[] = $product['sku'][0];
+            if (!empty($product['sku'][0] ?? '')) {
+                $result[] = $product['sku'][0];
+            }
         } else {
             //多规格返回最低价
             foreach ($product['sku'] as $sku) {
