@@ -407,7 +407,7 @@ class Product extends BaseModel
         // 整理商品列表数据
         foreach ($dataSource as &$product) {
             // 商品主图
-            $product['product_image'] = $product['image'] ? $product['image'][0]['file_path'] : '';
+            $product['product_image'] = $product['image'][0]['file_path'] ?? '';
             // 商品默认规格
             $product['product_sku'] = self::getShowSku($product);
             // 回调函数
