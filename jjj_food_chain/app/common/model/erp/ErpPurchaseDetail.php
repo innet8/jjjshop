@@ -25,4 +25,12 @@ class ErpPurchaseDetail extends BaseModel
     {
         return $this->belongsTo(Product::class, 'product_id', 'product_id')->field('product_id, product_name, type, category_id, erp_supplier_id')->with(['sku', 'image', 'image.file', 'erpSupplier', 'erpSupplier.purchaser']);
     }
+
+    /**
+     * 根据规格汇总采购数量
+     */
+    public function sumActualPurchaseNum($product_sku_id)
+    {
+        return (new ErpPurchaseDetail())->where('product_sku_id', $product_sku_id)->sum('actual_purchase_num');;
+    }
 }

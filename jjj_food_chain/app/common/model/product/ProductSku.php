@@ -3,7 +3,7 @@
 namespace app\common\model\product;
 
 use app\common\model\BaseModel;
-use think\db\Where;
+use app\common\model\erp\ErpPurchaseDetail;
 
 /**
  * 商品SKU模型
@@ -26,8 +26,8 @@ class ProductSku extends BaseModel
      * 隐藏字段
      */
     protected $hidden = [
-        'create_time',
-        'update_time',
+        // 'create_time',
+        // 'update_time',
     ];
 
     /**
@@ -54,38 +54,46 @@ class ProductSku extends BaseModel
     public static function getSkuProductList($params)
     {
         $model = new ProductSku();
+        $model = $model->alias('ps')
+            ->field('ps.*, p.category_id, p.erp_supplier_id')
+            ->join('product p', 'p.product_id = ps.product_id')
+            ->with(['product' => function ($query) use ($params) {
+                $query->with(['image', 'image.file', 'category', 'erpSupplier', 'erpSupplier.purchaser']);
+            }]);
         // 规格库存
         if (isset($params['stock_num']) && $params['stock_num'] > 0) {
-            $model = $model->where('stock_num', '<', $params['stock_num']);
+            $model = $model->where('ps.stock_num', '<', $params['stock_num']);
         }
         // 规格库存排序
         if (isset($params['sort']) && $params['sort'] == 'asc') {
-            $model = $model->order('stock_num', 'asc');
+            $model = $model->order('ps.stock_num', 'asc');
         } else {
-            $model = $model->order('stock_num', 'desc');
+            $model = $model->order('ps.stock_num', 'desc');
         }
-        // 关联产品
-        $model = $model->with(['product' => function ($query) use ($params) {
-            $query->with(['image', 'image.file', 'erpSupplier', 'erpSupplier.purchaser']);
-            // 类型
-            if (isset($params['type']) && $params['type'] > 0) {
-                $query = $query->where('type', '=', $params['type']);
-            }
-            // 状态
-            if (isset($params['product_status']) && $params['product_status'] > 0) {
-                $query = $query->where('product_status', '=', $params['product_status']);
-            }
-            // 分类
-            if (isset($params['category_id']) && $params['category_id'] > 0) {
-                $categoryIds =  Category::getSubCategoryId($params['category_id']);
-                $query = $query->where('category_id', 'IN', $categoryIds);
-            }
-            // 商品名称
-            if (isset($params['product_name']) && $params['product_name'] != '') {
-                $query = $query->like('product_name', trim($params['product_name']));
-            }
-        }]);
+        // 类型
+        if (isset($params['type']) && $params['type'] > 0) {
+            $model->where('p.type', '=', $params['type']);
+        }
+        // 状态
+        if (isset($params['product_status']) && $params['product_status'] > 0) {
+            $model->where('p.product_status', '=', $params['product_status']);
+        }
+        // 分类
+        if (isset($params['category_id']) && $params['category_id'] > 0) {
+            $categoryIds =  Category::getSubCategoryId($params['category_id']);
+            $model->where('p.category_id', 'IN', $categoryIds);
+        }
+        // 商品名称
+        if (isset($params['product_name']) && $params['product_name'] != '') {
+            $model->like('p.product_name', trim($params['product_name']));
+        }
         $list = $model->paginate($params);
+        foreach ($list as &$item) {
+            // 历史进货数
+            $item['history_purchase_num'] = (new ErpPurchaseDetail())->sumActualPurchaseNum($item['product_sku_id']);
+            // 历史报损数
+            $item['historical_loss_num'] = (new ErpPurchaseDetail())->sumActualPurchaseNum($item['product_sku_id']);
+        }
         return $list;
     }
 
@@ -106,5 +114,4 @@ class ProductSku extends BaseModel
         return static::where('product_id', '=', $productId)
             ->where('product_sku_id', '=', $productSkuId)->find();
     }
-
 }

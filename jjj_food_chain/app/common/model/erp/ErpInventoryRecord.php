@@ -111,7 +111,6 @@ class ErpInventoryRecord extends BaseModel
             $data['out_time'] = time();
         }
         //
-        $data['number'] = $inventory_type;
         $data['inventory_type'] = $inventory_type;
         $data['purchase_order_id'] = $params['purchase_order_id'] ?? 0;
         $data['product_id'] = $params['product_id'] ?? 0;
@@ -128,13 +127,17 @@ class ErpInventoryRecord extends BaseModel
     /**
      * 撤销
      */
-    public function cancel($params)
+    public function cancel()
     {
-        $model = new self;
-        $params['status'] = self::STATUS_REVOKED;
-        $params['revoke_time'] = time();
-        $model->save($params);
-        return $model->id;
+        // 不是撤销状态的才能撤销
+        if ($this->status == self::STATUS_REVOKED) {
+            $this->error = '记录已撤销';
+            return false;
+        }
+        $this->status = self::STATUS_REVOKED;
+        $this->revoke_time = time();
+        $this->save();
+        return $this->id;
     }
 
     /**
@@ -142,6 +145,11 @@ class ErpInventoryRecord extends BaseModel
      */
     public function del()
     {
+        // 撤销状态的才能删除
+        if ($this->status != self::STATUS_REVOKED) {
+            $this->error = '记录不能删除';
+            return false;
+        }
         return $this->destroy(['id' => $this['id']]);
     }
 
