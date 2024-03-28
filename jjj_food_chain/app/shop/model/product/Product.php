@@ -18,10 +18,10 @@ class Product extends ProductModel
      */
     public function add($data)
     {
-        // if (!isset($data['type']) || !in_array($data['type'], [ProductModel::TYPE_PRODUCT, ProductModel::TYPE_MATERIAL])) {
-        //     $this->error = '商品类型不能为空';
-        //     return false;
-        // }
+        if (!isset($data['type']) || !in_array($data['type'], [ProductModel::TYPE_PRODUCT, ProductModel::TYPE_MATERIAL])) {
+            $this->error = '商品类型不能为空';
+            return false;
+        }
         if(hasEmptyValue($data['product_name'] ?? '')){
             $this->error = '商品名称不能为空';
             return false;
@@ -56,6 +56,8 @@ class Product extends ProductModel
         $this->startTrans();
         try {
             // 添加商品
+            $data['product_attr'] = isset($data['product_attr']) ? $data['product_attr'] : '';
+            $data['product_feed'] = isset($data['product_feed']) ? $data['product_feed'] : '';
             $this->save($data);
             // 商品规格
             $this->addProductSpec($data);
@@ -145,10 +147,10 @@ class Product extends ProductModel
      */
     public function edit($data)
     {
-        // if (!isset($data['type']) || !in_array($data['type'], [ProductModel::TYPE_PRODUCT, ProductModel::TYPE_MATERIAL])) {
-        //     $this->error = '商品类型不能为空';
-        //     return false;
-        // }
+        if (!isset($data['type']) || !in_array($data['type'], [ProductModel::TYPE_PRODUCT, ProductModel::TYPE_MATERIAL])) {
+            $this->error = '商品类型不能为空';
+            return false;
+        }
         if(hasEmptyValue($data['product_name'] ?? '')){
             $this->error = '商品名称不能为空';
             return false;
@@ -182,6 +184,8 @@ class Product extends ProductModel
         }
         //
         return $this->transaction(function () use ($data, $productSkuIdList) {
+            $data['product_attr'] = isset($data['product_attr']) ? $data['product_attr'] : '';
+            $data['product_feed'] = isset($data['product_feed']) ? $data['product_feed'] : '';
             $this->save($data);
             // 商品规格
             $this->addProductSpec($data, $productSkuIdList);
@@ -212,7 +216,7 @@ class Product extends ProductModel
 
         // 添加规格数据
         if ($data['spec_type'] == '10') {
-            $sku = $data['sku'][0];
+            $sku = $data['sku'][0] ?? [];
             // 单规格
             $sku['app_id'] = self::$app_id;
             $sku['line_price'] = $sku['product_price'];
@@ -226,9 +230,9 @@ class Product extends ProductModel
                 $material = array_merge($material, $data['sku']['material'] ?? []);
                 (new ProductSkuMaterial)->add($material);
             }
-            $stock = $sku['stock_num'];
-            $product_price = $sku['product_price'];
-            $cost_price = $sku['cost_price'];
+            $stock = $sku['stock_num'] ?? 0;
+            $product_price = $sku['product_price'] ?? 0;
+            $cost_price = $sku['cost_price'] ?? 0;
             $bag_price = $sku['bag_price'] ?? 0;
         } else if ($data['spec_type'] == '20') {
             // 更新规格
@@ -439,6 +443,7 @@ class Product extends ProductModel
         // 更新模式: 先删除所有规格
         $model = new ProductSku;
         $stock = 0;//总库存
+        $materialStock = 0;//总材料库存
         $product_price = 0;//价格
         $cost_price = 0;
         $bag_price = 0;
@@ -446,25 +451,27 @@ class Product extends ProductModel
         if ($data['spec_type'] == '10') {
             // 单规格
             $this->sku()->save($data['sku']);
-            $stock = $data['sku']['stock_num'];
-            $product_price = $data['sku']['product_price'];
-            $cost_price = $data['sku']['cost_price'];
+            $stock = $data['sku']['stock_num'] ?? 0;
+            $materialStock = $data['sku']['material_stock'] ?? 0;
+            $product_price = $data['sku']['product_price'] ?? 0;
+            $cost_price = $data['sku']['cost_price'] ?? 0;
             $bag_price = $data['sku']['bag_price'] ?? 0;
         } else if ($data['spec_type'] == '20') {
             //更新规格
             (new Spec)->updateSpec($data['sku']);
             // 添加商品sku
             $model->addSkuList($this['product_id'], $data['sku'], $productSkuIdList);
-            $product_price = $data['sku'][0]['product_price'];
-            $cost_price = $data['sku'][0]['cost_price'];
+            $product_price = $data['sku'][0]['product_price'] ?? 0;
+            $cost_price = $data['sku'][0]['cost_price'] ?? 0;
             $bag_price = $data['sku'][0]['bag_price'] ?? 0;
             foreach ($data['sku'] as $item) {
-                $stock += $item['stock_num'];
+                $stock += $item['stock_num'] ?? 0;
+                $materialStock += $item['material_stock'] ?? 0;
                 if ($item['product_price'] < $product_price) {
-                    $product_price = $item['product_price'];
+                    $product_price = $item['product_price'] ?? 0;
                 }
                 if ($item['cost_price'] < $cost_price) {
-                    $cost_price = $item['cost_price'];
+                    $cost_price = $item['cost_price'] ?? 0;
                 }
                 if ($item['bag_price'] < $bag_price) {
                     $bag_price = $item['bag_price'] ?? 0;
@@ -473,6 +480,7 @@ class Product extends ProductModel
         }
         $this->save([
             'product_stock' => $stock,
+            'product_material_stock' => $materialStock,
             'product_price' => $product_price,
             'cost_price' => $cost_price,
             'bag_price' => $bag_price

@@ -27,7 +27,7 @@ class Spec extends BaseModel
      */
     public function material()
     {
-        return $this->hasMany(ProductSkuMaterial::class, 'spec_id');
+        return $this->hasMany(ProductSkuMaterial::class, 'spec_id')->with(['materialProduct']);
     }
 
     //更新规格

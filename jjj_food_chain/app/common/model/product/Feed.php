@@ -35,7 +35,7 @@ class Feed extends BaseModel
      */
     public function material()
     {
-        return $this->hasMany(ProductFeedMaterial::class, 'feed_id');
+        return $this->hasMany(ProductFeedMaterial::class, 'feed_id')->with(['materialProduct']);
     }
 
     //更新加料库库

@@ -15,9 +15,9 @@ class ProductFeedMaterial extends BaseModel
     /**
      * 材料信息（产品表）
      */
-    public function material()
+    public function materialProduct()
     {
-        return $this->belongsTo(Product::class, 'product_id', 'material_id');
+        return $this->belongsTo(Product::class, 'material_id', 'product_id')->field('product_id, product_name, product_unit');
     }
 
     /**
