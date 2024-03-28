@@ -32,7 +32,7 @@ class CreateProductFeedMaterialTable extends Migrator
         $table = $this->table('product_feed_material', ['engine' => 'InnoDB', 'collation' => 'utf8mb4_unicode_ci', 'comment' => '产品加料材料关联表']);
         $table->addColumn('feed_id', 'integer', ['default' => 0, 'comment' => '加料id']);
         $table->addColumn('material_id', 'integer', ['default' => 0, 'comment' => '材料id']);
-        $table->addColumn('material_num', 'integer', ['default' => 0, 'comment' => '使用库存数量']);
+        $table->addColumn('material_num', 'decimal', ['precision' => 12, 'scale' => 4, 'default' => 0, 'comment' => '使用库存数量']);
         $table->addColumn('create_time', 'integer', ['limit' => MysqlAdapter::INT_REGULAR, 'null' => false, 'default' => 0, 'signed' => true, 'comment' => '创建时间']);
         $table->addIndex(['feed_id'], ['name' => 'feed_id']);
         $table->addIndex(['material_id'], ['name' => 'material_id']);

@@ -47,6 +47,14 @@ class ProductSku extends BaseModel
     }
 
     /**
+     * 产品规格关联材料（一对一）
+     */
+    public function material()
+    {
+        return $this->hasOne(ProductSkuMaterial::class, 'product_sku_id')->with(['materialProduct']);
+    }
+
+    /**
      * 通过规格获取商品SKU列表
      */
     public static function getSkuProductList($params)
