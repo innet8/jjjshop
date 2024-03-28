@@ -268,7 +268,7 @@ class Product extends ProductModel
                 'product_id' => $this->product_id,
                 'type' => ErpInventoryRecord::TYPE_ADJUST_OUT,
                 'num' => $this->total_num,
-                'operator_id' => $data['shop_user_id'],
+                'operator_id' => $data['shop_user_id'] ?? 0,
                 'remark' => '',
                 'shop_supplier_id' => $this->shop_supplier_id,
             ];
@@ -279,7 +279,7 @@ class Product extends ProductModel
                 'product_id' => $this->product_id,
                 'type' => ErpInventoryRecord::TYPE_ADJUST_IN,
                 'num' => $this->total_num,
-                'operator_id' => $data['shop_user_id'],
+                'operator_id' => $data['shop_user_id'] ?? 0,
                 'remark' => '',
                 'shop_supplier_id' => $this->shop_supplier_id,
             ];

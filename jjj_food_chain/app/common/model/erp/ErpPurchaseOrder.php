@@ -58,7 +58,7 @@ class ErpPurchaseOrder extends BaseModel
      */
     public function details()
     {
-        return $this->hasMany(ErpPurchaseDetail::class, 'purchase_order_id', 'id')->with(['product']);
+        return $this->hasMany(ErpPurchaseDetail::class, 'purchase_order_id', 'id')->with(['sku']);
     }
 
     /**
@@ -310,5 +310,20 @@ class ErpPurchaseOrder extends BaseModel
         $random = rand(1000, 9999);
         $number = $prefix. $date. '0000'. $random;
         return $number;
+    }
+
+    /**
+     * 获取采购单数量
+     */
+    public function getPurchaseOrderCount($status, $shop_supplier_id = 0)
+    {
+        $model = new self;
+        if ($status) {
+            $model = $model->where('status', $status);
+        }
+        if ($shop_supplier_id) {
+            $model = $model->where('shop_supplier_id', $shop_supplier_id);
+        }
+        return $model->count();
     }
 }

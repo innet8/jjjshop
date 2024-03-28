@@ -61,7 +61,8 @@ class helper
     public static function number2($number, $isMinimum = false, $minimum = 0.01)
     {
         $isMinimum && $number = max($minimum, $number);
-        return sprintf('%.2f', $number);
+        // 小数点后面的价格大于0才显示，如：1.20为1.2，5.00为5，8.01为8.01
+        return floatval(sprintf('%.2f', $number));
     }
 
     public static function getArrayItemByColumn($array, $column, $value)

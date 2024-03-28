@@ -4,6 +4,7 @@ namespace app\common\model\erp;
 
 use app\common\model\BaseModel;
 use app\common\model\product\Product;
+use app\common\model\product\ProductSku;
 
 /**
  * 采购单明细模型
@@ -17,6 +18,15 @@ class ErpPurchaseDetail extends BaseModel
      * @var string[]
      */
     protected $append = [];
+
+    /**
+     * 产品规格信息
+     */
+
+    public function sku()
+    {
+        return $this->belongsTo(ProductSku::class, 'product_sku_id', 'product_sku_id')->with(['product']);
+    }
 
     /**
      * 产品信息

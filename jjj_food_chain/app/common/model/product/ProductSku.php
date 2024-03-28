@@ -43,10 +43,8 @@ class ProductSku extends BaseModel
      */
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product_id', 'product_id');
+        return $this->belongsTo(Product::class, 'product_id', 'product_id')->with(['image', 'image.file', 'erpSupplier', 'erpSupplier.purchaser']);
     }
-
-
 
     /**
      * 通过规格获取商品SKU列表

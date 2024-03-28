@@ -2,6 +2,7 @@
 
 namespace app\shop\service;
 
+use app\common\model\erp\ErpPurchaseOrder;
 use app\shop\model\product\Product;
 use app\shop\model\order\Order;
 use app\shop\model\user\User;
@@ -21,6 +22,8 @@ class ShopService
     private $OrderModel;
     // 用户模型
     private $UserModel;
+    // 采购单模型
+    private $ErpPurchaseOrderModel;
 
     /**
      * 构造方法
@@ -31,6 +34,7 @@ class ShopService
         $this->ProductModel = new Product();
         $this->OrderModel = new Order();
         $this->UserModel = new User();
+        $this->ErpPurchaseOrderModel = new ErpPurchaseOrder();
     }
 
     /**
@@ -78,6 +82,10 @@ class ShopService
                 // 库存
                 'stock' => [
                     'product' => $this->getProductStockTotal($shop_supplier_id),
+                ],
+                // 采购单
+                'purchase' => [
+                    'apply' => $this->getPurchaseOrderCount($shop_supplier_id),
                 ],
             ],
             'today_data' => [
@@ -130,6 +138,15 @@ class ShopService
             ],
         ];
         return $data;
+    }
+
+    /**
+     * 获取采购单数量
+     */
+    public function getPurchaseOrderCount($shop_supplier_id)
+    {
+        // 待审核
+        return $this->ErpPurchaseOrderModel->getPurchaseOrderCount(ErpPurchaseOrder::STATUS_WAIT, $shop_supplier_id);
     }
 
     /**
