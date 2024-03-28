@@ -9,7 +9,7 @@
         <el-form size="small" ref="form" :model="form" class="product-form" label-position="top" label-width="180px" v-if="!loading">
             <!--基础信息-->
             <div class="product-form-flex">
-                <Basic @validateField="validateField"></Basic>
+                <Basic @validateField="validateField" :canChange="true"></Basic>
                 <!--规格设置-->
                 <Spec></Spec>
 
@@ -117,6 +117,8 @@ export default {
                 image: [],
                 /*商品卖点*/
                 selling_point: '',
+                /*供应商*/
+                erp_supplier_id: '',
                 /*规格类别,默认10单规格，20多规格*/
                 spec_type: 10,
                 /*库存计算方式,默认20付款减库存，10下单减库存*/
@@ -241,7 +243,6 @@ export default {
                     self.form.model.product_feed.map((item, index) => {
                         self.form.model.product_feed[index].feed_name = JSON.parse(item.feed_name)
                     })
-
                 })
                 .catch(error => {
                     self.loading = false;
@@ -326,6 +327,26 @@ export default {
                     if (typeof params.category_id == 'object' && params.category_id) {
                         params.category_id = Number(params.category_id[params.category_id.length - 1])
                     }
+
+                    // 材料的数据添加处理
+                    if (params.type == 20) {
+                        let data = {};
+                        data = {
+                            type: params.type,
+                            product_name: params.product_name,
+                            category_id: params.category_id,
+                            image: params.image,
+                            selling_point: params.selling_point,
+                            erp_supplier_id: params.erp_supplier_id,
+                            product_unit: params.product_unit,
+                            spec_type: 10,
+                            sku: params.sku,
+                            product_status: params.product_status,
+                            product_sort: params.product_sort,
+                        }
+                        params = data;
+                    }
+                    console.log(params);
                     self.save_loading = true;
                     PorductApi.storeEditProduct({
                         product_id: self.product_id,

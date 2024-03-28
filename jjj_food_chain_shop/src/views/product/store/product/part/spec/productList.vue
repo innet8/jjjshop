@@ -123,6 +123,7 @@ export default {
             let Params = self.searchForm;
             Params.page = self.curPage;
             Params.list_rows = self.pageSize;
+            Params.material_type = 20;
             if (typeof Params.category_id == 'object' && Params.category_id) {
                 Params.category_id = Number(Params.category_id[Params.category_id.length - 1])
             }

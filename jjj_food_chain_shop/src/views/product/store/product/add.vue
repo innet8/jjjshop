@@ -77,6 +77,8 @@ export default {
                     image: [],
                     /*商品卖点*/
                     selling_point: '',
+                    /*供应商*/
+                    erp_supplier_id: '',
                     /*规格类别,默认10单规格，20多规格*/
                     spec_type: 10,
                     /*库存计算方式,默认20付款减库存，10下单减库存*/
@@ -270,6 +272,25 @@ export default {
                     })
                     if (typeof params.category_id == 'object' && params.category_id) {
                         params.category_id = Number(params.category_id[params.category_id.length - 1])
+                    }
+
+                    // 材料的数据添加处理
+                    if(params.type == 20){
+                        let data = {};
+                        data = {
+                            type: params.type,
+                            product_name:params.product_name,
+                            category_id:params.category_id,
+                            image:params.image,
+                            selling_point:params.selling_point,
+                            erp_supplier_id:params.erp_supplier_id,
+                            product_unit:params.product_unit,
+                            spec_type:10,
+                            sku:params.sku,
+                            product_status:params.product_status,
+                            product_sort:params.product_sort,
+                        }
+                        params = data;
                     }
                     self.loading = true;
                     params.alone_grade_equity = self.convertJson(self.form.gradeList);

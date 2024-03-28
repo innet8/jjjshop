@@ -125,6 +125,7 @@ export default {
             Params.product_ids = this.selectType == 'limit' ? this.limit_ids : '';
             Params.page = self.curPage;
             Params.list_rows = self.pageSize;
+            Params.material_type = 10;
             if (typeof Params.category_id == 'object' && Params.category_id) {
                 Params.category_id = Number(Params.category_id[Params.category_id.length - 1])
             }

@@ -62,9 +62,9 @@ export default {
                             product_id: item.product_id,
                             estimate_purchase_price: item.estimate_purchase_price,
                             estimate_purchase_num: item.estimate_purchase_num,
+                            estimate_purchase_num: item.estimate_purchase_num,
                         })
                     })
-
                     PurchaseApi.addErpPurchaseOrder(Params, true)
                         .then(data => {
                             this.loading = false;

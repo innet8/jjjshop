@@ -51,6 +51,7 @@ export default {
                     barcode: '',//条形码
                     purchase_price: null,//单价
                     material: [],//材料
+                    material_stock:null, //材料库存
                 })
             self.form.many_select_list.push([])        
         },

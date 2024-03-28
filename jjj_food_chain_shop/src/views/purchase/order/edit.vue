@@ -64,8 +64,10 @@ export default {
                     self.form.arrival_time = date.toISOString().slice(0, 10); // 获取日期部分
                     self.form.purchase_detail = data.data.detail.details;
                     self.form.purchase_detail.map((item, index) => {
-                        Object.assign(self.form.purchase_detail[index], item.product);
+                        Object.assign(self.form.purchase_detail[index], item.sku);
+                        Object.assign(self.form.purchase_detail[index], item.sku.product);
                     })
+               
                 })
                 .catch(error => { });
         },
@@ -123,11 +125,13 @@ export default {
 
                         copyData.purchase_detail.map(item => {
                             Params.purchase_detail.push({
+                                product_sku_id: item.product_sku_id,
                                 product_id: item.product_id,
                                 estimate_purchase_price: item.estimate_purchase_price,
                                 estimate_purchase_num: item.estimate_purchase_num,
                             })
                         })
+
                         PurchaseApi.editErpPurchaseOrder(Params, true)
                             .then(data => {
                                 this.loading = false;

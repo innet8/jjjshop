@@ -8,7 +8,7 @@
         <!--基本信息-->
         <div class="common-form">{{ $t('基本信息') }}</div>
         <el-form-item :label="$t('类型：')">
-            <el-radio-group v-model="form.model.type" @change="changeType">
+            <el-radio-group v-model="form.model.type" :disabled="canChange" @change="changeType">
                 <el-radio :label="10">{{ $t('成品') }}</el-radio>
                 <el-radio :label="20">{{ $t('材料') }}</el-radio>
             </el-radio-group>
@@ -23,7 +23,7 @@
             <el-cascader class="max-w460" :options="options" v-model="form.model.category_id" clearable style="width: 100%;" :placeholder="$t('请选择分类')"></el-cascader>
         </el-form-item>
 
-        <el-form-item :label="$t('特色分类：')">
+        <el-form-item :label="$t('特色分类：')" v-if="form.model.type == 10">
             <el-select v-model="form.model.special_id" clearable class="max-w460" size="default" :placeholder="$t('请选择特色分类')">
                 <template v-for="cat in form.special" :key="cat.category_id">
                     <el-option :value="cat.category_id" :label="cat.name_text"></el-option>
@@ -66,9 +66,9 @@
         </el-form-item>
 
         <el-form-item :label="$t('供应商：')">
-            <el-select v-model="form.model.special_id" clearable class="max-w460" size="default" :placeholder="$t('请选择供应商')">
-                <template v-for="item in form.special" :key="item.category_id">
-                    <el-option :value="item.category_id" :label="item.name_text"></el-option>
+            <el-select v-model="form.model.erp_supplier_id" filterable clearable class="max-w460" size="default" :placeholder="$t('请选择供应商')">
+                <template v-for="item in supplierList" :key="item.id">
+                    <el-option :value="item.id" :label="item.name"></el-option>
                 </template>
             </el-select>
         </el-form-item>
@@ -80,6 +80,7 @@
 <script>
 import Upload from '@/components/file/Upload.vue';
 // import draggable from 'vuedraggable';
+import PurchaseApi from '@/api/purchase.js';
 import { languageStore } from '@/store/model/language.js';
 const languageList = languageStore().languageList;
 export default {
@@ -93,7 +94,14 @@ export default {
             isProductUpload: false,
             languageList: languageList,
             options: [],
+            supplierList: [],
         };
+    },
+    props:{
+        canChange:{
+            type:Boolean,
+            default:false,
+        },
     },
     inject: ['form'],
     watch: {
@@ -121,13 +129,29 @@ export default {
     created() {
         this.formData = this.form;
         // this['formData'] = this.form;
+        this.getData();
     },
     methods: {
+        //获取供应商
+        getData() {
+            let self = this;
+            let Params = {};
+            Params.list_rows = 200;
+            PurchaseApi.supplierList(Params, true)
+                .then(data => {
+                    self.loading = false;
+                    self.supplierList = data.data.list.data;
+
+                })
+                .catch(error => { });
+        },
+
         changeType() {
             this.form.model.sku[0].material = [];
             this.form.model.sku = this.form.model.sku.slice(0,1)
             this.form.single_select_list = [];
-            this.form.many_select_list = [];
+            this.form.many_select_list = [[]];
+            this.form.ing_select_list = [[]];
         },
         /*打开上传图片*/
         openProductUpload: function () {

@@ -9,7 +9,7 @@
         <div class="common-form mt50">{{ $t('规格/库存') }}</div>
 
         <!--减库存方式-->
-        <el-form-item :label="$t('库存计算方式：')">
+        <el-form-item :label="$t('库存计算方式：')" v-if="form.model.type == 10">
             <el-radio-group v-model="form.model.deduct_stock_type">
                 <el-radio :label="10">{{ $t('下单减库存') }}</el-radio>
                 <el-radio :label="20">{{ $t('付款减库存') }}</el-radio>

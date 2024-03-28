@@ -43,10 +43,10 @@
                             </el-form-item>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="$t('条形码')" width="140">
+                    <el-table-column :label="$t('条形码')" width="140" >
                         <template #default="scope">
                             <el-form-item label="" style="margin-bottom: 0;" :prop="`scope.row.barcode`"
-                                :rules="[{ validator: () => { return typeof scope.row.barcode ? true : false; }, message: $t('请输入商品价格') }]">
+                                :rules="[{ validator: () => { return scope.row.barcode ? true : false; }, message: $t('请输入条形码') }]">
                                 <el-input v-model="scope.row.barcode" :placeholder="$t('请输入条形码')"></el-input>
                             </el-form-item>
                         </template>
@@ -70,11 +70,13 @@
                                 <el-form-item label="" class="max-w230">
                                     <el-input v-model="item.product_name_text" disabled></el-input>
                                 </el-form-item>
-                                <el-form-item label="" class="max-w230">
+                                <el-form-item label="" class="max-w230"
+                                :prop="`form.model.sku.[${scope.$index}].material.[${index}].material_num`"
+                                :rules="[{ validator: () => { return form.model.sku[scope.$index].material[index].material_num ? true : false; }, message: $t('请输入数量') }]"
+                                >
                                     <el-input v-model="form.model.sku[scope.$index].material[index].material_num" :placeholder="$t('请输入数量')">
                                         <template #append>{{ item.product_unit_text }}</template>
                                     </el-input>
-
                                 </el-form-item>
                                 <el-icon class="delete-icon" @click="handleDelete(scope.$index, index)">
                                     <Delete />
@@ -161,7 +163,9 @@ export default {
                         num = Math.floor(num);
                         arr.push(num);
                     })
-                    this.form.model.sku[index].stock_num = arr.sort((a, b) => a - b)[0]==Infinity ? null : arr.sort((a, b) => a - b)[0];
+                    if((item.material || []).length>0){
+                        this.form.model.sku[index].stock_num = arr.sort((a, b) => a - b)[0]==Infinity ? null : arr.sort((a, b) => a - b)[0];
+                    }
                 });
             },
             deep: true,

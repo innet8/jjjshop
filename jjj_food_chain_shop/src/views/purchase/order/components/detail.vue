@@ -19,10 +19,10 @@
                                 {{ scope.row.product.type == 10 ? $t('成品') : $t('材料') }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="product.product_name" :label="$t('商品名称')" width="300px">
+                        <el-table-column prop="product.product_name_text" :label="$t('商品名称')" width="300px">
                             <template #default="scope">
                                 <div class="product-info">
-                                    <div class="pic"><img v-img-url="scope.row.product.image[0].file_path" alt="" /></div>
+                                    <div class="pic"><img v-img-url="scope.row.product?.image?.[0]?.file_path" alt="" /></div>
                                     <div class="info">
                                         <div class="name">{{ scope.row.product.product_name_text }}</div>
                                         <div class="price">{{ $t('销售价：') }}{{ scope.row.product.product_price }}</div>
@@ -35,7 +35,7 @@
                                 {{ ERP(scope.row.product.erpSupplier || '') }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="sales_actual" :label="$t('规格')">
+                        <el-table-column prop="spec_name_text" :label="$t('规格')">
                             <template #default="scope">
                             {{ scope.row.spec_name_text || '-' }}
                         </template>

@@ -74,10 +74,13 @@ export default {
                     Object.assign(self.form, data.data.detail);
                     const date = new Date(self.form.arrival_time * 1000);  // 时间戳转换成毫秒
                     self.form.arrival_time = date.toISOString().slice(0, 10); // 获取日期部分
+
                     self.form.purchase_detail = data.data.detail.details;
                     self.form.purchase_detail.map((item, index) => {
-                        Object.assign(self.form.purchase_detail[index], item.product);
+                        Object.assign(self.form.purchase_detail[index], item.sku);
+                        Object.assign(self.form.purchase_detail[index], item.sku.product);
                     })
+
                     self.activities = [];
                     self.form.logs.map(item => {
                         self.activities.push({

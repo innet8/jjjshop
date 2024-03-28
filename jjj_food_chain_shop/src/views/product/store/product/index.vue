@@ -10,8 +10,8 @@
 
             <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
                 <el-form-item :label="$t('商品分类')">
-                    <el-cascader :options="categoryList" :props="{ checkStrictly: true, expandTrigger: 'hover' }"
-                        v-model="searchForm.category_id" clearable :placeholder="$t('请选择分类')">
+                    <el-cascader :options="categoryList" :props="{ checkStrictly: true, expandTrigger: 'hover' }" v-model="searchForm.category_id" clearable
+                        :placeholder="$t('请选择分类')">
                         <template #default="{ data }">
                             <span @click="handleValue(data)">{{ data.label }}</span>
                         </template>
@@ -32,11 +32,10 @@
                         <el-option :label="$t('下架中')" value="lower"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item :label="$t('商品名称')"><el-input size="small" v-model="searchForm.product_name"
-                        :placeholder="$t('请输入商品名称')"></el-input></el-form-item>
+                <el-form-item :label="$t('商品名称')"><el-input size="small" v-model="searchForm.product_name" :placeholder="$t('请输入商品名称')"></el-input></el-form-item>
                 <el-form-item>
                     <el-button class="search-button" size="small" type="primary" icon="Search" @click="onSubmit">{{ $t('查询')
-                    }}</el-button>
+                        }}</el-button>
                 </el-form-item>
             </el-form>
             <el-button size="small" type="primary" icon="Plus" v-auth="'/product/store/product/add'" @click="addClick">{{
@@ -47,6 +46,11 @@
         <div class="product-content">
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
+                    <el-table-column prop="category.path_name_text" :label="$t('类型')">
+                        <template #default="scope">
+                            {{ scope.row.type == 10 ? $t('成品') : $t('材料') }}
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="product_name" :label="$t('商品名称')" width="400px">
                         <template #default="scope">
                             <div class="product-info">
@@ -63,8 +67,7 @@
                     <el-table-column prop="product_stock" :label="$t('库存')"></el-table-column>
                     <el-table-column prop="product_status.text" :label="$t('状态')" width="100">
                         <template #default="scope">
-                            <el-switch :disabled="!this.$filter.isAuth('/product/store/product/state')"
-                                :model-value="scope.row.product_status.value == 10 ? true : false"
+                            <el-switch :disabled="!this.$filter.isAuth('/product/store/product/state')" :model-value="scope.row.product_status.value == 10 ? true : false"
                                 @click="undercarriage(scope.row, scope.row.product_status.value == 10 ? 20 : 10)"></el-switch>
                         </template>
                     </el-table-column>
@@ -72,10 +75,8 @@
                     <el-table-column prop="product_sort" :label="$t('排序')"></el-table-column>
                     <el-table-column fixed="right" :label="$t('操作')" width="120">
                         <template #default="scope">
-                            <el-button @click="editClick(scope.row)" link type="primary" size="small"
-                                v-auth="'/product/store/product/edit'">{{ $t('编辑') }}</el-button>
-                            <el-button @click="deleteClick(scope.row)" link type="primary" size="small"
-                                v-auth="'/product/store/product/delete'">{{ $t('删除') }}</el-button>
+                            <el-button @click="editClick(scope.row)" link type="primary" size="small" v-auth="'/product/store/product/edit'">{{ $t('编辑') }}</el-button>
+                            <el-button @click="deleteClick(scope.row)" link type="primary" size="small" v-auth="'/product/store/product/delete'">{{ $t('删除') }}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -83,9 +84,8 @@
         </div>
         <!--分页-->
         <div class="pagination">
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" background
-                :current-page="curPage" :page-size="pageSize" layout="total, prev, pager, next, jumper"
-                :total="totalDataNumber"></el-pagination>
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" background :current-page="curPage" :page-size="pageSize"
+                layout="total, prev, pager, next, jumper" :total="totalDataNumber"></el-pagination>
         </div>
 
     </div>
@@ -186,9 +186,9 @@ export default {
                 self.totalDataNumber = data.data.list.total;
                 self.product_count = data.data.product_count;
             })
-            .catch(error => {
-                self.loading = false;
-            });
+                .catch(error => {
+                    self.loading = false;
+                });
         },
 
         /*搜索查询*/
@@ -212,7 +212,7 @@ export default {
                 }
             });
         },
-        
+
         /* 强制下架上架*/
         undercarriage(row, state) {
             let self = this;
@@ -225,7 +225,7 @@ export default {
                 war = $t("确认要重新上架吗?"),
                     war_ = $t('上架')
             }
-            ElMessageBox.confirm(war , $t('提示'), {
+            ElMessageBox.confirm(war, $t('提示'), {
                 type: 'warning'
             })
                 .then(() => {
@@ -271,8 +271,8 @@ export default {
                 });
         },
 
-        handleValue(data){
-            this.searchForm.category_id =[]
+        handleValue(data) {
+            this.searchForm.category_id = []
             this.searchForm.category_id = data.value;
         }
     }

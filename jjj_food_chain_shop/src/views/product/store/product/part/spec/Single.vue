@@ -13,21 +13,29 @@
             <el-input-number :min="0" :max="1000000" :controls="false" v-model="form.model.sku[0].purchase_price" :placeholder="$t('请填写采购单价')" class="max-w460"></el-input-number>
         </el-form-item>
 
-        <el-form-item :label="$t('库存数量：')"  :rules="[{ required: true, message: $t('请填写库存数量') }]" prop="model.sku[0].stock_num">
-            <el-input-number :min="0" :max="999" :disabled="form.single_select_list.length > 0" :controls="false" :placeholder="$t('请填写库存数量')" v-model="form.model.sku[0].stock_num" class="max-w460"></el-input-number>
+        <el-form-item :label="$t('库存数量：')" v-if="form.model.type == 10" :rules="[{ required: true, message: $t('请填写库存数量') }]" prop="model.sku[0].stock_num">
+            <el-input-number :min="0" :max="999" :disabled="form.single_select_list.length > 0" :controls="false" :placeholder="$t('请填写库存数量')" v-model="form.model.sku[0].stock_num"
+                class="max-w460"></el-input-number>
         </el-form-item>
 
-        <el-form-item :label="$t('商品条码：')" :rules="[{ required: true, message: $t('请输入商品条码') }]" prop="model.barcode">
-            <el-input :placeholder="$t('请输入商品条码')" v-model="form.model.barcode" class="max-w460"></el-input>
+        <el-form-item :label="$t('库存数量：')" v-if="form.model.type == 20" :rules="[{ required: true, message: $t('请填写库存数量') }]" prop="model.sku[0].material_stock">
+            <el-input-number :min="0" :max="999" :disabled="form.single_select_list.length > 0" :controls="false" :placeholder="$t('请填写库存数量')" v-model="form.model.sku[0].material_stock"
+                class="max-w460"></el-input-number>
         </el-form-item>
-        <el-form-item class="materials" :label="$t('商品材料：')" v-if="form.model.type == 10" >
+
+        <el-form-item :label="$t('商品条码：')" :rules="[{ required: true, message: $t('请输入商品条码') }]" prop="model.sku[0].barcode">
+            <el-input :placeholder="$t('请输入商品条码')" v-model="form.model.sku[0].barcode" class="max-w460"></el-input>
+        </el-form-item>
+        <el-form-item class="materials" :label="$t('商品材料：')" v-if="form.model.type == 10">
             <el-button style="margin-bottom: 16px;" type="primary" @click="addMaterials">{{ $t('添加材料') }}+</el-button>
 
             <div class="materials-one" label="" v-for="item, index in form.single_select_list">
                 <el-form-item label="" class="max-w230">
                     <el-input v-model="item.product_name_text" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="" class="max-w230">
+                <el-form-item label="" class="max-w230"
+                    :rules="[{ validator: () => { return form.model.sku[0].material[index].material_num ? true : false; }, message: $t('请输入折扣') }]"
+                    :prop="`form.model.sku[0].material[${index}].material_num`">
                     <el-input v-model="form.model.sku[0].material[index].material_num" :placeholder="$t('请输入数量')">
                         <template #append>{{ item.product_unit_text }}</template>
                     </el-input>
@@ -58,17 +66,21 @@ export default {
         }
     },
     inject: ['form'],
-    watch:{
+    watch: {
         'form.model.sku': {
             handler(val) {
-                let arr = [];
-                (val[0].material || []).map((item,index)=>{
-                    let num = 0 
-                    num = Number(this.form.single_select_list[index].sku[0].stock_num) / Number(item.material_num)
-                    num = Math.floor(num)
-                    arr.push(num)
-                })
-                this.form.model.sku[0].stock_num = arr.sort((a, b) => a - b)[0]==Infinity ? null : arr.sort((a, b) => a - b)[0];
+                if (val) {
+                    let arr = [];
+                    (val[0].material || []).map((item, index) => {
+                        let num = 0
+                        num = Number(this.form.single_select_list[index].sku[0].stock_num) / Number(item.material_num)
+                        num = Math.floor(num)
+                        arr.push(num)
+                    })
+                    if ((val[0].material || []).length > 0) {
+                        this.form.model.sku[0].stock_num = arr.sort((a, b) => a - b)[0] == Infinity ? null : arr.sort((a, b) => a - b)[0];
+                    }
+                }
 
             },
             deep: true,

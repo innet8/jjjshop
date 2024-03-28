@@ -48,7 +48,7 @@
         <div class="product-content">
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-                    <el-table-column prop="number" :label="$t('编号')"></el-table-column>
+                    <el-table-column prop="number" :label="$t('编号')" ></el-table-column>
                     <el-table-column prop="category.path_name_text" :label="$t('采购方式')">
                         <template #default="scope">
                             {{ scope.row.type == 10 ? $t('总部采购') : $t('自行采购') }}
