@@ -58,12 +58,13 @@ export default {
                     Params.purchase_detail = [];
                     this.form.purchase_detail.map(item => {
                         Params.purchase_detail.push({
+                            product_sku_id: item.product_sku_id,
                             product_id: item.product_id,
                             estimate_purchase_price: item.estimate_purchase_price,
                             estimate_purchase_num: item.estimate_purchase_num,
                         })
                     })
-                    console.log(Params);
+
                     PurchaseApi.addErpPurchaseOrder(Params, true)
                         .then(data => {
                             this.loading = false;

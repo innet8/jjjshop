@@ -39,30 +39,31 @@
                     </el-table-column>
                     <el-table-column prop="product_name" :label="$t('采购名称')" width="240">
                         <template #default="scope">
-                            {{  scope.row.product ? scope.row.product.product_name_text :  scope.row.purchaseOrder.name }}
+                            {{ scope.row.product ? scope.row.product.product_name_text : scope.row.purchaseOrder.name }}
                         </template>
                     </el-table-column>
                     <el-table-column prop="num" :label="$t('商品数量')"></el-table-column>
                     <el-table-column prop="remark" :label="$t('备注')">
                         <template #default="scope">
-                            {{  scope.row.remark || '-' }}
+                            {{ scope.row.remark || '-' }}
                         </template>
                     </el-table-column>
                     <el-table-column prop="status" :label="$t('状态')" width="100">
                         <template #default="scope">
-                           {{ statusJudgment(scope.row.status) }}
+                            {{ statusJudgment(scope.row.status) }}
                         </template>
                     </el-table-column>
                     <el-table-column prop="operator.real_name" :label="$t('操作人')"></el-table-column>
-                    <el-table-column prop="create_time" :label="$t('时间')"  width="120">
+                    <el-table-column prop="create_time" :label="$t('时间')" width="120">
                         <template #default="scope">
                             <div style="line-height: 20px;">{{ scope.row.create_time.split(" ")[0] || '-' }}<br />{{ scope.row.create_time.split(" ")[1] || '-' }}</div>
                         </template>
                     </el-table-column>
-                    <el-table-column fixed="right" :label="$t('操作')" width="140">
+                    <el-table-column fixed="right" :label="$t('操作')" width="100">
                         <template #default="scope">
-                            <el-button @click="cancelClick(scope.row)" type="primary" link size="small" v-auth="'/purchase/log/cancel'">{{ $t('撤销') }}</el-button>
-                            <el-button @click="deleteClick(scope.row)" type="primary" link size="small" v-auth="'/purchase/log/delete'">{{ $t('删除') }}</el-button>
+                            <el-button @click="cancelClick(scope.row)" v-if="scope.row.status != 30" type="primary" link size="small" v-auth="'/purchase/log/cancel'">{{ $t('撤销')
+                                }}</el-button>
+                            <el-button @click="deleteClick(scope.row)" v-if="scope.row.status == 30" type="primary" link size="small" v-auth="'/purchase/log/delete'">{{ $t('删除') }}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -97,7 +98,7 @@ export default {
             tableData: [],
         }
     },
-    mounted(){
+    mounted() {
         this.getData();
     },
     methods: {
@@ -206,19 +207,19 @@ export default {
                 .catch(() => { });
         },
 
-        typeS(e){
+        typeS(e) {
             let result = '';
-            if(e == '10') return result = $t('采购入库');
-            if(e == '20') return result = $t('调整入库');
-            if(e == '30') return result = $t('销售出库');
-            if(e == '40') return result = $t('调整出库');
+            if (e == '10') return result = $t('采购入库');
+            if (e == '20') return result = $t('调整入库');
+            if (e == '30') return result = $t('销售出库');
+            if (e == '40') return result = $t('调整出库');
         },
 
-        statusJudgment(e){
+        statusJudgment(e) {
             let result = '';
-            if(e == '10') return result = $t('已入库');
-            if(e == '20') return result = $t('已出库');
-            if(e == '30') return result = $t('已撤销');
+            if (e == '10') return result = $t('已入库');
+            if (e == '20') return result = $t('已出库');
+            if (e == '30') return result = $t('已撤销');
         },
     },
 }

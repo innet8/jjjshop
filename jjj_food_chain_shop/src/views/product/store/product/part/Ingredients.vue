@@ -41,7 +41,7 @@
                         </el-form-item>
 
                         <el-form-item :label="$t('库存数量：')" :prop="`product_feed[${index}].stock_num`"
-                            :rules="[{ validator: () => { return item.stock_num  ? true : false; }, message: $t('请填写库存数量') }]">
+                            :rules="[{ validator: () => { return item.stock_num >=0   ? true : false; }, message: $t('请填写库存数量') }]">
                             <template #label>
                                 <span style="color: var(--el-color-danger);margin: 0  4px 0 0 !important;">*</span>{{ $t('库存数量：') }}
                             </template>
@@ -209,8 +209,8 @@ export default {
         },
 
         handleDeleteOne(index,indexs){
-            this.form.ing_select_list[index].splice(index,1);
-            this.form.model.product_feed[e.index].material.splice(index,1);
+            this.form.ing_select_list[index].splice(indexs,1);
+            this.form.model.product_feed[index].material.splice(indexs,1);
         },
 
         closeDialogFunc(e) {

@@ -37,19 +37,19 @@
                             {{ scope.row.type == 10 ? $t('成品') : $t('材料') }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="product_name_text" :label="$t('商品名称')" width="300"></el-table-column>
-                    <el-table-column prop="category.path_name_text" :label="$t('商品条码')"></el-table-column>
-                    <el-table-column prop="sales_actual" :label="$t('规格')"></el-table-column>
-                    <el-table-column prop="supplier.name" :label="$t('供应商')"></el-table-column>
-                    <el-table-column prop="supplier_price" :label="$t('售价')"></el-table-column>
-                    <el-table-column prop="product_stock" :label="$t('当前库存')"></el-table-column>
-                    <el-table-column :label="$t('库存金额')">
+                    <el-table-column prop="product.product_name_text" :label="$t('商品名称')" width="300"></el-table-column>
+                    <el-table-column prop="product.barcode" :label="$t('商品条码')" width="120"></el-table-column>
+                    <el-table-column prop="sales_actual" :label="$t('规格')" width="120"></el-table-column>
+                    <el-table-column prop="supplier.name" :label="$t('供应商')" width="120"></el-table-column>
+                    <el-table-column prop="product_price" :label="$t('售价')" width="100"></el-table-column>
+                    <el-table-column prop="stock_num" :label="$t('当前库存')" width="120"></el-table-column>
+                    <el-table-column :label="$t('库存金额')" width="120">
                         <template #default="scope">
-                            {{ Number(scope.row.supplier_price) * Number(scope.row.product_stock) }}
+                            {{ Number(scope.row.product_price) * Number(scope.row.stock_num) }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="product_stock" :label="$t('历史进货数')"></el-table-column>
-                    <el-table-column prop="product_stock" :label="$t('历史销售数')"></el-table-column>
+                    <el-table-column prop="stock_num" :label="$t('历史进货数')" width="120"></el-table-column>
+                    <el-table-column prop="stock_num" :label="$t('历史销售数')" width="120"></el-table-column>
                     <el-table-column prop="update_time" :label="$t('最后变动时间')" width="160">
                         <template #default="scope">
                             <div style="line-height: 20px;">{{ scope.row.update_time.split(" ")[0] || '-' }}<br/>{{ scope.row.update_time.split(" ")[1] || '-' }}</div>

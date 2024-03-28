@@ -9,30 +9,38 @@
                 <div class="table-wrap">
                     <el-table size="small" ref="multipleTable" v-if="(form.purchase_detail || []).length > 0" :data="form.purchase_detail" border style="width: 100%"
                         v-loading="loading">
-                        <el-table-column width="60" :label="$t('序号')" >
+                        <el-table-column width="60" :label="$t('序号')">
                             <template #default="scope">
                                 {{ scope.$index + 1 }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="type" :label="$t('类型')">
+                        <el-table-column prop="product.type" :label="$t('类型')">
                             <template #default="scope">
-                                {{ scope.row.type == 10 ? $t('成品') : $t('材料') }}
+                                {{ scope.row.product.type == 10 ? $t('成品') : $t('材料') }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="product_name" :label="$t('商品名称')" width="300px">
+                        <el-table-column prop="product.product_name" :label="$t('商品名称')" width="300px">
                             <template #default="scope">
                                 <div class="product-info">
-                                    <div class="pic"><img v-img-url="scope.row.image[0].file_path" alt="" /></div>
+                                    <div class="pic"><img v-img-url="scope.row.product.image[0].file_path" alt="" /></div>
                                     <div class="info">
-                                        <div class="name">{{ scope.row.product_name_text }}</div>
-                                        <div class="price">{{ $t('销售价：') }}{{ scope.row.product_price }}</div>
+                                        <div class="name">{{ scope.row.product.product_name_text }}</div>
+                                        <div class="price">{{ $t('销售价：') }}{{ scope.row.product.product_price }}</div>
                                     </div>
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="category.path_name_text" :label="$t('供应商')"></el-table-column>
-                        <el-table-column prop="sales_actual" :label="$t('规格')"></el-table-column>
-                        <el-table-column prop="product_stock" :label="$t('当前库存')"></el-table-column>
+                        <el-table-column prop="product.erpSupplier" :label="$t('供应商')" width="160">
+                            <template #default="scope">
+                                {{ ERP(scope.row.product.erpSupplier || '') }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="sales_actual" :label="$t('规格')">
+                            <template #default="scope">
+                            {{ scope.row.spec_name_text || '-' }}
+                        </template>
+                        </el-table-column>
+                        <el-table-column prop="stock_num" :label="$t('当前库存')"></el-table-column>
 
                         <el-table-column :label="$t('预计采购单价')" width="180">
                             <template #default="scope">
@@ -126,7 +134,7 @@ export default {
         totalPrice() {
             let total = 0;
             this.form.purchase_detail.map(item => {
-                total = this.change? total + (Number(item.actual_purchase_price) * Number(item.actual_purchase_num)) : total + (Number(item.estimate_purchase_price) * Number(item.estimate_purchase_num))
+                total = this.change ? total + (Number(item.actual_purchase_price) * Number(item.actual_purchase_num)) : total + (Number(item.estimate_purchase_price) * Number(item.estimate_purchase_num))
             })
             return Number(total).toFixed(2);
         },
@@ -157,6 +165,23 @@ export default {
             this.form.purchase_detail.splice(e, 1);
 
             this.$emit('check')
+        },
+
+        ERP(data) {
+            let result = '-';
+            if (data.length > 0) {
+                result = [];
+                for (let index = 0; index < data.length; index++) {
+                    if(index < 3){
+                        result.push(data[index].name)
+                    }
+                }
+                result  = result.join(',');
+                if(data.length > 3){
+                    result = result + '+3';
+                }
+            }
+            return result;
         },
     },
 }
